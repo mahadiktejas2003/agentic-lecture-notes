@@ -1,0 +1,622 @@
+[
+  {
+    "block_id": "CB1",
+    "lecture_title": "English Articles (A, An, The) and Pronoun Introduction",
+    "title": "Using 'An' – Vowel Sound Rule and Silent H",
+    "explanation": "Introduces the rule for using 'an' before words with vowel sounds. Covers silent-H exceptions (honest, hour, hotel, historical) and abbreviations where the sound begins with a vowel (MPhil, MCom, MSc, MA).",
+    "transcript_range_percent": [4, 15],
+    "examples": [
+      {
+        "sentence": "He is ___ honest man.",
+        "rule": "Use 'an' when the word's initial sound is a vowel, regardless of the starting letter. 'Honest' has a silent H, so the sound starts with 'O'.",
+        "working": "honest → silent H → sound starts with O (vowel) -> an honest man"
+      },
+      {
+        "sentence": "She did ___ MCom from Kanpur University.",
+        "rule": "In abbreviations, pronounce each letter individually. M is pronounced 'em', which starts with vowel sound 'E'.",
+        "working": "MCom → E-M-C-O-M → sound starts with E (vowel) -> an MCom"
+      },
+      {
+        "sentence": "I hold ___ MA degree in Sociology.",
+        "rule": "Same abbreviation rule applies. MA is pronounced 'em-ay', starting with vowel sound 'E'.",
+        "working": "MA → E-M-A → sound starts with E (vowel) -> an MA degree"
+      },
+      {
+        "sentence": "She holds ___ Master's degree in English.",
+        "rule": "When the full word 'Master's' is used instead of the abbreviation, the sound starts with 'M' (consonant), so 'a' is used.",
+        "working": "Master's → sound starts with M (consonant) -> a Master's degree"
+      }
+    ],
+    "exercise_questions": [
+      "Fill in the blank: ___ hourly warning bell was sounded by the school peon.",
+      "Fill in the blank: He is ___ PhD in Physics.",
+      "Choose: She holds ___ BA Honors in Geography. (a / an)",
+      "Why do we say 'an hour' but 'a hotel' in common usage?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:09:30",
+        "type": "board",
+        "description": "Board showing 'an honest man', 'an hour', 'an MPhil' examples with vowel sound rule"
+      },
+      {
+        "timestamp": "00:11:30",
+        "type": "board",
+        "description": "Board showing abbreviation examples: an MCom, an MSc, an MA vs a Master's degree"
+      }
+    ],
+    "teacher_quotes": [
+      "Sound is the only parameter to decide whether we use 'an' or 'a'. If the sound is starting with a vowel, use 'an', otherwise use 'a'.",
+      "An MA, but a Master's degree. Similarly for BA, if you say he holds a BA Honors in Geography, the sound is coming from B, so no 'an' is needed."
+    ],
+    "traps": [
+      "Do not look at the written letter – look at the SOUND. 'Hour' starts with H but sounds like 'O', so it takes 'an'. 'University' starts with U but sounds like 'Y', so it takes 'a'."
+    ],
+    "tricks": [
+      "For abbreviations: spell out each letter aloud. If the first letter's name starts with a vowel sound (A, E, F, H, I, L, M, N, O, R, S, X), use 'an'."
+    ]
+  },
+  {
+    "block_id": "CB2",
+    "title": "A vs An – Words Starting with Vowel Letters but Consonant Sounds",
+    "explanation": "Covers exceptions where words begin with vowel letters (U, E, O) but produce consonant sounds (Y, W). Demonstrates that sound, not spelling, determines article choice.",
+    "transcript_range_percent": [15, 20],
+    "examples": [
+      {
+        "sentence": "I met ___ university professor in the morning.",
+        "rule": "'University' starts with U but the sound is 'Y' (yoo-ni-ver-si-ty), which is a consonant sound. Use 'a'.",
+        "working": "university → sound is Y (consonant) -> a university professor"
+      },
+      {
+        "sentence": "___ year is a big time period.",
+        "rule": "'Year' starts with Y sound, not a vowel. Use 'a'. Never say 'an year'.",
+        "working": "year → sound starts with Y (consonant) -> a year"
+      },
+      {
+        "sentence": "We saw ___ European.",
+        "rule": "'European' starts with E but the sound is 'Y' (yoo-ro-pee-an). Use 'a'.",
+        "working": "European → sound is Y (consonant) -> a European"
+      },
+      {
+        "sentence": "Here is ___ umbrella that I always wanted.",
+        "rule": "'Umbrella' starts with U and the sound is also a vowel 'uh'. Use 'an'.",
+        "working": "umbrella → sound starts with 'uh' (vowel) -> an umbrella"
+      },
+      {
+        "sentence": "That one was ___ useless idea.",
+        "rule": "'Useless' starts with U but the sound is 'Y' (yoo-sless). Use 'a'.",
+        "working": "useless → sound is Y (consonant) -> a useless idea"
+      }
+    ],
+    "exercise_questions": [
+      "Fill in: They came across ___ one-eyed man. (Hint: 'one' sounds like 'won')",
+      "Fill in: ___ ear specialist is one who has got ___ MD degree.",
+      "True or False: We should say 'an European country'."
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:13:30",
+        "type": "board",
+        "description": "Board showing contrast: 'an umbrella' vs 'a university', 'an ugly' vs 'a useless'"
+      }
+    ],
+    "teacher_quotes": [
+      "Forget what is written, forget the letter – focus on the SOUND. University starts with Y sound, not U sound. So 'a university', never 'an university'.",
+      "A year consists of 365 days, not 'an year'. The sound is Y, which is not a vowel."
+    ],
+    "traps": [
+      "Common mistake: Students see 'U' and immediately write 'an'. But 'university', 'useful', 'useless', 'European' all start with consonant sound Y.",
+      "'One' starts with O but sounds like 'won' (W sound) – so we say 'a one-eyed man', not 'an one-eyed man'."
+    ],
+    "tricks": [
+      "Quick test: Say the word out loud. If your mouth opens wide for the first sound (ah, eh, ih, oh, uh), use 'an'. If your lips/tongue block air (y, w, h), use 'a'."
+    ]
+  },
+  {
+    "block_id": "CB3",
+    "title": "The Definite Article 'The' – Referring to Known or Previously Mentioned Things",
+    "explanation": "Introduces the first major use of 'the': to refer to something already known to the listener/reader, or previously mentioned in the conversation.",
+    "transcript_range_percent": [20, 27],
+    "examples": [
+      {
+        "sentence": "The man whom you saw there has been arrested.",
+        "rule": "Use 'the' when both speaker and listener know which specific person/thing is being talked about. Here, both know which man.",
+        "working": "specific man (both know which one) -> the man"
+      },
+      {
+        "sentence": "Please return the book you had borrowed from me.",
+        "rule": "The specific book is already known – the one that was borrowed. Use 'the'.",
+        "working": "specific book (already identified by context) -> the book"
+      },
+      {
+        "sentence": "A writer met me in the morning. The writer was looking for some work.",
+        "rule": "First mention uses 'a' (unknown to listener). Second mention uses 'the' (now already referred to).",
+        "working": "first mention → a writer; second mention → the writer (already introduced)"
+      },
+      {
+        "sentence": "I do not find any merit in the proposal.",
+        "rule": "Even without explicit prior mention, 'the' is used because the listener already knows which proposal is being discussed from context.",
+        "working": "shared context (both know which proposal) -> the proposal"
+      }
+    ],
+    "exercise_questions": [
+      "Fill in: ___ girl who has dropped the test is standing there.",
+      "Fill in: No result could be reached at ___ meeting.",
+      "In a paragraph: 'I bought a pen. ___ pen was very expensive.' Which article in the blank?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:18:00",
+        "type": "board",
+        "description": "Board showing examples of 'the' for known/previously mentioned nouns"
+      }
+    ],
+    "teacher_quotes": [
+      "Either the listener already knows about it, or we have already told them about it – in both cases, use 'the'.",
+      "No result could be reached at the meeting – a particular meeting that the listener knows about already."
+    ],
+    "traps": [
+      "Don't assume 'the' is only for things mentioned earlier in the SAME sentence. Context from prior conversation or shared knowledge is enough."
+    ],
+    "tricks": [
+      "Ask yourself: 'Does the listener know WHICH ONE I mean?' If yes → 'the'. If it could be any random one → 'a/an'."
+    ]
+  },
+  {
+    "block_id": "CB4",
+    "title": "Mandatory 'The' – Mountain Ranges, Rivers, Oceans, Seas, Bays",
+    "explanation": "Covers the geographical categories where 'the' is always mandatory: mountain ranges, rivers, lakes, oceans, seas, bays, gulfs, and forests. This is convention, not logic.",
+    "transcript_range_percent": [27, 32],
+    "examples": [
+      {
+        "sentence": "___ Alps are in Europe. ___ Himalayas are the highest mountain range.",
+        "rule": "All mountain ranges always take 'the'. This is a fixed convention.",
+        "working": "mountain range → always 'the' -> the Alps, the Himalayas, the Andes, the Aravallis"
+      },
+      {
+        "sentence": "London is located on the banks of ___ Thames.",
+        "rule": "All rivers always take 'the'.",
+        "working": "river name → always 'the' -> the Thames, the Ganga, the Brahmaputra"
+      },
+      {
+        "sentence": "___ Dead Sea is near Israel. ___ Bay of Bengal is in South Asia.",
+        "rule": "All seas, oceans, bays, and gulfs take 'the'.",
+        "working": "sea/ocean/bay/gulf → always 'the' -> the Dead Sea, the Bay of Bengal, the Pacific Ocean"
+      }
+    ],
+    "exercise_questions": [
+      "Write the correct article: ___ Kaveri flows through Karnataka.",
+      "Write the correct article: ___ Indian Ocean is the third largest ocean.",
+      "Is it 'Gulf of Mannar' or 'the Gulf of Mannar'?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:21:30",
+        "type": "board",
+        "description": "Board listing mountain ranges, rivers, oceans with 'the' prefix"
+      }
+    ],
+    "teacher_quotes": [
+      "There is no logical reason behind it. It is convention. All mountain ranges, rivers, seas, oceans, bays, gulfs – they all take 'the'. Never write them without 'the'."
+    ],
+    "traps": [
+      "This is pure memorization – there is no sound-based or meaning-based logic. Students forget 'the' with lesser-known rivers or mountain ranges."
+    ],
+    "tricks": [
+      "Memory aid: If it's a natural geographical feature that is large and unique (range, river, ocean, sea, bay) → always 'the'."
+    ]
+  },
+  {
+    "block_id": "CB5",
+    "title": "Mandatory 'The' – Newspapers, Holy Books, Islands, Certain Nations",
+    "explanation": "Covers convention-based mandatory 'the' with newspaper names, religious scriptures/epics, island groups, and a few specific nations (USA, UK, USSR).",
+    "transcript_range_percent": [32, 38],
+    "examples": [
+      {
+        "sentence": "I read ___ Hindu every morning. She subscribes to ___ Wall Street Journal.",
+        "rule": "Almost all newspaper names carry 'the'. This is convention.",
+        "working": "newspaper → 'the' -> the Hindu, the Indian Express, the New York Times"
+      },
+      {
+        "sentence": "___ Bible, ___ Quran, ___ Ramayana, ___ Vedas are all sacred texts.",
+        "rule": "All major religious scriptures, holy books, and ancient epics take 'the'.",
+        "working": "religious/ancient text → 'the' -> the Bible, the Quran, the Vedas, the Iliad"
+      },
+      {
+        "sentence": "___ Andamans are a group of islands. ___ West Indies is famous for cricket.",
+        "rule": "All island groups take 'the'.",
+        "working": "island group → 'the' -> the Andamans, the Lakshadweep, the Hawaiian Islands"
+      },
+      {
+        "sentence": "___ USA is a federal republic. ___ UK consists of four countries.",
+        "rule": "A few specific nations take 'the' as convention: the USA, the UK, the USSR, the Great Britain.",
+        "working": "specific nations (exception) → 'the' -> the USA, the UK, the USSR"
+      }
+    ],
+    "exercise_questions": [
+      "True or False: We say 'Hindustan Times' without 'the'. (Hint: recently they removed it, but convention says 'the'.)",
+      "Fill in: ___ Odyssey is an epic by Homer.",
+      "Fill in: ___ Lakshadweep islands are in the Arabian Sea.",
+      "Which of these needs 'the': India / USA / Japan / UK?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:24:30",
+        "type": "board",
+        "description": "Board listing newspapers, holy books, islands, and nations that take 'the'"
+      }
+    ],
+    "teacher_quotes": [
+      "Very rarely will you find a newspaper without 'the' in its name. Recently Hindustan Times removed it, but that is their choice – the convention is to always use 'the'.",
+      "Normally country names do NOT take 'the'. But these five exceptions – USA, UK, USSR, Great Britain – are convention. Note them down."
+    ],
+    "traps": [
+      "99% of country names do NOT take 'the'. Only specific ones like USA, UK, USSR do. Don't overgeneralize.",
+      "Individual islands (like Sri Lanka, Cuba) may not take 'the'. Island GROUPS (Andamans, West Indies) do."
+    ],
+    "tricks": [
+      "If the country name contains a political descriptor (United States, United Kingdom, Union of Soviet...), it typically takes 'the'."
+    ]
+  },
+  {
+    "block_id": "CB6",
+    "title": "Mandatory 'The' – Organizations, Communities, Nationalities",
+    "explanation": "Covers mandatory 'the' with global and national organizations (UNO, WHO, ISRO), religious communities, tribal groups, linguistic groups, and nationalities when referred to as a group.",
+    "transcript_range_percent": [38, 43],
+    "examples": [
+      {
+        "sentence": "___ UNO has 193 member nations. ___ WHO declared a pandemic.",
+        "rule": "All global and national organizations always take 'the'.",
+        "working": "organization → 'the' -> the UNO, the WHO, the ISRO, the NITI Aayog"
+      },
+      {
+        "sentence": "___ Sikhs are a martial race. ___ Hindus are a majority in India.",
+        "rule": "All religious communities, tribal groups, and nationalities take 'the' when referring to the group.",
+        "working": "community/group → 'the' -> the Sikhs, the Muslims, the Gonds, the Punjabis"
+      },
+      {
+        "sentence": "___ European Union consists of 28 member nations.",
+        "rule": "Organizations always take 'the'. Additionally, note that European starts with Y sound, so the earlier article rule also applies.",
+        "working": "organization → 'the' -> the European Union"
+      }
+    ],
+    "exercise_questions": [
+      "Fill in: ___ ICMR is an important medical research body.",
+      "Fill in: ___ Jains are known for their business acumen.",
+      "Is it 'ISRO launched a satellite' or 'the ISRO launched a satellite'?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:27:30",
+        "type": "board",
+        "description": "Board showing organizations and community names with 'the'"
+      }
+    ],
+    "teacher_quotes": [
+      "We always say the Muslims, the Jews, the Sikhs, the Jains, the Hindus, the Christians, the Punjabis, the Italians. All communities and nationalities take 'the'.",
+      "ISRO, Bhabha Atomic Research Centre, TIFR – any organization, definitely 'the' should be used."
+    ],
+    "traps": [
+      "Students forget 'the' with Indian organizations like ISRO, AIIMS, ICMR. The rule applies to ALL organizations, not just international ones."
+    ],
+    "tricks": [
+      "If it's a body/organization/institution with an acronym or a formal name, prepend 'the'."
+    ]
+  },
+  {
+    "block_id": "CB7",
+    "title": "'The' for Group Quality and Superlative Degree",
+    "explanation": "Covers two important uses: (1) 'the' + singular noun for group quality (the computer = all computers), and (2) mandatory 'the' with superlative adjectives (the best, the worst, the fastest).",
+    "transcript_range_percent": [43, 50],
+    "examples": [
+      {
+        "sentence": "___ computer has revolutionized our lives.",
+        "rule": "'The' + singular noun can represent the entire category (group quality). 'The computer' = all computers.",
+        "working": "the computer → means 'computers in general' → group quality"
+      },
+      {
+        "sentence": "___ cow is a useful animal.",
+        "rule": "Same group quality rule. 'The cow' = all cows in general.",
+        "working": "the cow → means 'cows in general' → group quality"
+      },
+      {
+        "sentence": "___ best is yet to come. ___ fastest will be honored.",
+        "rule": "Superlative (third degree) adjectives ALWAYS require 'the'. No exceptions.",
+        "working": "superlative → mandatory 'the' -> the best, the worst, the fastest, the richest"
+      },
+      {
+        "sentence": "Honor ___ courageous. Respect ___ brave.",
+        "rule": "'The' + adjective (without noun) = that group of people. 'The courageous' = courageous people.",
+        "working": "the + adjective → means 'adjective people' -> the courageous = courageous people"
+      }
+    ],
+    "exercise_questions": [
+      "Rewrite using 'the': 'All languages are wonderful inventions of mankind.'",
+      "Fill in: ___ youngest player scored the winning goal.",
+      "What does 'the bad' mean in 'Punish the bad'?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:30:30",
+        "type": "board",
+        "description": "Board showing group quality examples and superlative degree with 'the'"
+      },
+      {
+        "timestamp": "00:33:00",
+        "type": "board",
+        "description": "Board showing 'the + adjective = people' pattern: the courageous, the good, the brave"
+      }
+    ],
+    "teacher_quotes": [
+      "Wherever you are using the third degree of the adjective – superlative – attaching 'the' is a must, 100%. Not a single exception.",
+      "The courageous means courageous people. The good means good people. The bad means bad people. The brave means brave people."
+    ],
+    "traps": [
+      "Don't confuse 'the computer' (group quality = all computers) with 'the computer on my desk' (specific known one). Context determines meaning."
+    ],
+    "tricks": [
+      "Superlative = THE. Always. Best → the best. Worst → the worst. Fastest → the fastest. No exceptions ever."
+    ]
+  },
+  {
+    "block_id": "CB8",
+    "title": "'The' with Proper Nouns for Comparison and Abstract Quality",
+    "explanation": "Covers two special uses: (1) 'the' before a proper noun when making a comparison, and (2) 'the' + noun + 'in him/her' to express an abstract quality or feeling within someone.",
+    "transcript_range_percent": [50, 56],
+    "examples": [
+      {
+        "sentence": "Stephen Hawking is often called ___ Einstein of the 21st century.",
+        "rule": "When comparing someone TO a famous person, use 'the' before the famous person's name.",
+        "working": "comparison to Einstein → the Einstein of the 21st century"
+      },
+      {
+        "sentence": "Kalidas is called ___ Shakespeare of India.",
+        "rule": "Same comparison rule. The person being compared to gets 'the'.",
+        "working": "comparison to Shakespeare → the Shakespeare of India"
+      },
+      {
+        "sentence": "Ludhiana is ___ Manchester of India.",
+        "rule": "Works for places too. Ludhiana is compared to Manchester's status.",
+        "working": "comparison to Manchester → the Manchester of India"
+      },
+      {
+        "sentence": "___ patriot in her awoke and she took to the gun.",
+        "rule": "'The' + quality noun + 'in him/her' expresses an abstract feeling or quality within someone. 'The patriot in her' = her patriotism.",
+        "working": "the patriot in her → means 'her patriotism/patriotic spirit' → abstract quality"
+      },
+      {
+        "sentence": "___ child in him could not control its curiosity.",
+        "rule": "Same pattern. 'The child in him' = his childlike nature/childhood curiosity.",
+        "working": "the child in him → means 'his childlike nature' → abstract quality"
+      }
+    ],
+    "exercise_questions": [
+      "Fill in: Govinda was known as ___ Amitabh Bachchan of comedy movies.",
+      "Fill in: Chandigarh is known as ___ Paris of India.",
+      "What does 'the poet in her' mean?"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:36:00",
+        "type": "board",
+        "description": "Board showing comparison examples: the Einstein, the Shakespeare, the Manchester, the Paris"
+      }
+    ],
+    "teacher_quotes": [
+      "When you are making a comparison to a famous person or place, use 'the' before that name. This is a very common exam question.",
+      "The patriot in her means her patriotism – you are using 'the' to convey an abstract feeling or quality within someone."
+    ],
+    "traps": [
+      "Normally proper nouns do NOT take 'the'. This is a specific exception ONLY when comparing. Don't use 'the' with proper nouns in regular sentences."
+    ],
+    "tricks": [
+      "Pattern: '[Person/Place] is the [Famous Person/Place] of [Region/Era]' → always needs 'the' before the comparison benchmark."
+    ]
+  },
+  {
+    "block_id": "CB9",
+    "title": "When NOT to Use 'The' – Abstract Nouns, Proper Nouns, Habitual Actions",
+    "explanation": "Covers important cases where 'the' should be omitted: abstract nouns in general sense, names of flowers/objects, and habitual/routine actions with places.",
+    "transcript_range_percent": [56, 72],
+    "examples": [
+      {
+        "sentence": "Love is ___ beautiful emotion.",
+        "rule": "Abstract nouns (love, hatred, anger, fear) in general sense do NOT take 'the'. Use 'a' if needed.",
+        "working": "love (abstract, general) → no 'the' → love is a beautiful emotion"
+      },
+      {
+        "sentence": "Roses smell sweet.",
+        "rule": "Names of flowers, objects, or species in general statements do NOT take 'the'.",
+        "working": "roses (general category) → no article needed → Roses smell sweet"
+      },
+      {
+        "sentence": "I go to school every morning.",
+        "rule": "Habitual/routine actions with places (school, temple, gym, college) omit 'the'. The purpose is the activity, not the building.",
+        "working": "habitual action → no 'the' → I go to school (for studying)"
+      },
+      {
+        "sentence": "___ chatbot is a useful invention.",
+        "rule": "Using 'the' here gives group quality (all chatbots). This is correct when talking about the category.",
+        "working": "the chatbot → group quality → all chatbots are useful"
+      },
+      {
+        "sentence": "An apple a day keeps ___ doctor away.",
+        "rule": "'The doctor' here refers to doctors in general. 'A doctor' could also work (group quality). Both valid.",
+        "working": "the doctor → doctors in general → group quality"
+      }
+    ],
+    "exercise_questions": [
+      "Correct or Incorrect: 'The love is a beautiful emotion.'",
+      "Fill in: Hatred is ___ bad emotion. (a / the / no article)",
+      "Fill in: I go to ___ gym every morning. (the / no article)",
+      "Correct or Incorrect: 'The roses smell sweet.'"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:49:00",
+        "type": "board",
+        "description": "Board showing article exercise questions with solutions discussed in class"
+      }
+    ],
+    "teacher_quotes": [
+      "Please never use 'the' with abstract nouns if you are talking in a general way. Love is a beautiful emotion, not 'the love'. Hatred is a bad emotion, not 'the hatred'.",
+      "Names of flowers or objects – roses, lilies, tulips – in general don't take 'the'. We say 'roses smell sweet', not 'the roses smell sweet'.",
+      "If you are going for the habitual purpose – to study at school, to pray at temple, to exercise at gym – no 'the' is needed."
+    ],
+    "traps": [
+      "Abstract nouns trap: Students add 'the' to love, anger, fear in general statements. Only add 'the' if referring to a SPECIFIC instance of that emotion.",
+      "Habitual vs specific: 'I go to school' (routine) vs 'I went to the school to meet the principal' (specific visit). The purpose matters."
+    ],
+    "tricks": [
+      "General statement about a feeling or category? → No 'the'. Specific, known instance? → Use 'the'."
+    ]
+  },
+  {
+    "block_id": "CB10",
+    "title": "Article Practice Exercises – Classroom Discussion",
+    "explanation": "Covers the interactive exercise session where students practiced applying article rules to various sentences, with immediate feedback and corrections from the teacher.",
+    "transcript_range_percent": [56, 68],
+    "examples": [
+      {
+        "sentence": "Every model aspires to get ___ hourglass figure.",
+        "rule": "'Hourglass' starts with H but the sound is vowel 'ow' (the H is silent), so use 'an'.",
+        "working": "hourglass → silent H → sound starts with 'ow' (vowel) -> an hourglass figure"
+      },
+      {
+        "sentence": "A hospital is a place where ___ sick are cared for.",
+        "rule": "'The sick' = sick people (the + adjective = group of people). Hospital itself takes 'an' because H is silent.",
+        "working": "the sick → sick people (group quality); an hospital (silent H)"
+      },
+      {
+        "sentence": "___ European Union consists of 28 member nations.",
+        "rule": "European starts with Y sound (consonant) AND it is an organization, so 'the' is mandatory.",
+        "working": "organization → the; European sound = Y → NOT 'an' -> the European Union"
+      },
+      {
+        "sentence": "Nothing is as powerful as ___ idea.",
+        "rule": "'Idea' starts with vowel sound 'I'. Use 'an'. No 'the' needed as it's general.",
+        "working": "idea → vowel sound I → an idea"
+      }
+    ],
+    "exercise_questions": [
+      "Correct the sentence: 'The European Union is a powerful organization.' (Is 'the' correct here?)",
+      "Fill in: She got ___ MPhil degree at 23.",
+      "Fill in: ___ ochre-colored pot was recovered from the site. (an / the / both possible)"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:44:00",
+        "type": "board",
+        "description": "Board showing article exercise set with answers being discussed"
+      }
+    ],
+    "teacher_quotes": [
+      "An hospital will come. The sound is beginning with O, not H. Even in Hindi there's a difference – 'aspatal' for humans, 'haspatal' for animals.",
+      "Both 'an' and 'the' are possible for 'ochre-colored pot'. It depends on whether the listener knows which pot you mean."
+    ],
+    "traps": [
+      "Multiple articles can be correct depending on context. 'The ochre pot' (specific known one) vs 'an ochre pot' (any ochre pot) – both are grammatically valid."
+    ],
+    "tricks": [
+      "When confused between a/an/the, ask: (1) Is it specific and known? → the. (2) Is it general? → a/an based on sound. (3) Is it a category? → no article or 'the' for group quality."
+    ]
+  },
+  {
+    "block_id": "CB11",
+    "title": "Introduction to Pronouns – Definition and Antecedent Agreement",
+    "explanation": "Introduces pronouns as words used in place of nouns. Covers the fundamental rule that a pronoun must agree with its antecedent in number, gender, and person.",
+    "transcript_range_percent": [78, 88],
+    "examples": [
+      {
+        "sentence": "Neena was a bright girl. ___ always used to work hard to maintain ___ position.",
+        "rule": "The pronoun (she/her) must agree with the antecedent (Neena) in number (singular), gender (female), and person (third).",
+        "working": "Neena (singular, female, 3rd person) → she/her → She always used to work hard to maintain her position."
+      }
+    ],
+    "exercise_questions": [
+      "Identify the antecedent: 'Rahul is a good boy. He studies daily.' What is the antecedent of 'he'?",
+      "What are the three parameters a pronoun must agree with its antecedent on?",
+      "Replace the noun with a pronoun: 'The students submitted the students' assignments on time.'"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "01:07:30",
+        "type": "board",
+        "description": "Board showing pronoun definition: pro = for, noun; and the antecedent agreement rule"
+      }
+    ],
+    "teacher_quotes": [
+      "A pronoun must always agree with its antecedent in number, gender, and person. Please write this down.",
+      "Pro means 'for' and noun – so pronoun means any word used in place of a noun. 'She' is used in place of 'Neena'."
+    ],
+    "traps": [
+      "'Ante' means 'before' – the antecedent is the original noun that the pronoun refers back to. Don't mix up the pronoun with its antecedent."
+    ],
+    "tricks": [
+      "Check three things for pronoun-antecedent agreement: (1) Number: singular or plural? (2) Gender: male, female, or neuter? (3) Person: first, second, or third?"
+    ]
+  },
+  {
+    "block_id": "CB12",
+    "title": "Sunday Practice Test Review – SVA, Articles, and Noun Corrections",
+    "explanation": "Covers the teacher's review of a previous Sunday practice test, correcting common errors in subject-verb agreement, article usage, and noun forms.",
+    "transcript_range_percent": [68, 78],
+    "examples": [
+      {
+        "sentence": "In goes the piston to touch the pin.",
+        "rule": "This is an inverted sentence. The normal order is 'The piston goes in'. Singular subject (piston) takes singular verb (goes).",
+        "working": "inverted → the piston goes in → singular subject, singular verb"
+      },
+      {
+        "sentence": "The five kilos of sugar given by her ___ sufficient.",
+        "rule": "The subject is not 'kilos' but the quantity of sugar (a single amount). Singular meaning → 'was'.",
+        "working": "five kilos of sugar → single quantity → was sufficient"
+      },
+      {
+        "sentence": "The committee ___ split on the issue.",
+        "rule": "Collective noun 'committee' takes plural verb when members are divided/disagreeing. Split implies division → 'were'.",
+        "working": "committee split → members divided → were split"
+      },
+      {
+        "sentence": "The Iraq was rebuilt by ___ leaders.",
+        "rule": "Iraq is singular (one country, third person), so the possessive must be 'its', not 'their'.",
+        "working": "Iraq (singular) → its leaders, NOT their leaders"
+      },
+      {
+        "sentence": "Please do not disturb me as I have got many ___ to do.",
+        "rule": "'Many works' is incorrect. 'Work' is uncountable. Say 'much work', 'a lot of work', or 'many pieces of work'.",
+        "working": "work (uncountable) → much work / a lot of work / many pieces of work"
+      }
+    ],
+    "exercise_questions": [
+      "Correct: 'Neither the moon nor the stars is visible tonight.'",
+      "Fill in: Each of us ___ responsible for the outcome. (is / are)",
+      "Correct: 'As they were setting up a new home, they went out to buy many furnitures.'"
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:55:30",
+        "type": "board",
+        "description": "Board showing Sunday practice test questions with corrections"
+      },
+      {
+        "timestamp": "01:00:00",
+        "type": "board",
+        "description": "Board showing neither-nor rule, collective nouns, and uncountable noun corrections"
+      }
+    ],
+    "teacher_quotes": [
+      "Five kilos of sugar – the subject is not kilos, it is the quantity. Single quantity means 'was', not 'were'. Same for 10 litres of water.",
+      "Committee were split – because there is division among members. When collective noun members disagree, use plural verb.",
+      "Iraq is singular. He is singular, she is singular, Iraq is singular. So it must be 'its leaders', not 'their leaders'."
+    ],
+    "traps": [
+      "Neither...nor: verb agrees with the SECOND/LAST subject. 'Neither the moon nor the stars ARE visible' (stars = plural → are).",
+      "'Each' always means ONE. Each of us → singular → 'is/was', never 'are/were'.",
+      "Furniture, work, advice – uncountable nouns. Never say 'many furnitures' or 'many works'. Use 'pieces of furniture', 'items of work'."
+    ],
+    "tricks": [
+      "For neither-nor/either-or: look at the LAST subject to decide the verb. For collective nouns: are they acting as one unit or divided? United → singular verb, divided → plural verb."
+    ]
+  }
+]

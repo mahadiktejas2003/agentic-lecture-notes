@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "before_tool_execution": {
+      "run_shell_command": {
+        "description": "Verify command safety.",
+        "script": "scripts/pre-exec-check.sh"
+      }
+    },
+    "after_model_call": {
+      "description": "Validate manifests are non‑empty before composition.",
+      "script": "scripts/post-composition-check.sh"
+    }
+  }
+}
