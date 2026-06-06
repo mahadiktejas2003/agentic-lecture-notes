@@ -101,7 +101,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         print(f"{'[PASS]' if ok else '[FAIL]'} {g}")
         if not ok: all_ok = False
     print("\n[SUCCESS] All gates passed." if all_ok else "\n[FAIL] Some gates failed.")
-    return all_ok
+    return all_ok, gates
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
@@ -110,4 +110,4 @@ if __name__ == '__main__':
     p.add_argument('--frame-manifest', default='frame_manifest.json')
     p.add_argument('--slide-manifest', default='slide_manifest.json')
     args = p.parse_args()
-    sys.exit(0 if run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest) else 1)
+    sys.exit(0 if run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest)[0] else 1)

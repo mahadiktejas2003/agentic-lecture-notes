@@ -41,3 +41,7 @@ scratch/
 concept_block_map.json
 frame_manifest.json
 slide_manifest.json
+
+# Notes and logs output
+notes-output/
+logs/

@@ -101,7 +101,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Load manifests
     if not os.path.exists(concept_map_path):
         print(f"Error: Concept block map not found at {concept_map_path}")
-        return False
+        return False, None
 
     with open(concept_map_path, 'r', encoding='utf-8') as f:
         concept_blocks = json.load(f)
@@ -160,6 +160,15 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         else:
             p = doc.add_paragraph()
             p.add_run("(No detailed explanation provided in the source.)").italic = True
+
+        # Key Concepts and Definitions
+        concepts = block.get('concepts', [])
+        if concepts:
+            doc.add_heading("Key Concepts & Definitions:", level=3)
+            for item in concepts:
+                p_c = doc.add_paragraph(style='List Bullet')
+                p_c.add_run(item.get('term', '') + ": ").bold = True
+                p_c.add_run(item.get('definition', ''))
 
         # Worked Examples
         examples = block.get('examples', [])
@@ -278,6 +287,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     doc.save(output_path)
     print(f"Notes document generated successfully at: {output_path}")
 
+    archive_path = None
     # Generate a unique, timestamped, and sanitized lecture-specific archived copy to prevent overwriting
     try:
         sanitized_title = re.sub(r'[^a-zA-Z0-9_-]', '_', lecture_title)
@@ -290,7 +300,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     except Exception as e:
         print(f"Warning: Could not save archived unique copy: {e}")
 
-    return True
+    return True, archive_path
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Generate Word document notes from sub-agent manifests.")
@@ -299,4 +309,6 @@ if __name__ == '__main__':
     parser.add_argument('--slide-manifest', default='slide_manifest.json')
     parser.add_argument('--output', default='notes-output/LECTURE_NOTES.docx')
     args = parser.parse_args()
-    build_document(args.concept_map, args.frame_manifest, args.slide_manifest, args.output)
+    success, archive_path = build_document(args.concept_map, args.frame_manifest, args.slide_manifest, args.output)
+    import sys
+    sys.exit(0 if success else 1)
