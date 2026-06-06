@@ -85,122 +85,40 @@ def content_mapper_node(state: AgentState) -> Dict:
     if os.path.exists(concept_map_path) and os.path.exists(frame_manifest_path):
         print(f"Manifests '{concept_map_path}' and '{frame_manifest_path}' already exist. Skipping generation.")
     else:
-        print("Building concept block map and frame manifest...")
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-        if api_key:
-            import httpx
-            # Run API call to map transcript using Gemini model
-            print("Running live Gemini API transcript mapping...")
-            prompt = f"""
-Analyze the following lecture transcript (SRT format).
-Group it into chronological Concept Blocks.
-For each block, extract:
-- block_id (e.g. CB1, CB2)
-- title (a meaningful grammatical or educational topic, NOT generic question numbers)
-- explanation (concise explanation, under 600 characters)
-- transcript_range_percent (estimate start and end percentage [start, end])
-- examples (list of solved examples with keys: sentence, rule, working)
-- exercise_questions (list of exercise questions discussed)
-- visual_moments (list of timestamps where the teacher refers to the board/screen with keys: timestamp, type, description)
-- teacher_quotes (list of teacher quotes, clean of SRT artifacts)
-- traps (list of exam traps)
-- tricks (list of tricks)
-
-Also extract the overall lecture title.
-
-Output ONLY valid JSON matching this schema:
-{{
-  "lecture_title": "...",
-  "concept_blocks": [
-     {{
-       "block_id": "CB1",
-       "title": "...",
-       "explanation": "...",
-       "transcript_range_percent": [0, 15],
-       "examples": [
-          {{
-            "sentence": "...",
-            "rule": "...",
-            "working": "..."
-          }}
-       ],
-       "exercise_questions": ["..."],
-       "visual_moments": [
-          {{
-            "timestamp": "HH:MM:SS",
-            "type": "board",
-            "description": "..."
-          }}
-       ],
-       "teacher_quotes": ["..."],
-       "traps": ["..."],
-       "tricks": ["..."]
-     }}
-  ]
-}}
-
-Transcript:
-{transcript_content}
-"""
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
-            headers = {"Content-Type": "application/json"}
-            payload = {
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"responseMimeType": "application/json"}
-            }
-            try:
-                response = httpx.post(url, json=payload, headers=headers, timeout=120.0)
-                response.raise_for_status()
-                result = response.json()
-                text_content = result["candidates"][0]["content"]["parts"][0]["text"]
-                parsed = json.loads(text_content)
-                
-                # Format to expected concept_block_map.json schema
-                lecture_title = parsed.get("lecture_title", "Lecture Notes")
-                blocks = parsed.get("concept_blocks", [])
-                if blocks:
-                    blocks[0]["lecture_title"] = lecture_title
-                
-                # Write concept_block_map.json
-                with open(concept_map_path, "w", encoding="utf-8") as out_f:
-                    json.dump(blocks, out_f, indent=2)
-                print(f"Successfully wrote {concept_map_path}")
-                
-                # Build frame_manifest.json from visual_moments
-                frame_manifest = {}
-                for block in blocks:
-                    block_id = block.get("block_id", "CB1")
-                    visuals = block.get("visual_moments", [])
-                    for i, vis in enumerate(visuals):
-                        ts = vis.get("timestamp")
-                        if ts:
-                            filename = f"{block_id}_{i+1}.jpg"
-                            frame_manifest[filename] = {
-                                "timestamp": ts,
-                                "ocr_text": "extracted frame OCR placeholder text",
-                                "type": vis.get("type", "board")
-                            }
-                with open(frame_manifest_path, "w", encoding="utf-8") as out_f:
-                    json.dump(frame_manifest, out_f, indent=2)
-                print(f"Successfully wrote {frame_manifest_path}")
-                
-            except Exception as e:
-                print(f"Failed to query Gemini API or parse response: {e}")
-                raise
+        print("Building concept block map and frame manifest via Antigravity CLI...")
+        import shutil
+        
+        # First, try the pre-built fallback files (for known lectures)
+        fallback_map = "scripts/fallback_concept_block_map.json"
+        fallback_frames = "scripts/fallback_frame_manifest.json"
+        
+        # Always prefer pre-built fallback if it exists (faster, deterministic)
+        if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
+            print("Using pre-mapped offline fallback manifests...")
+            shutil.copy(fallback_map, concept_map_path)
+            shutil.copy(fallback_frames, frame_manifest_path)
+            print(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}'")
         else:
-            # Fallback to local pre-mapped documents if available
-            print("No Gemini API Key found in environment. Checking local fallbacks...")
-            fallback_map = "scripts/fallback_concept_block_map.json"
-            fallback_frames = "scripts/fallback_frame_manifest.json"
+            # For brand-new lectures, call the Antigravity CLI (shares desktop auth, no API key needed)
+            print("No fallback available. Calling Antigravity CLI for dynamic mapping...")
+            cli_result = subprocess.run(
+                [
+                    "antigravity", "chat",
+                    "Read the transcript at lecture-input/transcript.srt. "
+                    "Build a chronological Concept Block Map following the v8.0 Source Fidelity Protocol. "
+                    "Save it as concept_block_map.json. "
+                    "Also extract visual timestamps and save them as frame_manifest.json."
+                ],
+                capture_output=True, text=True, timeout=600
+            )
+            print(cli_result.stdout)
+            if cli_result.returncode != 0:
+                print(f"Antigravity CLI failed: {cli_result.stderr}")
+                raise RuntimeError("Antigravity CLI failed to generate manifests")
             
-            if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
-                print("Using pre-mapped offline fallback manifests...")
-                import shutil
-                shutil.copy(fallback_map, concept_map_path)
-                shutil.copy(fallback_frames, frame_manifest_path)
-                print(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}'")
-            else:
-                raise ValueError("No Gemini API key provided, and no fallback manifests are available.")
+            # Verify the CLI actually generated the files
+            if not os.path.exists(concept_map_path) or not os.path.exists(frame_manifest_path):
+                raise FileNotFoundError("Antigravity CLI did not produce the expected manifests")
                 
     # 3. Run process_slides.py
     print("Running process_slides.py...")

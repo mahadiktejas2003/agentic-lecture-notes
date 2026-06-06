@@ -2,8 +2,11 @@
   {
     "block_id": "CB1",
     "title": "Fundamental CPU Scheduling Metrics and Terminology",
-    "lecture_title": "CPU Scheduling in Operating system (Lec-2)",
-    "transcript_range_percent": [0, 15],
+    "lecture_title": "CPU Scheduling in Operating Systems",
+    "transcript_range_percent": [
+      0,
+      15
+    ],
     "explanation": "Introduces the primary goals and performance metrics of CPU scheduling, detailing how the operating system manages CPU resources to ensure optimal performance. Key scheduling parameters and optimization criteria are defined.",
     "concepts": [
       {
@@ -52,6 +55,11 @@
         "sentence": "Calculate the Turnaround Time (TAT) for a process that arrives at time 2 and completes at time 15.",
         "rule": "Turnaround Time (TAT) is calculated as CT - AT.",
         "working": "Using the formula: TAT = CT - AT = 15 - 2 = 13 -> 13"
+      },
+      {
+        "sentence": "Calculate the Waiting Time (WT) for a process with Turnaround Time (TAT) of 13 and Burst Time (BT) of 5.",
+        "rule": "Waiting Time (WT) is calculated as TAT - BT.",
+        "working": "Using the formula: WT = TAT - BT = 13 - 5 = 8 -> 8"
       }
     ],
     "exercise_questions": [
@@ -96,7 +104,10 @@
   {
     "block_id": "CB2",
     "title": "First-Come First-Served Scheduling and the Convoy Effect",
-    "transcript_range_percent": [15, 30],
+    "transcript_range_percent": [
+      15,
+      30
+    ],
     "explanation": "Details First-Come First-Served scheduling where the CPU is allocated to processes in the order of their arrival. Explores the Gantt chart representation and the convoy effect, where short processes are delayed behind a long process.",
     "concepts": [
       {
@@ -118,6 +129,11 @@
         "sentence": "For the same processes P1=24, P2=3, P3=3 arriving at time 0, find average waiting time if they arrive in the order P2, P3, P1.",
         "rule": "Gantt chart order changes according to arrival sequence.",
         "working": "Gantt Chart: P2 (0 to 3), P3 (3 to 6), P1 (6 to 30). WT for P1=6, P2=0, P3=3. Average WT = (6 + 0 + 3)/3 = 3 -> 3"
+      },
+      {
+        "sentence": "Processes P1, P2, P3 arrive at times 0, 1, 2 respectively with burst times P1=24, P2=3, P3=3. Find the turnaround time and waiting time for each process under FCFS.",
+        "rule": "FCFS schedules processes in order of arrival. Gantt chart runs P1 (0 to 24), P2 (24 to 27), P3 (27 to 30).",
+        "working": "Gantt Chart: P1 (0 to 24), P2 (24 to 27), P3 (27 to 30). TAT: P1 = 24 - 0 = 24, P2 = 27 - 1 = 26, P3 = 30 - 2 = 28. WT: P1 = 24 - 24 = 0, P2 = 26 - 3 = 23, P3 = 28 - 3 = 25. -> TAT: [24, 26, 28], WT: [0, 23, 25]"
       }
     ],
     "exercise_questions": [
@@ -150,12 +166,16 @@
     ],
     "tricks": [
       "Draw the Gantt chart step by step to avoid calculation errors in arrival times."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   },
   {
     "block_id": "CB3",
     "title": "Shortest-Job-First Non-Preemptive Scheduling",
-    "transcript_range_percent": [30, 45],
+    "transcript_range_percent": [
+      30,
+      45
+    ],
     "explanation": "Explores Shortest Job First scheduling where the process with the shortest next CPU burst is selected. Explains why SJF is optimal for minimizing average waiting times, and discusses the difficulty of predicting next CPU burst lengths.",
     "concepts": [
       {
@@ -204,12 +224,16 @@
     ],
     "tricks": [
       "Sort all processes available in the ready queue by their burst times in ascending order."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   },
   {
     "block_id": "CB4",
     "title": "Shortest Remaining Time First Preemptive Scheduling",
-    "transcript_range_percent": [45, 60],
+    "transcript_range_percent": [
+      45,
+      60
+    ],
     "explanation": "Covers preemptive Shortest Job First scheduling, also known as Shortest Remaining Time First. Newly arrived processes with shorter remaining CPU bursts preempt the running process. Gantt charts and average waiting times are calculated.",
     "concepts": [
       {
@@ -248,12 +272,16 @@
     ],
     "tricks": [
       "Make a timeline of events (arrivals and completions) to systematically track remaining burst times."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   },
   {
     "block_id": "CB5",
     "title": "Priority-Based CPU Scheduling and Starvation Mitigation",
-    "transcript_range_percent": [60, 75],
+    "transcript_range_percent": [
+      60,
+      75
+    ],
     "explanation": "Explores Priority Scheduling, where each process is assigned an integer priority. Discusses starvation of low-priority processes and how the aging technique serves as a mitigation strategy by increasing priority over time.",
     "concepts": [
       {
@@ -306,12 +334,16 @@
     ],
     "tricks": [
       "Aging gradually increases the priority of processes that wait in the system for a long time."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   },
   {
     "block_id": "CB6",
     "title": "Round Robin Scheduling and Context-Switch Overhead",
-    "transcript_range_percent": [75, 90],
+    "transcript_range_percent": [
+      75,
+      90
+    ],
     "explanation": "Details Round Robin scheduling designed for time-sharing systems. Processes are allocated the CPU for a fixed time quantum. Explores the trade-offs of time quantum sizes relative to context-switch times to avoid high overhead.",
     "concepts": [
       {
@@ -332,6 +364,11 @@
         "sentence": "Processes P1=24, P2=3, P3=3 arrive at time 0. Calculate the Gantt Chart and average waiting time under Round Robin with Time Quantum q = 4.",
         "rule": "Run each process for up to 4ms in a FIFO ready queue.",
         "working": "Gantt Chart: P1 (0 to 4), P2 (4 to 7), P3 (7 to 10), P1 (10 to 30). WT for P1=(30-24)=6, P2=(4-0)=4, P3=(7-0)=7. Average WT = (6 + 4 + 7)/3 = 5.67 -> 5.67"
+      },
+      {
+        "sentence": "Compare the number of context switches in Round Robin scheduling for a single process with a burst time of 12 when the time quantum (q) is 12, 6, and 1.",
+        "rule": "Context switches occur when the running process is preempted to allow another process to run (or if the time quantum expires and the queue has other processes). For a single process: if TQ >= BT, it runs to completion (0 switches); if TQ < BT, it gets preempted at each quantum boundary.",
+        "working": "For q=12: 0 switches. For q=6: 1 switch (runs 0-6, switches state, runs 6-12). For q=1: 11 switches. -> q=12: 0, q=6: 1, q=1: 11"
       }
     ],
     "exercise_questions": [
@@ -370,12 +407,16 @@
     ],
     "tricks": [
       "Keep a FIFO ready queue and enqueue preempted processes at the tail."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   },
   {
     "block_id": "CB7",
     "title": "Multilevel Queues, Feedback Queues and Real-Time Latencies",
-    "transcript_range_percent": [90, 100],
+    "transcript_range_percent": [
+      90,
+      100
+    ],
     "explanation": "Covers Multilevel Queue and Multilevel Feedback Queue architectures that partition the ready queue and allow processes to move dynamically. Discusses real-time CPU scheduling, including soft and hard real-time latency requirements.",
     "concepts": [
       {
@@ -405,9 +446,9 @@
     ],
     "examples": [
       {
-        "sentence": "An MLFQ has 3 queues: Q0 (RR q=8), Q1 (RR q=16), Q2 (FCFS). Trace the queue transitions for a process requiring 30ms CPU burst.",
+        "sentence": "An MLFQ has 3 queues: Q0 (RR q=8), Q1 (RR q=16), Q2 (FCFS). Trace the queue transitions for a process requiring 50ms CPU burst.",
         "rule": "Move processes exceeding their quantum to the next lower queue.",
-        "working": "Process starts in Q0, runs for 8ms (22ms left). Moved to Q1, runs for 16ms (6ms left). Moved to Q2, runs for 6ms to completion. -> Q0 (8ms) -> Q1 (16ms) -> Q2 (6ms)"
+        "working": "Process starts in Q0, runs for 8ms (42ms left). Moved to Q1, runs for 16ms (26ms left). Moved to Q2, runs for 26ms FCFS to completion. -> Q0 (8ms) -> Q1 (16ms) -> Q2 (26ms)"
       }
     ],
     "exercise_questions": [
@@ -459,6 +500,7 @@
     ],
     "tricks": [
       "MLFQ is highly adaptive and doesn't require knowing burst times in advance."
-    ]
+    ],
+    "lecture_title": "CPU Scheduling in Operating Systems"
   }
 ]

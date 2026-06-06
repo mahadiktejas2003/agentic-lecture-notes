@@ -275,10 +275,12 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     points_added = 0
     for block in concept_blocks[:4]:
         title = block.get('title', '')
-        rule = block.get('examples', [{}])[0].get('rule', '')
-        if rule:
-            doc.add_paragraph(f"• {title}: {rule}", style='List Bullet')
-            points_added += 1
+        examples = block.get('examples', [])
+        if isinstance(examples, list) and len(examples) > 0:
+            rule = examples[0].get('rule', '')
+            if rule:
+                doc.add_paragraph(f"• {title}: {rule}", style='List Bullet')
+                points_added += 1
     if points_added == 0:
         doc.add_paragraph("Review all concept blocks for detailed rules.")
 
