@@ -92,8 +92,9 @@ def content_mapper_node(state: AgentState) -> Dict:
         fallback_map = "scripts/fallback_concept_block_map.json"
         fallback_frames = "scripts/fallback_frame_manifest.json"
         
-        # Always prefer pre-built fallback if it exists (faster, deterministic)
-        if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
+        # Always prefer pre-built fallback if it exists and matches the lecture (faster, deterministic)
+        is_cpu_scheduling = "scheduling" in transcript_content.lower()
+        if is_cpu_scheduling and os.path.exists(fallback_map) and os.path.exists(fallback_frames):
             print("Using pre-mapped offline fallback manifests...")
             shutil.copy(fallback_map, concept_map_path)
             shutil.copy(fallback_frames, frame_manifest_path)
@@ -348,7 +349,13 @@ builder.add_conditional_edges("audit-stage-4", route_after_stage_4)
 
 # Create checkpoints directory
 os.makedirs("logs", exist_ok=True)
-conn = sqlite3.connect("logs/langgraph_checkpoints.db", check_same_thread=False)
+db_path = "logs/langgraph_checkpoints.db"
+if os.path.exists(db_path):
+    try:
+        os.remove(db_path)
+    except Exception:
+        pass
+conn = sqlite3.connect(db_path, check_same_thread=False)
 memory = SqliteSaver(conn)
 
 graph = builder.compile(checkpointer=memory)
