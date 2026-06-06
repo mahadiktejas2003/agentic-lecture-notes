@@ -67,6 +67,142 @@ def content_mapper_node(state: AgentState) -> Dict:
     os.makedirs("notes-output", exist_ok=True)
     os.makedirs("logs", exist_ok=True)
     
+    # 1. Check transcript
+    transcript_path = "lecture-input/transcript.srt"
+    if not os.path.exists(transcript_path):
+        raise FileNotFoundError(f"Error: Transcript file not found at '{transcript_path}'")
+        
+    with open(transcript_path, "r", encoding="utf-8") as f:
+        transcript_content = f.read()
+        
+    if len(transcript_content.strip()) < 3000:
+        raise ValueError(f"Error: Transcript at '{transcript_path}' is missing or too short ({len(transcript_content)} chars).")
+        
+    # 2. Check and build concept_block_map.json and frame_manifest.json
+    concept_map_path = "concept_block_map.json"
+    frame_manifest_path = "frame_manifest.json"
+    
+    if os.path.exists(concept_map_path) and os.path.exists(frame_manifest_path):
+        print(f"Manifests '{concept_map_path}' and '{frame_manifest_path}' already exist. Skipping generation.")
+    else:
+        print("Building concept block map and frame manifest...")
+        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        if api_key:
+            import httpx
+            # Run API call to map transcript using Gemini model
+            print("Running live Gemini API transcript mapping...")
+            prompt = f"""
+Analyze the following lecture transcript (SRT format).
+Group it into chronological Concept Blocks.
+For each block, extract:
+- block_id (e.g. CB1, CB2)
+- title (a meaningful grammatical or educational topic, NOT generic question numbers)
+- explanation (concise explanation, under 600 characters)
+- transcript_range_percent (estimate start and end percentage [start, end])
+- examples (list of solved examples with keys: sentence, rule, working)
+- exercise_questions (list of exercise questions discussed)
+- visual_moments (list of timestamps where the teacher refers to the board/screen with keys: timestamp, type, description)
+- teacher_quotes (list of teacher quotes, clean of SRT artifacts)
+- traps (list of exam traps)
+- tricks (list of tricks)
+
+Also extract the overall lecture title.
+
+Output ONLY valid JSON matching this schema:
+{{
+  "lecture_title": "...",
+  "concept_blocks": [
+     {{
+       "block_id": "CB1",
+       "title": "...",
+       "explanation": "...",
+       "transcript_range_percent": [0, 15],
+       "examples": [
+          {{
+            "sentence": "...",
+            "rule": "...",
+            "working": "..."
+          }}
+       ],
+       "exercise_questions": ["..."],
+       "visual_moments": [
+          {{
+            "timestamp": "HH:MM:SS",
+            "type": "board",
+            "description": "..."
+          }}
+       ],
+       "teacher_quotes": ["..."],
+       "traps": ["..."],
+       "tricks": ["..."]
+     }}
+  ]
+}}
+
+Transcript:
+{transcript_content}
+"""
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+            headers = {"Content-Type": "application/json"}
+            payload = {
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"responseMimeType": "application/json"}
+            }
+            try:
+                response = httpx.post(url, json=payload, headers=headers, timeout=120.0)
+                response.raise_for_status()
+                result = response.json()
+                text_content = result["candidates"][0]["content"]["parts"][0]["text"]
+                parsed = json.loads(text_content)
+                
+                # Format to expected concept_block_map.json schema
+                lecture_title = parsed.get("lecture_title", "Lecture Notes")
+                blocks = parsed.get("concept_blocks", [])
+                if blocks:
+                    blocks[0]["lecture_title"] = lecture_title
+                
+                # Write concept_block_map.json
+                with open(concept_map_path, "w", encoding="utf-8") as out_f:
+                    json.dump(blocks, out_f, indent=2)
+                print(f"Successfully wrote {concept_map_path}")
+                
+                # Build frame_manifest.json from visual_moments
+                frame_manifest = {}
+                for block in blocks:
+                    block_id = block.get("block_id", "CB1")
+                    visuals = block.get("visual_moments", [])
+                    for i, vis in enumerate(visuals):
+                        ts = vis.get("timestamp")
+                        if ts:
+                            filename = f"{block_id}_{i+1}.jpg"
+                            frame_manifest[filename] = {
+                                "timestamp": ts,
+                                "ocr_text": "extracted frame OCR placeholder text",
+                                "type": vis.get("type", "board")
+                            }
+                with open(frame_manifest_path, "w", encoding="utf-8") as out_f:
+                    json.dump(frame_manifest, out_f, indent=2)
+                print(f"Successfully wrote {frame_manifest_path}")
+                
+            except Exception as e:
+                print(f"Failed to query Gemini API or parse response: {e}")
+                raise
+        else:
+            # Fallback to local pre-mapped documents if available
+            print("No Gemini API Key found in environment. Checking local fallbacks...")
+            fallback_map = "scripts/fallback_concept_block_map.json"
+            fallback_frames = "scripts/fallback_frame_manifest.json"
+            
+            if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
+                print("Using pre-mapped offline fallback manifests...")
+                import shutil
+                shutil.copy(fallback_map, concept_map_path)
+                shutil.copy(fallback_frames, frame_manifest_path)
+                print(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}'")
+            else:
+                raise ValueError("No Gemini API key provided, and no fallback manifests are available.")
+                
+    # 3. Run process_slides.py
     print("Running process_slides.py...")
     subprocess.run([sys.executable, "scripts/process_slides.py"], check=True)
     
@@ -78,6 +214,25 @@ def content_mapper_node(state: AgentState) -> Dict:
 def example_extractor_node(state: AgentState) -> Dict:
     print("\n=== [Node: example-extractor] Extracting examples and visual moments ===")
     
+    # 1. Load frame_manifest.json to get timestamps
+    manifest_path = "frame_manifest.json"
+    if os.path.exists(manifest_path):
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            frames = json.load(f)
+        timestamps = [info["timestamp"] for info in frames.values() if info.get("timestamp")]
+        if timestamps:
+            print(f"Running extract_frames.py with timestamps: {timestamps}")
+            subprocess.run([
+                sys.executable, "scripts/extract_frames.py",
+                "--video", "lecture-input/LECTURE.mp4",
+                "--output-dir", "screenshots",
+                "--timestamps"
+            ] + timestamps, check=True)
+        else:
+            print("No timestamps found in frame manifest.")
+    else:
+        print("Warning: frame_manifest.json not found. Skipping extraction.")
+        
     print("Running crop_frames.py...")
     subprocess.run([sys.executable, "scripts/crop_frames.py"], check=True)
     

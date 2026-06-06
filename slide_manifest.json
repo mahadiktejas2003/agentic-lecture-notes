@@ -1,1 +1,128 @@
-[]
+[
+  {
+    "slide_number": 1,
+    "image_path": "slides/slide_001.png",
+    "ocr_text": "CPU Scheduling\n\nOperating System Concepts \u2014 9\" Edit9on Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 2,
+    "image_path": "slides/slide_002.png",
+    "ocr_text": "a\ngp? Scheduling Criteria\n\nCPU utilization \u2014 keep the CPU as busy as possible\n\nO Throughput \u2014 # of processes that complete their execution per\ntime unit\n\nO Arrival Time(AT)\n\nO Burst Time(BT)\n\nO Completion time(CT)\n\nO Turnaround time \u2014 amount of time to execute a particular\n\nprocess ( CT-AT)\n\nO Waiting time \u2014 amount of time a process has been waiting in the\nready queue (TAT-BT)\n\nO Response time \u2014 amount of time it takes from when a request\nwas submitted until the first response is produced, not output (for\n\ntime-sharing environment)\nAd ,\n\nOperating System Concepts \u2014 9'\" Edition 1.2 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 3,
+    "image_path": "slides/slide_003.png",
+    "ocr_text": "Kgeh Scheduling Algorithm Optimization Criteria\n\nMax CPU utilization\nMax throughput\nMin turnaround time\nMin waiting time\n\nOOo oOo oO 8\n\nMin response time\n\nOperating System Concepts \u2014 9'\" Edition 1.3 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 4,
+    "image_path": "slides/slide_004.png",
+    "ocr_text": "First- Come, First-Served (FCFS) Scheduling\n\nProcess Arrival Time Burst Time\n\nP, 0 24\nP, 1 3\nPs ; 3\n\nO Suppose that the processes arrive in the order: P, , P. , Ps\nThe Gantt Chart for the schedule is:\n\nP P, | B,\n\n1\n\n24 27 30\n\nO Waiting time for P, =0;P, =24;P,=27\nO Average waiting time: (0 + 24 + 27)/3 =17\n\nFR\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition 1.4",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 5,
+    "image_path": "slides/slide_005.png",
+    "ocr_text": "FCFS Scheduling (Cont.)\n\nSuppose that the processes arrive in the order:\nP, , Ps , P,\nO The Gantt chart for the schedule is:\n\nWaiting time for P, = 6;P, =0.P3;=3\nAverage waiting time: (6+0+3)/3=3\nMuch better than previous case\n\noO oOo Oo OO\n\nConvoy effect - short process behind long process\n\nFR\n\nOperating System Concepts \u2014 9'\" Edition 1.5 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 6,
+    "image_path": "slides/slide_006.png",
+    "ocr_text": "ge) Shortest-Job-First (SUF) Scheduling\n\nO Associate with each process the length of its next CPU burst\nOo Use these lengths to schedule the process with the shortest\ntime\nO SUF is optimal \u2014 gives minimum average waiting time for a given\nset of processes\noO The difficulty is knowing the length of the next CPU request\nOo Could ask the user\n\nFR\n\nOperating System Concepts \u2014 9'\" Edition 1.6 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 7,
+    "image_path": "slides/slide_007.png",
+    "ocr_text": "ao) Example of SJF\n\nProcess Burst Time\nP, 6\nP, 8\nP, 7\nP, 3\n\nO Average waiting time =(8+16+9+0)/4=7\n\nFR\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition 1.7",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 8,
+    "image_path": "slides/slide_008.png",
+    "ocr_text": "|\n\n}\n% is\n\nO Now we add the concepts of varying arrival times and preemption to\n\nthe analysis\nProcess Arrival Time Burst Time\nP, 0 8\nP, 1 4\nP, 2 9\nP, 3 5\n\nO Preemptive SJF Gantt Chart\n\nP, es P, P, Ps\n0 1 5 10 17 26\nO Average waiting time = [(10-1)+(1-1)+(17-2)+5-3)]/4 = 26/4 = 6.5\nmsec\n\nFR\n\nOperating System Concepts \u2014 9'\" Edition 1.8 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 9,
+    "image_path": "slides/slide_009.png",
+    "ocr_text": "w\ngp? Priority Scheduling\n\nO A priority number (integer) is associated with each process\n\nO The CPU is allocated to the process with the highest priority\n(smallest integer = highest priority)\n\nOo Preemptive\noO Nonpreemptive\n\nO SJF is priority scheduling where priority is the inverse of predicted\nnext CPU burst time\n\nO Problem = Starvation \u2014 low priority processes may never execute\n\nO Solution = Aging \u2014 as time progresses increase the priority of the\n\nprocess\ndd \u00bb\n\nOperating System Concepts \u2014 9'\" Edition 1.9 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 10,
+    "image_path": "slides/slide_010.png",
+    "ocr_text": "Kgeh Example of Priority Scheduling\n\n& As\n\nProcess Burst Time Priority\nP, 10 3\nP, 1 1\nP, 2 4\nP, 1 5\nP, 5 2\n\nO Priority scheduling Gantt Chart\n\nO Average waiting time = 8.2 msec\n\nOperating System Concepts \u2014 9'\" Edition 1.10 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 11,
+    "image_path": "slides/slide_011.png",
+    "ocr_text": "7 Round Robin (RR)\n\nO Each process gets a small unit of CPU time (time quantum q),\nusually 10-100 milliseconds. After this time has elapsed, the\nprocess is preempted and added to the end of the ready queue.\n\nO If there are n processes in the ready queue and the time\nquantum is q, then each process gets 1/n of the CPU time in\nchunks of at most q time units at once. No process waits more\nthan (n-1)q time units.\n\nTimer interrupts every quantum to schedule next process\nPerformance\nOo qlarge => FIFO\n\nOo qsmall => q must be large with respect to context switch,\notherwise overhead is too high\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition 1.11",
+    "discussed_at": "00:00:00",
+    "discussed": true
+  },
+  {
+    "slide_number": 12,
+    "image_path": "slides/slide_012.png",
+    "ocr_text": "Process Burst Time\nP, 24\nP, 3\nP, 3\n\nad Example of RR with Time Quantum = 4\n\nO Typically, higher average turnaround than SJF, but better\nresponse\n\nq should be large compared to context switch time\nq usually 10ms to 100ms, context switch < 10 usec\n\nOperating System Concepts \u2014 9\" Edition 1.12\n\n30\n\nFR\n\nSilberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 13,
+    "image_path": "slides/slide_013.png",
+    "ocr_text": "Kgeh Time Quantum and Context Switch Time\n\nprocess time = 10 quantum context\nswitches\n0 10\nes ee\n0 6 10\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 14,
+    "image_path": "slides/slide_014.png",
+    "ocr_text": "7 Multilevel Queue\n\nO Ready queue is partitioned into separate queues, eg:\noO foreground (interactive)\nOo background (batch)\nProcess permanently in a given queue\nEach queue has its own scheduling algorithm:\n0 foreground \u2014 RR\n0 background \u2014 FCFS\nO Scheduling must be done between the queues:\n\noO Fixed priority scheduling; (i.e., serve all from foreground then\nfrom background). Possibility of starvation.\n\nOo Time slice \u2014 each queue gets a certain amount of CPU time\n\nwhich it can schedule amongst its processes; i.e., 80% to\nforeground in RR\n\n0 20% to background in FCFS\n\naux\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition 1.14",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 15,
+    "image_path": "slides/slide_015.png",
+    "ocr_text": "\\$\u2014 Multilevel Queue Scheduling\n\nhighest priority\n\nstudent processes\n\nlowest priority\n\nOperating System Concepts \u2014 9\"\" Edition 1.15 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 16,
+    "image_path": "slides/slide_016.png",
+    "ocr_text": "Multilevel Feedback Queue\n\nO A process can move between the various queues; aging can be\nimplemented this way\n\nO Multilevel-feedback-queue scheduler defined by the following\nparameters:\n\nO\n\nO\nO\nO\nO\n\nnumber of queues\n\nscheduling algorithms for each queue\n\nmethod used to determine when to upgrade a process\nmethod used to determine when to demote a process\n\nmethod used to determine which queue a process will enter\nwhen that process needs service\n\nOperating System Concepts \u2014 9'\" Edition 1.16 Silberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 17,
+    "image_path": "slides/slide_017.png",
+    "ocr_text": "% is\n\nO Three queues:\n\nOo Q)\u2014 RR with time quantum 8\nmilliseconds\n\no Q,-\u2014RR time quantum 16 milliseconds\n0 Q,-FCFS\n\nO Scheduling\n\nuo Anew job enters queue Q, which is\nserved FCFS\n\n\u00bb Whenit gains CPU, job receives 8\nmilliseconds\n\n> If it does not finish in 8\nmilliseconds, job is moved to\nqueue Q,\n\no At Q, job is again served FCFS and\nreceives 16 additional milliseconds\n\n> If it still does not complete, it is\npreempted and moved to queue Q,\n\nOperating System Concepts \u2014 9\" Edition 1.17\n\nKgeh Example of Multilevel Feedback Queue\n\nquantum = 8\n\nquantum = 16\n\noa\nSilberschatz, Galvin and Gagne \u00a92013",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  },
+  {
+    "slide_number": 18,
+    "image_path": "slides/slide_018.png",
+    "ocr_text": "=)\n\u201c@7__ Real-Time CPU Scheduling __\n\nO Can present obvious\nchallenges\n\ninterrupt\nO Soft real-time systems \u2014no\nguarantee as to when critical determine\n\n. . task T running interrupt\nreal-time process will be type\nscheduled context\n\nswitch\n\nO Hard real-time systems \u2014\ntask must be serviced by its\n\ndeadline\nO Two types of latencies affect\nperformance\n. interrupt\n1. Interrupt latency \u2014 time from latency\narrival of interrupt to start of\nroutine that services interrupt\ntime\n\n2. Dispatch latency \u2014 time for\nschedule to take current process\noff CPU and switch to another\n\nFR\n\nSilberschatz, Galvin and Gagne \u00a92013\n\nOperating System Concepts \u2014 9\" Edition 1.18",
+    "discussed_at": "00:00:00",
+    "discussed": false
+  }
+]

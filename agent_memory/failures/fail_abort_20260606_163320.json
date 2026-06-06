@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-06-06T16:33:20.387322",
+  "status": "aborted",
+  "failed_gates": [
+    "Gate 7"
+  ],
+  "reason": "Gate 7 exceeded 3 retries.",
+  "attempts": 1,
+  "gate_retries": {
+    "7": 3
+  }
+}

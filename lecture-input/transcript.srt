@@ -1,5169 +1,2568 @@
 1
-00:01:53,060 --> 00:01:54,020
-Good evening. Good evening.
+00:00:00,080 --> 00:00:05,359
+[intro music]
 
 2
-00:01:55,000 --> 00:01:58,140
-[clears throat] Let's see all who joined.
+00:00:07,220 --> 00:00:09,360
+Hello दोस्तों,
+welcome to operating system class.
 
 3
-00:02:05,540 --> 00:02:08,800
-Good evening, Sachit. Good evening,
-Nikita. Good evening.
+00:00:09,620 --> 00:00:13,300
+इस class में हम लोग discuss करने जा रहे
+हैं CPU scheduling और
 
 4
-00:02:08,840 --> 00:02:10,260
-Very good evening.
+00:00:13,360 --> 00:00:17,240
+CPU scheduling जो है one of the most
+important topic है इस exam
 
 5
-00:02:19,860 --> 00:02:21,100
-Mm, good evening, Rishav.
+00:00:17,260 --> 00:00:21,080
+के लिए। क्यों?
+क्योंकि इस exam में मैं minimum two
 
 6
-00:02:22,440 --> 00:02:43,540
-Uh,
+00:00:21,180 --> 00:00:25,120
+questions जो है वो expect कर रहा हूं CPU
+scheduling के ऊपर। अगर आप
 
 7
-00:02:43,700 --> 00:02:46,380
-did you attend, uh,
-Sunday's practice test?
+00:00:25,160 --> 00:00:29,040
+previous year के question भी check करो ना
+तो उसमें आपको जो है सबसे ज्यादा question
 
 8
-00:02:50,940 --> 00:02:53,340
-Please let me know
-if you have attended the Sunday's...
+00:00:29,100 --> 00:00:32,940
+आपको CPU scheduling के ऊपर ही मिलेंगे पूरे
+operating system syllabus में
 
 9
-00:02:53,560 --> 00:02:56,480
-Okay, Sunday practice test you did. Okay,
-okay.
+00:00:32,980 --> 00:00:36,910
+से। और यहां पे अगर हम question के level की
+बात करें, बिल्कुल easy
 
 10
-00:02:56,600 --> 00:03:00,480
-Uh, any questions from there?
-Any problems that you faced in the English
+00:00:37,000 --> 00:00:40,820
+level के questions जो है वो यहां पे आए हुए
+हैं और जितने भी questions यहां पे आए हैं
 
 11
-00:03:00,600 --> 00:03:00,860
-part?
+00:00:40,860 --> 00:00:44,750
+वो numerical level के हैं। और numerical
+questions जो है CPU scheduling
 
 12
-00:03:04,400 --> 00:03:06,620
-Let me know what are the problems
-that you faced.
+00:00:44,800 --> 00:00:48,680
+के ऊपर बिल्कुल easy हैं। मतलब इसमें कोई
+ऐसा नहीं है कि अ, मतलब
 
 13
-00:03:08,100 --> 00:03:09,160
-Okay, no problems.
+00:00:48,740 --> 00:00:52,520
+अगर आप computer science background से हैं
+तभी आपको clear होगा। इसमें कोई computer
 
 14
-00:03:15,240 --> 00:03:18,580
-Okay, okay. Any problems that you faced,
-Vipin?
+00:00:52,560 --> 00:00:56,020
+science,
+कोई branch का कोई लेना-देना नहीं है। बस
 
 15
-00:03:23,740 --> 00:03:28,360
-"Thoda
+00:00:56,060 --> 00:00:59,760
+चाहिए। आप easily questions को solve कर
+सकते हैं। चलिए start करते
 
 16
-00:03:28,600 --> 00:03:32,480
-samajhne mein time laga hai, sir,
-toh kaise solve karenge
+00:00:59,800 --> 00:01:03,760
+हैं। सबसे पहले हमारे पास CPU utilization
+का मतलब
 
 17
-00:03:32,560 --> 00:03:33,060
-isko?
+00:01:03,800 --> 00:01:07,700
+क्या है कि CPU, um,
+as busy as possible। मतलब
 
 18
-00:03:34,680 --> 00:03:38,640
-Thoda samajhne mein time lagta hai." Yeah,
-initially
+00:01:07,740 --> 00:01:11,640
+हमारा जो CPU है वो हमने busy रखना है सबसे
+ज्यादा। ये मेरी, मतलब
 
 19
-00:03:38,650 --> 00:03:42,540
-it does take some time, but, uh,
-as you do more
+00:01:11,660 --> 00:01:15,600
+एक तरह से आप कह सकते हो कि expectation है
+या आप कह सकते हो कि
 
 20
-00:03:42,560 --> 00:03:46,320
-practice, things become easier.
-So since you are in the beginning
+00:01:15,640 --> 00:01:19,620
+हम चाहते हैं कि CPU ज्यादा से ज्यादा busy
+रहे, idle कम रहे। idle
 
 21
-00:03:46,380 --> 00:03:49,200
-stages, so it will surely take some time.
+00:01:19,660 --> 00:01:23,560
+रहेगा तो वो system के लिए खर--
+मतलब system के लिए वो खराब है। ठीक
 
 22
-00:03:49,260 --> 00:03:50,880
-That is nothing to worry about.
+00:01:23,580 --> 00:01:25,690
+है। Throughput। Throughput का मतलब क्या
+है?
 
 23
-00:03:52,240 --> 00:03:52,720
-Don't worry.
+00:01:26,240 --> 00:01:30,070
+Number of processes
+that completed their execution per unit
 
 24
-00:03:54,680 --> 00:03:56,800
-It will get better with the passage of
-time.
+00:01:30,120 --> 00:01:34,060
+मतलब कितने process execute हो रहे हैं per
+unit time, that is a throughput।
 
 25
-00:03:57,160 --> 00:04:00,520
-Okay, so now we can begin. Okay, so,
+00:01:34,120 --> 00:01:38,040
+ये topics,
+ये मतलब terms आपको याद होनी चाहिए। अब आते
 
 26
-00:04:01,340 --> 00:04:01,520
-mm,
+00:01:38,100 --> 00:01:42,020
+times के ऊपर। Time जो है वो बहुत ज्यादा
+important है क्योंकि numerical में
 
 27
-00:04:02,900 --> 00:04:06,320
-uh, day before yesterday we were talking
+00:01:42,100 --> 00:01:45,900
+आपको इन times के बारे में ही या तो दिए
+जाएंगे, कुछ ना कुछ time दिए जाएंगे, कुछ
 
 28
-00:04:06,400 --> 00:04:07,200
-about, uh--
+00:01:45,940 --> 00:01:48,800
+time आपसे पूछा जाएगा। तो सबसे पहले arrival
+time.
 
 29
-00:04:09,020 --> 00:04:12,920
-Sorry, on Friday, uh, we
-were talking about the noun part,
+00:01:49,420 --> 00:01:52,550
+नाम से ही पता लग रहा है arrival time AT।
+What is the arrival time?
 
 30
-00:04:13,640 --> 00:04:17,360
-so-- Sorry, the article part, and, uh,
-we were talking about the fact ki
+00:01:52,620 --> 00:01:56,100
+The time at which the process enter into
+the system।
 
 31
-00:04:17,380 --> 00:04:21,300
-humne an kahan lagana hai.
-So just to recap, humne,
+00:01:56,120 --> 00:02:00,060
+जैसे मैंने आपको बोला कि मेरी class जो है
+वो ग्यारह बजे होगी।
 
 32
-00:04:21,460 --> 00:04:25,340
-uh, the first point we talked about
-was that, uh, we need to use
+00:02:00,080 --> 00:02:03,900
+तो ग्यारह बजे मतलब मैंने class में arrive
+हुआ तो ग्यारह बजे क्या हो गया?
 
 33
-00:04:25,500 --> 00:04:28,880
-an wherever we are talking of, uh,
-a vowel.
+00:02:04,040 --> 00:02:07,940
+Arrival time। Then burst time। Burst time
+is also known as
 
 34
-00:04:29,000 --> 00:04:32,920
-If a word is starting with a vowel,
-typically the convention is to
+00:02:07,980 --> 00:02:11,940
+CPU time। CPU time मतलब कि process आते ही
+बोल रहा है
 
 35
-00:04:33,040 --> 00:04:36,940
-use an before it, like we said an ink pot,
-an ugly,
+00:02:11,960 --> 00:02:15,900
+कि मेरे को इतना time लगेगा CPU को execute
+करने में। मतलब मेरे को
 
 36
-00:04:37,660 --> 00:04:41,519
-uh, an ugly person, an owl, an elephant,
-an
+00:02:15,960 --> 00:02:19,920
+इतने amount of time तक CPU चाहिए। जैसे मैं
+ग्यारह बजे class में
 
 37
-00:04:41,660 --> 00:04:42,740
-ink pot, bubby.
+00:02:19,940 --> 00:02:23,800
+enter हुआ,
+मेरा arrival time ग्यारह बजे और मैंने आते
 
 38
-00:04:44,000 --> 00:04:46,180
-"Sir, your voice is not coming properly.
+00:02:23,860 --> 00:02:27,780
+मेरे को ये topic पढ़ाना है CPU scheduling
+और इसको पढ़ाने में मेरे को एक घंटा
 
 39
-00:04:46,260 --> 00:04:49,980
-Your, uh, mobile camera is on." See, I
+00:02:27,840 --> 00:02:30,480
+लगेगा। Getting the point?
+तो मेरा burst time कितना हो गया?
 
 40
-00:04:50,060 --> 00:04:53,860
-have, uh,
-switched on the mobile camera so
+00:02:30,910 --> 00:02:34,860
+एक घंटा। तो that is what the time जितना वो
+spend करेगा CPU
 
 41
-00:04:53,940 --> 00:04:57,880
-read your messages properly,
-because your messages
+00:02:34,900 --> 00:02:38,740
+के ऊपर,
+that is the burst time। Then completion
 
 42
-00:04:57,940 --> 00:05:01,220
-on the, uh, computer screen. So that
-is a limitation.
+00:02:38,800 --> 00:02:42,520
+क्या है? The time at
+which process completed its execution।
 
 43
-00:05:01,240 --> 00:05:04,640
-That is why I am, uh, mm, logging in from,
-uh...
+00:02:42,560 --> 00:02:46,460
+मतलब जिस time पे वो complete हुआ,
+जिस time पे वो terminate
 
 44
-00:05:07,880 --> 00:05:11,220
-"I do not know where to use article."
-That is what we are talking about.
+00:02:46,520 --> 00:02:50,380
+हुआ। अब देखो idle condition में तो
+obviously ग्यारह बजे आया, एक
 
 45
-00:05:12,360 --> 00:05:16,240
-Just wait for a while. So I
-was talking about an, and then we were
+00:02:50,420 --> 00:02:54,320
+घंटा उसने बोला था,
+बारह बजे खत्म हो जाना चाहिए। लेकिन ऐसा
 
 46
-00:05:16,260 --> 00:05:19,870
-talking about, uh-- No,
-if I switch off the mobile camera,
+00:02:54,360 --> 00:02:58,240
+क्योंकि CPU के ऊपर जब process चलता है तो
+चलते-चलते उसको बीच में
 
 47
-00:05:20,180 --> 00:05:23,600
-see,
-you will face a problem because I will not
+00:02:58,300 --> 00:03:02,200
+let's say कोई hardware को access करना है,
+कोई file को access करना है, बीच में
 
 48
-00:05:24,620 --> 00:05:28,000
-Your messages are easily readable
-if I switch on the mobile phone.
+00:03:02,220 --> 00:03:05,140
+उसको कोई ना कोई और काम जो है वो करना है तो
+वो क्या करता है?
 
 49
-00:05:28,060 --> 00:05:31,380
-Otherwise,
-I'm not able to read your messages on the
+00:03:05,180 --> 00:03:09,100
+फिर वो काम करने चला जाता है और इस time तक
+CPU किसी और process को
 
 50
-00:05:32,680 --> 00:05:34,120
-So that is the reason. It's up to you.
+00:03:09,160 --> 00:03:11,640
+execute करता है। ये actual में कहानी है
+क्या?
 
 51
-00:05:34,800 --> 00:05:38,460
-If you want to--
-If you want me to switch it off,
+00:03:12,220 --> 00:03:15,960
+जो हमने, अ,
+like last lecture में भी बात की थी मैंने
 
 52
-00:05:38,500 --> 00:05:40,240
-case,
-I won't be able to read your messages.
+00:03:16,060 --> 00:03:19,680
+की। Pre-emption का मतलब क्या होता है कि
+process चलते-चलते हम उसको
 
 53
-00:05:41,500 --> 00:05:41,720
-Okay,
+00:03:19,780 --> 00:03:23,620
+preempt कर देते हैं। Maybe कोई high
+priority process आ गया। Maybe कोई ऐसा
 
 54
-00:05:42,540 --> 00:05:45,900
-so we'll keep it switched on.
-You can simply turn off
+00:03:23,720 --> 00:03:27,700
+process आ गया जिसकी priority जो है वो
+पुराने वाले process से ज्यादा थी तो हम
 
 55
-00:05:45,960 --> 00:05:49,920
-camera in mobile and, uh... Yeah,
-I'll turn off the camera
+00:03:27,740 --> 00:03:31,560
+वाले को भेज देंगे,
+नए वाले को execute कर देंगे। तो पुराना
 
 56
-00:05:50,040 --> 00:05:51,040
-if it is possible.
+00:03:31,600 --> 00:03:35,540
+time तक wait करेगा,
+दोबारा से फिर उसकी turn आ जाएगी। तो ये
 
 57
-00:05:53,420 --> 00:05:56,280
-Mm, how to close the camera?
+00:03:35,580 --> 00:03:39,400
+condition में तो C--
+completion time जो है,
 
 58
-00:05:58,020 --> 00:06:01,560
-Mm, I'll try to do it.
-Could you please tell me how to do it?
+00:03:39,440 --> 00:03:43,220
+उतना ही होगा। लेकिन ऐसा होता नहीं है।
+Completion time कहीं ना कहीं ज्यादा जो है
 
 59
-00:06:01,620 --> 00:06:03,380
-Because I've never done it before.
+00:03:43,260 --> 00:03:47,020
+वो लग जाता है। Then turnaround time।
+Turnaround time क्या है?
 
 60
-00:06:04,700 --> 00:06:06,080
-How to turn off the mobile
+00:03:47,080 --> 00:03:48,240
+The amount of time
 
 61
-00:06:06,160 --> 00:06:12,650
-cameraWell,
+00:03:49,220 --> 00:03:53,060
+to execute a particular process। मतलब
+turnaround time मतलब पूरा time,
 
 62
-00:06:12,690 --> 00:06:13,560
-I can't see any
+00:03:53,660 --> 00:03:57,500
+जितना time process उस पूरे system में रहा
+that is called a
 
 63
-00:06:14,590 --> 00:06:17,590
-symbol for a camera. Tap on video icon.
-Okay.
+00:03:57,580 --> 00:04:01,400
+turnaround time। And waiting time means
+the amount of time the
 
 64
-00:06:18,690 --> 00:06:20,390
-Tap on video icon.
+00:04:01,440 --> 00:04:05,400
+process has been waiting in the ready
+queue, that is our waiting
 
 65
-00:06:33,390 --> 00:06:36,070
-Tap on in the down side. Okay.
+00:04:05,480 --> 00:04:08,820
+time। अब देखो दोबारा से वही example। मैं
+ग्यारह बजे class में enter किया,
 
 66
-00:06:38,970 --> 00:06:42,149
-There might be send a camera icon after
-closing chat.
+00:04:09,720 --> 00:04:11,680
+arrival time ग्यारह बजे। Getting the
+point?
 
 67
-00:06:42,890 --> 00:06:45,530
-Well, I can't see that camera icon.
+00:04:12,040 --> 00:04:15,280
+अब यहां पे मैंने जाते ही class में बोल
+दिया कि मेरे को एक घंटा लगेगा इस topic को
 
 68
-00:06:46,030 --> 00:06:49,950
-All that I can see is close. Then there
-is a bell
+00:04:15,300 --> 00:04:16,519
+पढ़ाने में। Burst time क्या हो गया?
 
 69
-00:06:50,110 --> 00:06:53,830
-at the top right corner, and then there
-is a
+00:04:16,980 --> 00:04:20,959
+एक घंटा। अब बीच में जब मैंने पढ़ाना start
+किया, let's say मेरे को कोई call
 
 70
-00:06:53,850 --> 00:06:57,410
-chat box. Nothing else is visible to me.
-Just a moment.
+00:04:21,000 --> 00:04:24,540
+आ गई। मैं बीच में call attend करने चला
+गया। Maybe मैं washroom चला
 
 71
-00:06:57,970 --> 00:06:59,690
-Let me see if there is something else.
+00:04:24,620 --> 00:04:28,560
+गया। बीच में let's say 10 मिनट मेरे को
+वहां लगे call करने में। बीच में कुछ
 
 72
-00:07:05,830 --> 00:07:06,330
-Um.
+00:04:28,620 --> 00:04:32,360
+time जो है वो मैंने extra जो है वो वहां पे
+लगाया
 
 73
-00:07:12,430 --> 00:07:15,050
-No, I think I have switched off my camera.
+00:04:32,500 --> 00:04:36,260
+और मैंने topic को complete किया एक बजे।
+आया था मैं
 
 74
-00:07:16,010 --> 00:07:16,710
-Is it okay now?
+00:04:36,320 --> 00:04:40,180
+ग्यारह बजे। मैंने बोला था कि मेरे को एक
+घंटा लगेगा, total एक hour लगेगा।
 
 75
-00:07:20,130 --> 00:07:22,490
-I suppose the camera has been switched on.
+00:04:40,240 --> 00:04:44,000
+लेकिन मैंने topic को complete किया एक बजे।
+मतलब मेरा completion time
 
 76
-00:07:23,870 --> 00:07:24,790
-I have flipped it.
+00:04:44,040 --> 00:04:47,860
+कितना है?
+एक। तो देखो अब यहां पे अगर आपको turnaround
 
 77
-00:07:26,010 --> 00:07:27,250
-Okay. I have flipped it.
+00:04:47,920 --> 00:04:51,700
+जाए तो turnaround time क्या है?
+Total time मैंने कितना spend किया class के
 
 78
-00:07:28,930 --> 00:07:29,630
-Just a moment.
+00:04:51,740 --> 00:04:55,560
+अंदर। तो एक बजे मैं class से बाहर निकला।
+आया था मैं ग्यारह बजे तो यानी
 
 79
-00:07:42,670 --> 00:07:44,030
-No, I'm not able to do so.
+00:04:55,620 --> 00:04:59,040
+total मैंने दो घंटे spend किए। तो CT minus
+AT is the
 
 80
-00:07:53,770 --> 00:07:54,990
-Tap on is mute
+00:04:59,320 --> 00:05:01,700
+turnaround। Waiting time का मतलब क्या है?
 
 81
-00:07:58,210 --> 00:08:03,990
-mic.
+00:05:01,740 --> 00:05:05,640
+कि मेरे को कितना time wait वहां पे किया।
+मतलब चाहे मैंने किया, चाहे students ने
 
 82
-00:08:04,150 --> 00:08:08,110
-Not able to do so.
-I do find the camera icon in front of me,
+00:05:05,680 --> 00:05:09,400
+किया, waiting time कितना है?
+तो waiting time देखो। यहां पे मैंने
 
 83
-00:08:08,150 --> 00:08:08,830
-how to do it.
+00:05:09,460 --> 00:05:13,420
+total turnaround time कितना था?
+मैंने दो घंटे system में रुका। लेकिन उस
 
 84
-00:08:10,230 --> 00:08:13,370
-Can you just, uh, off from your, um,
-file to...
+00:05:13,460 --> 00:05:17,420
+दो घंटे में से मैंने आते ही क्या बोला था
+कि मेरे को topic पढ़ाने में एक घंटा
 
 85
-00:08:18,430 --> 00:08:20,370
-Just share your laptop screen.
+00:05:17,460 --> 00:05:21,240
+लगेगा। तो यानी एक घंटा जो है वो मैंने
+topic पढ़ाया और
 
 86
-00:08:21,290 --> 00:08:24,670
-No, I've already-- Okay,
-let me share the screen with you.
+00:05:21,280 --> 00:05:24,860
+बाकी का एक घंटा जो है वो मैंने या तो wait
+किया, मैंने call attend की,
 
 87
-00:08:24,750 --> 00:08:25,590
-Let me see if it
+00:05:24,980 --> 00:05:28,440
+washroom गया,
+दोस्त आ गया। मतलब बीच में एक घंटा extra
 
 88
-00:08:26,470 --> 00:08:26,870
-works.
+00:05:28,540 --> 00:05:31,920
+पड़ा। That is our waiting time। तो waiting
+time क्या बन गया?
 
 89
-00:08:33,690 --> 00:08:37,350
-Okay, now is it turned off?
-Please let me know if it is turned off.
+00:05:32,040 --> 00:05:35,860
+Turnaround time,
+total time spend किया minus burst time,
 
 90
-00:08:38,590 --> 00:08:40,980
-Okay, right, right. So it
-is turned off now.
+00:05:35,900 --> 00:05:39,130
+उसको spend करना चाहिए था। So that
+is the waiting time। Finally,
 
 91
-00:08:41,890 --> 00:08:43,450
-Right. So that will solve your problem.
+00:05:40,000 --> 00:05:43,760
+response time। Response time हमेशा याद
+रखना ये सिर्फ pre-emption के
 
 92
-00:08:44,570 --> 00:08:48,550
-Anyway, the only concern
-was I should be able to read your messages
+00:05:43,800 --> 00:05:47,700
+case में हम calculate करते हैं। Non
+pre-emption के case में calculate नहीं
 
 93
-00:08:48,619 --> 00:08:50,150
-because they don't come out so well.
+00:05:47,740 --> 00:05:50,294
+करते।Response time का मतलब क्या है?
 
 94
-00:08:52,150 --> 00:08:53,780
-Please explain question number eight.
+00:05:50,344 --> 00:05:54,084
+The time at which a process gets the CPU
+first time मतलब उसको
 
 95
-00:08:53,850 --> 00:08:57,730
-हाँ, मैं भी करता हूँ। थोड़ा सा wait करिए,
-फिर करते हैं। So
+00:05:54,164 --> 00:05:57,364
+पहली बार CPU कब मिला? That
+is a response time। जैसे
 
 96
-00:08:57,950 --> 00:09:01,070
-I was talking to you about, uh,
-the exceptions,
+00:05:57,904 --> 00:06:01,584
+students wait कर रहे हैं। पहले पाँच
+student है class में। वो wait कर रहे हैं
 
 97
-00:09:01,810 --> 00:09:05,510
-uh,
-in which cases we have to use 'an' बेशक
+00:06:01,624 --> 00:06:05,484
+मेरे पास teacher कब आएगा, कब आएगा?
+अब देखो एक तो funda क्या हो सकता
 
 98
-00:09:05,550 --> 00:09:09,350
-vowel present हो या ना हो। So we
-were saying that the only criterion
+00:06:05,504 --> 00:06:09,164
+है कि मैं पहले student के पास गया,
+उसकी सारी problems को solve
 
 99
-00:09:09,430 --> 00:09:12,270
-which we use to find out whether we should
-use 'an'
+00:06:09,204 --> 00:06:13,154
+किया। फिर दूसरे के पास गया सारी problem,
+तीसरे के पास गया सारी problem।
 
 100
-00:09:13,070 --> 00:09:16,770
-is, uh, whether the sound
-is coming in the form of a vowel.
+00:06:13,184 --> 00:06:17,064
+अब देखो चौथा,
+पांचवा student जो है तब तक wait कर रहे
 
 101
-00:09:16,870 --> 00:09:19,810
-For example, we had spoken about honest.
+00:06:17,124 --> 00:06:21,044
+जाऊंगा?
+That is called the response time। दूसरा
 
 102
-00:09:20,190 --> 00:09:24,070
-तो हमने कहा था कि बेशक उसमें H लगा हुआ है
-शुरू में, but the sound
+00:06:21,104 --> 00:06:24,864
+जो मैंने preemption वाला बताया था। हमेशा
+याद रखना कि मैंने सारी problems
 
 103
-00:09:24,110 --> 00:09:28,050
-is coming from O. We don't call it honest.
-This is honest.
+00:06:24,884 --> 00:06:28,514
+solve नहीं की student one की। मैंने सारी
+में से कुछ एक दो problem solve
 
 104
-00:09:28,510 --> 00:09:30,770
-So the count-- sound is coming from O.
+00:06:28,604 --> 00:06:32,424
+की। फिर मैं दूसरे के पास चला गया। एक दो
+problem solve की। मैं तीसरे के पास चला गया
 
 105
-00:09:31,070 --> 00:09:34,810
-So that is why we
-are saying an honest man, an honest
+00:06:32,804 --> 00:06:36,613
+तो obviously इस case में response time जो
+है वो कम हो जाएगा।
 
 106
-00:09:34,910 --> 00:09:38,750
-person. Similarly, uh, I
-was telling you कि reality में इसका
+00:06:36,644 --> 00:06:40,564
+Reason उसका क्योंकि मैं सारी problem solve
+नहीं कर रहा। मैं दो-दो, एक-एक,
 
 107
-00:09:38,790 --> 00:09:41,350
-जो sound है वो hotel नहीं होता, it
-is hotel.
+00:06:40,624 --> 00:06:44,544
+दो-दो problem solve करके मैं दूसरे के पास
+जाता जा रहा हूँ फटाफट से। इससे होगा
 
 108
-00:09:41,770 --> 00:09:45,370
-Though most people are used to calling it,
-uh, hotel, but very
+00:06:44,644 --> 00:06:48,464
+क्या?
+जो last student है उसको बहुत ज्यादा wait
 
 109
-00:09:45,410 --> 00:09:48,530
-technical it is hotel, तो an होना चाहिए
+00:06:48,504 --> 00:06:52,284
+उसके पास मैं जल्दी जो है वो पहुंच जाऊंगा।
+That is called a response
 
 110
-00:09:49,530 --> 00:09:53,450
-though it is not very common. An hour पास,
-तो again, once again
+00:06:52,364 --> 00:06:56,284
+time। अब हमारी अ,
+मतलब हमें optimize करना है। मतलब
 
 111
-00:09:53,490 --> 00:09:57,150
-इसमें जो sound आपका है वो H से शुरू हो रहा
-है। Sorry, H से शुरू
+00:06:56,324 --> 00:06:59,364
+जितने भी algorithm हम use करेंगे उसका
+funda क्या है?
 
 112
-00:09:57,250 --> 00:10:01,050
-नहीं हो रहा है,
-O से शुरू हो रहा है। तो hour बोले
+00:06:59,424 --> 00:07:03,394
+मतलब वो चाहते क्या है कि maximum CPU
+utilization हो। मतलब CPU ज्यादा से
 
 113
-00:10:01,110 --> 00:10:04,950
-या hour बोले तो sound आपका vowel से ही बन
-रहा है। So
+00:07:03,404 --> 00:07:07,374
+ज्यादा busy रहे। Throughput maximum हो,
+ज्यादा से ज्यादा process execute हो।
 
 114
-00:10:04,990 --> 00:10:08,970
-that is why we are saying an hourly bell
-was sounded
+00:07:07,404 --> 00:07:11,004
+Turnaround time हम minimum करने की कोशिश
+करें। मतलब ताकि process जो है
 
 115
-00:10:08,990 --> 00:10:12,690
-by the school peon. An hourly interval
+00:07:11,084 --> 00:07:14,864
+ज्यादा जो है वो system में ना रुके। फटाफट
+execute हो के चला जाए। Waiting
 
 116
-00:10:13,050 --> 00:10:16,250
-was given to them for rest. So hour.
+00:07:14,904 --> 00:07:18,824
+time obviously minimum करना चाहते हैं।
+Response time भी हम minimum करना चाहते हैं
 
 117
-00:10:17,670 --> 00:10:21,410
-Now similarly, uh, we
-were talking of historical building,
+00:07:18,864 --> 00:07:22,824
+ताकि CPU जो है वो फटाफट से users को
+processes को
 
 118
-00:10:21,810 --> 00:10:25,090
-an historic novel, and then an
+00:07:22,944 --> 00:07:26,904
+मिलता जाए। तो ये हमारी जो है वो algorithm
+से expectation
 
 119
-00:10:25,230 --> 00:10:29,190
-historic occasion. Right? Not, uh,
-historical.
+00:07:26,964 --> 00:07:30,824
+है कि कौन से algorithm जो है वो क्या क्या
+हमें provide करते हैं। तो चलिए start
 
 120
-00:10:29,270 --> 00:10:31,390
-This is historical. Right?
+00:07:30,864 --> 00:07:34,824
+करते हैं first algorithm से which
+is a very popular first come first
 
 121
-00:10:32,330 --> 00:10:36,110
-Now, uh, कुछ एक cases हमने किए थे
-that whenever we are
+00:07:34,884 --> 00:07:38,124
+serve। बहुत ही layman है। First come first
+serve का मतलब क्या है?
 
 122
-00:10:36,150 --> 00:10:40,090
-talking of an abbreviation and
-if the sound is beginning with
+00:07:38,184 --> 00:07:42,054
+जो पहले आया उसको CPU दे दो। अब देखो यहां
+पे question आ सकता है।
 
 123
-00:10:40,290 --> 00:10:43,710
-a vowel, like we said she
-is an MPhil in Economics.
+00:07:42,084 --> 00:07:45,924
+Let's say मेरे पास तीन process है P1, P2,
+P3। Arrival time
 
 124
-00:10:44,230 --> 00:10:48,150
-Now very clearly यह word जो है M से शुरू
-हो रहा है, as you can see
+00:07:46,004 --> 00:07:49,654
+zero, one,
+two। Burst time ये आपको यहां पे दिया हुआ
 
 125
-00:10:48,250 --> 00:10:52,090
-for yourself. But the sound
-is actually beginning with E.
+00:07:49,764 --> 00:07:53,484
+millisecond,
+microsecond में मत जाना। Question में दिया
 
 126
-00:10:52,510 --> 00:10:53,530
-MPhil.
+00:07:53,524 --> 00:07:56,984
+otherwise मान के चलो कि ये सिर्फ एक unit
+है।
 
 127
-00:10:54,450 --> 00:10:58,090
-If you try to repeat yourself mentally,
-it is M E double
+00:07:57,044 --> 00:08:00,824
+चलिए अब यहां से अगर हम बात करें तो इसको
+बोलते हैं Gantt chart। ये क्या है?
 
 128
-00:10:58,330 --> 00:11:02,150
-M. So अगर sound E से आ रहा है,
-vowel से है तो an
+00:08:00,944 --> 00:08:04,744
+Gantt chart है जिसके basis पे आपको पता
+लगेगा कि कैसे processes को
 
 129
-00:11:02,210 --> 00:11:06,030
-ही आएगा उसके शुरू में। So
-is true of MCom also.
+00:08:04,784 --> 00:08:08,454
+हमने execute किया। वैसे तो नीचे बना हुआ है
+लेकिन मैं आपको बना के दिखा देता हूँ।
 
 130
-00:11:06,490 --> 00:11:10,010
-MCom. ऐसे हम pronounce करते हैं। She
+00:08:08,484 --> 00:08:12,324
+Gantt chart हमेशा start करना है zero से।
+Zero time से start करना है। अब
 
 131
-00:11:10,250 --> 00:11:14,150
-is-- She did an MCom from Kanpur
+00:08:12,344 --> 00:08:16,104
+देखो arrival time check करना है सबसे पहले।
+Obviously पहले तो ये check करेंगे कि
 
 132
-00:11:14,230 --> 00:11:18,150
-University. Similarly, she holds an MSc
+00:08:16,144 --> 00:08:20,084
+भैया arrive कौन कौन से हुए। तो देखो time
+zero पे कौन arrive हुआ?
 
 133
-00:11:18,270 --> 00:11:20,090
-degree in Biology.
+00:08:20,124 --> 00:08:22,983
+Time zero पे अकेला P1 arrive हुआ। कोई और
+arrive हुआ?
 
 134
-00:11:21,730 --> 00:11:25,590
-Because इसका जो sound है वो ऐसे बनेगा M
+00:08:23,044 --> 00:08:26,944
+नहीं। तो मैं P1 को execute कर दूंगा। अब
+देखो first come first serve क्या
 
 135
-00:11:26,070 --> 00:11:26,190
-S
+00:08:27,044 --> 00:08:30,704
+है?
+Non preemption। ये हमेशा याद रखना it
 
 136
-00:11:27,750 --> 00:11:31,580
-C.
-ऐसे sound बनेगा। तो sound आपका E से शुरू
+00:08:30,744 --> 00:08:34,464
+मतलब एक बार अगर CPU को हमने process दे
+दिया वो पूरा
 
 137
-00:11:31,630 --> 00:11:35,470
-आपको an ही बोलना पड़ेगा। I hold an MA
-degree
+00:08:34,564 --> 00:08:38,304
+का पूरा चलेगा। तो पूरा का पूरा मतलब मैंने
+24 units इसको
 
 138
-00:11:35,510 --> 00:11:39,270
-in Sociology. So once again, the b--
-sound is beginning with E, तो
+00:08:38,344 --> 00:08:42,184
+चाहिए थे। मैंने 24 तक चला दिया। तो देखो 24
+तक हमने
 
 139
-00:11:39,310 --> 00:11:43,140
-हम an लगाएंगे। But याद रखें अगर हम बोले
-Master's degree.
+00:08:42,224 --> 00:08:45,844
+P1 को चला दिया। अब कितना हो गया time?
+घड़ी पे time कितना हो गया?
 
 140
-00:11:43,810 --> 00:11:47,650
-She holds a Master's degree. So in
-that case, आपका जो sound है वो
+00:08:46,364 --> 00:08:50,304
+24। अब देखो कौन कौन arrive हुए। Arrive
+क्या ये तो पहले ही arrive हो चुके
 
 141
-00:11:47,810 --> 00:11:50,330
-M से शुरू हो रहा है। It
-is not beginning with E.
+00:08:50,344 --> 00:08:54,024
+हैं। One और two time पे already arrive हो
+चुके हैं। तो दोनों में से मैं किसको पहले
 
 142
-00:11:50,990 --> 00:11:53,770
-She holds a Master's degree in English.
+00:08:54,064 --> 00:08:56,324
+चलाऊंगा? जो पहले आया। पहले कौन आया था?
 
 143
-00:11:54,370 --> 00:11:57,310
-I hold a Master's degree in Mathematics.
+00:08:56,444 --> 00:09:00,304
+P2 आया था। तो पहले P2 आया तो मैं P2 को
+चलाऊंगा क्योंकि इसका arrival
 
 144
-00:11:57,430 --> 00:12:01,130
-ऐसे आएगा। So a Master's degree, but an MA.
+00:09:00,324 --> 00:09:03,744
+time जो है वो कम है। तो तीन unit तक चलाया
+तो 27 पे ये
 
 145
-00:12:02,510 --> 00:12:06,190
-An MA, but a Master's degree.
-Similarly for
+00:09:03,824 --> 00:09:07,724
+खत्म। फिर P3 को चलाया तीन unit तक तो 30 पे
+ये खत्म।
 
 146
-00:12:06,270 --> 00:12:09,390
-BA, if you say he holds a BA Honors in
+00:09:07,744 --> 00:09:11,603
+तो इस तरीके से आप 30 पे सारे processes को
+खत्म कर सकते हो। अब
 
 147
-00:12:09,410 --> 00:12:13,298
-Geography.तो आपका जो sound है वह B से आ
-रहा है तो यहां पर
+00:09:11,644 --> 00:09:14,684
+क्या लिख लिया करो?
+Completion time। Completion time क्या है
 
 148
-00:12:13,358 --> 00:12:16,998
-an की कोई जरूरत आपको नहीं है। Similarly
+00:09:15,184 --> 00:09:19,104
+P1 कब complete हुआ?
+ये देखो 24 पे। P2 कब complete हुआ?
 
 149
-00:12:17,018 --> 00:12:20,978
-PhD है तो PhD का sound कहाँ से शुरू हो रहा
-है check करिए।
+00:09:19,304 --> 00:09:23,224
+27 पे और P3 कब complete हुआ?
+30 पे। तो ये मेरा completion time
 
 150
-00:12:20,998 --> 00:12:24,978
-P से शुरू हो रहा है। कोई vowel नहीं आ रहा
-sound में तो vowel नहीं आ
+00:09:23,284 --> 00:09:27,104
+आ जाएगा। अब आपको पता है कि turnaround time
+जो है वो कैसे calculate करना होता
 
 151
-00:12:25,018 --> 00:12:28,418
-रहा तो फिर आप a बोलेंगे। He is a PhD in
+00:09:27,144 --> 00:09:31,004
+है। CT minus AT,
+completion time minus arrival time और
 
 152
-00:12:28,718 --> 00:12:32,638
-Physics.
-She holds a BA degree with Geography
+00:09:31,124 --> 00:09:32,514
+waiting time कैसे calculate करते हैं?
 
 153
-00:12:32,718 --> 00:12:33,118
-Honours.
+00:09:32,664 --> 00:09:36,504
+TAT minus burst time that
+is turnaround time minus burst
 
 154
-00:12:34,138 --> 00:12:37,158
-तो net net अब तक जो हमने सीखा वह यह है
+00:09:36,564 --> 00:09:40,424
+time। तो इस तरीके से आप जो है वो formula
+में डालोगे values। मैं इसीलिए नहीं कर रहा
 
 155
-00:12:38,098 --> 00:12:41,998
-कि sound is the only parameter whether
-vowel है या
+00:09:40,484 --> 00:09:44,304
+इसमें आपको extra time लगेगा। आप simply
+values को डालो
 
 156
-00:12:42,038 --> 00:12:46,018
-नहीं है। Sound is the only parameter to
-decide कि हम
+00:09:44,384 --> 00:09:48,344
+एक-एक करके। जैसे CT minus AT करोगे तो
+turnaround time जो है इसका
 
 157
-00:12:46,118 --> 00:12:50,098
-an लगाएंगे या a लगाएंगे। If the sound
-is starting with a vowel
+00:09:48,404 --> 00:09:51,534
+आ जाएगा 24 minus 0, 24। 27 minus 1,
 
 158
-00:12:50,318 --> 00:12:54,138
-use an, otherwise use a.
-अच्छा कुछ और देखिए थोड़ा
+00:09:51,984 --> 00:09:55,864
+26। 30 minus 2 that
+is 28। Clear है this is a
 
 159
-00:12:54,158 --> 00:12:57,338
-आपको अजीब लगेंगे। This one
-is an ugly sight.
+00:09:55,904 --> 00:09:59,824
+turnaround time और अगर आपसे average पूछ ले
+total करके divide by 3
 
 160
-00:12:57,718 --> 00:13:00,718
-अब इसका जो sound है वह ऐसे आ रहा है a से
-ugly
+00:09:59,844 --> 00:10:03,694
+कर देना that is a average और ऐसे ही
+completion time अगर आपसे पूछे sorry
 
 161
-00:13:01,818 --> 00:13:05,438
-note करें ध्यान से ugly तो a से sound आ
-रहा है which is a vowel.
+00:10:03,744 --> 00:10:07,644
+waiting time तो TAT, TAT कितना है 24,
+24 minus burst
 
 162
-00:13:05,818 --> 00:13:09,758
-So अगर यह vowel है तो an लगा दिया आपने।
-कोई problem नहीं है। इसी तरह
+00:10:07,664 --> 00:10:11,544
+time 24 minus 24 करोगे 0, 26 minus 3 करोगे
 
 163
-00:13:09,818 --> 00:13:11,518
-से next one है Here is an umbrella
+00:10:11,664 --> 00:10:15,364
+23 और 28 minus 3 करोगे तो 25। तो ये
 
 164
-00:13:13,398 --> 00:13:17,098
-that I always wanted.
-An umbrella so sound is coming
+00:10:15,404 --> 00:10:19,164
+आपका क्या आ गया?
+ये आ गया आपका waiting time। Getting the
 
 165
-00:13:17,158 --> 00:13:20,938
-from umbrella a right तो an आएगा
+00:10:19,204 --> 00:10:19,424
+point?
 
 166
-00:13:21,238 --> 00:13:24,678
-but आगे अगर आप देखेंगे तो आपको difference
-नजर आएगा। I met a
+00:10:20,724 --> 00:10:24,424
+यहां पे अगर हम बात करें,
+ये देखो waiting time जो है वो P2,
 
 167
-00:13:24,758 --> 00:13:26,877
-university professor in the morning.
+00:10:24,544 --> 00:10:27,364
+P1 का zero है। Yes,
+P2 का कितना waiting time?
 
 168
-00:13:26,958 --> 00:13:30,688
-अब यहां भी beginning में u लगा हुआ है
-and in the earlier
+00:10:27,444 --> 00:10:31,344
+P2 का waiting time है 24। 24,
 
 169
-00:13:30,798 --> 00:13:34,758
-sentences also u लगा था
-but sound बहुत ही different है। Note
+00:10:32,244 --> 00:10:35,744
+एक minute 24 कैसे आया यहां पे? अ, 26
 
 170
-00:13:34,818 --> 00:13:38,488
-करें। आपका जो sound है वह कैसे निकल रहा है
-y से निकल रहा
+00:10:35,984 --> 00:10:39,084
+minus 3 करोगे तो 23 आना चाहिए यहां पे
 
 171
-00:13:38,488 --> 00:13:40,798
-है university y।
+00:10:39,864 --> 00:10:43,784
+और ये 23 आ रहा है और P3 का जो waiting time
 
 172
-00:13:42,138 --> 00:13:45,858
-इसी तरह से अगर year है y e a r है तो यह भी
-sound
+00:10:43,824 --> 00:10:46,844
+है 25 आ रहा है। ये यहां पे actually अलग
+क्यों आ रहे हैं?
 
 173
-00:13:46,038 --> 00:13:49,598
-y से शुरू हो रहा है तो फिर an हम नहीं लगा
-सकते। हम क्या
+00:10:47,444 --> 00:10:51,324
+ये यहां पे इन्होंने जो ये मैंने Galvin की
+book से उठाया था।
 
 174
-00:13:49,618 --> 00:13:53,438
-बोलेंगे? A year is a big time period,
-not an year.
+00:10:51,344 --> 00:10:55,204
+तो Galvin की book में arrival time तीनों
+का zero दे रखा था। मतलब सारे एक ही time
 
 175
-00:13:54,318 --> 00:13:58,237
-A year consists of 365 days, not an
+00:10:55,264 --> 00:10:59,204
+पे arrive हुए थे। लेकिन मैंने just for
+आपको ताकि आपको और clear से
 
 176
-00:13:58,298 --> 00:14:01,898
-year.
-So I met a university professor in the
+00:10:59,244 --> 00:11:02,864
+समझ आ जाए कि अगर मैंने arrival time इस
+तरीके से दे दूं zero, one, two
 
 177
-00:14:02,338 --> 00:14:06,238
-We saw a European तो sound जो है वह y
+00:11:03,244 --> 00:11:05,784
+उस case में आपको कैसे execute करना है। तो
+इन,
 
 178
-00:14:06,398 --> 00:14:09,898
-से बन रहा है। तो आप यह भूल जाइए कि लिखा
-क्या है,
+00:11:06,884 --> 00:11:10,684
+इन answers पे मत जाना। ये answers आए हैं
+जब हमने arrival time तीनों
 
 179
-00:14:10,258 --> 00:14:13,278
-letter कौन सा है but sound पर focus करिए
-European.
+00:11:10,744 --> 00:11:13,804
+का zero, zero,
+zero लिया हुआ है। लेकिन मैंने यहां पे
 
 180
-00:14:13,718 --> 00:14:17,038
-Similarly,
-they came across a one eyed man.
+00:11:13,844 --> 00:11:17,584
+कर दिया है। तो इस वजह से आपका जो waiting
+time और turnaround time इस
 
 181
-00:14:17,438 --> 00:14:21,358
-तो one eyed में जो sound आपका v से शुरू हो
-रहा है। One eyed
+00:11:17,624 --> 00:11:21,444
+तरीके से आएगा। बस इसको calculate करके
+divide by 3 कर देना। इसको total
 
 182
-00:14:21,478 --> 00:14:21,678
-man
+00:11:21,504 --> 00:11:25,444
+करके divide by 3 कर देना। तो this
+is a average turnaround time
 
 183
-00:14:22,998 --> 00:14:26,918
-a आएगा। An ear specialist
-is one who has got
+00:11:25,484 --> 00:11:29,024
+and average waiting time इस तरीके से निकल
+जाएगा। Then हमारे पास आता है यहां
 
 184
-00:14:26,978 --> 00:14:30,878
-an MD degree.
-अब आपका जो ear है यह वाला इसका sound
+00:11:29,064 --> 00:11:32,644
+पे। इसमें थोड़ा सा और इन्होंने point दिया
+हुआ है कि let's say अगर मेरे
 
 185
-00:14:30,938 --> 00:14:31,708
-e से बन रहा है।
+00:11:32,804 --> 00:11:36,784
+processes इस तरीके से आए पहले P2, P3,
+P1। तो सबसे पहले
 
 186
-00:14:32,518 --> 00:14:36,258
-Ear ऐसे बन रहा है ear तो अगर e से
+00:11:36,794 --> 00:11:40,744
+हमने P2 को चला दिया। फिर P3 को चला दिया P1
+को। Just for example इन्होंने बताया
 
 187
-00:14:36,298 --> 00:14:39,958
-sound बन रहा है फिर तो an ही आएगा उसमें
-कोई शक नहीं है। ठीक है
+00:11:40,764 --> 00:11:41,584
+हुआ है। तो
 
 188
-00:14:39,998 --> 00:14:43,358
-जी। तो और last आपका है That one was a
+00:11:42,504 --> 00:11:46,324
+आपको तो वैसे arrival time के हिसाब से चलना
+है। जैसे आपको arrival
 
 189
-00:14:43,518 --> 00:14:47,458
-useless idea.
-Again आपका जो sound है वह year
+00:11:46,364 --> 00:11:50,244
+time दिया हो उसके हिसाब से आप पहले process
+को चलाओ और फिर दूसरे को चलाओ,
 
 190
-00:14:47,578 --> 00:14:50,058
-से है year. Year is not a
+00:11:50,404 --> 00:11:54,224
+तीसरे को चलाओ। जैसे जैसे वो arrive हुए।
+लेकिन अगर सारे एक ही time पे arrive
 
 191
-00:14:51,218 --> 00:14:55,078
-vowel है ना तो an नहीं लगाएंगे a ही
+00:11:54,244 --> 00:11:58,220
+हुए हो।मतलब let's say सारे zero पर arrive
+हुए हैं तो फिर आप पहले P1 को
 
 192
-00:14:55,118 --> 00:14:58,898
-लगाएंगे। A useless idea.
-So net net अब तक जो हमने
+00:11:58,240 --> 00:12:02,200
+चला दो,
+P2 को P3 को जैसे मर्जी चला दो। यहां पे
 
 193
-00:14:58,958 --> 00:15:02,858
-सीखा वह यह है कि जहां sound vowel का नजर आ
-रहा हो
+00:12:02,240 --> 00:12:06,120
+दे दिया कि let's say पहले P2 आया फिर P3 और
+P1। तो उस
 
 194
-00:15:03,478 --> 00:15:07,178
-बेशक vowel लगा हो या ना लगा हो तो हम लोगों
-ने an
+00:12:06,140 --> 00:12:09,880
+case में अगर हम इस तरीके से करेंगे ना तो
+ये जो waiting time है और
 
 195
-00:15:07,298 --> 00:15:09,898
-use करना है। I hope this is clear.
+00:12:09,940 --> 00:12:13,900
+यहां पे अगर हम बात करें turnaround time जो
+है इन्होंने निकाला नहीं है लेकिन waiting
 
 196
-00:15:11,498 --> 00:15:14,318
-Please let me know in the chat box
-if it is okay by all of you.
+00:12:13,920 --> 00:12:15,280
+time इन्होंने निकाला है वो क्या आया?
 
 197
-00:15:15,938 --> 00:15:19,778
-Year हो तो an आएगा जी। आप पूछ रहे हैं सागर
-year
+00:12:15,680 --> 00:12:19,380
+काफी कम आया है। waiting time जो है वो काफी
+कम आया है as compared to the previous.
 
 198
-00:15:19,838 --> 00:15:23,018
-हो तो an आएगा बिल्कुल 100% an आएगा।
+00:12:19,780 --> 00:12:23,420
+यहां पे waiting time जो है वो काफी ज्यादा
+आ रहा था। इसको हम बोलते हैं
 
 199
-00:15:23,118 --> 00:15:25,938
-An year नहीं बिल्कुल नहीं होगा a year
+00:12:23,440 --> 00:12:27,240
+basically convoy effect.
+Convoy effect का मतलब क्या है कि पहला
 
 200
-00:15:25,998 --> 00:15:29,878
-होगा। An year नहीं हो सकता। उसका sound जो
-है
+00:12:27,279 --> 00:12:31,240
+process जो है वो काफी बड़ा है। जैसे देखो
+यहां पे पहला process जो है उसका
 
 201
-00:15:29,938 --> 00:15:31,358
-that is beginning with y.
+00:12:31,280 --> 00:12:35,220
+burst time काफी ज्यादा था उसकी वजह से जो
+पीछे छोटे-छोटे process
 
 202
-00:15:32,158 --> 00:15:36,118
-Year से sound है e से नहीं है। अगर ear
-specialist है तो फिर
+00:12:35,280 --> 00:12:39,180
+थे उनको काफी wait करना पड़ा। तो convoy
+effect में हमारे पास
 
 203
-00:15:36,238 --> 00:15:39,338
-an आएगा। I hope you understand this point.
+00:12:39,220 --> 00:12:43,040
+क्या होता है कि basically short processes
+जो है वो long
 
 204
-00:15:39,718 --> 00:15:41,018
-Now let us come to the.
+00:12:43,060 --> 00:12:46,060
+process के पीछे wait करते रहते हैं that
+is called a convoy effect.
 
 205
-00:15:42,298 --> 00:15:46,118
-देखिए the का जो सबसे पहला और सबसे common
-are
+00:12:46,400 --> 00:12:50,240
+तो इस वजह से हम क्या कर सकते हैं कि जो
+छोटे processes हैं उनको पहले चला लो
 
 206
-00:15:46,178 --> 00:15:49,598
-you presenting your?
-I didn't get your idea.
+00:12:50,320 --> 00:12:54,240
+long process को बाद में चला लो। लेकिन
+practically ऐसा नहीं करते
 
 207
-00:15:49,658 --> 00:15:50,878
-यह क्या पूछ रहे हैं आप भावना?
+00:12:54,280 --> 00:12:56,280
+this is just a theoretical concept.
 
 208
-00:15:51,738 --> 00:15:55,278
-आप क्या पूछना चाह रहे हैं मुझे clear नहीं।
-Please clarify your response.
+00:12:57,300 --> 00:12:59,640
+Next आता है हमारे पास shortest job first.
 
 209
-00:15:55,598 --> 00:15:56,598
-Clarify your question.
+00:12:59,760 --> 00:13:03,460
+नाम से पता लग रहा है कि shortest job मतलब
+यहां पे हम check करेंगे burst
 
 210
-00:15:57,878 --> 00:16:01,178
-Are you presenting your screen?
-I don't understand what you are saying.
+00:13:03,480 --> 00:13:07,320
+time.
+मतलब जिसका burst time सबसे कम है उसको पहले
 
 211
-00:16:02,958 --> 00:16:06,498
-Sir आपकी screen visible नहीं है। Visible
-क्यों नहीं है भाई?
+00:13:07,380 --> 00:13:11,340
+चलाओ। चलिए कैसे करना है ये देखो यहां पे
+example में again इन्होंने
 
 212
-00:16:06,538 --> 00:16:09,218
-मैंने तो screen मुझे तो सामने नजर आ रही
+00:13:11,380 --> 00:13:15,140
+arrival time जो है वो सबका zero, zero,
+zero ले रखा है। लेकिन आपको
 
 213
-00:16:09,227 --> 00:16:12,628
-है। I don't know आपको क्यों नहीं नजर आ
-रही?
+00:13:15,200 --> 00:13:18,480
+question में जरूरी नहीं है कि हमेशा zero
+दिया हो। आपको question में इस तरीके से
 
 214
-00:16:13,178 --> 00:16:15,258
-आप सब लोगों को नजर आ रही है कि नहीं
-screen?
+00:13:18,520 --> 00:13:22,519
+zero, one,
+two कुछ और time भी दिया हो सकता है। चलिए
 
 215
-00:16:15,778 --> 00:16:18,918
-बाकी लोग कह रहे हैं कि visible है। आपको
-क्यों visible नहीं है?
+00:13:22,560 --> 00:13:26,440
+कर लेते हैं कि अगर time सारे एक ही time पे
+arrive हुए हैं तो देखो सबसे पहले zero
 
 216
-00:16:19,378 --> 00:16:22,478
-Please check at your own end भावना। सब लोग
-कह रहे हैं कि उनको
+00:13:26,500 --> 00:13:29,720
+पे कौन आया?
+Zero पे किसको execute करेंगे सबसे पहले?
 
 217
-00:16:23,278 --> 00:16:26,858
-visible है। सब लोग कह रहे हैं visible। आप
-please अपने end पर देखिए कोई
+00:13:29,820 --> 00:13:33,660
+जिसका burst time जो है वो shortest है। तो
+burst time देखो shortest किसका
 
 218
-00:16:26,918 --> 00:16:30,738
-technical problem तो नहीं है आपके phone के
-साथ। Please recheck
+00:13:33,700 --> 00:13:37,340
+है?
+P4 का। तो P4 को चला दिया और SJF भी क्या है
 
 219
-00:16:30,778 --> 00:16:34,758
-your connection.
-बाकी सब लोग कह रहे हैं कि उनको नजर आ रही
+00:13:37,460 --> 00:13:41,380
+non preemption.
+Non preemption मतलब एक बार जो start हो गया
 
 220
-00:16:34,798 --> 00:16:38,258
-was talking about the use of the,
-the third article.
+00:13:41,420 --> 00:13:45,330
+पूरे का पूरा चलेगा। तो चलो P4 पूरा चला
+दिया। फिर देखो किसका burst time
 
 221
-00:16:39,778 --> 00:16:43,587
-तो the का सबसे पहला जो common use है वह
-हमने करना
+00:13:45,400 --> 00:13:49,260
+सबसे कम है?
+P1 का। तो P1 को पूरा चला दिया। फिर देखो
 
 222
-00:16:43,758 --> 00:16:46,948
-है to refer to something already known.
+00:13:49,300 --> 00:13:53,260
+कम है?
+P3 का। इसको चला दिया। फिर P2 का सबसे,
 
 223
-00:16:47,078 --> 00:16:50,858
-आपने clearly बोला sir कोई example ऐसा होगा
-कि
+00:13:53,280 --> 00:13:57,000
+तो फिर P2 को हमने चला दिया। तो इस तरीके से
+आप completion time पहले लिख लिया
 
 224
-00:16:50,898 --> 00:16:53,448
-जो sound vowel अ,
+00:13:57,020 --> 00:13:59,880
+करो। Completion time देखो P1 का completion
+time क्या आया?
 
 225
-00:16:55,098 --> 00:16:55,978
-sound vowel
+00:14:00,300 --> 00:14:03,980
+P1 कब complete हुआ?
+Nine पे। ठीक है। P2 कब complete
 
 226
-00:16:56,838 --> 00:17:00,818
-एक minute sound vowel का करें लेकिन start
-vowel से हो तो
+00:14:04,000 --> 00:14:07,420
+हुआ? 24 पे। P3 कब complete हुआ?
 
 227
-00:17:00,918 --> 00:17:04,918
-क्या करें? If same condition
-if sir कोई example ऐसा होगा
+00:14:08,060 --> 00:14:11,980
+16 पे। और P4 कब complete हुआ?
+Three पे। इस तरीके से आप completion
 
 228
-00:17:05,018 --> 00:17:06,378
-कि जो sound vowel
+00:14:12,020 --> 00:14:15,940
+time निकाल लो। फिर आपको turnaround पता ही
+है कि CT minus AT
 
 229
-00:17:07,598 --> 00:17:11,298
-मैं समझा नहीं आपकी बात क्या करें?
-देखिए बड़ी simple सी बात है। Vowel
+00:14:16,060 --> 00:14:19,780
+और waiting time आपको पता है कि TAT minus
+burst time.
 
 230
-00:17:11,378 --> 00:17:15,318
-लगा हो या ना लगा हो irrespective of
-whether you are
+00:14:19,940 --> 00:14:23,860
+ये मैं बार-बार calculate नहीं कर रहा,
+time waste होगा यहां पे। आपको formula
 
 231
-00:17:15,358 --> 00:17:17,158
-having a vowel in the beginning or not.
+00:14:23,900 --> 00:14:27,560
+बता दिया,
+एक-एक करके आप calculate करके final answer
 
 232
-00:17:17,578 --> 00:17:21,518
-अगर sound vowel की आ रही तो 100% an आएगा।
+00:14:27,620 --> 00:14:31,040
+निकाल सकते हो। response time यहां पे
+calculate नहीं करना। response
 
 233
-00:17:21,558 --> 00:17:22,178
-Very simple.
+00:14:31,120 --> 00:14:35,080
+time अगर आप calculate करोगे भी ना तो वो
+हमेशा waiting
 
 234
-00:17:23,058 --> 00:17:26,858
-फिर भी अगर आप question को clarify कर दें
-सचिव जी तो मुझे better
+00:14:35,140 --> 00:14:38,920
+time के बराबर ही आएगा। response time हम
+preemption वाले cases में calculate
 
 235
-00:17:26,878 --> 00:17:30,658
-रहेगा। But anyway आपको बात समझ आ गई है
-मेरी 100% vowel आएगा अगर
+00:14:38,980 --> 00:14:42,550
+करते हैं। तो यहां पे SJF के case में आपको
+नहीं calculate करना।
 
 236
-00:17:30,718 --> 00:17:31,748
-sound वो निकल रही है।
+00:14:42,580 --> 00:14:46,320
+CT minus AT मतलब आपका TAT और waiting time
+is more
 
 237
-00:17:33,158 --> 00:17:36,978
-हां जी I was talking of the.
-तो the का सबसे पहला use क्या है to refer
+00:14:46,340 --> 00:14:49,860
+than enough.
+Next आता है shortest remaining time first.
 
 238
-00:17:37,078 --> 00:17:39,178
-something already referred to or known.
+00:14:50,440 --> 00:14:54,270
+ये है actually में SJF के अंदर variation
+है कि अगर मैं shortest
 
 239
-00:17:39,698 --> 00:17:43,398
-यानी for example मैं आपको दिखाता हूं जैसे
-यह आपके सामने कुछ
+00:14:54,320 --> 00:14:58,240
+job first को with preemption चलाऊं,
+by default तो वो non preemption
 
 240
-00:17:43,438 --> 00:17:47,238
-cases हैं। हमने लिखे हैं। जिस चीज का सुनने
-वाले को या
+00:14:58,280 --> 00:15:02,100
+है। लेकिन अगर मैं shortest job first को
+with preemption चलाऊं तो उसको
 
 241
-00:17:47,278 --> 00:17:51,198
-पढ़ने वाले को पहले मालूम है,
-तब हम the बोलते हैं। या
+00:15:02,120 --> 00:15:05,700
+बोलते हैं हम SRTF shortest remaining time
+first.
 
 242
-00:17:51,238 --> 00:17:54,958
-तो वह चीज पहले बताई जा चुकी है,
-reference दिया जा चुका है या
+00:15:05,780 --> 00:15:09,600
+ये shortest remaining job first भी बोल
+देते हैं इसको, दोनों में से कोई भी
 
 243
-00:17:55,018 --> 00:17:58,928
-सुनने वाले को वैसे ही मालूम है। दोनों में
-से कोई भी case हो
+00:15:09,640 --> 00:15:13,570
+नाम। अब देखो यहां पे arrival time दिया हुआ
+है zero, one, two, three burst time
 
 244
-00:17:58,998 --> 00:18:02,898
-सकता है। तो सुनने वाले को वैसे ही मालूम है
-या उसे बताया जा चुका
+00:15:13,620 --> 00:15:15,700
+भी दिया हुआ है। तो हम करना क्या है सबसे
+पहले?
 
 245
-00:18:02,958 --> 00:18:05,598
-है। तो जैसे the man whom you saw there.
+00:15:16,260 --> 00:15:18,820
+आप start करोगे time zero से। clear है?
 
 246
-00:18:05,818 --> 00:18:08,858
-इस बंदे को आपने वहां देखा था has been
-arrested.
+00:15:18,860 --> 00:15:22,780
+तो अब आपको कोई भी process पहले एक unit तक
+ही चलाना है। एक unit तक
 
 247
-00:18:09,178 --> 00:18:12,838
-तो कौन सा man है? वह बंदा जिसको आपने वहां
+00:15:22,820 --> 00:15:26,740
+क्यों चलाना है अभी आपको पता लग जाएगा। तो
+देखो पहले zero पे check करो कौन arrive
 
 248
-00:18:13,298 --> 00:18:17,010
-देखा था।The man whom you saw there has
-been
+00:15:26,760 --> 00:15:30,480
+हुआ। Zero पे सिर्फ P1 आया। तो P1 को हमने
+एक
 
 249
-00:18:17,050 --> 00:18:20,830
-arrested.
-मतलब ऐसा नहीं कि कोई भी बंदा arrest हुआ
+00:15:30,600 --> 00:15:34,190
+unit तक चलाया,
+एक time तक चलाया और जैसे ही मैंने एक time
 
 250
-00:18:20,870 --> 00:18:24,790
-arrest हुआ है जिसको आपने देखा था।
-Similarly, this is the girl who
+00:15:34,220 --> 00:15:37,910
+चलाया तो burst time को एक कम कर दिया। आठ
+था मैंने सात कर
 
 251
-00:18:24,870 --> 00:18:28,390
-has dropped the test.
-यह वह लड़की है जिसने test drop किया
+00:15:37,980 --> 00:15:41,889
+दिया। अब देखो one पे दोबारा फिर check करो
+कि कौन-कौन arrive हुआ
 
 252
-00:18:28,430 --> 00:18:32,170
-है। है ना!
-यह वह लड़की है जिसने test drop किया,
+00:15:41,920 --> 00:15:45,880
+है। तो P1 तो already arrive हो चुका है। P2
+भी आ गया। अब दोनों में
 
 253
-00:18:32,210 --> 00:18:36,070
-girl है। Similarly,
-the boy who will lead the team is
+00:15:45,920 --> 00:15:48,580
+से देखो कि burst time किसका कम है?
+Burst time किसका कम है?
 
 254
-00:18:36,150 --> 00:18:39,850
-standing there.
-वह लड़का जो team का captain होगा वह वहां
+00:15:48,720 --> 00:15:52,520
+P2 का कम है। तो P2 को चलाओ again एक time
+के लिए। तो एक
 
 255
-00:18:39,890 --> 00:18:43,770
-है। तो particular boy की बात हो रही है।
-ठीक है। तो सुनने वाले
+00:15:52,580 --> 00:15:56,460
+तक और चलाया। कितना हो गया?
+तीन रह गया। अब देखो दो पे फिर
 
 256
-00:18:43,830 --> 00:18:47,470
-को उसके बारे में पता है या उसे बताया जा
-चुका है।
+00:15:56,500 --> 00:16:00,320
+check करो कौन-कौन arrive हुआ। P1 और P2 तो
+already arrive हो चुके हैं।
 
 257
-00:18:48,410 --> 00:18:51,710
-देखिए,
-please return the book you had borrowed
+00:16:00,360 --> 00:16:04,180
+P3 भी आ गया। अब P3 भी आ गया race में तो
+तीनों में से check करो सबसे
 
 258
-00:18:52,070 --> 00:18:55,890
-अब देखिए,
-मैं आपसे कोई भी किताब वापस नहीं मांग रहा
+00:16:04,220 --> 00:16:08,000
+burst time कम किसका है?
+Again P2 का ही है। तो P2 को आप
 
 259
-00:18:55,930 --> 00:18:58,630
-वह किताब मांग रहा हूं जो आपने मेरे से ली
-थी,
+00:16:08,540 --> 00:16:12,400
+चला सकते हो। अब देखो P2 को आप चाहे एक unit
+तक भी चलाओ चाहे पूरा
 
 260
-00:18:59,510 --> 00:19:03,270
-जो आपने मेरे से ली थी। So please return
-the book you
+00:16:12,460 --> 00:16:15,100
+का पूरा तीन तक चला दो एक ही बात है। क्यों?
 
 261
-00:19:03,350 --> 00:19:07,280
-had borrowed from me.
-जो आपने मेरे से ली थी यानी specific book
+00:16:15,180 --> 00:16:18,840
+क्योंकि इसके बाद इसका time जो है वो कम
+होकर two हो जाएगा, one हो जाएगा और
 
 262
-00:19:07,370 --> 00:19:11,350
-है। Similarly,
-I do not find any merit in the proposal.
+00:16:18,900 --> 00:16:22,460
+बाकियों का time already आपको दिख ही रहा है
+कि ज्यादा है। तो आप इकट्ठा भी चला सकते
 
 263
-00:19:11,770 --> 00:19:15,450
-अब आप कहेंगे इसमें पहले reference तो नहीं
-लिया। बिल्कुल सही बात है, लेकिन हम यह
+00:16:22,480 --> 00:16:26,460
+हो लेकिन हमेशा ऐसा मत करना,
+एक-एक करके check करना क्योंकि ऐसा हो
 
 264
-00:19:15,510 --> 00:19:19,350
-मानकर चल रहे हैं इस मामले में कि सुनने
-वाले को, पढ़ने वाले को इस
+00:16:26,520 --> 00:16:30,379
+सकता है कि future में कोई और process आया
+हो, वो late
 
 265
-00:19:19,370 --> 00:19:23,210
-बात का पता है मैं किस proposal की बात कर
-रहा हूं। For example, हो सकता है पिछले
+00:16:30,480 --> 00:16:34,220
+आया है लेकिन उसका burst time सबसे कम है।
+तो इसीलिए ध्यान से check करना। तो
 
 266
-00:19:23,250 --> 00:19:27,170
-कुछ दिनों में हमारे बीच एक particular
-proposal की बात हो रही है। ठीक है। तो मैं
+00:16:34,260 --> 00:16:38,120
+चलिए P2 को मैंने पांच तक चलाया और खत्म हो
+गया। अब पांच पे
 
 267
-00:19:27,210 --> 00:19:30,630
-उसके बारे में बोल रहा हूं। I do not find
-any merit in the proposal.
+00:16:38,140 --> 00:16:42,040
+दोबारा फिर check करेंगे कौन-कौन आया। सारे
+आ गए और ये खत्म हो चुका है हमारा
 
 268
-00:19:30,690 --> 00:19:34,450
-That means सुनने वाले को पता है मैं किस
-proposal की
+00:16:42,120 --> 00:16:45,360
+P2.
+अब सारे आ गए तो इनमें से सबसे कम कौन सा
 
 269
-00:19:34,510 --> 00:19:38,050
-बात कर रहा हूं। So he already knows about
+00:16:45,400 --> 00:16:49,300
+P4 है। क्योंकि बाकियों का सात और nine है,
+P4 का पांच है तो P4 को हमने
 
 270
-00:19:38,270 --> 00:19:42,190
-what I am talking about.
-So any merit in the proposal.
+00:16:49,320 --> 00:16:53,020
+चला दिया पांच तक, 10 हो गया। उसके बाद P2,
+P4 खत्म हो
 
 271
-00:19:42,370 --> 00:19:46,150
-एक ही proposal है जिसके बारे में आपको पता
-है। No result could be
+00:16:53,100 --> 00:16:56,920
+गया। अब बाकी बचे हुए में P1 जो है वो सात
+है और P3 का burst time nine
 
 272
-00:19:46,190 --> 00:19:50,040
-reached at the meeting.
-अब देखिए the meeting आपने बोला है
+00:16:56,930 --> 00:17:00,760
+है तो मैं P1 को चलाऊंगा तो 17 तक चलाया और
+P3
 
 273
-00:19:50,050 --> 00:19:53,450
-क्योंकि कोई particular meeting है जिसके
-बारे में सुनने वाले को पता है
+00:17:00,800 --> 00:17:04,720
+को 17 और nine कितने हो गए? 26.
+तो 26 तक मैंने P3 को
 
 274
-00:19:53,490 --> 00:19:55,840
-पहले। So no result could be reached.
+00:17:04,740 --> 00:17:08,620
+चलाया और इसको खत्म कर दिया। तो इस तरीके से
+आपका completion time जो है वो
 
 275
-00:19:55,970 --> 00:19:59,890
-यानी उस meeting पर कोई नतीजा नहीं निकला।
-कौन सी meeting जिसके
+00:17:08,640 --> 00:17:12,570
+आप check करके देख सकते हो। P3 का 26 है,
+P1 का 17,
 
 276
-00:19:59,950 --> 00:20:01,870
-बारे में सुनने वाले को पता है already?
+00:17:12,640 --> 00:17:16,580
+P4 का 10, P2 का five, P1 का, okay P1
 
 277
-00:20:02,270 --> 00:20:05,750
-तो या तो सुनने वाले को,
-पढ़ने वाले को पहले ही पता उसके बारे में
+00:17:16,620 --> 00:17:20,560
+का 17 आ ही चुका है यहां पे हमने लिख लिया।
+तो इस तरीके से completion time लिख
 
 278
-00:20:06,210 --> 00:20:09,930
-तब the लगाएंगे और हम पहले बता चुके हैं
-यानी
+00:17:20,620 --> 00:17:23,120
+लो, TAT निकाल लो, waiting time.
 
 279
-00:20:09,970 --> 00:20:13,790
-पहले पता है या हम बता चुके हैं तब the
-लगेगा। But कहानी
+00:17:24,180 --> 00:17:26,180
+चलिए next आता है हमारे पास priority.
 
 280
-00:20:13,830 --> 00:20:17,800
-थोड़ी आगे भी जाएगी। ऐसी बात नहीं,
-इतनी आसान नहीं है। एक पैरा है आपके
+00:17:26,600 --> 00:17:30,560
+अब priority का funda क्या है कि processes
+की अलग-अलग priorities भी हो
 
 281
-00:20:17,870 --> 00:20:20,740
-लिए। A writer met me in the morning.
+00:17:30,620 --> 00:17:34,460
+सकती हैं। अब साथ में आपको priorities दी
+होंगी और जिसकी priority ज्यादा
 
 282
-00:20:21,190 --> 00:20:24,890
-The writer was looking for some work.
-अब यह कौन सा the writer है?
+00:17:34,500 --> 00:17:38,180
+है आप उसको पहले execute करोगे। priority का
+मतलब ही क्या है कि जिसकी
 
 283
-00:20:24,930 --> 00:20:28,910
-वही writer है जिसकी मैं बात कर चुका हूं।
-एक writer मुझे
+00:17:38,200 --> 00:17:41,760
+priority ज्यादा है आपको उसके हिसाब से उसको
+execute करना है।
 
 284
-00:20:28,970 --> 00:20:32,830
-सुबह मिला और वह writer काम की तलाश कर रहा
-था। कौन सा writer?
+00:17:41,800 --> 00:17:45,640
+लेकिन यहां पे मैं एक छोटा सा point बता दूं
+कि जितने भी questions
 
 285
-00:20:33,110 --> 00:20:37,050
-जिस writer की मैंने बात की है। तो दोनों
-में से कुछ भी हो सकता है। But the की
+00:17:45,650 --> 00:17:49,080
+numerical आएंगे ना एक बार statement अच्छे
+से पढ़ लेना क्योंकि numerical question
 
 286
-00:20:37,090 --> 00:20:40,950
-कहानी काफी आगे जाएगी। In certain cases
-using the,
+00:17:49,120 --> 00:17:52,960
+में ना ये अपनी तरफ से कुछ variation भी कर
+देते हैं। क्योंकि theoretical
 
 287
-00:20:41,010 --> 00:20:43,870
-the, using the word the is mandatory.
+00:17:53,000 --> 00:17:56,560
+है। कोई ऐसा तो है नहीं कि आपको एक fixed
+rule ही है, hard and fast rule ही
 
 288
-00:20:44,310 --> 00:20:47,710
-Compulsory है कि आपको use करना ही करना है।
-So we will be
+00:17:56,600 --> 00:18:00,440
+है। थोड़ा-बहुत change कर देते हैं अपने
+हिसाब से। तो इसीलिए थोड़ा ध्यान से
 
 289
-00:20:47,750 --> 00:20:51,470
-discussing some of those cases where it
-is compulsory to talk about,
+00:18:00,480 --> 00:18:03,540
+question को read करके ही फिर आप start
+करना।
 
 290
-00:20:51,910 --> 00:20:52,990
-to use the word the.
+00:18:03,600 --> 00:18:07,564
+चलिएअब यहां पर अगर हम बात करें priority तो
+priority preemption भी हो
 
 291
-00:20:54,670 --> 00:20:57,830
-कहीं भी mountain range की कोई बात है we
-always use the.
+00:18:07,584 --> 00:18:11,254
+सकती है non preemption.
+ये आपको question में दिया होगा कि आपको
 
 292
-00:20:58,450 --> 00:21:01,050
-So we always say the Alps,
+00:18:11,284 --> 00:18:15,174
+है या non preemption के साथ करना है। लेकिन
+यहां पर थोड़ी सी problem है।
 
 293
-00:21:02,170 --> 00:21:05,750
-which is in Europe.
-We always say the Andes.
+00:18:15,184 --> 00:18:18,984
+problem क्या है? Starvation.
+Starvation का मतलब क्या है कि let's say
 
 294
-00:21:07,090 --> 00:21:11,030
-ठीक है जी! We always say the सतपुड़ा।
+00:18:19,044 --> 00:18:22,664
+process चल रहा है,
+इतने में high priority process आ गया। हमने
 
 295
-00:21:14,290 --> 00:21:16,030
-We always say the अरावली,
+00:18:22,744 --> 00:18:26,404
+process को चला दिया। अभी वो चल रहा था,
+उससे ऊपर एक और higher आ गया,
 
 296
-00:21:17,310 --> 00:21:18,530
-the अरावली।
+00:18:26,824 --> 00:18:30,764
+उसको चला दिया। फिर उससे ऊपर एक और higher आ
+गया, उसको चलाना start
 
 297
-00:21:19,630 --> 00:21:23,290
-ठीक है जी! We always say the Himalayas,
-the शिवालिक,
+00:18:30,824 --> 00:18:34,624
+कर दिया। तो बेचारा जो बिल्कुल नीचे दबा
+पड़ा है, जिसकी priority सबसे कम है,
 
 298
-00:21:24,790 --> 00:21:28,570
-the सेकिलीमांजरो। तो जितने भी mountain
+00:18:34,964 --> 00:18:38,804
+वो तो wait ही करता रह जाएगा। इतने long
+time तक wait करेगा that is called
 
 299
-00:21:28,670 --> 00:21:31,050
-ranges हैं all of them take the.
+00:18:38,864 --> 00:18:42,544
+a starvation.
+मतलब वो बेचारा भूखा ही रह जाएगा कि उसकी
 
 300
-00:21:31,910 --> 00:21:35,710
-आपके सामने कुछ example हमने लिख दिए हैं।
-Then second category इसमें
+00:18:42,604 --> 00:18:46,484
+आएगी,
+कब आएगी। क्योंकि उससे ऊपर high priority
 
 301
-00:21:35,770 --> 00:21:39,390
-आएगी with the names of all rivers we
-always use
+00:18:46,524 --> 00:18:49,344
+इसको बोलते हैं starvation और इसका solution
+है aging.
 
 302
-00:21:39,430 --> 00:21:42,250
-the. So we always say the कावेरी,
+00:18:50,284 --> 00:18:53,384
+Aging मतलब कि जैसे-जैसे time बढ़ेगा ना हम
+क्या करेंगे?
 
 303
-00:21:43,190 --> 00:21:44,130
-the कृष्णा,
+00:18:53,404 --> 00:18:55,764
+या CPU क्या करेगा?
+या operating system क्या करेगा?
 
 304
-00:21:45,510 --> 00:21:49,450
-the ब्रह्मपुत्र, the सुवर्णरेखा which
-is near
+00:18:56,284 --> 00:19:00,024
+वो उनकी priorities को change करता रहेगा।
+मतलब बेचारा जो बिल्कुल नीचे दबा पड़ा
 
 305
-00:21:49,490 --> 00:21:49,950
-रांची,
+00:19:00,044 --> 00:19:04,024
+है उसकी priority को वो क्या करेगा?
+थोड़ी बढ़ा देगा ताकि उसकी
 
 306
-00:21:50,790 --> 00:21:53,330
-the सतलज, the जमुना,
+00:19:04,064 --> 00:19:07,624
+भी turn आ जाए। That
+is called a process of aging.
 
 307
-00:21:54,610 --> 00:21:58,330
-the Hudson Bay,
-the Thames on the banks of which
+00:19:08,744 --> 00:19:11,904
+Next आते हैं यहां पर एक example हम discuss
+कर लेते हैं priority scheduling का।
 
 308
-00:21:58,370 --> 00:22:01,630
-London is located. So all the rivers
+00:19:11,924 --> 00:19:15,604
+priority scheduling में let's say burst
+time यहां पर दिया हुआ है। ये देखो आपको
 
 309
-00:22:01,770 --> 00:22:05,550
-always take the. So the first category
-was all
+00:19:15,644 --> 00:19:19,544
+burst time दिख रहा है। priorities यहां पर
+दी हुई है। Arrival time इसने again
 
 310
-00:22:05,590 --> 00:22:08,890
-mountain ranges.
-Then the second category was all the
+00:19:19,604 --> 00:19:23,124
+zero मान रखा है। सब मतलब एक ही time पर
+arrive हुए हैं। Although question में
 
 311
-00:22:09,290 --> 00:22:13,150
-rivers and even lakes के नाम के साथ भी the
-आता है। जो
+00:19:23,134 --> 00:19:26,904
+arrival time अलग भी हो सकता है। लेकिन अगर
+एक question आपको समझ आ गया, आप वो भी
 
 312
-00:22:13,310 --> 00:22:17,090
-खाड़ी होती है,
-bay होती है उसके नाम के साथ भी the आता है।
+00:19:26,964 --> 00:19:29,624
+easily कर लोगे। अब देखो यहां पर सबसे पहले
 
 313
-00:22:18,510 --> 00:22:22,290
-The third category is all oceans.
-With the names of
+00:19:30,664 --> 00:19:34,464
+check करना है आपको कि ये example जो है
+इसने non
 
 314
-00:22:22,530 --> 00:22:26,070
-all seas and oceans we use the.
-So we always say the
+00:19:34,564 --> 00:19:38,023
+preemption वाला लिया है। मतलब इसमें
+preemption नहीं है non preemption है। एक
 
 315
-00:22:26,130 --> 00:22:27,010
-Arabian Sea,
+00:19:38,104 --> 00:19:42,024
+start हो गया वही पूरा का पूरा execute
+होगा। लेकिन यहां पर आपको
 
 316
-00:22:27,950 --> 00:22:31,930
-the Indian Ocean, the Pacific Ocean,
-the Dead Sea.
+00:19:42,184 --> 00:19:45,924
+main focus रखना है priority के ऊपर। जैसे
+SJF के ऊपर आपका
 
 317
-00:22:32,749 --> 00:22:36,530
-Dead Sea है ना Israel के पास है। The Gulf
-of
+00:19:45,964 --> 00:19:49,454
+focus था burst time में,
+यहां पर priority में। तो देखो priority जो
 
 318
-00:22:37,350 --> 00:22:40,570
-Mannar. Gulf of Mannar
-is between Sri Lanka and India. Right!
+00:19:49,524 --> 00:19:51,984
+है सबसे, सबसे ज्यादा किसकी है?
 
 319
-00:22:41,670 --> 00:22:45,510
-The Bay of Bengal, the सुंदर,
-the सुंदरबन। सुंदरबन
+00:19:53,564 --> 00:19:56,284
+Highest priority किसकी है?
+ये कैसे पता लगेगा?
 
 320
-00:22:45,520 --> 00:22:49,270
-हालांकि mangrove है
-but ठीक है मतलब थोड़ा miscellaneous
+00:19:57,004 --> 00:20:00,444
+ये इन्होंने mention नहीं किया लेकिन
+question में आपको दिया होगा। यहां पर let's
 
 321
-00:22:49,310 --> 00:22:53,230
-category में आ जाएगा।
-But जितने भी आपके rev-- जितने
+00:20:00,524 --> 00:20:04,264
+जिस process की priority सबसे मतलब number
+जिसका सबसे कम
 
 322
-00:22:53,290 --> 00:22:57,050
-भी आपके seas हैं, oceans हैं,
-gulfs हैं all of them will
+00:20:04,304 --> 00:20:06,864
+है lower the number higher the priority.
 
 323
-00:22:57,150 --> 00:23:00,450
-take the.
-Never write them without using the.
+00:20:07,004 --> 00:20:10,684
+ये concept याद रखना। लेकिन question में
+आपको higher the number higher the
 
 324
-00:23:01,550 --> 00:23:05,130
-That is a convention actually. There
-is no logical reason behind it.
+00:20:10,744 --> 00:20:14,204
+priority भी दी जा सकती है। Lower the
+number higher the priority मतलब ये देखो
 
 325
-00:23:05,290 --> 00:23:06,370
-It is convention.
+00:20:14,243 --> 00:20:17,964
+सबसे पहले क्या किया zero पर P2 को उठा
+लिया। P2 देखो कहां है
 
 326
-00:23:07,650 --> 00:23:11,590
-अच्छा!
-ऐसी तरह से जो जंगलों के नाम हैं ना तो वहां
+00:20:18,044 --> 00:20:20,684
+P2?
+ये रहा। P2 की priority जो है वो कितनी है?
 
 327
-00:23:11,630 --> 00:23:14,950
-लगता है। जैसे हम बोलते हैं the Amazon
-rainforest, वहां भी आता
+00:20:21,184 --> 00:20:24,824
+One है। One मतलब सबसे कम number है। यानी
+इसकी
 
 328
-00:23:14,990 --> 00:23:18,940
-है। अच्छा!
-Next category हमारी है with the names
+00:20:24,844 --> 00:20:27,984
+priority सबसे ज्यादा है। Lower the number
+higher the priority.
 
 329
-00:23:18,990 --> 00:23:22,570
-of newspapers. Very rarely will you find a
+00:20:28,324 --> 00:20:31,524
+लेकिन आपको higher the number higher the
+priority भी दी जा सकती है। Question के
 
 330
-00:23:22,610 --> 00:23:26,010
-newspaper जिसके नाम के साथ the नहीं लगा
-होगा। Very rarely.
+00:20:31,544 --> 00:20:34,533
+हिसाब से करना। तो lower the number है
+higher the priority.
 
 331
-00:23:26,450 --> 00:23:30,350
-Recently I saw one newspaper,
-Hindustan Times, which
+00:20:34,644 --> 00:20:38,444
+तो इसकी priority सबसे ज्यादा है तो पहले P2
+को चला दिया। ठीक है। इसका
 
 332
-00:23:30,410 --> 00:23:34,030
-has removed the from its name. Now that
-is up to the
+00:20:38,464 --> 00:20:42,364
+burst time कितना था?
+एक। तो एक तक हमने चला के इसको खत्म कर
 
 333
-00:23:34,070 --> 00:23:38,030
-newspaper.
-But normally जितने भी newspaper आप check
+00:20:42,374 --> 00:20:45,104
+अब देखो कौन है उसके बाद priority किसकी
+सबसे ज्यादा है?
 
 334
-00:23:38,070 --> 00:23:41,970
-वह हिंदी का हो, पंजाबी का हो, उर्दू का हो,
-English का हो they always carry
+00:20:45,424 --> 00:20:48,784
+P5 की सबसे ज्यादा priority है। तो उसको
+हमने पांच तक
 
 335
-00:23:42,050 --> 00:23:42,230
-the.
+00:20:48,864 --> 00:20:52,184
+चलाया। छह पर वो खत्म हो गया। फिर उसके बाद
+किसकी priority है?
 
 336
-00:23:43,710 --> 00:23:47,650
-ठीक है!
-the उनके नाम के साथ लगा होगा हमेशा।
+00:20:52,324 --> 00:20:56,224
+P1 की सबसे ज्यादा priority है। तो P1 को
+हमने पूरे का पूरा चला
 
 337
-00:23:47,670 --> 00:23:51,410
-होगा। अब यह convention है। हालांकि कई
-newspaper जैसे मैंने Hindustan
+00:20:56,284 --> 00:21:00,224
+दिया। Burst time कितना?
+10। तो 16 हो जाएगा। फिर P3 को चला दिया।
 
 338
-00:23:51,490 --> 00:23:55,070
-Times का जिक्र किया है। They have removed
-the from their name but
+00:21:00,244 --> 00:21:04,124
+फिर P4 को चला दिया। तो इस तरीके से हम
+priority को देखते हुए
 
 339
-00:23:55,170 --> 00:23:58,370
-otherwise the लगाया जाता है। So we always
-say the Hindu,
+00:21:04,164 --> 00:21:07,824
+चलाएंगे। और अगर हम बात करें preemption के
+case में, उसमें भी करना यही
 
 340
-00:23:58,970 --> 00:24:02,310
-the Indian Express, the Patriot,
-the Pioneer,
+00:21:07,884 --> 00:21:11,824
+है। लेकिन आप उसमें कोशिश किया करो
+preemption में सिर्फ एक unit तक
 
 341
-00:24:03,510 --> 00:24:04,530
-the Telegraph,
+00:21:11,884 --> 00:21:15,864
+चलाकर देखा करो ताकि आपको पता लग जाए कि एक
+unit चलाने के बाद
 
 342
-00:24:05,650 --> 00:24:08,650
-the Morning Mail, The Wall Street Journal,
+00:21:15,964 --> 00:21:19,664
+ऐसा तो नहीं है कि कोई और process है जिसकी
+priority इससे
 
 343
-00:24:10,370 --> 00:24:13,930
-The New York Times। जो भी है newspaper
-सबके नाम के साथ the
+00:21:19,704 --> 00:21:23,504
+ज्यादा हो गई। क्योंकि फिर आपको preempt
+करना पड़ेगा। लेकिन non
 
 344
-00:24:14,090 --> 00:24:17,654
-लिखा जाता है।That was the third
+00:21:23,584 --> 00:21:27,484
+preemption के case में चाहे कोई बाद में
+process आया है जिसकी priority ज्यादा
 
 345
-00:24:17,734 --> 00:24:21,304
-category.
-Now the fourth one all major religious
+00:21:27,504 --> 00:21:31,424
+है,
+हम preempt नहीं करेंगे। हम उसी को चलाएंगे
 
 346
-00:24:21,494 --> 00:24:25,374
-scriptures जितनी भी holy books हैं,
-पुरानी classic books
+00:21:31,504 --> 00:21:32,484
+गया। चलिए
 
 347
-00:24:25,474 --> 00:24:29,254
-हैं वहां the लगाया जाता है। Not only holy
-books अगर कोई
+00:21:33,784 --> 00:21:37,424
+next आता है round robin। ये काफी important
+है round robin.
 
 348
-00:24:29,334 --> 00:24:32,674
-epic वगैरह है तो वहां भी लगाया जाता है।
-पुरानी किताब कोई भी
+00:21:37,464 --> 00:21:41,304
+इसके ऊपर जो है already पहले भी question आ
+चुके हैं। round robin में हम use करते हैं
 
 349
-00:24:32,734 --> 00:24:36,634
-ancient book हो the लगाया जाता है। So we
-always say the
+00:21:41,464 --> 00:21:44,744
+time quantum का। Time,
+time quantum का मतलब क्या है?
 
 350
-00:24:36,714 --> 00:24:37,154
-Bible,
+00:21:44,804 --> 00:21:48,344
+कि हम पूरे के पूरे process को एक बार में
+नहीं चलाते। हम कुछ time के लिए
 
 351
-00:24:38,594 --> 00:24:39,184
-the Torah,
+00:21:48,404 --> 00:21:51,824
+चलाएंगे। CPU कुछ time के लिए execute करेगा
+उसको। फिर उसको निकाल
 
 352
-00:24:40,634 --> 00:24:43,974
-the Quran, the गुरु ग्रंथ साहिब,
-the रामायण,
+00:21:51,924 --> 00:21:55,714
+के ready queue में भेज देगा। फिर दूसरे को
+उठाएगा। फिर उसने time के लिए
 
 353
-00:24:44,634 --> 00:24:47,914
-the Vedas, the उपनिषद आप लिख सकते हैं the
+00:21:55,744 --> 00:21:58,324
+चलाएगा। फिर उसको दोबारा से भेज देगा। जैसे
+ये देखो
 
 354
-00:24:47,974 --> 00:24:51,914
-उपनिषद यहां भी the आता है। The Puranas,
-Puranas
+00:21:59,304 --> 00:22:02,864
+इस example से आपको पता लगेगा। Let's say
+all processes arrived at zero.
 
 355
-00:24:51,954 --> 00:24:54,354
-भी पुरानी किताबें हैं। ठीक है जी! The
+00:22:03,024 --> 00:22:06,984
+सारे zero पर आए हैं। Time quantum है मेरा
+चार। अब देखो
 
 356
-00:24:54,374 --> 00:24:58,174
-Puranas, the स्मृतियां है ना! यह
+00:22:07,044 --> 00:22:10,494
+सबसे पहले यहां पर हम दो queue बनाते हैं।
+एक ready queue, एक running queue.
 
 357
-00:24:58,234 --> 00:25:01,914
-सारी जो पुरानी किताबें हैं इनके नाम के साथ
-हम the
+00:22:10,624 --> 00:22:14,144
+तो ये हमारी running queue है जो हमने पिछली
+बार भी बनाई है। लेकिन अब यहां पर एक
 
 358
-00:25:01,954 --> 00:25:05,944
-हमेशा लिखते हैं,
-एक convention है। Even जो epics हैं
+00:22:14,184 --> 00:22:16,764
+ready queue नई से बनाएंगे। Ready queue का
+मतलब क्या है?
 
 359
-00:25:05,974 --> 00:25:09,784
-जैसे यह Greek epic है Homer का लिखा the
-Iliad, The Odyssey
+00:22:16,804 --> 00:22:20,584
+कि कौन-कौन से processes ready हैं। तो देखो
+P1, P2, P3 ready
 
 360
-00:25:10,134 --> 00:25:13,344
-तो यहां भी the लगाया जाता है। यह
-convention है। Right!
+00:22:20,624 --> 00:22:24,364
+है। सारे zero पर आए हैं तो आप simply
+number wise डाल दो। P1, P2,
 
 361
-00:25:14,114 --> 00:25:18,074
-Similarly,
-with the names of all islands दुनिया में
+00:22:24,524 --> 00:22:28,204
+P3। चलिए सबसे पहले P1 को निकाला ready
+queue से
 
 362
-00:25:18,114 --> 00:25:22,094
-भी islands हैं हमेशा the लगाया जाएगा। So
-we always say
+00:22:28,664 --> 00:22:31,184
+और running queue में डाल दिया। कितने time
+तक चलाएंगे?
 
 363
-00:25:22,154 --> 00:25:25,814
-the West Indies.
-We always say the Hawaiian Islands.
+00:22:31,264 --> 00:22:35,164
+सिर्फ चार unit तक। तो zero से four P1 को
+चलाया। P1 को
 
 364
-00:25:26,234 --> 00:25:30,174
-Hawaiian,
-Hawaii America में है। The Andamans, the
+00:22:35,244 --> 00:22:38,044
+zero से four चलाया। कितना बचा ये?
+पीछे 20 बचा है
 
 365
-00:25:30,254 --> 00:25:31,054
-Lakshadweep
+00:22:38,544 --> 00:22:42,504
+और इसको हमने दोबारा से ready queue में डाल
+दिया। क्यों डाल
 
 366
-00:25:31,874 --> 00:25:35,593
-है ना! The Lakshadweep, the Andamans,
-the Nicobars
+00:22:42,544 --> 00:22:43,284
+दिया ready queue में?
 
 367
-00:25:35,974 --> 00:25:39,914
-है ना!
-हमेशा the लगाते हैं। तो जितने भी islands
+00:22:44,124 --> 00:22:46,924
+यहां से खत्म कर दो,
+पीछे डाल दो। Ready queue मतलब queue मतलब
 
 368
-00:25:39,974 --> 00:25:40,114
-the.
+00:22:46,964 --> 00:22:50,844
+First in first out.
+मतलब पहले हमने जो डाला था वही पहले
 
 369
-00:25:41,634 --> 00:25:44,173
-Similarly,
-with the names of certain nations.
+00:22:50,854 --> 00:22:54,504
+और हमेशा insertion last में करते हैं।
+Insertion last में करते हैं। तो
 
 370
-00:25:44,534 --> 00:25:48,314
-देखिए,
-यह थोड़ी समझने वाली चीज है। Normally
+00:22:54,564 --> 00:22:58,304
+insertion क्यों किया?
+क्योंकि अभी ये बचा हुआ है। अगर ये नहीं बचा
 
 371
-00:25:48,414 --> 00:25:51,474
-या किसी person के नाम के साथ the आता नहीं।
+00:22:58,344 --> 00:23:02,224
+इसको नहीं डालते। लेकिन अभी ये बचा हुआ है।
+अभी 20 unit इसके पड़े हैं। चलिए
 
 372
-00:25:51,714 --> 00:25:55,454
-99% नहीं आता। It is extremely rare कि आप
-किसी
+00:23:02,804 --> 00:23:06,744
+P2 को निकाला चार unit तक चलाया। लेकिन चार
+unit तक चलाने की
 
 373
-00:25:55,474 --> 00:25:58,884
-person या किसी country के नाम के साथ the
+00:23:06,784 --> 00:23:10,664
+जरूरत नहीं है। क्यों?
+क्योंकि इसका burst time ही तीन है। लेकिन
 
 374
-00:25:59,094 --> 00:26:02,934
-लगाएं। वह कहां लगाएंगे वह मैं आपको
-बताऊंगा। But in general नहीं लगाया
+00:23:10,724 --> 00:23:14,304
+ज्यादा होता तब भी मैं चार unit तक चलाता।
+तो अभी तीन तक चलाओ,
 
 375
-00:26:02,974 --> 00:26:06,514
-जाता। लेकिन यह पांच exceptions हैं जिनके
-साथ the
+00:23:14,784 --> 00:23:18,624
+खत्म कर दो। खत्म हो गया। अब मेरे को यहां
+पर डालने की जरूरत नहीं है। P2 को
 
 376
-00:26:06,554 --> 00:26:10,264
-लगाना convention बना हुआ है। तो यह आप note
-कर लें।
+00:23:18,684 --> 00:23:22,534
+यहां पर मत डालो। क्यों नहीं?
+क्योंकि ये खत्म ही हो गया। लेकिन अगर ये
 
 377
-00:26:10,294 --> 00:26:11,094
-The USA,
+00:23:22,624 --> 00:23:26,264
+मतलब इसमें अगर burst time बचता तो हम इसमें
+पीछे से डाल देते।
 
 378
-00:26:12,254 --> 00:26:13,534
-The Great Britain,
+00:23:26,304 --> 00:23:30,104
+चलिए अब P3 आया। P3 को भी तीन units चाहिए
+तो हमने तीन तक
 
 379
-00:26:14,734 --> 00:26:18,654
-USSR आजकल तो exist नहीं करता। It has split
-into
+00:23:30,164 --> 00:23:33,764
+चलाया 10 पर खत्म। Although time quantum
+चार था लेकिन
 
 380
-00:26:18,834 --> 00:26:22,774
-15 states लेकिन जब यह करता था तो The USSR
-बोला जाता
+00:23:33,904 --> 00:23:37,684
+जितना उसको चाहिए हमने तीन तक चलाना। ऐसा
+नहीं कि चार तक चलाओ।
 
 381
-00:26:22,874 --> 00:26:26,594
-था। The Union of Soviet Socialist
-Republics
+00:23:37,744 --> 00:23:41,684
+CPU idle रहेगा। उसको तीन units चाहिए और आप
+उसको धक्के से चार
 
 382
-00:26:26,994 --> 00:26:30,854
-अब उसकी जगह CIS बन गया है। Commonwealth of
-Independent States,
+00:23:41,764 --> 00:23:45,504
+तक चला रहे हो। ऐसा तो हो नहीं सकता। तो
+इसलिए तीन तक चला के 10 पर P3
 
 383
-00:26:31,334 --> 00:26:31,894
-The UK.
+00:23:45,544 --> 00:23:49,534
+खत्म। अब obviously कोई बचा ही नहीं है। फिर
+आप P1 को चार तक चलाएं।
 
 384
-00:26:33,094 --> 00:26:36,754
-तो यह countries के नाम के साथ typically
-the लगाया जाता है। बहुत
+00:23:49,564 --> 00:23:53,324
+फिर P1 को, फिर P1 को,
+P1 को चार तक चला के अब बाकी का
 
 385
-00:26:36,834 --> 00:26:40,743
-rare ऐसे example हैं। पांच छह मैंने आपके
-सामने लिखे हैं। यह आप note कर
+00:23:53,484 --> 00:23:57,424
+20 जो है वो time unit तक इसको चला दो। तो
+इस तरीके से आपका round robin जो है
 
 386
-00:26:40,794 --> 00:26:43,764
-लें। Normally country के नाम के साथ we
-don't use the.
+00:23:57,464 --> 00:24:01,410
+वो work करेगा। तो completion time आपकाP1
+का तीस हो
 
 387
-00:26:45,914 --> 00:26:49,814
-चलिए आगे चलते हैं। अच्छा यह हो गया West
-Indies वाला। With
+00:24:01,480 --> 00:24:05,280
+गया। P2 का आपका completion time सात हो गया
+और P3 का completion time
 
 388
-00:26:49,854 --> 00:26:53,114
-the names of all global and
+00:24:05,340 --> 00:24:09,220
+दस हो गया। तो इस तरीके से जो है वो हमारा
+यहां पे work करता है। तो याद
 
 389
-00:26:53,314 --> 00:26:56,454
-national organizations जितने भी Indian
+00:24:09,260 --> 00:24:13,240
+रखना कि SGF से इसका average turnaround
+time ज्यादा आ सकता
 
 390
-00:26:56,514 --> 00:27:00,504
-organizations हैं या global organizations
-हैं सबके साथ the लगाया जाता
+00:24:13,260 --> 00:24:17,239
+है लेकिन response time जो है वो कम होगा।
+response time मैंने आपको
 
 391
-00:27:00,534 --> 00:27:03,634
-है। अगर आप India की बात करें for example
-we say
+00:24:17,280 --> 00:24:21,040
+पहले ही बताया कि कब process को पहली बार
+CPU मिल रहा है। देखो
 
 392
-00:27:05,034 --> 00:27:08,514
-the NITI Aayog ऐसे बोला जाता है। The NITI
+00:24:21,400 --> 00:24:25,280
+अब एक process है जिसका burst time जो है वो
+चौबीस है। मतलब
 
 393
-00:27:08,934 --> 00:27:09,354
-Aayog
+00:24:25,500 --> 00:24:29,140
+student one, two,
+three तीन बैठे हैं। पहला student कहता है,
 
 394
-00:27:10,694 --> 00:27:12,374
-or we say the Planning Commission.
+00:24:29,200 --> 00:24:32,820
+पचास problem है।" दूसरा कहता है,
+"सर मेरे पास दो problem है।" तीसरा कह रहा
 
 395
-00:27:14,414 --> 00:27:18,274
-Similarly,
-the ICMR Indian Council of Medical
+00:24:32,829 --> 00:24:33,980
+"तीन।" अगर मैं
 
 396
-00:27:19,034 --> 00:27:21,034
-the AIIMS ऐसे बोला जाता है।
+00:24:34,820 --> 00:24:36,780
+round robin नहीं use करूंगा तो मैं क्या कर
+रहा हूं?
 
 397
-00:27:22,054 --> 00:27:25,274
-इसी तरह से global organizations हैं the
-UNO
+00:24:36,900 --> 00:24:40,620
+पहले वाले को ही पहले सबसे ज्यादा problem
+solve करूंगा। उसकी
 
 398
-00:27:26,034 --> 00:27:29,594
-ठीक है जी! the IMF, the UNICEF, the
+00:24:40,640 --> 00:24:44,540
+problem solve करने के बाद मैं दूसरे और
+तीसरे पर जाऊंगा। वो तो बेचारे wait
 
 399
-00:27:29,754 --> 00:27:33,654
-WHO, the World Bank, the ILO जितने
+00:24:44,580 --> 00:24:48,560
+करते रहेंगे कि मेरे को CPU कब मिलेगा?
+मेरे को CPU कब मिलेगा? तो better क्या है?
 
 400
-00:27:33,714 --> 00:27:37,174
-भी organizations हैं सारे के साथ the लगाना
-एक convention बनी हुई
+00:24:48,700 --> 00:24:52,580
+Time quantum.
+Time quantum मतलब वो चाहे पचास problem
 
 401
-00:27:37,214 --> 00:27:38,054
-है।
+00:24:52,640 --> 00:24:56,580
+पहले ही बोल दिया student को भैया मैं एक
+बार में तीन problem ही solve करूंगा।
 
 402
-00:27:39,254 --> 00:27:42,634
-Now with the names of all religious
+00:24:56,600 --> 00:25:00,380
+तो मैंने तीन problem solve करने के बाद मैं
+दूसरे student पर चला गया। तो
 
 403
-00:27:42,754 --> 00:27:43,434
-communities,
+00:25:00,420 --> 00:25:04,140
+दूसरे को CPU फटाफट से मिल गया। पहले case
+में पचास question के बाद
 
 404
-00:27:44,294 --> 00:27:48,094
-tribal community हो या कोई religious
-community हो।
+00:25:04,220 --> 00:25:08,040
+मिलता। अब उसको सिर्फ तीन question solve
+करने के just बाद उसको CPU मिल गया
 
 405
-00:27:48,134 --> 00:27:51,634
-जैसे कि tribal की हम बात करें तो हम बोलते
-हैं say the
+00:25:08,560 --> 00:25:12,500
+that is called a response time.
+तो response time का जो funda है काफी
 
 406
-00:27:51,714 --> 00:27:55,634
-Gonds. The Gonds are a tribe in Mysore,
-Karnataka में
+00:25:12,520 --> 00:25:16,420
+important है। round robin के case में ये
+response time काफी कम कर देता
 
 407
-00:27:55,674 --> 00:27:59,474
-है। The Gonds बोलते हैं हम group है। इसी
-तरह से the Santhals
+00:25:16,440 --> 00:25:20,420
+है। चलिए next आता है ये simple सा example
+बताया
 
 408
-00:27:59,554 --> 00:28:03,414
-है। अभी बिहार में आपको काफी मिलते हैं। इधर
-MP में काफी मिलते
+00:25:20,480 --> 00:25:24,200
+कि अगर मेरा time quantum ज्यादा होगा let's
+say twelve है तो context switches,
 
 409
-00:28:03,474 --> 00:28:07,174
-हैं। The Santhals ठीक है जी!
-इसी तरह से the Onge.
+00:25:24,260 --> 00:25:25,600
+context switches कितने हैं? zero.
 
 410
-00:28:08,034 --> 00:28:11,914
-अगर आप Andaman Nicobar जाएं तो वहां एक
-tribe है Onge नाम की। तो
+00:25:26,100 --> 00:25:29,140
+अगर मेरा time quantum six है तो context
+switches कितने हैं? one.
 
 411
-00:28:11,994 --> 00:28:15,644
-जितने भी यह groups हैं ना religious वहां
-the लगाया जाता है।
+00:25:29,460 --> 00:25:32,470
+Context switches का मतलब क्या है कि let's
+say एक process चल रहा
 
 412
-00:28:15,754 --> 00:28:19,254
-Tribal groups है वहां भी the लगाया जाता
-है। So we always say the
+00:25:32,560 --> 00:25:36,460
+था। जैसे ही time quantum छह हुआ हमने उसको
+निकाल
 
 413
-00:28:19,314 --> 00:28:23,194
-Mohammedans यानी the Muslims, the Jews,
-the
+00:25:36,560 --> 00:25:40,460
+के दूसरे process को जैसे P1 चल रहा था।
+जैसे ही time quantum छह
 
 414
-00:28:23,254 --> 00:28:26,994
-Punjabis linguistic group में भी the लगाया
-जाता है। The
+00:25:40,520 --> 00:25:44,420
+हुआ मतलब CPU ने बोला मैं छह question solve
+करूंगा। छह question solve करते ही
 
 415
-00:28:27,074 --> 00:28:30,674
-Punjabis, the Swedes जो
+00:25:44,460 --> 00:25:48,000
+हमने P1 को निकाल के P2 को चढ़ा दिया। P2 को
 
 416
-00:28:30,734 --> 00:28:34,574
-Swedish में Sweden में रहते हैं। The Poles
-जो Poland में
+00:25:48,560 --> 00:25:52,240
+ready queue से निकाल के running queue में
+डाल दिया और P1 को दोबारा ready queue में
 
 417
-00:28:34,594 --> 00:28:38,454
-रहते हैं। है ना!
-The Bangladeshis ऐसे बोला जाता है। So
+00:25:52,280 --> 00:25:54,660
+भेज दिया। इसको बोलते हैं context switch.
 
 418
-00:28:38,514 --> 00:28:42,434
-the Sikhs, the Jains, the Parsis,
-the Jews, the
+00:25:54,740 --> 00:25:58,380
+Context switch का मतलब क्या है कि P1 ने
+जितना काम किया
 
 419
-00:28:42,494 --> 00:28:43,994
-Hindus ऐसे बोला जाता है।
+00:25:58,480 --> 00:26:02,190
+उसको हमने save कर दिया और P2 को load कर
+दिया। ऐसे ही
 
 420
-00:28:45,454 --> 00:28:49,434
-यह देखिए मैंने लिखा हुआ है the Punjabis,
-the Haryanvis, the Swedes,
+00:26:02,260 --> 00:26:06,170
+देखो अगर मेरा time quantum one होगा तो
+context switches ज्यादा होंगे।
 
 421
-00:28:49,714 --> 00:28:50,854
-the Poles the
+00:26:06,200 --> 00:26:10,140
+देखो पहले हमने P1 को चलाया एक time तक
+चलाया उसको switch कर
 
 422
-00:28:52,074 --> 00:28:56,064
-जो भी। तो यह कुछ different categories हैं।
+00:26:10,220 --> 00:26:14,120
+दिया। switch मतलब उसको वापस ready queue
+में भेज दिया दूसरे को उठा लिया। फिर
 
 423
-00:28:56,094 --> 00:28:59,774
-इसमें मतलब समझने वाला तो थोड़ा कम ही part
-है। But याद रखना पड़ेगा
+00:26:14,620 --> 00:26:18,260
+एक time तक P2 को चलाया फिर तीसरे को उठा
+लिया फिर चौथे को उठा लिया, पांचवे
 
 424
-00:28:59,814 --> 00:29:03,314
-हमें कि कहां-कहां the लगाया जाता है। ठीक
-है जी!
+00:26:18,300 --> 00:26:22,130
+को। तो context switches जो है वो भी time
+consuming है। Although ये
 
 425
-00:29:03,714 --> 00:29:07,634
-I hope you are getting the point.
-यह बात समझ आ रही है आपको। हां,
+00:26:22,260 --> 00:26:25,780
+time बहुत कम है लेकिन ये time consuming
+है। time consuming क्यों है?
 
 426
-00:29:07,754 --> 00:29:11,474
-Indian organizations में बिल्कुल कोई
-global हो, कोई Indian हो isro the
+00:26:26,160 --> 00:26:29,950
+Let's say एक process चल रहा था। चलते-चलते
+हमने उसको बीच में से stop कर
 
 427
-00:29:11,514 --> 00:29:15,214
-लगाया जाएगा। बिल्कुल 100% लगाना चाहिए
-आपको।
+00:26:30,020 --> 00:26:33,720
+दिया। stop करने के बाद होगा क्या?
+उसकी values हमें
 
 428
-00:29:15,254 --> 00:29:18,974
-ISRO है, Bhabha Atomic Research Center है,
-TIFR
+00:26:33,840 --> 00:26:37,620
+PCB में store करनी पड़ेंगी। Process
+control block में जो मैंने lecture one में
 
 429
-00:29:19,054 --> 00:29:23,034
-है, Atomic Energy Commission है या कोई
+00:26:37,660 --> 00:26:41,420
+बोला था। मतलब उसका जो status था वो save
+करना पड़ेगा
 
 430
-00:29:23,134 --> 00:29:26,994
-और organization है definitely the लगाना
-चाहिए।
+00:26:41,480 --> 00:26:45,440
+ताकि जब उसकी turn दोबारा आए ना,
+जब वो दोबारा execute होगा तब
 
 431
-00:29:27,034 --> 00:29:30,854
-चलिए अब हम चलते हैं जहां थोड़ा logic
-involved
+00:26:45,500 --> 00:26:49,340
+हम उसको resume करेंगे ना कि restart
+करेंगे। तो context switches जो
 
 432
-00:29:30,894 --> 00:29:34,574
-है। Next हमारा point है कि the हमने क्यों
-लगाया है?
+00:26:49,360 --> 00:26:52,980
+है थोड़ा सा time लेता है। तो इसीलिए अगर
+time quantum
 
 433
-00:29:34,594 --> 00:29:38,254
-देखिए,
-आपके सामने sentences हैं। The computer has
+00:26:53,100 --> 00:26:56,940
+बहुत कम होगा तो context switches बहुत
+ज्यादा होंगी और अगर time
 
 434
-00:29:38,334 --> 00:29:40,254
-revolutionized our lives.
+00:26:56,960 --> 00:27:00,740
+quantum बहुत ज्यादा होगा तो ये फिर general
+जो है वो FCFS की तरह ही
 
 435
-00:29:41,594 --> 00:29:45,534
-The language is a wonderful invention of
-mankind and a cow is a
+00:27:00,780 --> 00:27:04,250
+work करेगा। पुराने system की तरह work
+करेगा। तो ना तो ये बहुत ज्यादा होना
 
 436
-00:29:45,634 --> 00:29:49,214
-useful animal.
-तीन sentences आपके सामने लिखे गए
+00:27:04,340 --> 00:27:07,809
+चाहिए ना ये बहुत कम होना चाहिए।
 
 437
-00:29:49,254 --> 00:29:53,174
-हैं। आपको याद होगा बिल्कुल शुरू में हमने
-when we were talking about
+00:27:07,860 --> 00:27:10,600
+चलिए last में हमारे पास आता है multi level
+queue.
 
 438
-00:29:53,374 --> 00:29:56,374
-a तो हमने कहा था a can be used to convey a
-group
+00:27:10,700 --> 00:27:13,550
+ये theoretical सा funda है। multi level
+queue में हम करते क्या हैं?
 
 439
-00:29:56,474 --> 00:30:00,374
-quality। है ना!
-आपको याद होगा the a can be used to
+00:27:13,580 --> 00:27:17,340
+multiple queues बना लेते हैं। अलग-अलग
+level पर queues बना लेते हैं।
 
 440
-00:30:00,394 --> 00:30:03,394
-convey a group quality. Same
-is the thing here.
+00:27:17,360 --> 00:27:21,330
+actual में हम कर क्या रहे हैं?
+अभी तक जितने भी हमने algorithm किए उसमें
 
 441
-00:30:04,194 --> 00:30:07,654
-The को भी group quality के लिए use किया जा
-सकता है। So when you say the
+00:27:21,340 --> 00:27:25,320
+बोल रहे हैं process P1, P2,
+P3। हमने ये नहीं बात की कि ये process है
 
 442
-00:30:07,734 --> 00:30:11,334
-computer has revolutionized human lives
-meaning इसका यह है
+00:27:25,700 --> 00:27:29,640
+लेकिन जल्दी हमारे system में interactive
+process होते हैं, batch processes
 
 443
-00:30:11,734 --> 00:30:14,834
-computers have revolutionized human lives.
+00:27:29,680 --> 00:27:33,510
+होते हैं, student processes होते हैं,
+अलग-अलग type के processes होते हैं। तो अब
 
 444
-00:30:15,974 --> 00:30:19,904
-कोई particular computer नहीं है जिसने
-human life को revolutionized किया है।
+00:27:33,540 --> 00:27:36,600
+कर क्या रहे हैं?
+उनकी priority define कर रहे हैं। मतलब मैं
 
 445
-00:30:19,914 --> 00:30:23,406
-हम computers की general बात कर रहे
-हैं।यानी all
+00:27:36,640 --> 00:27:40,300
+interactive process को हम इकट्ठा करके एक
+queue में डाल देते हैं। background
 
 446
-00:30:23,686 --> 00:30:26,306
-computers have revolutionized human life.
+00:27:40,380 --> 00:27:43,750
+process को इकट्ठा करके एक queue में डाल
+देते हैं। मतलब अलग-अलग queues में अलग-अलग
 
 447
-00:30:26,926 --> 00:30:30,426
-Similarly, when we say the language
-is a wonderful invention of mankind
+00:27:43,860 --> 00:27:47,820
+type of processes को डाल देते हैं। फिर एक
+queue में let's say मैंने round
 
 448
-00:30:30,446 --> 00:30:32,246
-हमारा meaning है languages.
+00:27:47,880 --> 00:27:51,480
+robin चला दिया। दूसरे queue में मैंने FCFS
+चला दिया। मतलब अलग-अलग
 
 449
-00:30:33,566 --> 00:30:37,426
-ठीक है जी। Similarly,
-जब आप बोलते हैं the cow
+00:27:51,560 --> 00:27:55,140
+algorithms जो है अलग-अलग queues के ऊपर
+हमने लगा दिया ताकि
 
 450
-00:30:37,466 --> 00:30:40,006
-real meaning is all cows
-are useful animals.
+00:27:55,180 --> 00:27:59,140
+हम divide कर सकें और हम distribute कर सकें
+कि भैया तू process जो
 
 451
-00:30:40,466 --> 00:30:44,246
-तो the को भी आप group quality के लिए use
-कर सकते हैं। कोई problem नहीं है।
+00:27:59,180 --> 00:28:03,020
+है वो अलग चलेगा,
+तेरा process जो है वो अलग चलेगा। अब इसके
 
 452
-00:30:44,266 --> 00:30:47,686
-जैसे a को हमने use किया था the को भी use
-किया
+00:28:03,080 --> 00:28:05,920
+पर हम जो है वो कहीं ना कहीं work कर सकते
+हैं। लेकिन problem क्या है?
 
 453
-00:30:48,146 --> 00:30:50,906
-जा सकता है।
+00:28:06,440 --> 00:28:10,399
+problem है starvation.
+जैसे हमने decide कर दिया कि भैया
 
 454
-00:30:53,446 --> 00:30:54,946
-Next हमारा point है,
+00:28:10,440 --> 00:28:14,369
+जो processes हैं उनकी priority higher है।
+तो CPU तो पहले उन्हीं
 
 455
-00:30:56,746 --> 00:31:00,566
-जो celestial bodies हैं यानी जो heavenly
-bodies
+00:28:14,380 --> 00:28:18,180
+को execute करता रहेगा। तो जो background
+process है वो तो wait करते रहेंगे कि
 
 456
-00:31:00,586 --> 00:31:04,106
-हैं,
-astronomical bodies हैं। Normally the
+00:28:18,200 --> 00:28:22,060
+हमारी turn कब आए?
+तो या तो हम round robin चला सकते हैं।
 
 457
-00:31:04,166 --> 00:31:08,106
-साथ। So planets के नाम हैं,
-stars के नाम हैं, galaxies
+00:28:22,100 --> 00:28:25,920
+robin के case में क्या करेंगे कि हम पहले
+process के ऊपर चलाएंगे और फिर
 
 458
-00:31:08,146 --> 00:31:12,066
-के नाम हैं। कुछ comet है तो हमेशा the
-लगाया जाता है। तो
+00:28:25,960 --> 00:28:29,620
+जब वो सारे process complete हो जाएंगे तब
+हम दूसरे के pro-- दूसरी queue में
 
 459
-00:31:12,126 --> 00:31:15,686
-आप बोलते हैं the Jupiter, the Venus,
-the Pluto,
+00:28:29,660 --> 00:28:33,500
+जाएंगे। अब आपस में queues interact नहीं कर
+रहे। मतलब
 
 460
-00:31:16,146 --> 00:31:20,026
-the Earth, the Moon,
-the Saturn। यह convention बनी
+00:28:33,680 --> 00:28:37,210
+दो queues हैं तो ऐसा नहीं कि एक process
+दूसरी queue में जा सकता
 
 461
-00:31:20,046 --> 00:31:22,006
-हुई है।
+00:28:37,260 --> 00:28:41,140
+है। एक process एक ही queue में रहेगा,
+दूसरा process दूसरी queue में ही रहेगा। तो
 
 462
-00:31:22,986 --> 00:31:26,966
-चलिए next हमारा the का use। आप note करिए
-तीनों sentences को।
+00:28:41,160 --> 00:28:44,920
+बेचारा वो wait ही करता रहेगा जब तक पहली
+queue के सारे process complete नहीं
 
 463
-00:31:27,006 --> 00:31:30,626
-लिखा the best is yet to come, the worst
-is over
+00:28:44,940 --> 00:28:48,660
+होते। तो इसीलिए हम इसमें advance use करते
+हैं। जैसे ये देखो यहां पे
 
 464
-00:31:30,886 --> 00:31:32,746
-and the fastest will be honored.
+00:28:48,700 --> 00:28:52,600
+क्या किया हुआ है। अलग-अलग queues को बनाया
+हुआ है। अलग-अलग processes के लिए
 
 465
-00:31:33,566 --> 00:31:37,326
-आप जो the लगा रहे हैं note करें ध्यान से
-the के पीछे आपने
+00:28:52,620 --> 00:28:56,340
+अलग-अलग queue. तो let's say पहले इस,
+इसको execute करेंगे। इसके
 
 466
-00:31:37,406 --> 00:31:40,586
-third degree use की हुई है adjective की
+00:28:56,420 --> 00:29:00,220
+सारे process को execute करने के बाद मैं
+दूसरी queue पर जाऊंगा। फिर इसको सारों को
 
 467
-00:31:41,046 --> 00:31:44,476
-superlative आपने use की है। यानी good,
-better,
+00:29:00,280 --> 00:29:03,820
+तीसरी, फिर इसको सारों पे चौथी,
+फिर इसको सारे पे पांचवी। ठीक
 
 468
-00:31:44,746 --> 00:31:48,066
-best third degree है। Worst में होता है
-bad,
+00:29:03,880 --> 00:29:07,860
+है। अब यहां पे आ गया multi level.
+इसमें हमने थोड़ा सा change कर दिया।
 
 469
-00:31:48,446 --> 00:31:52,246
-worse and worst third degree है यहां भी।
-और fast में
+00:29:07,880 --> 00:29:09,620
+multi level feedback का मतलब क्या है?
 
 470
-00:31:52,286 --> 00:31:56,246
-fast, faster,
-fastest यहां भी third degree। तो note करें
+00:29:10,120 --> 00:29:13,580
+इसमें हमने queues को आपस में जोड़ दिया। ये
+देखो पहली queue
 
 471
-00:31:56,306 --> 00:32:00,266
-third degree use होगी किसी adjective की
-this thing we will discuss in
+00:29:13,640 --> 00:29:17,540
+थी। अब इसको हमने दूसरी में जोड़ दिया। इसको
+हमने तीसरी में जोड़ दिया। ये
 
 472
-00:32:00,306 --> 00:32:02,766
-detail when the time comes for adjective
-part.
+00:29:17,600 --> 00:29:21,520
+क्यों किया?
+Let's say कोई process यहां पे था। उसको
 
 473
-00:32:03,196 --> 00:32:06,866
-But for the moment please note down कि
-wherever you are using the third degree of
+00:29:21,580 --> 00:29:25,320
+robin से चलाया। Time quantum था उसका आठ।
+मैंने उसको आठ
 
 474
-00:32:06,906 --> 00:32:10,546
-the adjective, attaching the
-is a must 100%.
+00:29:25,380 --> 00:29:29,280
+unit तक चलाया। अगर वो आठ में complete हो
+गया तो terminate हो जाएगा।
 
 475
-00:32:10,606 --> 00:32:14,586
-The तो लगेगा ही लगेगा। कुछ शक की बात ही
-नहीं। एक percent भी कोई इसमें
+00:29:29,340 --> 00:29:33,240
+अगर नहीं complete हुआ तो वो दूसरी queue
+में भी जा सकता है।
 
 476
-00:32:14,626 --> 00:32:18,486
-exception नहीं है। जहां भी आपने
-superlative use
+00:29:33,280 --> 00:29:37,020
+पहले वाले में क्या था?
+वो queue change नहीं करेगा। वो fix रहेगा
 
 477
-00:32:18,506 --> 00:32:22,046
-करना है,
-third degree use करनी है the उसके साथ
+00:29:37,040 --> 00:29:40,580
+ही करता रहेगा,
+starvation आएगी। लेकिन यहां पे वो दूसरी
 
 478
-00:32:22,326 --> 00:32:26,246
-आएगा। So the finest, the worst, the
+00:29:40,660 --> 00:29:44,260
+जाएगा। दूसरी queue में हमने time quantum
+बढ़ा दिया। आठ से 16 कर
 
 479
-00:32:26,366 --> 00:32:30,266
-slowest, the oldest, the youngest,
-the richest, the poorest.
+00:29:44,300 --> 00:29:48,040
+दिया। अब 16 में अगर वो complete हो गया तो
+terminate हो जाएगा। अगर
 
 480
-00:32:32,786 --> 00:32:36,746
-ठीक है जी। अब आगे देखिए जरा। अब ध्यान से
-अगर आप देखें
+00:29:48,060 --> 00:29:51,690
+16 में भी complete नहीं हुआ मतलब burst
+time बहुत ज्यादा है उसका। Let's say burst
 
 481
-00:32:36,806 --> 00:32:40,286
-तो यहां भी आपने तीनों मामलों में adjective
-use किया है,
+00:29:51,760 --> 00:29:55,380
+time है उसका 50 तो पहले आठ तक चलाया। बचा
+कितना?
 
 482
-00:32:40,766 --> 00:32:44,466
-लेकिन उसके साथ आपने the लगा दिया। ठीक है
-जी। ध्यान से note
+00:29:55,520 --> 00:29:59,260
+42 तो वो बेचारा इसमें चला गया। फिर 16 तक
+चलाया तो
 
 483
-00:32:44,486 --> 00:32:48,446
-करें। Honor the courageous आपका meaning
+00:29:59,300 --> 00:30:00,520
+16 minus करोगे
 
 484
-00:32:48,486 --> 00:32:52,366
-क्या निकल रहा है?
-Honor the courageous आपका meaning है honor
+00:30:01,560 --> 00:30:03,460
+तो ये आपका जो है, अ,
 
 485
-00:32:52,526 --> 00:32:53,706
-courageous people.
+00:30:04,540 --> 00:30:08,384
+40thirty six, twenty six बचेगा। ठीक है तो
 
 486
-00:32:54,506 --> 00:32:57,746
-Whenever you are using the with a simple
+00:30:08,464 --> 00:30:11,324
+twenty six बचा तो अब वो बचा हुआ काम कहां
+पे करेगा?
 
 487
-00:32:57,826 --> 00:33:01,686
-adjective first degree adjective की है। एक
-quality बता
+00:30:11,404 --> 00:30:14,724
+फिर वो FCFS की तरह चलेगा,
+First Come First Serve की तरह
 
 488
-00:33:01,746 --> 00:33:05,206
-रहा है courageous और आप the लगा रहे हैं।
-It becomes a group
+00:30:14,764 --> 00:30:18,604
+चलेगा। मतलब यहां पे processes को queues को
+हमने
 
 489
-00:33:05,266 --> 00:33:06,606
-quality always.
+00:30:18,664 --> 00:30:22,564
+आपस में connect कर दिया तो वो एक दूसरे
+queues में जो है वो participate कर सकते
 
 490
-00:33:07,726 --> 00:33:11,556
-एक group quality बन जाएगी। Honor the
-courageous means
+00:30:22,644 --> 00:30:26,064
+दूसरी queues में भी जा सकते हैं। This
+is a concept of multi-level
 
 491
-00:33:11,766 --> 00:33:15,486
-honor courageous people। क्योंकि आप
+00:30:26,564 --> 00:30:30,364
+feedback और यहां पे छोटा सा point जो है वो
+real time CPU scheduling
 
 492
-00:33:15,506 --> 00:33:19,166
-अकेला courageous लिख नहीं पाएंगे। या तो
-लिखेंगे honor courageous
+00:30:30,404 --> 00:30:34,403
+मतलब real time में जब हम करते हैं ना
+actual में जब आपके system में होता है तो
 
 493
-00:33:19,266 --> 00:33:23,046
-people या फिर the courageous। दोनों में से
-एक होगा। Either
+00:30:34,444 --> 00:30:38,224
+होता क्या है कि जब process चलता है,
+जब एक process चल रहा होता है तो
 
 494
-00:33:23,086 --> 00:33:25,306
-the courageous or courageous people.
+00:30:38,284 --> 00:30:40,244
+बीच में हम बोलते क्या है interrupt?
 
 495
-00:33:25,906 --> 00:33:29,886
-तो meaning दोनों का same है। Similar to
-the good, everything
+00:30:40,544 --> 00:30:44,364
+हम बोल रहे ना बार-बार कि running process
+को preempt कर दिया। preempt करते
 
 496
-00:33:29,946 --> 00:33:33,886
-else appears to be.
-अच्छे लोगों को सब कुछ अच्छा ही लगता है।
+00:30:44,404 --> 00:30:48,324
+क्यों हैं?
+इसको बोलते हैं interrupt। interrupt जैसे
 
 497
-00:33:33,906 --> 00:33:37,895
-तो आप ऐसे बोल सकते थे to good people ऐसे
-बोल सकते थे।
+00:30:48,344 --> 00:30:52,144
+गलती से किसी ने shutdown button पे click
+कर दिया या किसी ने higher
 
 498
-00:33:37,926 --> 00:33:41,806
-वो नहीं बोलना तो the good बोल दीजिए। तो
-the good और good people
+00:30:52,164 --> 00:30:54,524
+priority process execute कर दिया तो होगा
+क्या?
 
 499
-00:33:41,826 --> 00:33:45,706
-का meaning एक ही है,
-कोई फर्क नहीं है। तो यानी adjective की
+00:30:54,564 --> 00:30:58,104
+running process बीच में preempt हो जाएगा।
+फिर हम दूसरे process को
 
 500
-00:33:45,726 --> 00:33:49,526
-degree use करके भी हम the लगा के group
-quality बना सकते
+00:30:58,144 --> 00:31:02,104
+execute करेंगे। तो जब हम running process
+को preempt interrupt करते हैं मतलब
 
 501
-00:33:49,546 --> 00:33:51,386
-हैं। जैसे आपने लिखा the bad
+00:31:02,164 --> 00:31:05,804
+बीच में interrupt करते हैं तो हम पहले
+check करते हैं कि भई ये किस type का
 
 502
-00:33:52,426 --> 00:33:55,866
-तो the bad means bad people। इसी तरह से
-आपने लिखा
+00:31:05,824 --> 00:31:09,724
+interrupt है। क्या इस interrupt को हमें
+CPU को कोई
 
 503
-00:33:55,986 --> 00:33:59,786
-respect the brave तो brave, the brave here
+00:31:09,844 --> 00:31:11,824
+इसको priority देनी चाहिए या नहीं देनी
+चाहिए?
 
 504
-00:33:59,846 --> 00:34:03,806
-means brave people। तो आप ऐसे भी बोल सकते
-थे respect
+00:31:11,984 --> 00:31:14,124
+अगर priority देनी चाहिए तो होगा क्या?
 
 505
-00:34:03,866 --> 00:34:07,746
-brave people या respect the brave। तो
+00:31:14,504 --> 00:31:18,324
+फिर हम उस case में context switch करेंगे।
+context switch मतलब कि
 
 506
-00:34:07,826 --> 00:34:11,186
-the लगा के आपने group quality बना दी है।
+00:31:18,404 --> 00:31:22,104
+जो काम इसने किया था,
+इस process ने जो-जो काम किए उसको save कर
 
 507
-00:34:11,226 --> 00:34:12,226
-Right।
+00:31:22,164 --> 00:31:26,064
+दो और इसको बोलते हैं ISR। ISR मतलब
+interrupt
 
 508
-00:34:13,326 --> 00:34:16,726
-चलिए आगे चलते हैं हम। I think यह last
-point है हमारा,
+00:31:26,244 --> 00:31:29,324
+service routine। interrupt service routine
+क्या है?
 
 509
-00:34:17,726 --> 00:34:20,746
-इसका article का। देखिए तो आपने क्या
+00:31:29,784 --> 00:31:33,704
+फिर वो जो CPU है ना वो ISR जो है वो handle
+करता है। अब वो
 
 510
-00:34:20,786 --> 00:34:24,266
-लिखा। आपने लिखा the patriot in her
+00:31:33,764 --> 00:31:37,724
+CPU जो है वो जो interrupt आकर हुआ था उसको
+priority देगा। interrupt जो
 
 511
-00:34:24,406 --> 00:34:28,126
-awoke and she took to the gun.
-अब आपने क्या किया
+00:31:37,764 --> 00:31:41,664
+भी आकर हुआ उसको पहले execute करेगा। फिर जब
+interrupt खत्म हो जाएगा
 
 512
-00:34:28,226 --> 00:34:32,086
-है? इसमें एक खासियत आपको बताता हूं।
+00:31:41,724 --> 00:31:45,384
+तब फिर बेचारा जो process हमने preempt किया
+था वो दोबारा से फिर
 
 513
-00:34:32,166 --> 00:34:36,086
-इसमें normally जो adjective है उसके पीछे
-in लगा होता है। इस तरह
+00:31:45,464 --> 00:31:49,384
+चलेगा। तो इतने time तक ये जो बीच में इतना
+time है इस
 
 514
-00:34:36,146 --> 00:34:40,006
-के sentence में। आपने बोला the patriot in
-her awoke.
+00:31:49,424 --> 00:31:53,184
+time तक जो है वो process अपना ready queue
+में चला जाएगा क्योंकि इस
 
 515
-00:34:41,546 --> 00:34:45,506
-अब ऐसा तो नहीं है कि उसके अंदर एक और
-person था
+00:31:53,264 --> 00:31:57,044
+time तक CPU busy है interrupt को handle
+करने में। तो
 
 516
-00:34:45,526 --> 00:34:49,286
-जो patriot था। चलिए आप बताइए,
-आपसे पूछते हैं। क्या meaning
+00:31:57,164 --> 00:32:01,124
+इस वजह से जो है कहीं ना कहीं latency आकर
+होती है। इसको बोलते हैं latency।
 
 517
-00:34:49,366 --> 00:34:52,746
-इसका निकल रहा है?
-मुझे बताइए जरा। Please let me know in the
+00:32:01,164 --> 00:32:05,084
+latency मतलब कि हम चाहते नहीं है कि ये
+time आकर हो लेकिन कहीं
 
 518
-00:34:52,986 --> 00:34:55,126
-comments what is the meaning of this line?
+00:32:05,104 --> 00:32:08,664
+ना कहीं आकर होता है। जैसे आप system use
+करते हो, system use करते time जो है
 
 519
-00:34:55,166 --> 00:34:58,506
-The patriot in her awoke
-and she took to the gun.
+00:32:08,704 --> 00:32:12,664
+obviously आपने बीच में keyboard से कोई
+button press कर दिया या आपने mouse जो
 
 520
-00:34:58,966 --> 00:35:01,666
-What is the meaning of the expression the
-patriot in her?
+00:32:12,684 --> 00:32:16,464
+है वो गलती से click कर दिया तो इस case में
+क्या होता है interrupt आकर होता है। तो
 
 521
-00:35:02,666 --> 00:35:03,326
-क्या meaning है?
+00:32:16,564 --> 00:32:20,504
+CPU बीच में उस चीज को भी क्या करता है
+execute करने की कोशिश करता
 
 522
-00:35:06,486 --> 00:35:09,706
-Yes, please the feel. हां,
-बिल्कुल सही बोला आपने।
-
-523
-00:35:09,726 --> 00:35:13,546
-अभिमन्यु। यह feeling की बात कर रहा है।
-Patriotism की feeling की
-
-524
-00:35:13,586 --> 00:35:17,426
-बात कर रहा है। बिल्कुल सही बोला आपने। तो
-जो patriot word है, उसके
-
-525
-00:35:17,466 --> 00:35:21,026
-साथ the लगा के आपने एक abstract feeling
-convey की
-
-526
-00:35:21,086 --> 00:35:24,806
-है। एक quality आपने convey की है कि उसके
-अंदर की
-
-527
-00:35:24,846 --> 00:35:27,646
-देशभक्ति जाग उठी और उसने बंदूक पकड़ ली
-
-528
-00:35:28,766 --> 00:35:32,026
-the लगा के। इसी तरह से the child in him
-could not,
-
-529
-00:35:32,946 --> 00:35:33,476
-could not
-
-530
-00:35:35,246 --> 00:35:37,666
-control its curiosity.
-
-531
-00:35:40,446 --> 00:35:44,326
-उसके अंदर का बचपन, the childhood,
-उसके यानी
-
-532
-00:35:44,346 --> 00:35:48,126
-the child का मतलब childhood। उसके अंदर का
-जो बचपन है, उसके
-
-533
-00:35:48,146 --> 00:35:51,946
-अंदर जो बच्चा है,
-वह अपनी curiosity को रोक नहीं पाया। तो
-
-534
-00:35:52,066 --> 00:35:53,926
-once again you are talking of a quality.
-
-535
-00:35:55,406 --> 00:35:57,646
-ठीक है जी।
-
-536
-00:36:00,106 --> 00:36:03,846
-चलिए last हमारा point है the से जुड़ा हुआ।
-
-537
-00:36:03,886 --> 00:36:07,606
-आपने लिखा है Stephen Hawkins
-is often called the Einstein of the
-
-538
-00:36:07,786 --> 00:36:11,646
-21st century. Normally proper noun के
-
-539
-00:36:11,706 --> 00:36:15,526
-साथ the नहीं लगाया जाता। जैसे मैंने पहले
-कहा। But here are some
-
-540
-00:36:15,566 --> 00:36:19,026
-exceptions.
-आपने लिखा है Stephen Hawkins
-
-541
-00:36:19,186 --> 00:36:23,126
-Einstein.
-तो आप यहां पर the इसलिए लगा रहे हैं
-
-542
-00:36:23,166 --> 00:36:25,266
-you are comparing Hawkins with
-
-543
-00:36:25,346 --> 00:36:29,246
-Einstein.You are comparing Hawkins with
-
-544
-00:36:29,426 --> 00:36:33,306
-Einstein. जिस बंदे से comparison किया जा
-
-545
-00:36:33,386 --> 00:36:37,226
-रहा है उसके साथ the लगेगा याद रखिए। आप
-comparison
-
-546
-00:36:37,306 --> 00:36:40,986
-कर रहे हैं कि उसको Einstein के बराबर का
-दर्जा दिया
-
-547
-00:36:41,026 --> 00:36:45,006
-जाता है। So Stephen Hawkins
-is often called the Einstein
-
-548
-00:36:45,086 --> 00:36:46,546
-of the twenty first century.
-
-549
-00:36:47,406 --> 00:36:51,066
-Similarly, Kalidas
-is called the Shakespeare of India.
-
-550
-00:36:51,846 --> 00:36:55,286
-तो जिस बंदे के साथ comparison,
-अब Kalidas की तुलना है
-
-551
-00:36:55,346 --> 00:36:59,326
-Shakespeare के साथ। तो Shakespeare के साथ
-the आएगा। यहां लगाना
-
-552
-00:36:59,426 --> 00:37:02,126
-wrong नहीं because you
-are making a comparison, right?
-
-553
-00:37:02,846 --> 00:37:06,766
-Similarly,
-the budding painter promises to evolve
-
-554
-00:37:06,776 --> 00:37:08,486
-the next M. F. Husain.
-
-555
-00:37:09,546 --> 00:37:13,366
-तो same चीज है, बिल्कुल M. F.
-Husain से तुलना हो रही है। एक और sentence
-
-556
-00:37:13,406 --> 00:37:16,106
-लिए hand लिखा, Ludhiana
-is the Manchester of India.
-
-557
-00:37:16,886 --> 00:37:20,006
-Ludhiana is the Manchester of India.
-Right!
-
-558
-00:37:20,306 --> 00:37:24,066
-तो again the same case यानी जो status
-Manchester का वहां पर
-
-559
-00:37:24,106 --> 00:37:27,926
-है वो Ludhiana का India में है। फिर आपने
-बोला Chandigarh is known
-
-560
-00:37:27,966 --> 00:37:31,786
-as the Paris of India. Chandigarh
-is known as the
-
-561
-00:37:31,926 --> 00:37:35,146
-Paris of India. Again the Paris of India.
-
-562
-00:37:35,526 --> 00:37:39,426
-तो यह बड़ा common question है। यह जो last
-दो मैंने आपके लिए लिखे थे काफी
-
-563
-00:37:39,466 --> 00:37:41,406
-common question है paper में।
-
-564
-00:37:42,846 --> 00:37:46,746
-तो यह चीजें हैं जिनका आपने ध्यान रखना है।
-अब
-
-565
-00:37:46,766 --> 00:37:50,586
-आइए कुछ हम question करके देखते हैं। कुछ
-time आप लगाइए
-
-566
-00:37:50,626 --> 00:37:54,386
-जरा। मुझे बताइए इसमें कहां-कहां क्या-क्या
-mistake है,
-
-567
-00:37:54,486 --> 00:37:58,026
-कहां-कहां कौन सा article लगना है बताइए
-मुझे। आप जरा नजर
-
-568
-00:37:58,086 --> 00:38:01,946
-मारिए इस exercise पर जो आपकी आंखों के
-सामने नजर आ रही
-
-569
-00:38:01,966 --> 00:38:05,206
-है। मुझे बताइए कहां-कहां क्या-क्या problem
-
-570
-00:38:05,246 --> 00:38:07,746
-है।
-
-571
-00:38:09,966 --> 00:38:13,686
-हाँ जी, Is it correct to say a film
-is mainly a form of,
-
-572
-00:38:14,266 --> 00:38:17,026
-a film is mainly a form of entertainment?
-
-573
-00:38:18,726 --> 00:38:22,626
-हाँ जी, यह ठीक होगा कहना। हाँ,
-the film भी ठीक है। आपका
-
-574
-00:38:22,666 --> 00:38:26,546
-कहना सही है अभिमन्यु,
-the कहना सही है। An film क्यों
-
-575
-00:38:26,566 --> 00:38:29,046
-लगाएंगे भाई, किस खुशी में लगाएंगे an film?
-
-576
-00:38:29,806 --> 00:38:33,316
-देखिए,
-a film is mainly a form of entertainment.
-
-577
-00:38:33,426 --> 00:38:34,886
-This is perfectly fine.
-
-578
-00:38:35,866 --> 00:38:39,726
-Film मत बोलिए अकेला,
-अकेला film मत बोलिए। या तो
-
-579
-00:38:39,746 --> 00:38:43,606
-the film बोलिए वो भी ठीक होगा,
-a film बोलिए वो
-
-580
-00:38:43,646 --> 00:38:47,586
-भी ठीक होगा। Form में o का sound आ
-
-581
-00:38:47,686 --> 00:38:51,666
-रहा है तो वहां an आएगा form में। नहीं,
-नहीं
-
-582
-00:38:51,726 --> 00:38:55,326
-भाई form में o का sound कहां आ रहा है?
-आप क्या f silent है क्या?
-
-583
-00:38:55,366 --> 00:38:59,306
-बताइए मुझे। यह कैसी बात कर रहे हैं आप।
-विपिन, क्या
-
-584
-00:38:59,466 --> 00:39:02,886
-form में sound o से शुरू हो रही है कि f से
-शुरू हो रही है?
-
-585
-00:39:03,846 --> 00:39:07,326
-Starting sound कौन सी है form में बताइए। f
-है या o है?
-
-586
-00:39:08,666 --> 00:39:12,426
-हाँ तो f है तो फिर an कैसे आ जाएगा भाई।
-अगर f से है तो a ही
-
-587
-00:39:12,506 --> 00:39:15,926
-आएगा। वो गलत बात है यह। चलिए I
-
-588
-00:39:15,966 --> 00:39:19,366
-returned her money
-which I had borrowed from her.
-
-589
-00:39:20,586 --> 00:39:21,626
-बताइए क्या करेंगे आप?
-
-590
-00:39:22,986 --> 00:39:26,586
-I returned her money
-which I had borrowed from her.
-
-591
-00:39:26,926 --> 00:39:29,246
-कौन सा article लगाएंगे, कहां लगाएंगे बताइए
-
-592
-00:39:29,266 --> 00:39:31,906
-मुझे।
-
-593
-00:39:34,226 --> 00:39:37,726
-The कहां लगाएंगे बताइए। I returned her the
-money.
-
-594
-00:39:37,826 --> 00:39:41,606
-मैंने उसे वो पैसे वापस कर दिए जो मैंने
-उधार लिए
-
-595
-00:39:41,746 --> 00:39:42,906
-थे।
-
-596
-00:39:43,746 --> 00:39:47,726
-बिल्कुल सही बात है। Specific money की बात
-है तो the आएगा। The
-
-597
-00:39:47,886 --> 00:39:51,096
-money which I had borrowed,
-हाँ सही कह रहे Brijesh
-
-598
-00:39:51,166 --> 00:39:54,976
-आप। A writer is one who can play with
-words in
-
-599
-00:39:55,006 --> 00:39:56,066
-different ways.
-
-600
-00:39:58,026 --> 00:40:01,886
-A writer is one who can play with words in
-different ways.
-
-601
-00:40:01,946 --> 00:40:05,786
-तो बताइए क्या लगाएंगे a, an,
-the या ऐसे ही छोड़ देंगे।
-
-602
-00:40:06,186 --> 00:40:10,106
-Because जरूरी नहीं कि आपने article लगाना
-ही है। हाँ, सही
-
-603
-00:40:10,146 --> 00:40:14,075
-बोला आपने a writer यानी सारे writers की
-बात हो रही
-
-604
-00:40:14,106 --> 00:40:17,626
-है। A writer is one who can play with
-words in different ways.
-
-605
-00:40:20,786 --> 00:40:23,826
-Writer is one who can play with words.
-
-606
-00:40:26,546 --> 00:40:30,486
-चलिए चौथा देखिए। The Sikhs are a
-
-607
-00:40:30,506 --> 00:40:31,766
-martial race.
-
-608
-00:40:33,346 --> 00:40:36,226
-The Sikhs are martial race.
-
-609
-00:40:37,366 --> 00:40:38,566
-बताइए क्या लिखेंगे इसमें?
-
-610
-00:40:39,666 --> 00:40:43,086
-Which article is needed?
-यह article की need है भी या नहीं
-
-611
-00:40:43,206 --> 00:40:43,726
-बताइए।
-
-612
-00:40:44,846 --> 00:40:47,466
-बताइए Is it correct
-or इसको change करें हम?
-
-613
-00:40:47,766 --> 00:40:49,706
-The writer is right or wrong.
-
-614
-00:40:50,966 --> 00:40:52,746
-The writer is right or wrong, मैं समझा
-
-615
-00:40:52,786 --> 00:40:56,666
-नहीं। नहीं, the writer के
-
-616
-00:40:56,746 --> 00:41:00,686
-a writer भी लिख सकते हैं,
-कोई problem नहीं है। हाँ जी,
-
-617
-00:41:00,746 --> 00:41:03,406
-कर रहा था। The Sikhs are a martial race.
-
-618
-00:41:03,546 --> 00:41:07,506
-What is your comment on that?
-यह ठीक है या article remove कर दें
-
-619
-00:41:07,566 --> 00:41:11,516
-बताइए। Nikhil कह रहे हैं ठीक है, right है।
-
-620
-00:41:11,586 --> 00:41:12,916
-और बाकी लोग क्या बोलते हैं?
-
-621
-00:41:13,806 --> 00:41:16,186
-a लगेगा। क्यों भाई a कहां लगेगा
-
-622
-00:41:16,266 --> 00:41:20,166
-अभिषेक?
-बिल्कुल correct है। अभी आपको मैंने बताया
-
-623
-00:41:20,206 --> 00:41:24,146
-जो religious communities हैं,
-जो linguistic groups हैं,
-
-624
-00:41:24,266 --> 00:41:27,366
-उनके नाम के साथ the हमेशा आएगा।
-
-625
-00:41:27,426 --> 00:41:31,186
-Nationalities हैं the हमेशा आएगा। We will
-always
-
-626
-00:41:31,306 --> 00:41:34,406
-say the Muslims, the Jews, the
-
-627
-00:41:35,546 --> 00:41:39,346
-Sikhs, the Jains, the Hindus,
-the Christians, the
-
-628
-00:41:39,406 --> 00:41:42,616
-Punjabis, the Italians ऐसे आएगा।
-
-629
-00:41:44,146 --> 00:41:46,806
-An apple a day keeps the doctor away.
-
-630
-00:41:48,026 --> 00:41:51,046
-But if the doctor is handsome,
-keep the apple away.
-
-631
-00:41:51,146 --> 00:41:55,006
-हाँ जी बताइए। The, the writer, a
-
-632
-00:41:55,046 --> 00:41:59,006
-writer दोनों लगा सकते हैं Shivam जो आप पूछ
-रहे हैं। दोनों में से कोई भी लगा दें,
-
-633
-00:41:59,066 --> 00:42:02,676
-कोई दिक्कत नहीं है। हाँ बिल्कुल a doctor
-का मतलब है all doctors.
-
-634
-00:42:03,206 --> 00:42:05,926
-हाँ जी,
-An apple a day keeps the doctor away.
-
-635
-00:42:06,266 --> 00:42:10,206
-काफी लोग कह रहे हैं Brijesh और Shazi Zama
-साहब। यह correct
-
-636
-00:42:10,226 --> 00:42:12,786
-है बिल्कुल। I agree with you full 100%.
-
-637
-00:42:13,366 --> 00:42:17,226
-An apple a day.
-अगर आप apple a day लिखते तो गलत
-
-638
-00:42:17,246 --> 00:42:20,206
-होता। क्योंकि आपका मतलब है रोज एक apple
-
-639
-00:42:20,286 --> 00:42:23,626
-खाना। प्रतिदिन एक सेब खाना। तो,
-
-640
-00:42:27,486 --> 00:42:31,210
-आप पूछ रहे हैं Sagar अरे।R सही है क्या
-पिछले
-
-641
-00:42:31,290 --> 00:42:35,260
-sentence में?
-पिछला sentence बिल्कुल 100% ठीक है।
-
-642
-00:42:35,290 --> 00:42:39,190
-The Sikhs are a martial race,
-उसका कारण यह है because you are
-
-643
-00:42:39,210 --> 00:42:43,090
-talking of many people who are Sikhs,
-you are not talking of a single
-
-644
-00:42:43,210 --> 00:42:47,190
-Sikh. We always say the Hindus
-are a majority in India.
-
-645
-00:42:47,670 --> 00:42:50,390
-The Muslims are in a minority in India.
-
-646
-00:42:50,870 --> 00:42:53,610
-The Jains are the richest people in India.
-
-647
-00:42:53,730 --> 00:42:57,490
-तो बिल्कुल सही लगा है,
-इसमें कोई दिक्कत नहीं। An apple a day
-
-648
-00:42:57,530 --> 00:43:01,430
-सही है यह,
-इसमें कोई दिक्कत नहीं है। Every model
-
-649
-00:43:01,510 --> 00:43:05,039
-aspires to get a hourglass figure.
-
-650
-00:43:05,190 --> 00:43:06,690
-बताइए इसमें क्या problem है?
-
-651
-00:43:12,530 --> 00:43:16,260
-हाँ जी। An क्यों आएगा भई?
-बिल्कुल सही बात है।
-
-652
-00:43:16,450 --> 00:43:20,390
-R लगा हुआ है तो An आएगा। बिल्कुल सही कह
-रहे हैं। तो यहां An लगाइए।
-
-653
-00:43:20,410 --> 00:43:21,670
-An hourglass figure.
-
-654
-00:43:22,730 --> 00:43:26,410
-A hospital is a place where the sick are
-
-655
-00:43:26,530 --> 00:43:27,350
-cared for.
-
-656
-00:43:28,910 --> 00:43:32,810
-तो अब इसमें आपको जैसे मैंने पहले जिक्र
-
-657
-00:43:32,850 --> 00:43:36,370
-किया था कि sound is beginning with O not
-
-658
-00:43:36,710 --> 00:43:40,570
-H.
-Even Hindi में भी difference है। अगर आप
-
-659
-00:43:40,670 --> 00:43:40,930
-हैं,
-
-660
-00:43:42,530 --> 00:43:46,470
-aspire होगा ना question six में। हाँ,
-aspire बिल्कुल ठीक
-
-661
-00:43:46,550 --> 00:43:50,470
-लगा हुआ है,
-कोई दिक्कत नहीं। तो an hospital आएगा। इसको
-
-662
-00:43:50,510 --> 00:43:54,430
-लें। अच्छा Hindi में आपको बता रहा था,
-अगर अस्पताल है तो इंसानों का
-
-663
-00:43:54,470 --> 00:43:58,430
-है और अगर हस्पताल है तो जानवरों का है। यह
-difference है
-
-664
-00:43:58,470 --> 00:44:02,070
-वहां भी। But यहां पर an hospital आएगा।
-
-665
-00:44:02,110 --> 00:44:04,070
-European Union consists of
-
-666
-00:44:05,410 --> 00:44:09,310
-28 members. बताइए इसमें क्या doubt है?
-बताइए इसमें क्या दिक्कत है?
-
-667
-00:44:11,750 --> 00:44:15,510
-भई an नहीं आएगा। फिर आप वही बात कह रहे हैं
-सीता कौन था। An
-
-668
-00:44:15,590 --> 00:44:19,510
-क्यों आएगा बताओ मेरे को। अभी आपको बता के
-हटाऊं कि European
-
-669
-00:44:19,590 --> 00:44:23,530
-की sound जो है वो Y से शुरू हो रही है। और
-दूसरी बात यह भी है
-
-670
-00:44:23,630 --> 00:44:26,110
-कि European Union तो है ही दुनिया में एक,
-
-671
-00:44:27,310 --> 00:44:31,270
-केवल दुनिया में एक ही European Union है,
-और कोई है ही नहीं।
-
-672
-00:44:31,310 --> 00:44:35,130
-तो जितनी organizations हैं they always
-take the, अभी तो हम
-
-673
-00:44:35,150 --> 00:44:38,790
-बात करके हटें हैं। हमेशा the आएगा। The
-
-674
-00:44:38,949 --> 00:44:42,710
-UNO, The European Union, The NAFTA,
-
-675
-00:44:43,430 --> 00:44:47,070
-The SAFTA जो भी है, है ना!
-तो the आएगा। The
-
-676
-00:44:47,150 --> 00:44:49,910
-European Union consists of 28 member
-nations.
-
-677
-00:44:50,610 --> 00:44:54,330
-She got an M.Phil. degree at 23.
-बताइए ठीक है कि
-
-678
-00:44:54,340 --> 00:44:54,770
-गलत है?
-
-679
-00:44:55,650 --> 00:44:59,410
-Can we use the 28 member nations because
-we are talking about specific।
-
-680
-00:45:00,510 --> 00:45:02,110
-एक मिनट। क्या पूछ रहे हैं आप?
-
-681
-00:45:03,230 --> 00:45:07,150
-भई the क्यों बोलेंगे? नहीं, नहीं,
-कोई जरूरत नहीं आपको। नहीं, नहीं। आपको यहां
-
-682
-00:45:07,210 --> 00:45:09,930
-कोई जरूरत नहीं the की। She got an M.Phil.
-
-683
-00:45:10,290 --> 00:45:12,370
-हाँ यह बिल्कुल दुरुस्त है because M.Phil.
-
-684
-00:45:12,450 --> 00:45:13,110
-का sound
-
-685
-00:45:13,950 --> 00:45:16,880
-E से शुरू हो रहा है। E double M, है ना!
-
-686
-00:45:17,130 --> 00:45:21,010
-तो उस हिसाब से ठीक है। अगर Masters in
-Philosophy
-
-687
-00:45:21,050 --> 00:45:24,530
-होता तो फिर a की जरूरत पड़ती आपको। तो nine
-is
-
-688
-00:45:24,550 --> 00:45:28,510
-correct। Hourly warning bell
-was sounded to mark the end of
-
-689
-00:45:28,590 --> 00:45:30,690
-a period. बताइए क्या लगाएंगे आप इसमें?
-
-690
-00:45:33,710 --> 00:45:37,550
-Hmm. An hourly warning bell
-was sounded to mark the end of a
-
-691
-00:45:37,610 --> 00:45:38,050
-period.
-
-692
-00:45:38,970 --> 00:45:42,110
-The best was saved for last.
-
-693
-00:45:43,360 --> 00:45:47,040
-The best was saved for last.
-बताइए क्या करेंगे?
-
-694
-00:45:52,290 --> 00:45:56,110
-हाँ,
-बिल्कुल सही बात है। Last जो है यह third
-
-695
-00:45:56,190 --> 00:45:59,570
-है adjective की,
-तो आपको the लगाना चाहिए। बिल्कुल सही बात
-
-696
-00:45:59,630 --> 00:46:03,470
-है। Many ideas were given
-but the idea that I loved
-
-697
-00:46:03,570 --> 00:46:05,430
-was the one given by her.
-
-698
-00:46:06,370 --> 00:46:07,830
-बताइए इसमें क्या problem है?
-
-699
-00:46:10,270 --> 00:46:14,030
-Many ideas were given but the idea
-that I loved was the
-
-700
-00:46:14,130 --> 00:46:15,210
-one given by her.
-
-701
-00:46:16,690 --> 00:46:20,610
-बिल्कुल सही है। In fact इससे इसको better
-भी लिखा जा
-
-702
-00:46:20,710 --> 00:46:24,250
-सकता है। Many ideas were given
-but the one,
-
-703
-00:46:24,690 --> 00:46:28,560
-क्योंकि ideas पहले mentioned ही है तो
-repeat नहीं करना चाहिए। But
-
-704
-00:46:28,630 --> 00:46:32,450
-anyway grammatically the idea बिल्कुल सही
-है। जो
-
-705
-00:46:32,510 --> 00:46:35,670
-idea मुझे पसंद है वो उसने दिया था। बिल्कुल
-सही
-
-706
-00:46:35,710 --> 00:46:39,190
-है। Our meeting ended without any
-
-707
-00:46:39,310 --> 00:46:42,210
-useful conclusion being reached.
-
-708
-00:46:42,290 --> 00:46:45,750
-Our meeting ended without any useful
-conclusion being reached.
-
-709
-00:46:45,790 --> 00:46:47,050
-बताइए इसमें क्या दिक्कत है?
-
-710
-00:46:50,390 --> 00:46:50,610
-हमम।
-
-711
-00:46:52,650 --> 00:46:56,510
-क्योंकि एक particular meeting की बात हो
-रही है ना। A तो फिर पता नहीं
-
-712
-00:46:56,550 --> 00:47:00,460
-कितनी meetings हुई हैं। ऐसा तो नहीं है। आप
-specific meeting की बात कर रहे हैं
-
-713
-00:47:00,470 --> 00:47:04,420
-ना!
-तो the meeting बोलना चाहिए। The meeting
-
-714
-00:47:04,510 --> 00:47:07,990
-conclusion. Govinda was known as the
-
-715
-00:47:08,050 --> 00:47:11,050
-Amitabh Bachchan of comedy movies.
-
-716
-00:47:11,070 --> 00:47:12,070
-बताइए क्या करेंगे?
-
-717
-00:47:15,370 --> 00:47:17,990
-हाँ जी, is it correct or
-is there something wrong there?
-
-718
-00:47:19,470 --> 00:47:23,390
-बिल्कुल सही है क्योंकि जिससे comparison
-होता है वहां the
-
-719
-00:47:23,450 --> 00:47:27,270
-आना चाहिए। जिस person से या thing से
-
-720
-00:47:27,310 --> 00:47:30,930
-compare कर रहे हैं वहां the आना चाहिए। तो
-बिल्कुल सही answer है आपका, बिल्कुल
-
-721
-00:47:30,990 --> 00:47:34,340
-सही है। The Amitabh Bachchan ही आएगा।
-
-722
-00:47:34,340 --> 00:47:36,850
-Accidents keep on happening frequently.
-
-723
-00:47:38,770 --> 00:47:42,670
-बताइए the आएगा या क्या आएगा बताइए? या
-
-724
-00:47:42,710 --> 00:47:46,260
-किसी article का कोई जरूरत नहीं है।
-
-725
-00:47:48,570 --> 00:47:52,350
-यह correct है। General बात हो रही है। किसी
-particular accident-- नहीं, नहीं
-
-726
-00:47:52,410 --> 00:47:55,290
-an की जरूरत इसलिए नहीं है because यह
-plural
-
-727
-00:47:55,330 --> 00:47:59,170
-है। आप जो यह जागृति कह
-
-728
-00:47:59,210 --> 00:48:03,050
-रही हैं कि an आएगा,
-वो इसलिए नहीं आएगा because an singular
-
-729
-00:48:03,130 --> 00:48:06,370
-के लिए use होता है,
-plural के लिए use नहीं होगा। तो
-
-730
-00:48:06,410 --> 00:48:10,310
-accidents है ना यह। है ना!
-तो accident होता तो शायद हम
-
-731
-00:48:10,350 --> 00:48:14,090
-सोच सकते थे लेकिन यहां तो नहीं आएगा। The
-chatbot
-
-732
-00:48:14,250 --> 00:48:17,170
-is a useful invention. बताइए क्या करेंगे?
-
-733
-00:48:18,170 --> 00:48:21,430
-The chatbot, that means all chatbots are
-
-734
-00:48:21,850 --> 00:48:25,670
-useful inventions.
-तो group quality बन गई आपकी the लगाने
-
-735
-00:48:25,770 --> 00:48:29,570
-से, जैसे पहले हमने किया। Love
-is the beautiful
-
-736
-00:48:29,630 --> 00:48:31,600
-emotion. बताइए क्या करेंगे इसमें
-
-737
-00:48:31,630 --> 00:48:35,202
-आप?Love is the beautiful
-
-738
-00:48:35,322 --> 00:48:35,882
-emotion.
-
-739
-00:48:37,182 --> 00:48:40,882
-नहीं ठीक तो नहीं है जी। बृजेश ये ठीक तो
-नहीं है।
-
-740
-00:48:42,642 --> 00:48:46,512
-हमम!
-देखिए ऐसा थोड़ी की दुनिया में एक ही
-
-741
-00:48:46,602 --> 00:48:49,682
-नाम की। बहुत सी emotions है fear है,
-
-742
-00:48:50,342 --> 00:48:54,222
-anger है, then hatred है। ना जाने the love
-
-743
-00:48:54,302 --> 00:48:58,002
-नहीं आएगा जी। याद रखिए आपको मैंने पहले भी
-बताया था जब हम
-
-744
-00:48:58,062 --> 00:49:01,902
-noun की बात कर रहे थे। Please never use
-the with
-
-745
-00:49:02,042 --> 00:49:05,521
-abstract noun if you
-are talking in a general way.
-
-746
-00:49:05,542 --> 00:49:06,832
-Please remember that always.
-
-747
-00:49:07,762 --> 00:49:11,711
-No,
-it is not allowed to use the with abstract
-
-748
-00:49:11,802 --> 00:49:15,762
-sense। हां,
-बहुत ही specific case है तो फिर the
-
-749
-00:49:15,802 --> 00:49:19,462
-लगाया जा सकता है।
-But general way में बात कर रहे हैं तो फिर
-
-750
-00:49:19,502 --> 00:49:23,342
-जरूरत नहीं है। तो आपने सही बोला सब लोगों
-ने बृजेश, जागृति,
-
-751
-00:49:23,382 --> 00:49:27,182
-अभिमन्यु और सोनिया ने कि love
-is a beautiful emotion होना
-
-752
-00:49:27,222 --> 00:49:31,122
-चाहिए। Love R क्यों होगा भाई अभिषेक आप
-कहां जा रहे हो, भागे
-
-753
-00:49:31,162 --> 00:49:33,042
-जा रहे हो। Love क्या plural है बताओ मेरे
-को?
-
-754
-00:49:34,142 --> 00:49:37,802
-Love कोई plural थोड़े कि आप R लगा रहे हो।
-Love is ही आना है। Is
-
-755
-00:49:38,042 --> 00:49:41,822
-a beautiful emotion.
-The rose smells sweet.
-
-756
-00:49:43,582 --> 00:49:44,882
-बताइए क्या करेंगे इसमें?
-
-757
-00:49:48,602 --> 00:49:52,502
-नहीं,
-correct नहीं है because आपको मैंने बताया
-
-758
-00:49:52,522 --> 00:49:54,622
-के साथ the की कोई जरूरत नहीं होती है
-
-759
-00:49:54,822 --> 00:49:58,542
-99%। भाई इस sweets
-
-760
-00:49:58,642 --> 00:50:02,622
-क्यों आएगा?
-देबजीत बताओ मेरे को। The की कोई जरूरत ही
-
-761
-00:50:02,742 --> 00:50:03,142
-simple.
-
-762
-00:50:04,122 --> 00:50:06,562
-Roses smell sweet.
-
-763
-00:50:07,722 --> 00:50:11,522
-Roses smell sweet. Very simple. नाम के
-
-764
-00:50:11,542 --> 00:50:15,262
-साथ 99% हम the नहीं लगाते हैं। Nothing is
-
-765
-00:50:15,382 --> 00:50:18,962
-as powerful as an
-
-766
-00:50:19,062 --> 00:50:19,482
-idea.
-
-767
-00:50:20,502 --> 00:50:24,122
-तो यह बिल्कुल ठीक है। कोई दिक्कत नहीं है
-इसमें। The ochre
-
-768
-00:50:24,202 --> 00:50:26,982
-colored pot was recovered from the site.
-
-769
-00:50:28,822 --> 00:50:32,202
-हां जी, देखिए इसमें ना the भी हो सकता है,
-कोई दिक्कत नहीं है।
-
-770
-00:50:32,322 --> 00:50:36,262
-इसमें an भी हो सकता है। वो depend करेगा
-situation पर कि
-
-771
-00:50:36,302 --> 00:50:39,942
-अगर सामने वाले बंदे को पता है मैं कौन से
-pot की बात कर रहा हूं
-
-772
-00:50:40,382 --> 00:50:44,142
-तो,
-तो the लगा दीजिए और अगर नहीं पता तो an लगा
-
-773
-00:50:44,222 --> 00:50:47,642
-दीजिए। तो an भी हो सकता है,
-the भी हो सकता है। Both are
-
-774
-00:50:47,722 --> 00:50:49,542
-possible. There is no doubt about that.
-
-775
-00:50:49,922 --> 00:50:53,762
-यह ठीक है,
-अपने आप में गलत नहीं कहा जाएगा। और बताइए
-
-776
-00:50:53,802 --> 00:50:57,582
-other question you have in mind और कोई
-doubt अगर आपको है इनमें से किसी भी
-
-777
-00:50:57,622 --> 00:51:01,162
-question पर तो please let me know
-otherwise then we will
-
-778
-00:51:01,382 --> 00:51:02,502
-start with the next thing.
-
-779
-00:51:04,602 --> 00:51:08,582
-हां जी,
-first question में problem है तो कोई
-
-780
-00:51:08,842 --> 00:51:12,802
-a film is mainly a form of entertainment,
-a form of
-
-781
-00:51:12,882 --> 00:51:16,322
-entertainment.
-Seventeenth आप कह रहे हैं。 Seventeenth में
-
-782
-00:51:16,342 --> 00:51:20,042
-जी love is a beautiful emotion. Love
-
-783
-00:51:20,502 --> 00:51:24,122
-abstract noun है,
-feeling की बात है। जहां feeling होती है
-
-784
-00:51:24,162 --> 00:51:28,002
-normally कोई जरूरत नहीं होती है। जैसे
-hatred है। We
-
-785
-00:51:28,042 --> 00:51:31,302
-say hatred is a bad emotion. एक मिनट रहिए,
-जरा अभी आ रहा हूं
-
-786
-00:51:31,382 --> 00:51:35,242
-शिवम। Hatred is a bad emotion.
-We say anger must be
-
-787
-00:51:35,282 --> 00:51:39,222
-controlled.
-तो the की कोई जरूरत है नहीं आपको। हां,
-
-788
-00:51:39,242 --> 00:51:43,122
-तो the लगा सकते हैं। शिवम कह रहे हैं sir
-थोड़ा confusion हो रहा है where and
-
-789
-00:51:43,162 --> 00:51:47,062
-when to use article.
-भाई इसमें confusion कहां पर है मुझे यह
-
-790
-00:51:47,102 --> 00:51:51,002
-जरा। कहां confusion है आपको?
-Eighteenth question पूछ रहे बृजेश।
-
-791
-00:51:51,022 --> 00:51:54,922
-The rose,
-the rose नाम के साथ the लगाने नहीं आपने।
-
-792
-00:51:54,982 --> 00:51:58,922
-किसी भी object के नाम के साथ या person के
-नाम के
-
-793
-00:51:58,962 --> 00:52:01,342
-साथ the लगाने की जरूरत normally होती नहीं
-
-794
-00:52:01,382 --> 00:52:03,802
-है। अ,
-
-795
-00:52:05,082 --> 00:52:08,982
-हां,
-आप a rose भी लगा सकते हैं। कोई दिक्कत
-
-796
-00:52:09,022 --> 00:52:12,292
-लगाइए। हां जी शिवम आपको क्या confusion हो
-रहा है बताइए?
-
-797
-00:52:12,402 --> 00:52:15,162
-The roses smell sweet. Is this correct
-or not?
-
-798
-00:52:15,722 --> 00:52:19,522
-मैंने आपको अभी क्या बताया कि आप proper
-noun
-
-799
-00:52:19,642 --> 00:52:23,402
-के साथ the मत लगाइए। Rose किसी particular
-flower का
-
-800
-00:52:23,442 --> 00:52:26,422
-नाम है। We don't say the lilies
-are beautiful.
-
-801
-00:52:26,482 --> 00:52:30,282
-We say lilies are beautiful.
-We don't say that tulips look
-
-802
-00:52:30,362 --> 00:52:34,142
-nice. We say tulips look nice. हां,
-अगर किसी के घर में
-
-803
-00:52:34,202 --> 00:52:38,082
-आपको tulip नजर आए हैं और आप उनकी बात कर
-रहे हैं तो बिल्कुल कह
-
-804
-00:52:38,142 --> 00:52:41,662
-सकते हैं that tulips
-are looking nice because specific case है,
-
-805
-00:52:42,082 --> 00:52:45,962
-है ना। लेकिन general में अगर आप बोलते कि
-tulip बड़े सुंदर होते तो the मत
-
-806
-00:52:45,982 --> 00:52:46,402
-लगाइए,
-
-807
-00:52:47,382 --> 00:52:51,242
-the मत लगाइए। बस यही कह रहा हूं मैं। हां
-जी शिवम आपको क्या confusion है
-
-808
-00:52:51,281 --> 00:52:55,221
-बताइए मेरे को?
-Article सिर्फ noun के साथ ही use होते
-
-809
-00:52:55,281 --> 00:52:59,242
-हैं। Article जो है normally तो हम noun
-
-810
-00:52:59,302 --> 00:53:03,242
-के साथ ही use करते हैं जी। Pronoun वगैरह
-के साथ तो हम use नहीं करते।
-
-811
-00:53:03,282 --> 00:53:06,622
-Normally तो noun के साथ ही use होते हैं।
-और बताइए कौन सा doubt है आपको?
-
-812
-00:53:07,642 --> 00:53:08,642
-Yes, normally.
-
-813
-00:53:11,862 --> 00:53:13,602
-Yes please, any other question? हां जी।
-
-814
-00:53:34,062 --> 00:53:35,602
-Any other question please?
-
-815
-00:53:47,742 --> 00:53:51,722
-Test question. Okay,
-test question में आपको doubt है। मुझे
-
-816
-00:53:51,762 --> 00:53:55,622
-बताइए। मैं file खोलता हूं। कौन सा question
-है आपको बताइए जरा। Sunday test में अगर
-
-817
-00:53:55,682 --> 00:53:58,402
-आपको कोई doubt है तो बताइए मुझे।
-
-818
-00:54:01,572 --> 00:54:02,672
-Sound not coming.
-
-819
-00:54:03,702 --> 00:54:05,342
-बाकी लोगों को sound आ रही कि नहीं आ रही?
-
-820
-00:54:06,162 --> 00:54:10,042
-बताइए जरा। हां जी, बाकी लोगों
-
-821
-00:54:10,062 --> 00:54:13,731
-को sound आ रही है कि नहीं आ रही?
-जागृति बोल रही है इनको आ रही,
-
-822
-00:54:13,762 --> 00:54:16,962
-है। आपकी कुछ technical problem होगी। आप
-देखिए जरा
-
-823
-00:54:17,022 --> 00:54:20,962
-ऋषभ। बाकी सबको sound आ रही। मैं test open
-कर रहा हूं। आप मुझे बताइए कौन सा
-
-824
-00:54:20,982 --> 00:54:21,982
-doubt है आपको test में?
-
-825
-00:54:26,802 --> 00:54:30,242
-हां,
-अभी आ रहा हूं मैं जरा। मैं आ रहा हूं test
-
-826
-00:54:30,942 --> 00:54:33,342
-मैं test खोल लूं।
-
-827
-00:54:34,742 --> 00:54:37,922
-हां जी,
-Sunday का जो test आपका है मैं open कर रहा
-
-828
-00:54:37,942 --> 00:54:59,752
-हूं।आपको
-
-829
-00:54:59,772 --> 00:55:03,412
-लीजिए test। मैं screen पे ला रहा हूं test
-को। हां जी बताइए कौन सा
-
-830
-00:55:03,452 --> 00:55:04,312
-question था मुझे?
-
-831
-00:55:05,532 --> 00:55:09,292
-Tenth question one to ten तो सारे ही हो गए
-ना ये तो। चलिए कोई बात
-
-832
-00:55:09,312 --> 00:55:12,732
-नहीं। हां जी पहले question पे आए। In goes
-the
-
-833
-00:55:12,752 --> 00:55:16,692
-piston to touch the pin. Okay,
-देखिए ये थोड़ा सा ना टेढ़ा लिखा
-
-834
-00:55:16,712 --> 00:55:20,572
-है और इस तरह के question आपको मैंने करवाए
-भी हैं। सीधे तरीके से
-
-835
-00:55:20,632 --> 00:55:24,512
-लिखेंगे तो sentence बनेगा the piston goes
-
-836
-00:55:24,612 --> 00:55:27,252
-in ऐसे लिखेंगे। The piston
-
-837
-00:55:28,852 --> 00:55:31,492
-ऐसे आएगा। The piston
-
-838
-00:55:32,252 --> 00:55:35,732
-goes in ऐसा आएगा। यह सीधा तरीका है लिखने
-
-839
-00:55:35,792 --> 00:55:39,692
-का। तो उसी को घुमा के उसने लिख दिया in
-goes the
-
-840
-00:55:39,732 --> 00:55:43,352
-piston, the piston goes to यह इसका
-
-841
-00:55:43,412 --> 00:55:46,972
-मतलब है। तो piston singular है। ठीक है जी।
-Third person
-
-842
-00:55:47,032 --> 00:55:50,972
-है तो singular ही verb आना है इसके साथ तो
-उस हिसाब से बिल्कुल match
-
-843
-00:55:51,012 --> 00:55:54,512
-कर रहा है। तो sentence आपका बिल्कुल सही
-है। ठीक है
-
-844
-00:55:54,532 --> 00:55:58,372
-जी। The advice given by the saint was so
-
-845
-00:55:58,432 --> 00:56:02,252
-effective that blah blah blah.
-तो आपका यहीं शुरुआत में
-
-846
-00:56:02,292 --> 00:56:05,912
-नजर आ रहा है कि यह जो आपका यहां आपको लगाना
-है noun
-
-847
-00:56:06,772 --> 00:56:10,632
-क्योंकि verb तो पहले ही पीछे लगा given तो
-यहां लगाना है noun
-
-848
-00:56:10,852 --> 00:56:14,732
-और आपने लगा दिया verb और यह आपको बहुत
-detail में मैंने समझाया था। मुझे
-
-849
-00:56:14,792 --> 00:56:18,172
-याद है जब हम noun की बात कर रहे थे। यहां
-आना चाहिए
-
-850
-00:56:18,272 --> 00:56:19,252
-advice,
-
-851
-00:56:20,312 --> 00:56:24,172
-उपदेश, सलाह। Advise नहीं
-
-852
-00:56:24,252 --> 00:56:27,652
-आएगा, advice आएगा। ठीक है जी, ठीक कर लें।
-
-853
-00:56:27,672 --> 00:56:30,852
-The five kilos of sugar given by her.
-
-854
-00:56:31,032 --> 00:56:33,012
-देखिए verb नहीं आएगा क्योंकि
-
-855
-00:56:34,052 --> 00:56:37,912
-यह इस तरह के sentences हमने काफी किए भी उस
-दिन। क्यों नहीं
-
-856
-00:56:37,972 --> 00:56:41,472
-आएगा?
-उसका कारण आपको बताया था मैंने कि reality
-
-857
-00:56:41,512 --> 00:56:44,332
-subject इसमें kilos बन ही नहीं रहा है।
-
-858
-00:56:45,112 --> 00:56:48,672
-इसमें अअअ जो है वो quantity बन रहा है। The
-
-859
-00:56:48,772 --> 00:56:52,712
-quantity of sugar given by her,
-was आएगा यहां पे। यहां verb
-
-860
-00:56:52,792 --> 00:56:56,292
-नहीं आएगा। उसका कारण यह है कि अगर आप हिंदी
-में भी
-
-861
-00:56:56,372 --> 00:56:59,672
-translate कर लें तब भी singular meaning
-निकलेगा। आप बोलेंगे
-
-862
-00:56:59,732 --> 00:57:03,252
-पाँच किलो चीनी हमारे लिए बहुत
-
-863
-00:57:03,292 --> 00:57:04,832
-थी। है ना?
-
-864
-00:57:05,672 --> 00:57:09,652
-10 लीटर हमारे लिए पानी बहुत था। तो
-singular meaning निकल रहा है
-
-865
-00:57:09,672 --> 00:57:13,552
-तो was लगाइए। Please do not disturb me as
-I have
-
-866
-00:57:13,612 --> 00:57:17,472
-got many works to do.
-तो देखिए many works होता नहीं
-
-867
-00:57:17,512 --> 00:57:20,772
-है। ये उस दिन हमने किया भी था। तो या तो
-much work बोलिए,
-
-868
-00:57:21,512 --> 00:57:25,332
-a lot of work बोलिए या many pieces of work
-बोल
-
-869
-00:57:25,432 --> 00:57:29,352
-सकते हैं but many works तो नहीं हो सकता।
-Works का meaning कुछ और
-
-870
-00:57:29,372 --> 00:57:33,212
-निकलता है। I go to the school every
-morning to study blah blah
-
-871
-00:57:33,252 --> 00:57:37,032
-blah.
-देखिए I go to the school है और clearly
-
-872
-00:57:37,092 --> 00:57:40,912
-करने जाता हूं। तो जो routine एक habitual
-action है, अगर आप वो
-
-873
-00:57:40,972 --> 00:57:44,912
-बता रहे हैं तो the की कोई जरूरत नहीं है।
-हम बोले I go to temple
-
-874
-00:57:44,932 --> 00:57:48,832
-every morning यानी मैं पूजा करने जाता हूं।
-I go to
-
-875
-00:57:48,892 --> 00:57:52,732
-gym every morning.
-मैं exercise करने जाता हूं। I go to
-
-876
-00:57:52,792 --> 00:57:56,672
-मैं college पढ़ने जाता हूं। तो the की कोई
-जरूरत है नहीं आपको। The तब
-
-877
-00:57:56,692 --> 00:58:00,452
-लगाएंगे अगर किसी और काम के लिए जा रहे हैं।
-One of the
-
-878
-00:58:00,492 --> 00:58:04,132
-lady.
-भाई आप one of बोल रहे हैं तो फिर one of
-
-879
-00:58:04,392 --> 00:58:08,352
-many ही आएगा ना। बहुतों में से एक आ सकता
-है। तो जैसे मैंने आपको बताया भी था
-
-880
-00:58:08,362 --> 00:58:12,152
-उस दिन कि one of के पीछे हर हालत में you
-need to have a plural noun.
-
-881
-00:58:12,712 --> 00:58:16,612
-यहां आएगा ladies। पक्का ladies आएगा।
-
-882
-00:58:16,652 --> 00:58:20,332
-One of the books, one of the movies,
-one of the boy, one of the
-
-883
-00:58:20,392 --> 00:58:21,572
-girl, one of the ladies.
-
-884
-00:58:22,872 --> 00:58:25,592
-The Iraq was rebuilt by their leaders.
-
-885
-00:58:25,672 --> 00:58:29,652
-अरे भाई their यहां कहां से आ गया?
-Iraq singular है ना। Singular
-
-886
-00:58:29,752 --> 00:58:33,632
-noun है तो यहां their तो हो ही नहीं सकता।
-Iraq एक
-
-887
-00:58:33,672 --> 00:58:35,632
-चीज है ना तो third person है तो its
-
-888
-00:58:35,712 --> 00:58:39,592
-लगाइए। ठीक है। जैसे he लगाने के बाद हम
-
-889
-00:58:39,632 --> 00:58:43,441
-पीछे their लगा सकते हैं। She लगाने के बाद
-their लगा सकते हैं। नहीं लगा सकते
-
-890
-00:58:44,072 --> 00:58:47,872
-हैं। क्योंकि she भी singular है,
-he भी singular है और Iraq भी singular है
-
-891
-00:58:48,272 --> 00:58:52,132
-तो their तो नहीं आएगा। Every part of
-Mongolian life is this
-
-892
-00:58:52,232 --> 00:58:56,072
-and each of their songs. आप ध्यान देंखे,
-ध्यान से।
-
-893
-00:58:56,152 --> 00:58:59,792
-Each आपका subject है। तो यानी आपका मतलब
-क्या निकलता है?
-
-894
-00:58:59,892 --> 00:59:03,691
-Each song ऐसे लिख दें,
-एक ही बात है। Each of the
-
-895
-00:59:03,752 --> 00:59:07,732
-songs को हमने लिख दिया each song। अब ये
-singular हो गया। Each का मतलब एक
-
-896
-00:59:07,752 --> 00:59:11,692
-होता है। तो अगर singular है और यह third
-person है
-
-897
-00:59:11,772 --> 00:59:14,272
-तो पीछे आपको क्या लगाना पड़ेगा? Remains
-
-898
-00:59:15,172 --> 00:59:18,932
-यह लगाना पड़ेगा आपको। जैसे हमने पहले लगाया
-है। ऐसे
-
-899
-00:59:18,952 --> 00:59:20,252
-होगा।
-
-900
-00:59:21,412 --> 00:59:24,772
-As they were setting up a new home,
-they went out to buy.
-
-901
-00:59:24,832 --> 00:59:28,672
-देखिए many furnitures होता है नहीं।
-Furniture नाम का word ही नहीं होता। आप
-
-902
-00:59:28,732 --> 00:59:32,112
-dictionary उठा के देखिए। तो यह furniture
-items हो सकता
-
-903
-00:59:32,132 --> 00:59:35,842
-है, furniture articles हो सकता है,
-articles of furniture हो सकता है,
-
-904
-00:59:36,052 --> 00:59:39,392
-items of furniture हो सकता है। लेकिन यह
-many furnitures नहीं
-
-905
-00:59:39,412 --> 00:59:43,292
-होगा। Many items of furniture कर लीजिए। A
-quarter
-
-906
-00:59:43,372 --> 00:59:45,252
-of musician, quartets of musicians.
-
-907
-00:59:45,272 --> 00:59:49,092
-देखिए quartets का मतलब चार बंदों का group।
-जैसे
-
-908
-00:59:49,152 --> 00:59:52,942
-दो-दो का होता है,
-trio तीन का होता है तो quartets चार का
-
-909
-00:59:52,992 --> 00:59:56,982
-है। तो group है इसका meaning। तो group तो
-singular होता है। अगर यह
-
-910
-00:59:57,072 --> 00:59:59,412
-singular होता तो फिर have नहीं आएगा,
-यहां has
-
-911
-00:59:59,472 --> 01:00:03,032
-आएगा। ठीक है जी। India and
-
-912
-01:00:03,072 --> 01:00:06,732
-Pakistans.
-देखिए आपने लिखा India's Pakistans border.
-
-913
-01:00:07,132 --> 01:00:10,992
-अब दोनों का border तो एक ही है ना। दोनों
-का border तो
-
-914
-01:00:11,012 --> 01:00:14,952
-common है। तो फिर आपने अगर दूसरे वाले के
-साथ apostrophe लगाया
-
-915
-01:00:15,072 --> 01:00:18,872
-तो बिल्कुल सही लगाया। ठीक है ना?
-अगर आप दोनों
-
-916
-01:00:18,952 --> 01:00:22,832
-के साथ apostrophe लगा देंगे फिर तो यह है
-कि इसका border अलग है, इसका
-
-917
-01:00:22,852 --> 01:00:26,612
-border अलग है। ऐसा तो है नहीं। दोनों का
-common border है। तो आपने ठीक लगाया।
-
-918
-01:00:26,632 --> 01:00:29,112
-उसमें कोई mistake नहीं मेरे हिसाब से।
-
-919
-01:00:30,032 --> 01:00:33,912
-Each of us.
-अब each आपने लगा दिया और फिर आपने
-
-920
-01:00:33,972 --> 01:00:37,842
-verb भी लगा दिया। Each का मतलब ही एक होता
-है। तो यहां तो verb नहीं आएगा,
-
-921
-01:00:38,012 --> 01:00:41,292
-was आएगा। The police have
-
-922
-01:00:41,872 --> 01:00:45,612
-caught the criminal.
-यह तो ठीक लग रहा है because police
-
-923
-01:00:46,252 --> 01:00:49,762
-British English में जिसको हम follow करते
-हैं वो plural गिना जाता है
-
-924
-01:00:49,762 --> 01:00:53,348
-हमेशा।तो police are ही लिखा जाता है। The
-police were
-
-925
-01:00:53,428 --> 01:00:56,668
-बोलेंगे,
-the police have बोलेंगे। बिल्कुल सही है,
-
-926
-01:00:56,708 --> 01:01:00,068
-है। Neither the moon neither the another
-stars.
-
-927
-01:01:00,308 --> 01:01:03,888
-देखिए neither nor के case में हमने पहले भी
-discuss किया है
-
-928
-01:01:03,948 --> 01:01:07,808
-कि moon एक subject है और यह singular है और
-stars
-
-929
-01:01:07,868 --> 01:01:11,588
-plural है। तो neither nor का case हो तो
-आपका जो verb है
-
-930
-01:01:11,688 --> 01:01:14,588
-is लिखा आपने, यह जाना चाहिए दूसरे के
-
-931
-01:01:14,628 --> 01:01:17,628
-साथ। है ना! तो दूसरा stars है
-
-932
-01:01:18,008 --> 01:01:21,228
-subject। तो stars के हिसाब से देखा जाए तो
-लगेगा
-
-933
-01:01:21,308 --> 01:01:25,048
-are। तो यह rule लगता है जब neither nor का
-
-934
-01:01:25,088 --> 01:01:28,928
-मामला हो या either
-or का मामला हो। और तीसरा होता है
-
-935
-01:01:29,008 --> 01:01:32,568
-not only but also,
-इन तीनों मामलों में दूसरे वाले के
-
-936
-01:01:32,608 --> 01:01:36,428
-साथ या last वाले के साथ बोल दीजिए। क्योंकि
-normally क्योंकि
-
-937
-01:01:36,508 --> 01:01:40,308
-दो ही होते तो हम दो बोल देते। वैसे last का
-rule है। The committee
-
-938
-01:01:40,388 --> 01:01:44,268
-were split. बिल्कुल सही है,
-कोई दिक्कत नहीं है because committee के
-
-939
-01:01:44,308 --> 01:01:48,268
-different members आपस में बंट गए हैं ना।
-यह collective noun है
-
-940
-01:01:48,288 --> 01:01:51,928
-और collective noun में हमने किया था कि अगर
-आपस में कोई debate हो रही है,
-
-941
-01:01:52,608 --> 01:01:56,308
-कोई difference of opinion है, कुछ
-
-942
-01:01:56,408 --> 01:01:59,888
-और है तो are या were ही लगाते हैं हम। तो
-यह तो
-
-943
-01:01:59,928 --> 01:02:03,368
-बिल्कुल ठीक है। अगर इसको समझना है आपने तो
-ऐसे
-
-944
-01:02:03,448 --> 01:02:07,368
-समझिए। Committee के साथ आप एक बार members
-लगा लो। समझने के लिए कह
-
-945
-01:02:07,408 --> 01:02:10,768
-रहा हूं,
-लिखना नहीं है। आप पढ़िए committee,
-
-946
-01:02:10,988 --> 01:02:14,888
-बिल्कुल सही नजर आएगा आपको। क्योंकि आपस में
-बहसबाजी हो रही
-
-947
-01:02:15,008 --> 01:02:18,558
-है, division हो गई है तो
-that means एक से ज्यादा groups बन गए
-
-948
-01:02:18,588 --> 01:02:22,408
-तो were आएगा,
-इसमें कोई दिक्कत की बात नहीं है। बिल्कुल
-
-949
-01:02:22,418 --> 01:02:25,788
-बताइए और किसमें आपको है?
-आप कह रहे हैं furniture spelling
-
-950
-01:02:25,848 --> 01:02:29,668
-mistake। कहां पर है जी spelling mistake
-दिखाइए मुझे जरा। अगर है तो
-
-951
-01:02:29,728 --> 01:02:33,368
-उसको ignore कर दें। paper के अंदर भी लिखा
-होता है कि अगर
-
-952
-01:02:33,388 --> 01:02:36,668
-spelling mistake है तो उसको ignore कर दें।
-Are
-
-953
-01:02:36,688 --> 01:02:38,688
-responsible, यह कौन सा question है जी?
-
-954
-01:02:38,708 --> 01:02:42,288
-Are responsible वाला मुझे समझ नहीं आया जो
-आप कह रहे हैं। please
-
-955
-01:02:42,348 --> 01:02:43,788
-बताइए कौन सा question है?
-
-956
-01:02:47,068 --> 01:02:50,488
-हां जी,
-कौन से question की आप बात कर रहे हैं,
-
-957
-01:02:50,528 --> 01:02:54,488
-बताइए। Are responsible की जो बात हो रही
-है। Eight
-
-958
-01:02:54,568 --> 01:02:57,578
-में क्या करें जी?
-Eight में तो मैंने बता दिया I go to school
-
-959
-01:02:57,648 --> 01:03:01,188
-आएगा। I go to school आएगा और कुछ नहीं
-
-960
-01:03:01,247 --> 01:03:05,188
-आएगा। और बताइए कोई doubt अगर आप। अम्म
-fourteen में
-
-961
-01:03:05,268 --> 01:03:09,008
-क्या problem है भाई?
-Fourteen में neither the moon,
-
-962
-01:03:09,248 --> 01:03:13,048
-मैंने आपको बताया neither nor लगा हो तो जो
-verb है वह
-
-963
-01:03:13,068 --> 01:03:16,188
-दूसरे वाले subject के साथ count
-
-964
-01:03:16,288 --> 01:03:20,248
-होगा। Stars are countable जी,
-stars uncountable नहीं है। बिल्कुल
-
-965
-01:03:20,308 --> 01:03:24,148
-गलत कह रहे हैं आप। Stars can be counted
-मतलब grammatical sense में
-
-966
-01:03:24,208 --> 01:03:27,988
-countable है। वैसे तो चलो गिनती नहीं हो
-पाएगी। Kilos is
-
-967
-01:03:28,028 --> 01:03:31,958
-correct. बिल्कुल correct है,
-कोई doubt नहीं। Rupees is correct, kilos
-
-968
-01:03:32,028 --> 01:03:35,888
-is correct. देखिए,
-मैंने आपको बताई है यह बात कि होता तो kilo
-
-969
-01:03:35,928 --> 01:03:39,858
-है लेकिन आजकल वो इतना ज्यादा popular हो
-गया। वो कहते हैं
-
-970
-01:03:39,888 --> 01:03:42,808
-ना एक झूठ को हजार बार बोला जाए तो वो सच से
-भी ज्यादा
-
-971
-01:03:43,888 --> 01:03:47,648
-बड़ा सच होता है। तो वही बात है। चलता है
-ये, मतलब
-
-972
-01:03:47,668 --> 01:03:51,068
-acceptable है। हां जी और बताइए another
-question,
-
-973
-01:03:51,188 --> 01:03:55,018
-question nine.
-भाई spelling mistake है तो correct कर लें।
-
-974
-01:03:55,028 --> 01:03:58,908
-spelling mistake को error तब माना जाएगा
-अगर उससे meaning
-
-975
-01:03:58,948 --> 01:04:02,908
-change हो रहा हो। ठीक है ना! अ,
-meaning अगर
-
-976
-01:04:02,948 --> 01:04:06,868
-change हो रहा है तो mistake माना जाएगा।
-वैसे नहीं माना जाएगा। तो इसको ignore
-
-977
-01:04:06,908 --> 01:04:09,568
-कर दें, कोई बात नहीं। और बताइए।
-
-978
-01:04:12,728 --> 01:04:16,508
-Okay, it's all right now. I think there
-is no further question coming
-
-979
-01:04:18,228 --> 01:04:21,508
-my way.
-चलिए just मुझे एक second दीजिए मैं अभी
-
-980
-01:04:21,588 --> 01:04:22,828
-आता।
-
-981
-01:04:32,068 --> 01:04:32,078
-Okay.
-
-982
-01:04:43,608 --> 01:05:53,268
-चलिए,
-
-983
-01:06:16,808 --> 01:06:19,508
-let us begin with the next thing.
-
-984
-01:06:42,228 --> 01:06:43,608
-Let us come to the next part,
-
-985
-01:06:44,528 --> 01:06:45,828
-which is the pronoun part.
-
-986
-01:06:46,688 --> 01:06:48,407
-तो देखिए technically pronoun
-
-987
-01:06:49,368 --> 01:06:53,168
-में बहुत ज्यादा question आते हैं paper
-में, मतलब ज्यादा काफी सारी
-
-988
-01:06:53,208 --> 01:06:57,108
-mistakes उसमें होती हैं,
-लोग करते हैं। तो consequently paper में भी
-
-989
-01:06:57,148 --> 01:06:58,828
-काफी question आपको देखने
-
-990
-01:06:58,888 --> 01:07:02,678
-कोमिलेंगे pronoun के।
-
-991
-01:07:02,718 --> 01:07:06,158
-तो let us try to understand कि पहले
-pronoun होता क्या
-
-992
-01:07:06,238 --> 01:07:09,998
-है। अ, pro है ना और आगे
-
-993
-01:07:10,018 --> 01:07:10,958
-आपने लिखा noun।
-
-994
-01:07:12,038 --> 01:07:15,918
-तो pro means for और noun का meaning आपको
-पता ही है क्या होता
-
-995
-01:07:15,938 --> 01:07:19,918
-है। तो यानी any such word that you
-are using
-
-996
-01:07:19,998 --> 01:07:21,198
-in place of a noun.
-
-997
-01:07:22,158 --> 01:07:26,018
-Any such word that you are using in place
-
-998
-01:07:26,058 --> 01:07:29,818
-of a noun, that is a pronoun.
-जैसे example के तौर पर हमने लिखा है
-
-999
-01:07:29,878 --> 01:07:33,618
-Neena was a bright girl.
-तो बारी-बारी Neena का नाम
-
-1000
-01:07:33,698 --> 01:07:37,678
-लेने की बजाय हमने she लिख दिया। तो
-language
-
-1001
-01:07:37,718 --> 01:07:41,218
-wise थोड़ा सा ज्यादा अच्छा लगता है। She
-always used to work hard to
-
-1002
-01:07:41,278 --> 01:07:45,058
-maintain her position। है ना!
-तो Neena की जगह आपने she use
-
-1003
-01:07:45,098 --> 01:07:49,008
-किया। ठीक है नहीं!
-So she would be known as a pronoun.
-
-1004
-01:07:51,318 --> 01:07:55,258
-अ, एक बहुत basic condition है,
-बहुत important condition
-
-1005
-01:07:55,318 --> 01:07:58,018
-है जो हमें ensure करनी है
-while using any pronoun.
-
-1006
-01:07:58,558 --> 01:08:02,358
-हमने लिखा a pronoun must always agree
-
-1007
-01:08:02,378 --> 01:08:05,238
-with its antecedent in number,
-
-1008
-01:08:05,958 --> 01:08:09,398
-gender and person.
-पहले आप इसको लिख लीजिए फिर मैं आपको समझाता
-
-1009
-01:08:09,418 --> 01:08:13,298
-हूं। A pronoun must always agree
-
-1010
-01:08:13,378 --> 01:08:17,108
-with its antecedent in number, gender and
-
-1011
-01:08:17,198 --> 01:08:20,878
-person.
-अब सबसे पहले तो हम जानते हैं antecedent
-
-1012
-01:08:20,898 --> 01:08:24,628
-होता है। Antece, अ, ante से बना है।
-
-1013
-01:08:24,658 --> 01:08:28,598
-A-N-T-E, ante means पहले, before। यानी जिस
-
-1014
-01:08:28,698 --> 01:08:32,618
-चीज को आप pronoun के जरिए describe कर रहे
-हैं,
-
-1015
-01:08:32,838 --> 01:08:36,278
-वो है आपका antecedent.
-जैसे अगर आप पिछले example
-
-1016
-01:08:36,318 --> 01:08:39,918
-पकड़ें तो इस मामले में आपका जो pronoun है
-वो तो she
-
-1017
-01:08:40,038 --> 01:08:43,938
-है। लेकिन antecedent क्या है? Neena यानी
-
-1018
-01:08:43,998 --> 01:08:47,738
-जिसकी बात she में की जा रही है वो Neena
-है। वो
-
-1019
-01:08:47,778 --> 01:08:51,618
-person Neena है जिसको she refer कर रहा है।
-तो इस paragraph में
-
-1020
-01:08:51,658 --> 01:08:55,538
-हमारा antecedent होगा Neena। उसकी बात हम
-कर रहे हैं।
-
-1021
-01:08:55,578 --> 01:08:59,538
-तो यह जो she और Neena है they must agree
-
-1022
-01:08:59,918 --> 01:09:03,578
-किस-किस मामले में? लिखा है आपने।
-
-1023
-01:09:03,598 --> 01:09:05,718
-आपने लिखा है number।
-
-1024
-01:09:06,798 --> 01:09:10,718
-Number means अगर Neena singular है तो पीछे
-भी singular pronoun
-
-1025
-01:09:10,778 --> 01:09:14,678
-होना चाहिए। Right!
-Neena हमें पता है एक लड़की का नाम है तो
-
-1026
-01:09:14,698 --> 01:09:18,138
-is okay। Number agree हो रहा है। Then
-दूसरा आपने बोला
-
-1027
-01:09:18,258 --> 01:09:22,038
-है gender। Gender means Neena
-is a female तो
-
-1028
-01:09:22,058 --> 01:09:26,038
-आपने she लगा दिया। बिल्कुल,
-एकदम बढ़िया है। फिर
-
-1029
-01:09:26,078 --> 01:09:29,218
-third आपने लिखा gender, अ,
-sorry third आपने लिखा
-
-1030
-01:09:29,318 --> 01:09:33,278
-person। तो person means Neena third person
-है।
-
-1031
-01:09:33,338 --> 01:09:36,977
-यानी third person कौन होता है?
-मैं अपने आप को refer
-
-1032
-01:09:37,058 --> 01:09:38,658
-करने के लिए I बोलूंगा।
-
-1033
-01:09:39,488 --> 01:09:43,298
-अपने आप को या मान लीजिए हम तीन चार लोग
-इकट्ठे हैं तब भी हम, तब हम we
-
-1034
-01:09:43,398 --> 01:09:47,258
-बोल देंगे। है ना!
-तो first person में जो singular है,
-
-1035
-01:09:47,618 --> 01:09:51,598
-अकेला बंदा है,
-अपनी बात कर रहा है तो I है। अगर हम
-
-1036
-01:09:51,678 --> 01:09:55,558
-चार पांच लोगों की बात कर रहे हैं तो हम we
-हैं और उसके
-
-1037
-01:09:55,598 --> 01:09:59,458
-बाद आएगा you। अब second person में एक ही
-you है और कोई
-
-1038
-01:09:59,498 --> 01:10:03,478
-है ही नहीं। छोटा हो, सामने वाला बड़ा हो,
-एक हो, 10 हो you ही
-
-1039
-01:10:03,518 --> 01:10:06,998
-होता है और उसके बाद जो बाकी सारे third
-person
-
-1040
-01:10:07,038 --> 01:10:10,878
-हैं। यानी I,
-we और you को छोड़ के सारे third
-
-1041
-01:10:10,918 --> 01:10:14,898
-person हैं। तो उसमें singular कौन-कौन से
-हैं आप सोचिए जरा। He singular
-
-1042
-01:10:14,998 --> 01:10:18,738
-है male के लिए। Masculine gender बोलते
-हैं। Then
-
-1043
-01:10:18,858 --> 01:10:22,648
-she जो है यह feminine gender है,
-female है। Then they
-
-1044
-01:10:22,818 --> 01:10:26,718
-वो सारे आ जाते हैं। ठीक है!
-तो इस Neena जो है वो third person
-
-1045
-01:10:26,778 --> 01:10:30,218
-है, singular है। याद रखिए,
-जितने भी नाम होते हैं,
-
-1046
-01:10:30,858 --> 01:10:34,678
-किसी भी person का कोई भी नाम है it
-is always
-
-1047
-01:10:34,758 --> 01:10:38,398
-a third person singular,
-always without any
-
-1048
-01:10:38,438 --> 01:10:42,318
-exception. कोई भी proper noun है यह हमेशा
-
-1049
-01:10:42,338 --> 01:10:46,298
-third person होगा। तो वो person भी match
-हो रहा है। तो तीनों मामलों में
-
-1050
-01:10:46,358 --> 01:10:49,958
-Neena और she का match बन रहा है। यानी
-Neena singular है, she भी
-
-1051
-01:10:50,058 --> 01:10:53,858
-singular है। Neena female है,
-she भी female है और
-
-1052
-01:10:53,938 --> 01:10:57,638
-Neena third person है,
-she भी third person है। तो हमारी जो basic
-
-1053
-01:10:57,738 --> 01:11:01,638
-है pronoun वाली, वो आपकी match हो चुकी है।
-
-1054
-01:11:01,718 --> 01:11:05,278
-यह काम सबसे पहले हमने ensure करना है कि
-हमारे
-
-1055
-01:11:05,358 --> 01:11:09,268
-pronoun का antecedent के साथ match होना
-चाहिए।
-
-1056
-01:11:09,318 --> 01:11:13,218
-I hope this is clear.
-अगर clear नहीं तो मुझे बताइए मैं आपको और
-
-1057
-01:11:13,278 --> 01:11:15,198
-देता हूं।
-
-1058
-01:11:16,038 --> 01:11:19,938
-Yes, please.
-Please let me know in the chat box whether
-
-1059
-01:11:19,998 --> 01:11:21,678
-or not.
-
-1060
-01:11:33,998 --> 01:11:35,758
-Please let me know in the comment box.
-
-1061
-01:11:46,138 --> 01:11:49,258
-Okay, you want some more example. Okay,
-let me write it down.
-
-1062
-01:11:51,498 --> 01:11:52,358
-अगर हम लिखें
-
-1063
-01:11:53,938 --> 01:11:54,338
-Ram,
-
-1064
-01:11:57,178 --> 01:11:57,718
-Hari
-
-1065
-01:11:58,678 --> 01:11:58,978
-and
-
-1066
-01:11:59,938 --> 01:12:00,538
-Neena
-
-1067
-01:12:01,528 --> 01:12:03,398
-are playing.
-
-1068
-01:12:04,498 --> 01:12:07,718
-Ram, Hari and Neena are playing. Okay.
-
-1069
-01:12:08,738 --> 01:12:09,148
-They
-
-1070
-01:12:10,138 --> 01:12:11,358
-are
-
-1071
-01:12:13,278 --> 01:12:14,518
-engrossed
-
-1072
-01:12:16,758 --> 01:12:17,538
-in their
-
-1073
-01:12:18,758 --> 01:12:22,478
-game. देखिए। Neena, Hari-- Ram,
-
-1074
-01:12:22,538 --> 01:12:26,048
-Hari and Neena are playing. They
-are engrossed in their
-
-1075
-01:12:26,458 --> 01:12:30,418
-game. अब देखिए इसमें pronoun कौन सा है?
-They है। है ना!
-
-1076
-01:12:31,058 --> 01:12:35,018
-एक there है,
-एक they है। तो they हमें मालूम है कि
-
-1077
-01:12:35,058 --> 01:12:38,978
-हम किसके लिए use कर रहे हैं। Ram, Hari
-and Neena, तीनों के
-
-1078
-01:12:39,018 --> 01:12:42,928
-लिए use कर रहे हैं। तो जैसे मैंने आपसे
-पहले कहा कि कोई भी नाम होगा
-
-1079
-01:12:43,018 --> 01:12:46,918
-third person होगा। लेकिन अब इसमें नाम है
-तीन। तो यह plural बन
-
-1080
-01:12:46,998 --> 01:12:50,698
-गया ना! अगर तो यह एक बंदा होता, Ram अकेला
-
-1081
-01:12:50,758 --> 01:12:54,378
-होता तो फिर तो वो singular होता,
-फिर तो मैं he बोल देता। अगर
-
-1082
-01:12:54,438 --> 01:12:58,318
-Neena अकेली होती,
-मैं she बोल देता। लेकिन अब इसमें Ram भी
-
-1083
-01:12:58,378 --> 01:13:02,218
-है, Neena भी है,
-Hari भी है। मतलब तीन हैं। दो होते मैं
-
-1084
-01:13:02,238 --> 01:13:05,958
-तब भी they ही बोलता इनको। तो they से मतलब
-है कि यह
-
-1085
-01:13:06,038 --> 01:13:09,858
-plural बन गया क्योंकि तीन बंदे हैं,
-दो बंदे हैं और यह
-
-1086
-01:13:09,898 --> 01:13:13,618
-third person है और sex हमें पता नहीं। They
-से sex का मालूम नहीं
-
-1087
-01:13:13,678 --> 01:13:17,618
-पड़ेगा। तो यानी number wise तीन बंदे हैं,
-they बिल्कुल fit हो
-
-1088
-01:13:17,678 --> 01:13:21,478
-रहा है। Third person है तीनों,
-यह भी third person है तो सारा fitting हो
-
-1089
-01:13:21,538 --> 01:13:25,518
-रही है। तो आपका जो antecedent है और आपका
-जो
-
-1090
-01:13:25,658 --> 01:13:29,438
-pronoun है इनमें आपस में matching हो रही
-
-1091
-01:13:29,478 --> 01:13:33,378
-है। एक और example देखिए। हम बोलते
-
-1092
-01:13:33,458 --> 01:13:34,338
-हैं,
-
-1093
-01:13:34,378 --> 01:13:38,188
-उम्म, मान
-
-1094
-01:13:38,258 --> 01:13:39,298
-लीजिए हम लिखते हैं
-
-1095
-01:13:43,638 --> 01:13:44,298
-Meena
-
-1096
-01:13:45,538 --> 01:13:47,198
-is quite
-
-1097
-01:13:48,858 --> 01:13:49,578
-active
-
-1098
-01:13:50,918 --> 01:13:51,138
-in
-
-1099
-01:13:52,398 --> 01:13:54,978
-school. Meena is quite active in school.
-
-1100
-01:13:55,458 --> 01:13:56,518
-She often
-
-1101
-01:13:59,638 --> 01:14:03,348
-participates in
-
-1102
-01:14:04,098 --> 01:14:07,898
-math quiz. अब देखिए। Meena
-
-1103
-01:14:07,978 --> 01:14:11,738
-आपने लिखा है। Meena singular person है और
-जैसे मैंने
-
-1104
-01:14:11,778 --> 01:14:15,618
-बोला कि noun जो names हैं third person
-होते हैं हमेशा। Singular
-
-1105
-01:14:15,678 --> 01:14:19,638
-है,
-third person है। तो इसका she के साथ
-
-1106
-01:14:19,658 --> 01:14:23,268
-लीजिए जरा। Meena is one person.
-She also means one
-
-1107
-01:14:23,358 --> 01:14:27,298
-person. Meena is a third person.
-यह भी third person है
-
-1108
-01:14:27,358 --> 01:14:30,858
-और Meena female है,
-she भी female है। तो तीनों मामलों में
-
-1109
-01:14:30,918 --> 01:14:34,618
-आपका agreement हो गया। I hope it
-is clear now.
-
-1110
-01:14:35,538 --> 01:14:39,238
-या अभी भी कोई doubt है?
-Please let me know if there is still any
-
-1111
-01:14:39,318 --> 01:14:39,538
-doubt.
-
-1112
-01:14:43,138 --> 01:14:46,698
-चलिए तो अभी time हो रहा है तो फिर हम कल
-मिलेंगे। ठीक
-
-1113
-01:14:46,758 --> 01:14:48,408
-है! I'll see you tomorrow.
+00:32:20,524 --> 00:32:23,574
+है। So this is all about the CPU
+scheduling
