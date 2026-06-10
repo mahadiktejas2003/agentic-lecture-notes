@@ -23,19 +23,19 @@ python3 scripts/langgraph_orchestrator.py
 You can expose the core capabilities of the pipeline (document generation, quality audit, and frame extraction) to your AI agent directly as MCP tools.
 
 ### Key Security Config
-All MCP servers require an API Key handshake. The default expected key is `lecture_notes_secure_mcp_key_2026`. Specify it using the `MCP_API_KEY` environment variable or `--api-key` argument.
+All MCP servers require an API Key handshake. The default expected key is `${MCP_API_KEY}`. Specify it using the `MCP_API_KEY` environment variable or `--api-key` argument.
 
 ### 1. Claude Code
 Add the servers to your Claude Code developer setup:
 ```bash
 # Register Document Builder Server
-claude mcp add generate-docx python3 scripts/mcp_servers/generate_docx_server.py --env MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+claude mcp add generate-docx python3 scripts/mcp_servers/generate_docx_server.py --env MCP_API_KEY=${MCP_API_KEY}
 
 # Register Auditor Server
-claude mcp add audit-server python3 scripts/mcp_servers/audit_server.py --env MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+claude mcp add audit-server python3 scripts/mcp_servers/audit_server.py --env MCP_API_KEY=${MCP_API_KEY}
 
 # Register Frame Extractor Server
-claude mcp add extract-frames python3 scripts/mcp_servers/extract_frames_server.py --env MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+claude mcp add extract-frames python3 scripts/mcp_servers/extract_frames_server.py --env MCP_API_KEY=${MCP_API_KEY}
 ```
 
 ### 2. Cursor
@@ -44,17 +44,17 @@ Open Cursor Settings -> Features -> MCP, click **+ Add New MCP Server**, and con
   - Name: `generate_docx`
   - Type: `command`
   - Command: `/Users/tejasmahadik/Documents/agentic-lecture-notes/venv/bin/python scripts/mcp_servers/generate_docx_server.py`
-  - Environment Variables (optional, or pass in args): `MCP_API_KEY=lecture_notes_secure_mcp_key_2026`
+  - Environment Variables (optional, or pass in args): `MCP_API_KEY=${MCP_API_KEY}`
 * **Server 2 (Auditor)**:
   - Name: `audit_server`
   - Type: `command`
   - Command: `/Users/tejasmahadik/Documents/agentic-lecture-notes/venv/bin/python scripts/mcp_servers/audit_server.py`
-  - Environment Variables (optional, or pass in args): `MCP_API_KEY=lecture_notes_secure_mcp_key_2026`
+  - Environment Variables (optional, or pass in args): `MCP_API_KEY=${MCP_API_KEY}`
 * **Server 3 (Frame Extractor)**:
   - Name: `extract_frames`
   - Type: `command`
   - Command: `/Users/tejasmahadik/Documents/agentic-lecture-notes/venv/bin/python scripts/mcp_servers/extract_frames_server.py`
-  - Environment Variables (optional, or pass in args): `MCP_API_KEY=lecture_notes_secure_mcp_key_2026`
+  - Environment Variables (optional, or pass in args): `MCP_API_KEY=${MCP_API_KEY}`
 
 ### 3. Claude Desktop
 Add the following configuration to `~/Library/Application Support/Claude/claude_desktop_config.json`:
@@ -67,7 +67,7 @@ Add the following configuration to `~/Library/Application Support/Claude/claude_
         "/Users/tejasmahadik/Documents/agentic-lecture-notes/scripts/mcp_servers/generate_docx_server.py"
       ],
       "env": {
-        "MCP_API_KEY": "lecture_notes_secure_mcp_key_2026"
+        "MCP_API_KEY": "${MCP_API_KEY}"
       }
     },
     "audit_server": {
@@ -76,7 +76,7 @@ Add the following configuration to `~/Library/Application Support/Claude/claude_
         "/Users/tejasmahadik/Documents/agentic-lecture-notes/scripts/mcp_servers/audit_server.py"
       ],
       "env": {
-        "MCP_API_KEY": "lecture_notes_secure_mcp_key_2026"
+        "MCP_API_KEY": "${MCP_API_KEY}"
       }
     },
     "extract_frames": {
@@ -85,7 +85,7 @@ Add the following configuration to `~/Library/Application Support/Claude/claude_
         "/Users/tejasmahadik/Documents/agentic-lecture-notes/scripts/mcp_servers/extract_frames_server.py"
       ],
       "env": {
-        "MCP_API_KEY": "lecture_notes_secure_mcp_key_2026"
+        "MCP_API_KEY": "${MCP_API_KEY}"
       }
     }
   }

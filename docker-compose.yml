@@ -70,7 +70,7 @@ services:
       - GROQ_API_KEY=${GROQ_API_KEY:-}
       - CLOUDFLARE_AI_TOKEN=${CLOUDFLARE_AI_TOKEN:-}
       # MCP Server Authentication
-      - MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+      - MCP_API_KEY=${MCP_API_KEY}
       # Redis Connection
       - REDIS_URL=redis://redis:6379
     volumes:
@@ -114,7 +114,7 @@ services:
     ports:
       - "8011:8011"
     environment:
-      - MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+      - MCP_API_KEY=${MCP_API_KEY}
       - PYTHONUNBUFFERED=1
     volumes:
       - ./lecture-input:/app/lecture-input
@@ -133,7 +133,7 @@ services:
     ports:
       - "8012:8012"
     environment:
-      - MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+      - MCP_API_KEY=${MCP_API_KEY}
       - PYTHONUNBUFFERED=1
     volumes:
       - ./notes-output:/app/notes-output
@@ -151,7 +151,7 @@ services:
     ports:
       - "8013:8013"
     environment:
-      - MCP_API_KEY=lecture_notes_secure_mcp_key_2026
+      - MCP_API_KEY=${MCP_API_KEY}
       - PYTHONUNBUFFERED=1
     volumes:
       - ./lecture-input:/app/lecture-input

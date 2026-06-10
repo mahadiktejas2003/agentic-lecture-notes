@@ -279,8 +279,9 @@ def route_after_stage_1(state: AgentState):
         if retries >= 3:
             log_abort(state, f"Gate {failed} exceeded 3 retries.")
             return "abort"
-        if failed <= 3:
-            print(f"Gate {failed} failed (<= 3). Attempt {retries}/3. Full Reconstruction.")
+        # FIX: Gate 4 (Content Completeness) needs content-mapper, not note-formatter
+        if failed <= 4:
+            print(f"Gate {failed} failed (<= 4). Attempt {retries}/3. Full Reconstruction.")
             return "content-mapper"
         else:
             print(f"Gate {failed} failed. Attempt {retries}/3. Retrying note-formatter.")

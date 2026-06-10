@@ -7,7 +7,7 @@ This document describes the security and authentication mechanism implemented fo
 All three servers (`generate_docx_server.py`, `audit_server.py`, and `extract_frames_server.py`) enforce API Key authentication at startup and request handling level.
 
 1. **API Key Setup**:
-   - The default fallback API key is `lecture_notes_secure_mcp_key_2026`.
+   - The default fallback API key is `${MCP_API_KEY}`.
    - To customize the key, set the environment variable `MCP_API_KEY`:
      ```bash
      export MCP_API_KEY="your_secure_api_key"
@@ -35,7 +35,7 @@ When configured inside Cursor, Claude Code, or Claude Desktop, the server runs i
       "command": "python3",
       "args": ["scripts/mcp_servers/generate_docx_server.py"],
       "env": {
-        "MCP_API_KEY": "lecture_notes_secure_mcp_key_2026"
+        "MCP_API_KEY": "${MCP_API_KEY}"
       }
     }
   }

@@ -74,7 +74,7 @@ scripts/
 ```
 mcp_servers/
 ├── __init__.py                  # Package initializer
-├── auth.py                      # API key verification (default: lecture_notes_secure_mcp_key_2026)
+├── auth.py                      # API key verification (default: ${MCP_API_KEY})
 ├── generate_docx_server.py      # Port 8011 - Document generation tool
 ├── audit_server.py              # Port 8012 - Quality audit tool
 └── extract_frames_server.py     # Port 8013 - Frame extraction tool
@@ -220,7 +220,7 @@ START → content-mapper → example-extractor → note-formatter → audit-stag
 ## 🛠️ MCP SERVER CONFIGURATION
 
 ### Security Protocol
-- **Default API Key:** `lecture_notes_secure_mcp_key_2026`
+- **Default API Key:** `${MCP_API_KEY}`
 - **Auth Method:** Environment variable `MCP_API_KEY` or `--api-key` argument
 - **Enforcement:** `auth.py` runs `verify_auth()` before server startup; exits with code 1 on failure
 
@@ -239,7 +239,7 @@ Servers run as subprocesses with API key passed via environment:
     "generate_docx": {
       "command": "python3",
       "args": ["scripts/mcp_servers/generate_docx_server.py"],
-      "env": {"MCP_API_KEY": "lecture_notes_secure_mcp_key_2026"}
+      "env": {"MCP_API_KEY": "${MCP_API_KEY}"}
     }
   }
 }
@@ -521,7 +521,7 @@ Before executing the pipeline, verify:
 - [ ] `frame_manifest.json` is non-empty (use fallback if video missing)
 - [ ] Virtual environment activated (if using `venv/`)
 - [ ] Dependencies installed: `pip install -r requirements-mcp.txt`
-- [ ] MCP API key set (if using MCP servers): `export MCP_API_KEY=lecture_notes_secure_mcp_key_2026`
+- [ ] MCP API key set (if using MCP servers): `export MCP_API_KEY=${MCP_API_KEY}`
 
 ---
 
@@ -563,7 +563,7 @@ Before executing the pipeline, verify:
 5. Mismatch → print "Security Error: Invalid API key." to stderr, exit(1)
 
 ### Default Credentials
-- **API Key:** `lecture_notes_secure_mcp_key_2026`
+- **API Key:** `${MCP_API_KEY}`
 - **Customization:** Set `MCP_API_KEY` environment variable before launch
 
 ### Transport Security
