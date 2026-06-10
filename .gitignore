@@ -1,63 +1,73 @@
-```
-# Dependencies
-node_modules/
-.venv/
-venv/
+# --- Python ---
 __pycache__/
-.mypy_cache/
-.pytest_cache/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+*.egg-info/
 dist/
 build/
-target/
-.gradle/
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
+# --- Node / Next.js ---
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Environment
+# --- Secrets & Environment ---
 .env
 .env.local
-*.env.*
+.env.*.local
+*.pem
+*.key
+secrets/
 
-# Editors
-.vscode/
-.idea/
+# --- Media & Large Files (DO NOT UPLOAD) ---
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.pdf
+*.pptx
+*.docx
+*.xlsx
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.bmp
+*.srt
+*.vtt
+*.sub
 
-# OS
+# --- Project Specific Data ---
+lecture-input/
+notes-output/
+screenshots/
+slides/
+scratch/
+agent_memory/
+docker-shared/
+*.log
+logs/
+
+# --- OS Files ---
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Docker
-.dockerignore
-```
