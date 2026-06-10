@@ -6,7 +6,7 @@ from typing import List, Dict, Any
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from mcp.server.fastmcp import FastMCP
-from scripts.mcp_servers.auth import verify_auth, get_cleaned_args
+from scripts.mcp_servers.auth import verify_auth, get_cleaned_args, verify_request_auth, safe_path
 from scripts.extract_frames import extract_frames as run_extraction
 
 # Verify authentication on start
@@ -15,14 +15,27 @@ verify_auth()
 mcp = FastMCP("Extract Frames Server")
 
 @mcp.tool()
-def extract_frames(video_path: str, timestamps: List[str], output_dir: str) -> Dict[str, Any]:
+def extract_frames(video_path: str, timestamps: List[str], output_dir: str, api_key: str = None) -> Dict[str, Any]:
     """
     Extracts frames from the video at specified timestamps and saves them to output_dir.
     
     video_path: Path to the input MP4 video file.
     timestamps: List of timestamps (e.g. ['00:03:30', '00:10:15']).
     output_dir: Directory where the extracted frame JPEG files will be stored.
+    api_key: Optional API key for request validation.
     """
+    try:
+        verify_request_auth(api_key)
+        video_path = safe_path(video_path)
+        output_dir = safe_path(output_dir)
+    except Exception as e:
+        return {
+            "success": False,
+            "manifest_path": "frame_manifest.json",
+            "frame_count": 0,
+            "error": str(e)
+        }
+        
     try:
         success = run_extraction(
             video_path=video_path,

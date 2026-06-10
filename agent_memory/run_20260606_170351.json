@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-06-06T17:03:51.519419",
+  "transcript_hash": "27b5212935fb5ebf13b574c9ac70b87f53d88f855d60efe9253b4358f3ead2ce",
+  "status": "failed",
+  "audit_score": 13,
+  "failed_gates": [
+    "Gate 7"
+  ],
+  "notes_path": "notes-output/LECTURE_NOTES.docx"
+}

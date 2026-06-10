@@ -1,16 +1,37 @@
 #!/usr/bin/env python3
-import os, json, argparse, sys
+import os
+import json
+import argparse
+import sys
+import logging
 from docx import Document
+
+# Configure logging
+os.makedirs("logs", exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("logs/pipeline.log"),
+        logging.StreamHandler(sys.stderr)
+    ]
+)
 
 def count_worked_examples_in_docx(doc):
     return sum(1 for p in doc.paragraphs if p.text.strip().startswith('Q:'))
 
 def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_path):
-    print(f"Starting 15-Gate Quality Audit on: {docx_path}")
+    logging.info(f"Starting 15-Gate Quality Audit on: {docx_path}")
     if not os.path.exists(docx_path):
-        print(f"[FAIL] Target document not found at: {docx_path}")
-        return False
-    doc = Document(docx_path)
+        logging.error(f"[FAIL] Target document not found at: {docx_path}")
+        return False, {}
+        
+    try:
+        doc = Document(docx_path)
+    except Exception as e:
+        logging.error(f"[FAIL] Failed to open document {docx_path}: {e}")
+        return False, {}
+
     concept_blocks = json.load(open(concept_map_path)) if os.path.exists(concept_map_path) else []
     frames = json.load(open(frame_manifest_path)) if os.path.exists(frame_manifest_path) else {}
     slides = json.load(open(slide_manifest_path)) if os.path.exists(slide_manifest_path) else []
@@ -30,8 +51,8 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         for b in banned:
             if b.lower() in t.lower():
                 attr_fail += 1
-                print(f"[FAIL] Banned attribution: '{b}' in: '{t[:80]}...'")
-                return False
+                logging.warning(f"[FAIL] Banned attribution: '{b}' in: '{t[:80]}...'")
+                return False, {}
 
     img_count = sum(1 for rel in doc.part.rels.values() if 'image' in rel.reltype)
     total_map_ex = sum(len(b.get('examples',[])) for b in concept_blocks)
@@ -56,7 +77,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         for q in b.get('teacher_quotes', []):
             if srt_artifact_pattern.search(q) or q.startswith(('-->', ' ', 'ा', 'ि', 'े')):
                 bad_quotes += 1
-                print(f"[FAIL] Quote with SRT artifact: '{q[:80]}...'")
+                logging.warning(f"[FAIL] Quote with SRT artifact: '{q[:80]}...'")
 
     # Gate 14: Concept block titles must be meaningful (not just question ranges)
     meaningful_title_pattern = re.compile(r'^.*\(Questions?\s*\d+')
@@ -64,7 +85,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     for b in concept_blocks:
         if meaningful_title_pattern.match(b.get('title', '')):
             bad_titles += 1
-            print(f"[FAIL] Generic title: '{b.get('title')}'")
+            logging.warning(f"[FAIL] Generic title: '{b.get('title')}'")
 
     # Gate 15: Explanation Conciseness check
     verbose_explanations = 0
@@ -72,7 +93,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         expl = b.get('explanation', '')
         if len(expl) > 600 or expl.count('First,') > 1:
             verbose_explanations += 1
-            print(f"[FAIL] Verbose explanation in {b.get('block_id', '?')}: {len(expl)} chars")
+            logging.warning(f"[FAIL] Verbose explanation in {b.get('block_id', '?')}: {len(expl)} chars")
     
     gates = {
         'Gate 1: Structural Integrity':    h2 > 0 and h2 == rev and vis_fail == 0 and attr_fail == 0,
@@ -92,15 +113,21 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         'Gate 15: Explanation Conciseness': verbose_explanations == 0,
     }
 
-    print("\n--- AUDIT RESULTS ---")
-    print(f"H2: {h2}  RevBox: {rev}  Traps: {trap}  Tricks: {trick}  Quotes: {quote}  Tables: {len(doc.tables)}")
-    print(f"Images: {img_count}  MapEx: {total_map_ex}  DocEx: {doc_ex}  AttrFail: {attr_fail}")
-    print("---------------------")
+    logging.info("\n--- AUDIT RESULTS ---")
+    logging.info(f"H2: {h2}  RevBox: {rev}  Traps: {trap}  Tricks: {trick}  Quotes: {quote}  Tables: {len(doc.tables)}")
+    logging.info(f"Images: {img_count}  MapEx: {total_map_ex}  DocEx: {doc_ex}  AttrFail: {attr_fail}")
+    logging.info("---------------------")
     all_ok = True
     for g, ok in gates.items():
-        print(f"{'[PASS]' if ok else '[FAIL]'} {g}")
-        if not ok: all_ok = False
-    print("\n[SUCCESS] All gates passed." if all_ok else "\n[FAIL] Some gates failed.")
+        logging.info(f"{'[PASS]' if ok else '[FAIL]'} {g}")
+        if not ok:
+            all_ok = False
+    
+    if all_ok:
+        logging.info("\n[SUCCESS] All gates passed.")
+    else:
+        logging.warning("\n[FAIL] Some gates failed.")
+        
     return all_ok, gates
 
 if __name__ == '__main__':
@@ -110,4 +137,5 @@ if __name__ == '__main__':
     p.add_argument('--frame-manifest', default='frame_manifest.json')
     p.add_argument('--slide-manifest', default='slide_manifest.json')
     args = p.parse_args()
-    sys.exit(0 if run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest)[0] else 1)
+    success, gates = run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest)
+    sys.exit(0 if success else 1)

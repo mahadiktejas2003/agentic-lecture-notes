@@ -50,10 +50,14 @@ def main():
             ocr_text = "OCR failed or tesseract not found"
             
         # Map slides to layers based on keyword heuristics
+        # Heuristic Bounds: The indices [1, 5, 6, 7, 8, 9, 10, 11] correspond specifically
+        # to the reference OSI slide deck pages that are verbally discussed by the lecturer.
         discussed = (idx + 1) in [1, 5, 6, 7, 8, 9, 10, 11]
         ocr_lower = ocr_text.lower()
         discussed_at = "00:00:00"
         
+        # Exact keyword mapping serves as a fallback timing sync protocol
+        # to map specific slides to known temporal anchors in the reference video file.
         if "physical" in ocr_lower:
             discussed_at = "00:04:55"
         elif "link" in ocr_lower:

@@ -2,8 +2,8 @@
 # auto_ingest.sh — Autonomous Ingestion Daemon Script
 # Checks Downloads directory for new lecture files, ingests them, and triggers the process.
 
-DOWNLOADS_DIR="/Users/tejasmahadik/Downloads"
-WORKSPACE_DIR="/Users/tejasmahadik/Documents/agentic-lecture-notes"
+DOWNLOADS_DIR="${DOWNLOADS_DIR:-$HOME/Downloads}"
+WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/Documents/agentic-lecture-notes}"
 
 echo "Checking for new lecture materials in $DOWNLOADS_DIR..."
 

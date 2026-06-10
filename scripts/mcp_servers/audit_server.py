@@ -6,7 +6,7 @@ from typing import Dict, Any
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from mcp.server.fastmcp import FastMCP
-from scripts.mcp_servers.auth import verify_auth, get_cleaned_args
+from scripts.mcp_servers.auth import verify_auth, get_cleaned_args, verify_request_auth, safe_path
 from scripts.audit import run_audit as audit_runner
 
 # Verify authentication on start
@@ -69,12 +69,13 @@ GATE_MAPPING = {
 }
 
 @mcp.tool()
-def run_audit(gate_number: int, docx_path: str) -> Dict[str, Any]:
+def run_audit(gate_number: int, docx_path: str, api_key: str = None) -> Dict[str, Any]:
     """
     Runs the audit for a specific gate number on a docx document.
     
     gate_number: The integer gate number to audit (1-15).
-    docx_path: The absolute or relative path to the generated document.
+    docx_path: The path to the generated document.
+    api_key: Optional API key for request validation.
     """
     gate_name = GATE_MAPPING.get(gate_number)
     if not gate_name:
@@ -87,10 +88,13 @@ def run_audit(gate_number: int, docx_path: str) -> Dict[str, Any]:
         }
         
     try:
+        verify_request_auth(api_key)
+        docx_path = safe_path(docx_path)
+        
         # Use default paths relative to execution context
-        concept_map_path = "concept_block_map.json"
-        frame_manifest_path = "frame_manifest.json"
-        slide_manifest_path = "slide_manifest.json"
+        concept_map_path = safe_path("concept_block_map.json")
+        frame_manifest_path = safe_path("frame_manifest.json")
+        slide_manifest_path = safe_path("slide_manifest.json")
         
         all_ok, gates = audit_runner(
             docx_path=docx_path,
@@ -119,10 +123,10 @@ def run_audit(gate_number: int, docx_path: str) -> Dict[str, Any]:
     except Exception as e:
         return {
             "status": "error",
-            "gate": gate_name,
+            "gate": gate_name or str(gate_number),
             "error_type": "audit_execution_error",
             "details": str(e),
-            "suggested_recovery": "Ensure files exist and docx is not corrupted."
+            "suggested_recovery": "Ensure files exist, path is safe, and API key is correct."
         }
 
 @mcp.resource("audit://rules/{gate}")

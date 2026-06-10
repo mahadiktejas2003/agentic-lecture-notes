@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 import os, json, argparse, re
+import sys
+import logging
 from docx import Document
+
+# Configure logging
+os.makedirs("logs", exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.FileHandler("logs/pipeline.log"),
+        logging.StreamHandler(sys.stderr)
+    ]
+)
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn, nsdecls
@@ -100,7 +113,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # Load manifests
     if not os.path.exists(concept_map_path):
-        print(f"Error: Concept block map not found at {concept_map_path}")
+        logging.error(f"Error: Concept block map not found at {concept_map_path}")
         return False, None
 
     with open(concept_map_path, 'r', encoding='utf-8') as f:
@@ -287,7 +300,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     import datetime
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     doc.save(output_path)
-    print(f"Notes document generated successfully at: {output_path}")
+    logging.info(f"Notes document generated successfully at: {output_path}")
 
     archive_path = None
     # Generate a unique, timestamped, and sanitized lecture-specific archived copy to prevent overwriting
@@ -298,9 +311,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         archive_name = f"LECTURE_NOTES_{sanitized_title}_{current_date}.docx"
         archive_path = os.path.join(os.path.dirname(output_path), archive_name)
         doc.save(archive_path)
-        print(f"Archived unique copy saved successfully at: {archive_path}")
+        logging.info(f"Archived unique copy saved successfully at: {archive_path}")
     except Exception as e:
-        print(f"Warning: Could not save archived unique copy: {e}")
+        logging.warning(f"Warning: Could not save archived unique copy: {e}")
 
     return True, archive_path
 
