@@ -1,9 +1,9 @@
 # PROJECT MEMORY: Agentic Lecture Notes Reconstruction
 
-**Last Updated:** June 10, 2025 (Post-Repush Full Audit)  
-**Project Status:** ✅ Production-Ready with Successful Run Logged  
+**Last Updated:** June 10, 2026 (Post-Critical Fixes & Dual-Mode Integration)  
+**Project Status:** ✅ Production-Ready with Security Hardening & AI Services  
 **Current Lecture:** CPU Scheduling (Operating Systems)  
-**Memory Version:** 2.0 - Complete System Knowledge Base
+**Memory Version:** 3.0 - Dual-Mode Operation (Local + Cloud AI)
 
 ---
 
@@ -11,12 +11,15 @@
 
 This is an **autonomous, self-healing, cross-platform pipeline** that converts lecture materials (video, transcript, slides) into **exam-ready Word documents (.docx)** using:
 - **v8.0 Source Fidelity Protocol** (13 strict rules against hallucination)
-- **LangGraph 1.x Orchestrator** with 4-stage audit routing and retry logic
+- **LangGraph 1.x Orchestrator** with 4-stage audit routing and retry logic (Gate 4 routing FIXED)
 - **15-Gate Quality Audit** system for validation
 - **3 FastMCP Servers** (document generation, auditing, frame extraction)
 - **5 Agent Skills** with self-improvement capabilities
+- **Dual-Mode AI Integration**: 
+  - **Mode A**: Direct API calls via `scripts/ai_services.py` (Gemini 2.0 Flash, Groq, Claude, Ollama)
+  - **Mode B**: External AI tools (Codex 5.5, Claude Code, Cursor, Antigravity 2.0 extensions)
 
-The system is designed to be **deterministic, traceable, and exam-focused**, ensuring no content is invented, dropped, or reorganized.
+The system is designed to be **deterministic, traceable, and exam-focused**, ensuring no content is invented, dropped, or reorganized. It supports both automated cloud AI processing AND manual intervention via IDE extensions.
 
 ---
 
