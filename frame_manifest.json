@@ -1,0 +1,37 @@
+{
+  "CB1_1.jpg": {
+    "timestamp": "00:01:50",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB2_1.jpg": {
+    "timestamp": "00:07:45",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB3_1.jpg": {
+    "timestamp": "00:13:30",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB4_1.jpg": {
+    "timestamp": "00:15:20",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB5_1.jpg": {
+    "timestamp": "00:19:40",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB6_1.jpg": {
+    "timestamp": "00:22:15",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  },
+  "CB7_1.jpg": {
+    "timestamp": "00:29:10",
+    "ocr_text": "extracted frame OCR placeholder text",
+    "type": "board"
+  }
+}
