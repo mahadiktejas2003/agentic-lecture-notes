@@ -411,11 +411,7 @@ builder.add_conditional_edges("audit-stage-4", route_after_stage_4)
 # Create checkpoints directory
 os.makedirs("logs", exist_ok=True)
 db_path = "logs/langgraph_checkpoints.db"
-if os.path.exists(db_path):
-    try:
-        os.remove(db_path)
-    except Exception:
-        pass
+# Checkpoint DB preserved for recovery
 conn = sqlite3.connect(db_path, check_same_thread=False)
 memory = SqliteSaver(conn)
 

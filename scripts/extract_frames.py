@@ -10,12 +10,13 @@ def extract_frames():
     if not os.path.exists(video):
         logger.error("❌ Video not found at %s", video)
         return
-    cmd = f'ffmpeg -i "{video}" -vf "select=eq(n\,0)+eq(mod(n\,300)\,0)" -vsync vfr "{output_dir}/frame_%03d.png"'
+    cmd = f'ffmpeg -i "{video}" -vf "select=eq(n\\,0)+eq(mod(n\\,300)\\,0)" -vsync vfr "{output_dir}/frame_%03d.png"'
     subprocess.run(cmd, shell=True, check=True)
     manifest = {}
     try:
         import pytesseract
         from PIL import Image
+        logger.info("🔍 Running Real OCR with pytesseract...")
         for fname in sorted(os.listdir(output_dir)):
             if fname.endswith('.png'):
                 fpath = os.path.join(output_dir, fname)

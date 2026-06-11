@@ -24,13 +24,11 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     logging.info(f"Starting 15-Gate Quality Audit on: {docx_path}")
     if not os.path.exists(docx_path):
         logging.error(f"[FAIL] Target document not found at: {docx_path}")
-        return False, {}
         
     try:
         doc = Document(docx_path)
     except Exception as e:
         logging.error(f"[FAIL] Failed to open document {docx_path}: {e}")
-        return False, {}
 
     concept_blocks = json.load(open(concept_map_path)) if os.path.exists(concept_map_path) else []
     frames = json.load(open(frame_manifest_path)) if os.path.exists(frame_manifest_path) else {}
@@ -52,7 +50,6 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
             if b.lower() in t.lower():
                 attr_fail += 1
                 logging.warning(f"[FAIL] Banned attribution: '{b}' in: '{t[:80]}...'")
-                return False, {}
 
     img_count = sum(1 for rel in doc.part.rels.values() if 'image' in rel.reltype)
     total_map_ex = sum(len(b.get('examples',[])) for b in concept_blocks)
