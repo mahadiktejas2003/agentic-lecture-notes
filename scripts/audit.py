@@ -94,16 +94,25 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     
     # Gate 9: Slide Handling - fail if slide_manifest is empty when slides are expected
     # Also check for undiscussed slides with OCR text appearing in document
-    has_slides_expected = len(slides) > 0 or len(concept_blocks) > 0  # If we have concept blocks, slides likely exist
+    has_slides_expected = len(concept_blocks) > 0  # If we have concept blocks, slides likely exist
     slide_manifest_empty = len(slides) == 0
     
-    # Gate 9 fails if: (1) slide manifest is empty when it shouldn't be, OR (2) undiscussed slides found in doc
+    # Gate 9 fails if: (1) slide manifest is empty when concept blocks exist, OR (2) undiscussed slides found in doc
     undisc_slide_in_doc = any((ot := s.get('ocr_text', '').strip()) and len(ot) > 5 and ot in all_text for s in undisc)
-    gate_9_result = not (slide_manifest_empty or undisc_slide_in_doc)
+    
+    # Fixed: Gate 9 now FAILS if slide_manifest is empty when we expect slides (concept_blocks exist)
+    if has_slides_expected and slide_manifest_empty:
+        logging.warning("[FAIL] Gate 9: Slide manifest is empty but concept blocks exist - missing slide data")
+        gate_9_result = False
+    else:
+        gate_9_result = not undisc_slide_in_doc
+    
+    # Gate 2: Must have BOTH matching counts AND at least one heading (prevent vacuous 0==0 pass)
+    gate_2_result = (rev == h2) and (h2 > 0)
     
     gates = {
         'Gate 1: Structural Integrity':    h2 > 0 and h2 == rev and vis_fail == 0 and attr_fail == 0,
-        'Gate 2: Revision Box Placement':  rev == h2,
+        'Gate 2: Revision Box Placement':  gate_2_result,
         'Gate 3: Chronological Flow':      h2 == len(concept_blocks) if concept_blocks else False,
         'Gate 4: Content Completeness':    len(concept_blocks) > 0,
         'Gate 5: Factual Accuracy':        doc_ex >= total_map_ex if total_map_ex else doc_ex > 0,
