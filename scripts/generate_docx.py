@@ -203,7 +203,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     p_work.add_run(working_text)
 
                 # Answer extraction: if working contains "->", take the part after last "->"
-                ans_text = working_text.split("->")[-1].strip() if "->" in working_text else ""
+                ans_text = working_text.split("->")[-1].strip() if "->" in working_text else (working_text.split("=")[-1].strip() if "=" in working_text else "")
                 if ans_text:
                     p_ans = doc.add_paragraph()
                     p_ans.add_run("Answer: ").bold = True

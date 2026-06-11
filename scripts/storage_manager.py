@@ -53,9 +53,9 @@ class StorageManager:
         self.bucket = None
         
         # Configuration from environment
-        self.key_id = os.getenv("B2_KEY_ID")
-        self.app_key = os.getenv("B2_APP_KEY")
-        self.endpoint = os.getenv("B2_ENDPOINT", "https://api.backblazeb2.com")
+        self.key_id = os.getenv("R2_ACCESS_KEY_ID")
+        self.app_key = os.getenv("R2_SECRET_ACCESS_KEY")
+        self.endpoint = os.getenv("R2_ENDPOINT", "https://api.backblazeb2.com")
         
     def _init_b2(self):
         """Initialize B2 API connection."""
@@ -64,7 +64,7 @@ class StorageManager:
             
         if not self.key_id or not self.app_key:
             raise ValueError(
-                "B2 credentials not set. Set B2_KEY_ID and B2_APP_KEY environment variables."
+                "B2 credentials not set. Set R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY environment variables."
             )
             
         info = InMemoryAccountInfo()

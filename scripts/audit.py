@@ -101,7 +101,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         'Gate 6: Image Integrity':         vis_fail == 0,
         'Gate 7: Minimum Counts':          h2 >= 1 and img_count >= exp_img * 0.8,
         'Gate 8: Source Traceability':     trap >= len(concept_blocks) * 0.5 or quote >= len(concept_blocks) * 0.5,
-        'Gate 9: Slide Handling':          not any(s.get('ocr_text','') in all_text for s in undisc),
+        'Gate 9: Slide Handling':          not any((ot := s.get('ocr_text', '').strip()) and len(ot) > 5 and ot in all_text for s in undisc),
         'Gate 10: Example Coverage':       doc_ex >= total_map_ex if total_map_ex else True,
         'Gate 11: Visual Coverage':        img_count >= exp_img * 0.8 if exp_img else True,
         'Gate 12: Exercise Content':       empty_exercise_count == 0,
