@@ -29,15 +29,27 @@ def extract_frames(video_path, output_dir, timestamps=None):
         if duration <= 0:
             logger.warning("Could not determine duration. Using default sampling.")
             # Fallback: every 300 frames approx
-            cmd = ['ffmpeg', '-i', video_path, '-vf', 'select=eq(n\,0)+not(mod(n\,300))', 
+            cmd = ['ffmpeg', '-i', video_path, '-vf', r'select=eq(n\,0)+not(mod(n\,300))', 
                    '-vsync', 'vfr', f'{output_dir}/frame_%03d.png']
             subprocess.run(cmd, check=True)
-            # Generate dummy manifest if no timestamps
+            # Generate manifest with calculated timestamps based on frame position
             manifest = {}
-            for f in sorted(os.listdir(output_dir)):
-                if f.endswith('.png'):
-                    manifest[f] = {"timestamp": "00:00:00", "ocr_text": "", "type": "board"}
+            frame_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.png')])
+            # Estimate timestamp assuming 30fps and every 300 frames = 10 seconds apart
+            for i, fname in enumerate(frame_files):
+                estimated_seconds = i * 10  # 10 seconds between frames
+                ts = f"{estimated_seconds//3600}:{(estimated_seconds%3600)//60:02d}:{estimated_seconds%60:02d}"
+                out_path = os.path.join(output_dir, fname)
+                try:
+                    import pytesseract
+                    from PIL import Image
+                    img = Image.open(out_path)
+                    ocr_text = pytesseract.image_to_string(img).strip()
+                except ImportError:
+                    ocr_text = "OCR unavailable"
+                manifest[fname] = {"timestamp": ts, "ocr_text": ocr_text, "type": "board"}
             with open('frame_manifest.json', 'w') as f: json.dump(manifest, f, indent=2)
+            logger.info(f"✅ Saved {len(manifest)} frames with estimated timestamps.")
             return
 
         # Default: sample every 60 seconds

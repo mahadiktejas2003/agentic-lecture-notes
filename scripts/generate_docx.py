@@ -119,6 +119,11 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     with open(concept_map_path, 'r', encoding='utf-8') as f:
         concept_blocks = json.load(f)
 
+    # Guard against empty concept_blocks list
+    if not concept_blocks or not isinstance(concept_blocks, list) or len(concept_blocks) == 0:
+        logging.warning("Warning: Concept block map is empty. Generating minimal document.")
+        concept_blocks = []
+
     frames = {}
     if frame_manifest_path and os.path.exists(frame_manifest_path):
         with open(frame_manifest_path, 'r', encoding='utf-8') as f:
@@ -128,6 +133,33 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     if slide_manifest_path and os.path.exists(slide_manifest_path):
         with open(slide_manifest_path, 'r', encoding='utf-8') as f:
             slides = json.load(f)
+
+    # SEMANTIC COHERENCE CHECK: Warn if concept blocks and frames appear mismatched
+    if concept_blocks and frames:
+        # Extract keywords from concept block titles
+        import re
+        concept_keywords = set()
+        for block in concept_blocks[:3]:  # Check first few blocks
+            title = block.get('title', '').lower()
+            words = re.findall(r'\b[a-z]{4,}\b', title)  # Words 4+ chars
+            concept_keywords.update(words)
+        
+        # Extract keywords from frame OCR text
+        frame_keywords = set()
+        for fname, info in list(frames.items())[:10]:  # Check first 10 frames
+            ocr = info.get('ocr_text', '').lower()
+            words = re.findall(r'\b[a-z]{4,}\b', ocr)
+            frame_keywords.update(words)
+        
+        # Check for overlap
+        common = concept_keywords & frame_keywords
+        overlap_ratio = len(common) / max(len(concept_keywords), 1)
+        
+        if overlap_ratio < 0.15:  # Less than 15% keyword overlap
+            logging.warning(f"⚠️  SEMANTIC COHERENCE WARNING: Concept blocks and frames may be from different lectures!")
+            logging.warning(f"   Concept keywords: {list(concept_keywords)[:10]}")
+            logging.warning(f"   Frame keywords: {list(frame_keywords)[:10]}")
+            logging.warning(f"   Overlap ratio: {overlap_ratio:.2f} (expected > 0.15)")
 
     # Build a lookup from timestamp to frame filename
     timestamp_to_frame = {}
@@ -139,13 +171,14 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Title
     lecture_title = "Lecture Reconstruction Notes"
     # Check if the manifest provides a dedicated lecture title
-    if "lecture_title" in concept_blocks[0]:
-        lecture_title = concept_blocks[0]["lecture_title"]
-    elif concept_blocks and isinstance(concept_blocks, list):
-        # Fallback: use first block's title only if it doesn’t look like a question range
-        first_title = concept_blocks[0].get('title', '')
-        if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
-            lecture_title = first_title
+    if concept_blocks and isinstance(concept_blocks, list) and len(concept_blocks) > 0:
+        if "lecture_title" in concept_blocks[0]:
+            lecture_title = concept_blocks[0]["lecture_title"]
+        else:
+            # Fallback: use first block's title only if it doesn't look like a question range
+            first_title = concept_blocks[0].get('title', '')
+            if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
+                lecture_title = first_title
     doc.add_heading(f"NOTES ## {lecture_title}", 0)
 
     # Section 1: Lecture Flow Outline
@@ -284,9 +317,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # Section 4: Final Revision Points
     doc.add_heading("Section 4: Final Revision Points", level=1)
-    # Take a few key points from the blocks
+    # Render ALL concept blocks, not just first 4
     points_added = 0
-    for block in concept_blocks[:4]:
+    for block in concept_blocks:
         title = block.get('title', '')
         examples = block.get('examples', [])
         if isinstance(examples, list) and len(examples) > 0:

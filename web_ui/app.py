@@ -373,12 +373,22 @@ async def process_lecture(
     # Generate unique lecture ID
     lecture_id = str(uuid.uuid4())[:8]
     
-    # Save uploaded files
+    # Save uploaded files with STANDARD NAMES that orchestrator expects
     video_ext = Path(video.filename).suffix or ".mp4"
     transcript_ext = Path(transcript.filename).suffix or ".srt"
     
-    video_path = UPLOAD_DIR / f"{lecture_id}{video_ext}"
-    transcript_path = UPLOAD_DIR / f"{lecture_id}{transcript_ext}"
+    # Use standard names: LECTURE.mp4 and transcript.srt
+    video_path = UPLOAD_DIR / f"LECTURE{video_ext}"
+    transcript_path = UPLOAD_DIR / f"transcript{transcript_ext}"
+    
+    # Backup any existing files first
+    if video_path.exists():
+        backup_video = UPLOAD_DIR / f"LECTURE_backup_{lecture_id}{video_ext}"
+        shutil.move(str(video_path), str(backup_video))
+        
+    if transcript_path.exists():
+        backup_transcript = UPLOAD_DIR / f"transcript_backup_{lecture_id}{transcript_ext}"
+        shutil.move(str(transcript_path), str(backup_transcript))
     
     with open(video_path, "wb") as f:
         shutil.copyfileobj(video.file, f)
