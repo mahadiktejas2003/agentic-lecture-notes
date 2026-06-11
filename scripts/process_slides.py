@@ -44,7 +44,9 @@ def main():
         ocr_text = ""
         try:
             ocr_text = pytesseract.image_to_string(img_path)
-            print(f"OCR Slide {idx+1}: {ocr_text[:50].replace('\n', ' ')}...")
+            clean_text = ocr_text[:50].replace('
+', ' ')
+    print(f"OCR Slide {idx+1}: {clean_text}...")
         except Exception as e:
             print(f"OCR failed for slide {idx+1}: {e}")
             ocr_text = "OCR failed or tesseract not found"
