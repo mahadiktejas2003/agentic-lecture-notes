@@ -1,104 +1,89 @@
 [
   {
     "block_id": "CB1",
-    "lecture_title": "DBMS Syllabus for IBPS SO IT Officer 2025",
-    "title": "DBMS Exam Weightage & Syllabus Structure",
-    "transcript_range_percent": [0, 20],
-    "explanation": "DBMS is the highest weightage subject in the IBPS SO IT Officer Technical Mains paper, contributing 15–20 out of 60 marks (which matches or exceeds the typical mains cutoff of 13–14 marks). The syllabus must be prepared with width (general familiarity with all topics) rather than deep specialization in a single area.",
+    "lecture_title": "Data Warehouse Syllabus (IBPS SO 2025)",
+    "title": "Data Warehouse Syllabus and Exam Structure",
+    "transcript_range_percent": [0, 50],
+    "explanation": "Data Warehouse and Data Mining is a critical technical topic for technical officer exams. Out of the 60 mains marks, it consistently accounts for 3–5 questions (averaging 4 marks) annually. This syllabus lecture details the entire topic hierarchy and overall exam strategy required to answer direct TECHNICAL questions without unnecessary programming depth.",
     "concepts": [
       {
-        "term": "Mains Cutoff Mark",
-        "definition": "The qualification mark threshold, typically around 13–14 marks out of 60."
+        "term": "Exam Weightage",
+        "definition": "Accounts for an average of 4 out of 60 marks in the Technical Mains paper (range: 3 to 5 questions)."
       },
       {
-        "term": "DBMS Weightage",
-        "definition": "The technical weight of DBMS in the exam, accounting for 15–20 out of 60 marks."
+        "term": "Data Warehouse (DWH) Architecture",
+        "definition": "A staging area, metadata directories, data warehouses, and domain-specific data marts used for business intelligence."
       }
     ],
     "examples": [
       {
-        "sentence": "How should a candidate allocate study time for DBMS compared to other subjects?",
-        "rule": "Prioritize DBMS width coverage since it can single-handedly cover the mains cutoff mark threshold.",
-        "working": "Cutoff ≈ 13–14 marks. DBMS marks ≈ 15–20. Coverage of all topics at moderate depth guarantees passing marks."
+        "sentence": "How should a candidate prepare for Data Warehouse questions in the IBPS SO Mains exam?",
+        "rule": "Focus on structural comparisons (OLTP/OLAP, Star/Snowflake) and definitions, avoiding deep coding.",
+        "working": "Weightage is 3–5 questions. All past questions are direct conceptual MCQs. Therefore, prioritize theoretical definitions and structural trade-offs."
       }
     ],
     "exercise_questions": [
-      "Explain why DBMS is considered the highest weightage topic for IT Officer Mains.",
-      "Describe the 'width-first' preparation strategy recommended by the teacher."
+      "Detail the typical score contribution of Data Warehousing in technical mains exams.",
+      "List the main components of a Data Warehouse architecture mentioned in the overview."
     ],
     "visual_moments": [
-      {"timestamp": "00:00:10", "type": "board", "description": "DBMS syllabus intro slide"},
-      {"timestamp": "00:00:45", "type": "board", "description": "DBMS weightage info (15-20 marks out of 60)"}
+      {"timestamp": "00:00:05", "type": "board", "description": "Syllabus overview and Data Warehousing topic list"},
+      {"timestamp": "00:00:15", "type": "board", "description": "Data Warehouse exam weightage: 3-5 questions on average"}
     ],
     "teacher_quotes": [
-      "Terah-chaudah number ka toh akela DBMS hi aapko mil jayega exam mein. DBMS iklota hi kaafi hai IT officer mains ko qualify karne mein.",
-      "Hume width mein jaana hai. Hume chaudai. Aapko har topic ki knowledge honi chahiye. Zyada deep mein jaane ki zaroorat nahi hai but at least moderate level ka pata hona chahiye."
+      "Mains mein har saal aapko check karoge toh easily char question, teen question, ya paanch question on an average mil hi jayenge."
     ],
     "traps": [
-      "Do not skip any technical topic in DBMS; even moderate knowledge can secure full marks."
+      "Do not spend time on coding or complex algorithms; study structural characteristics and conceptual definitions only."
     ],
     "tricks": [
-      "Preparation strategy: Cover all topics conceptually without going into deep programming implementation."
+      "Syllabus Strategy: Cover all topics at a conceptual level (width over depth)."
     ]
   },
   {
     "block_id": "CB2",
-    "title": "DBMS Core Topics Checklist",
-    "transcript_range_percent": [20, 100],
-    "explanation": "The technical core of the DBMS syllabus consists of 3-Schema Architecture, the Relational Model, Relational Algebra, ER modeling, Key constraints, Normalization rules (1NF to BCNF), SQL command categories (DDL/DML/DCL/TCL), Transaction ACID properties, Indexing (B+ Trees), Database Views, PL/SQL blocks (triggers, cursors, procedures), RAID configurations, and NoSQL distributed databases.",
+    "title": "Syllabus Topics & Core Checklist",
+    "transcript_range_percent": [50, 100],
+    "explanation": "The core syllabus covers transactional vs analytical database differences (OLTP vs OLAP), cube operations (roll-up, drill-down, slice, dice, pivot), dimensional schemas (Star Schema vs Snowflake Schema), fact and dimension tables, data integration processes (ETL), and data mining preprocessing.",
     "concepts": [
       {
-        "term": "Three Schema Architecture",
-        "definition": "Dividing database systems into view (external), logical (conceptual), and physical (internal) levels of abstraction."
+        "term": "OLAP vs OLTP",
+        "definition": "OLAP is optimized for read-heavy multi-dimensional analysis, whereas OLTP is optimized for write-heavy concurrent transactions."
       },
       {
-        "term": "Relational Model Terms",
-        "definition": "Relation (table), Tuple (row), Attribute (column), Arity (number of columns), and Cardinality (number of rows)."
+        "term": "OLAP Operations",
+        "definition": "Roll-up (aggregates), Drill-down (splits), Slice (cuts 1 dimension), Dice (selects sub-cube), and Pivot (rotates)."
       },
       {
-        "term": "Normalization Forms",
-        "definition": "Database design techniques reducing redundancy: 1NF (atomic values), 2NF (no partial dependency), 3NF (no transitive dependency), and BCNF."
+        "term": "Star vs Snowflake",
+        "definition": "Star Schema uses denormalized dimension tables directly connected to fact tables; Snowflake Schema normalizes dimension tables."
       },
       {
-        "term": "SQL Command Groups",
-        "definition": "DDL (schema creation: CREATE, ALTER), DML (data access: SELECT, UPDATE), DCL (permissions), and TCL (transaction control: COMMIT)."
+        "term": "Data Preprocessing",
+        "definition": "Essential cleaning, integration, transformation, and reduction phases executed on raw data before mining."
       }
     ],
     "examples": [],
     "exercise_questions": [
-      "Differentiate between Arity and Cardinality in a relation.",
-      "List the four command categories of SQL and provide examples for each."
+      "Compare Star Schema and Snowflake Schema based on normalization.",
+      "Identify the five primary OLAP cube operations."
     ],
     "visual_moments": [
-      {"timestamp": "00:01:12", "type": "board", "description": "Three Schema Architecture topic"},
-      {"timestamp": "00:01:24", "type": "board", "description": "Relational Model (table, arity, cardinality, tuples)"},
-      {"timestamp": "00:01:45", "type": "board", "description": "Relational Algebra topic"},
-      {"timestamp": "00:02:07", "type": "board", "description": "Joins (inner, outer, cross, natural) and set operations"},
-      {"timestamp": "00:02:22", "type": "board", "description": "ER Model and diagrams"},
-      {"timestamp": "00:02:33", "type": "board", "description": "Keys (Primary, Foreign, Candidate, Super)"},
-      {"timestamp": "00:02:48", "type": "board", "description": "Functional Dependencies"},
-      {"timestamp": "00:03:02", "type": "board", "description": "Closure properties and candidate key finding"},
-      {"timestamp": "00:03:13", "type": "board", "description": "Normalization (2NF, 3NF, BCNF)"},
-      {"timestamp": "00:03:43", "type": "board", "description": "SQL commands (DDL, DML, DCL, TCL)"},
-      {"timestamp": "00:03:58", "type": "board", "description": "SQL clauses (ORDER BY, GROUP BY, subqueries)"},
-      {"timestamp": "00:04:10", "type": "board", "description": "Aggregate and single row functions"},
-      {"timestamp": "00:04:22", "type": "board", "description": "ACID properties and Transaction control"},
-      {"timestamp": "00:04:33", "type": "board", "description": "Indexing (primary, cluster, secondary, B/B+ tree)"},
-      {"timestamp": "00:04:44", "type": "board", "description": "Views topic"},
-      {"timestamp": "00:04:53", "type": "board", "description": "PL/SQL (Triggers, Cursors, Stored Procedures)"},
-      {"timestamp": "00:05:15", "type": "board", "description": "RAID levels"},
-      {"timestamp": "00:05:30", "type": "board", "description": "NoSQL and Big Data"},
-      {"timestamp": "00:05:47", "type": "board", "description": "BASE and CAP properties"},
-      {"timestamp": "00:06:01", "type": "board", "description": "Summary/wrap-up"}
+      {"timestamp": "00:00:34", "type": "board", "description": "Core components of Data Warehousing Architecture"},
+      {"timestamp": "00:00:41", "type": "board", "description": "OLAP vs OLTP conceptual slide"},
+      {"timestamp": "00:00:52", "type": "board", "description": "OLAP cube operations: Slicing, Dicing, Roll-up, Drill-down, and Pivot"},
+      {"timestamp": "00:01:03", "type": "board", "description": "Star Schema and Snowflake Schema diagrams"},
+      {"timestamp": "00:01:17", "type": "board", "description": "ETL flow diagram"},
+      {"timestamp": "00:01:25", "type": "board", "description": "Data Mining and Preprocessing steps"}
     ],
     "teacher_quotes": [
-      "Three schema architecture, jiski upar direct aapko question mil jaata hai. Internal schema, view level ke upar question aapko direct aa jayega."
+      "Ye saare points questions hain jo har saal kuch na kuch alag-alag tareeqe se ghum-fir ke pooche jaate hain."
     ],
     "traps": [
-      "Confusion between Arity (columns) and Cardinality (rows) is extremely common in technical MCQs."
+      "OLTP database normalization prevents redundancy but slows multi-table aggregation joins."
     ],
     "tricks": [
-      "Mnemonic: B+ Tree leaf node linking is the reason why range queries are faster than B-Trees in RDBMS."
+      "Exam Tip: Focus heavily on the preprocessing phases and OLAP operations as they are frequently tested."
     ]
   }
 ]
