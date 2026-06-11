@@ -94,13 +94,14 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     
     # Gate 9: Slide Handling - fail if slide_manifest is empty when slides are expected
     # Also check for undiscussed slides with OCR text appearing in document
-    has_slides_expected = len(concept_blocks) > 0  # If we have concept blocks, slides likely exist
+    slide_file_exists = any(os.path.exists(os.path.join("lecture-input", f)) for f in ["slides.pdf", "SLIDES.pdf", "slides.pptx", "SLIDES.pptx"])
+    has_slides_expected = len(concept_blocks) > 0 and slide_file_exists
     slide_manifest_empty = len(slides) == 0
     
-    # Gate 9 fails if: (1) slide manifest is empty when concept blocks exist, OR (2) undiscussed slides found in doc
+    # Gate 9 fails if: (1) slide manifest is empty when concept blocks exist and slides are expected, OR (2) undiscussed slides found in doc
     undisc_slide_in_doc = any((ot := s.get('ocr_text', '').strip()) and len(ot) > 5 and ot in all_text for s in undisc)
     
-    # Fixed: Gate 9 now FAILS if slide_manifest is empty when we expect slides (concept_blocks exist)
+    # Fixed: Gate 9 now FAILS if slide_manifest is empty when we expect slides (concept_blocks exist and slides are present)
     if has_slides_expected and slide_manifest_empty:
         logging.warning("[FAIL] Gate 9: Slide manifest is empty but concept blocks exist - missing slide data")
         gate_9_result = False
