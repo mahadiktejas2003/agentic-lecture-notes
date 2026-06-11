@@ -115,13 +115,8 @@ def content_mapper_node(state: AgentState) -> Dict:
             # Check for Antigravity CLI path
             cli_path = os.environ.get("ANTIGRAVITY_CLI_PATH") or shutil.which("antigravity")
             if not cli_path:
-                logging.warning("Warning: 'antigravity' CLI is not found on PATH or ANTIGRAVITY_CLI_PATH. Checking for fallback manifests...")
-                if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
-                    shutil.copy(fallback_map, concept_map_path)
-                    shutil.copy(fallback_frames, frame_manifest_path)
-                    logging.info(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}' as CLI is not available.")
-                else:
-                    raise FileNotFoundError("antigravity CLI not found and no fallback manifests are available.")
+                logging.error("Error: Antigravity CLI not found on PATH or ANTIGRAVITY_CLI_PATH, and no matching fallback manifests are available.")
+                raise FileNotFoundError("Antigravity CLI not found and no matching fallback manifests are available.")
             else:
                 # For brand-new lectures, call the Antigravity CLI
                 logging.info(f"Calling Antigravity CLI from '{cli_path}' for dynamic mapping...")
@@ -139,21 +134,10 @@ def content_mapper_node(state: AgentState) -> Dict:
                     logging.info(cli_result.stdout)
                     if cli_result.returncode != 0:
                         logging.error(f"Antigravity CLI failed: {cli_result.stderr}")
-                        logging.info("Attempting to fall back to pre-built offline manifests...")
-                        if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
-                            shutil.copy(fallback_map, concept_map_path)
-                            shutil.copy(fallback_frames, frame_manifest_path)
-                            logging.info(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}' after CLI failure.")
-                        else:
-                            raise RuntimeError("Antigravity CLI failed to generate manifests and no fallback manifests are available.")
+                        raise RuntimeError(f"Antigravity CLI failed to generate manifests: {cli_result.stderr}")
                 except subprocess.TimeoutExpired as e:
-                    logging.warning("Warning: Antigravity CLI call timed out. Falling back to pre-built offline manifests...")
-                    if os.path.exists(fallback_map) and os.path.exists(fallback_frames):
-                        shutil.copy(fallback_map, concept_map_path)
-                        shutil.copy(fallback_frames, frame_manifest_path)
-                        logging.info(f"Copied fallback manifests to '{concept_map_path}' and '{frame_manifest_path}' due to timeout")
-                    else:
-                        raise RuntimeError("Antigravity CLI timed out and no fallback manifests are available.") from e
+                    logging.error("Error: Antigravity CLI call timed out.")
+                    raise RuntimeError("Antigravity CLI timed out.") from e
             
             # Verify the files actually were created
             if not os.path.exists(concept_map_path) or not os.path.exists(frame_manifest_path):
@@ -178,10 +162,14 @@ def example_extractor_node(state: AgentState) -> Dict:
             frames = json.load(f)
         timestamps = [info["timestamp"] for info in frames.values() if info.get("timestamp")]
         if timestamps:
-            logging.info(f"Running extract_frames.py with timestamps: {timestamps}")
+            video_path = "lecture-input/LECTURE.mp4"
+            if not os.path.exists(video_path) and os.path.exists("lecture-input/video.mp4"):
+                video_path = "lecture-input/video.mp4"
+                
+            logging.info(f"Running extract_frames.py with timestamps: {timestamps} using video: {video_path}")
             subprocess.run([
                 sys.executable, "scripts/extract_frames.py",
-                "--video", "lecture-input/LECTURE.mp4",
+                "--video", video_path,
                 "--output-dir", "screenshots",
                 "--timestamps"
             ] + timestamps, check=True)

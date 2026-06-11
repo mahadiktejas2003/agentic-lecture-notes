@@ -19,6 +19,16 @@ def get_video_duration(video_path):
         logger.error(f"Failed to get duration: {e}")
         return 0.0
 
+def is_logo_frame(text):
+    if not text:
+        return False
+    text_lower = text.lower()
+    if "gate smashers" in text_lower or "gate smasher" in text_lower:
+        words = re.findall(r'\b\w+\b', text_lower)
+        if len(words) < 25 or "subscribe" in text_lower or "join" in text_lower or "follow" in text_lower:
+            return True
+    return False
+
 def are_ocr_texts_similar(text1, text2, threshold=0.48):
     if not text1 or not text2:
         return False
@@ -71,6 +81,13 @@ def extract_frames(video_path, output_dir, timestamps=None):
                     ocr_text = pytesseract.image_to_string(img).strip()
                 except ImportError:
                     ocr_text = "OCR unavailable"
+                if is_logo_frame(ocr_text):
+                    logger.info(f"Skipping logo/intro frame: {fname}")
+                    try:
+                        os.remove(out_path)
+                    except:
+                        pass
+                    continue
                 manifest[fname] = {"timestamp": ts, "ocr_text": ocr_text, "type": "board"}
         else:
             # Default: sample every 60 seconds
@@ -99,6 +116,14 @@ def extract_frames(video_path, output_dir, timestamps=None):
                     ocr_text = pytesseract.image_to_string(img).strip()
                 except ImportError:
                     ocr_text = "OCR unavailable"
+                
+                if is_logo_frame(ocr_text):
+                    logger.info(f"Skipping logo/intro frame: {fname} (detected branding content)")
+                    try:
+                        os.remove(out_path)
+                    except:
+                        pass
+                    continue
                 
                 manifest[fname] = {
                     "timestamp": ts,

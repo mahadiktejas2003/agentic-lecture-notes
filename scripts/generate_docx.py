@@ -19,6 +19,16 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn, nsdecls
 from docx.oxml import parse_xml
 
+def is_logo_frame(text):
+    if not text:
+        return False
+    text_lower = text.lower()
+    if "gate smashers" in text_lower or "gate smasher" in text_lower:
+        words = re.findall(r'\b\w+\b', text_lower)
+        if len(words) < 25 or "subscribe" in text_lower or "join" in text_lower or "follow" in text_lower:
+            return True
+    return False
+
 def are_ocr_texts_similar(text1, text2, threshold=0.48):
     if not text1 or not text2:
         return False
@@ -207,6 +217,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     doc.add_heading("Section 2: Detailed Concept Blocks", level=1)
 
     inserted_ocrs = []
+    inserted_filenames = set()
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
@@ -321,10 +332,11 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                         is_duplicate = True
                         break
                 
-                if is_duplicate:
-                    logging.info(f"Skipping duplicate slide image: {frame_fname or img_path}")
+                if is_duplicate or is_logo_frame(current_ocr):
+                    logging.info(f"Skipping duplicate or logo slide image: {frame_fname or img_path}")
                 else:
                     if add_image_if_exists(doc, img_path):
+                        inserted_filenames.add(os.path.basename(img_path))
                         if current_ocr.strip():
                             inserted_ocrs.append(current_ocr)
 
@@ -405,7 +417,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     
     visual_appendix_limit = profile.get("visual_appendix_limit", 20)
     
-    if frames_found and visual_appendix_limit > 0:
+    # Only keep frames that were NOT inserted inline
+    appendix_frames = [f for f in frames_found if os.path.basename(f) not in inserted_filenames]
+    
+    if appendix_frames and visual_appendix_limit > 0:
         doc.add_page_break()
         doc.add_heading("Visual Appendix", level=1)
         
@@ -422,7 +437,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         
         # Add up to visual_appendix_limit frames
         count = 0
-        for img_path in frames_found:
+        for img_path in appendix_frames:
             if count >= visual_appendix_limit:
                 break
                 
@@ -438,7 +453,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 logging.error(f"Failed to add image {img_path}: {e}")
                 doc.add_paragraph(f"[Image load error: {e}]")
     else:
-        logging.warning("No cropped frames found or visual appendix limit is 0.")
+        logging.warning("No new unique frames found for Visual Appendix or limit is 0.")
 
     doc.save(output_path)
     logging.info(f"Notes document generated successfully at: {output_path}")
