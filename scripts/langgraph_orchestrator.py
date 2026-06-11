@@ -200,6 +200,35 @@ def example_extractor_node(state: AgentState) -> Dict:
 def note_formatter_node(state: AgentState) -> Dict:
     logging.info("=== [Node: note-formatter] Generating Word Document and running Student Tester ===")
     
+    # F-4: Semantic Coherence Check - warn if concept map and frame manifest seem mismatched
+    try:
+        with open(state["concept_map_path"], 'r') as f:
+            concept_blocks = json.load(f)
+        with open(state["frame_manifest_path"], 'r') as f:
+            frames = json.load(f)
+        
+        # Extract keywords from concept block titles
+        concept_keywords = set()
+        for block in concept_blocks:
+            title = block.get('title', '').lower()
+            concept_keywords.update(title.split())
+        
+        # Extract keywords from frame OCR text
+        frame_keywords = set()
+        for fname, frame_data in frames.items():
+            ocr_text = frame_data.get('ocr_text', '').lower()
+            frame_keywords.update(ocr_text.split())
+        
+        # Check for overlap - if very low overlap, warn about potential mismatch
+        common_keywords = concept_keywords & frame_keywords
+        overlap_ratio = len(common_keywords) / max(len(concept_keywords), 1)
+        
+        if overlap_ratio < 0.1 and len(concept_keywords) > 5 and len(frame_keywords) > 5:
+            logging.warning(f"⚠️ SEMANTIC COHERENCE WARNING: Low keyword overlap ({overlap_ratio:.2%}) between concept map and frames.")
+            logging.warning(f"   Concept topics may not match frame content. Common keywords: {list(common_keywords)[:10]}")
+    except Exception as e:
+        logging.error(f"Failed to perform semantic coherence check: {e}")
+    
     logging.info("Running generate_docx.py...")
     subprocess.run([
         sys.executable, "scripts/generate_docx.py",

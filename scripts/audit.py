@@ -92,6 +92,15 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
             verbose_explanations += 1
             logging.warning(f"[FAIL] Verbose explanation in {b.get('block_id', '?')}: {len(expl)} chars")
     
+    # Gate 9: Slide Handling - fail if slide_manifest is empty when slides are expected
+    # Also check for undiscussed slides with OCR text appearing in document
+    has_slides_expected = len(slides) > 0 or len(concept_blocks) > 0  # If we have concept blocks, slides likely exist
+    slide_manifest_empty = len(slides) == 0
+    
+    # Gate 9 fails if: (1) slide manifest is empty when it shouldn't be, OR (2) undiscussed slides found in doc
+    undisc_slide_in_doc = any((ot := s.get('ocr_text', '').strip()) and len(ot) > 5 and ot in all_text for s in undisc)
+    gate_9_result = not (slide_manifest_empty or undisc_slide_in_doc)
+    
     gates = {
         'Gate 1: Structural Integrity':    h2 > 0 and h2 == rev and vis_fail == 0 and attr_fail == 0,
         'Gate 2: Revision Box Placement':  rev == h2,
@@ -101,7 +110,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         'Gate 6: Image Integrity':         vis_fail == 0,
         'Gate 7: Minimum Counts':          h2 >= 1 and img_count >= exp_img * 0.8,
         'Gate 8: Source Traceability':     trap >= len(concept_blocks) * 0.5 or quote >= len(concept_blocks) * 0.5,
-        'Gate 9: Slide Handling':          not any((ot := s.get('ocr_text', '').strip()) and len(ot) > 5 and ot in all_text for s in undisc),
+        'Gate 9: Slide Handling':          gate_9_result,
         'Gate 10: Example Coverage':       doc_ex >= total_map_ex if total_map_ex else True,
         'Gate 11: Visual Coverage':        img_count >= exp_img * 0.8 if exp_img else True,
         'Gate 12: Exercise Content':       empty_exercise_count == 0,

@@ -29,7 +29,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
         if duration <= 0:
             logger.warning("Could not determine duration. Using default sampling.")
             # Fallback: every 300 frames approx
-            cmd = ['ffmpeg', '-i', video_path, '-vf', 'select=eq(n\,0)+not(mod(n\,300))', 
+            cmd = ['ffmpeg', '-i', video_path, '-vf', r'select=eq(n\,0)+not(mod(n\,300))', 
                    '-vsync', 'vfr', f'{output_dir}/frame_%03d.png']
             subprocess.run(cmd, check=True)
             # Generate dummy manifest if no timestamps

@@ -139,13 +139,14 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Title
     lecture_title = "Lecture Reconstruction Notes"
     # Check if the manifest provides a dedicated lecture title
-    if "lecture_title" in concept_blocks[0]:
-        lecture_title = concept_blocks[0]["lecture_title"]
-    elif concept_blocks and isinstance(concept_blocks, list):
-        # Fallback: use first block's title only if it doesn’t look like a question range
-        first_title = concept_blocks[0].get('title', '')
-        if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
-            lecture_title = first_title
+    if concept_blocks and isinstance(concept_blocks, list) and len(concept_blocks) > 0:
+        if "lecture_title" in concept_blocks[0]:
+            lecture_title = concept_blocks[0]["lecture_title"]
+        else:
+            # Fallback: use first block's title only if it doesn't look like a question range
+            first_title = concept_blocks[0].get('title', '')
+            if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
+                lecture_title = first_title
     doc.add_heading(f"NOTES ## {lecture_title}", 0)
 
     # Section 1: Lecture Flow Outline
@@ -284,9 +285,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # Section 4: Final Revision Points
     doc.add_heading("Section 4: Final Revision Points", level=1)
-    # Take a few key points from the blocks
+    # Render ALL concept blocks, not just first 4
     points_added = 0
-    for block in concept_blocks[:4]:
+    for block in concept_blocks:
         title = block.get('title', '')
         examples = block.get('examples', [])
         if isinstance(examples, list) and len(examples) > 0:
