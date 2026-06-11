@@ -1,568 +1,303 @@
 [
   {
     "block_id": "CB1",
-    "lecture_title": "DBMS Syllabus for IBPS SO IT Officer 2025",
-    "title": "DBMS Overview & Exam Weightage for IBPS SO IT Officer",
-    "transcript_range_percent": [0, 12],
-    "explanation": "DBMS (Database Management System) is the single most high-weightage topic for the IBPS SO IT Officer Mains exam. Out of the total 60 marks in the professional knowledge paper, DBMS alone accounts for approximately 15–20 marks — which is nearly equal to or greater than the typical mains cutoff of 13–14 marks. This means mastering DBMS alone can help a candidate qualify the mains exam. The syllabus must be covered with breadth (width) rather than extreme depth — every topic should be known at a moderate level.",
+    "lecture_title": "Data Warehouse Syllabus (IBPS SO 2025)",
+    "title": "Data Warehouse Concept & Architecture",
+    "transcript_range_percent": [0, 20],
+    "explanation": "Data Warehousing is a key technical topic in the IBPS SO IT Officer Mains exam, accounting for 3–5 questions (avg 4 marks) every year. A Data Warehouse (DWH) is a centralized repository that aggregates structured data from multiple heterogeneous sources to support business intelligence and analytical decision-making. Architecture levels consist of the source layer, staging area, data warehouse database (storing historical data), and data marts (analytical slices). Metadata acts as a directory explaining the structural rules and data sources.",
     "concepts": [
       {
-        "term": "IBPS SO IT Officer Mains",
-        "definition": "The professional knowledge exam for IT Officer recruitment under IBPS Specialist Officer, consisting of 60 marks of technical questions covering topics like DBMS, Networking, OS, Software Engineering, etc."
+        "term": "Data Warehouse (DWH)",
+        "definition": "A centralized repository that stores integrated historical data from multiple sources for reporting and analysis."
       },
       {
-        "term": "DBMS Weightage",
-        "definition": "DBMS carries approximately 15–20 marks out of 60 in the IT Officer Mains paper — the highest weightage among all subjects."
+        "term": "Metadata",
+        "definition": "Data about data. In a DWH, it describes the schema, structure, source mappings, and transformation rules."
       }
     ],
     "examples": [
       {
-        "sentence": "The mains cutoff for IT Officer is around 13–14 marks, and DBMS alone gives you 15–20 marks — so DBMS alone is sufficient to cross the cutoff.",
-        "rule": "DBMS is the single most important topic for IT Officer Mains.",
-        "working": "Cutoff ≈ 13–14 marks. DBMS weightage ≈ 15–20 marks out of 60. Therefore: DBMS marks > cutoff, making it the most strategic subject to master."
+        "sentence": "Explain the main purpose of the staging area in a Data Warehouse architecture.",
+        "rule": "The staging area holds raw data temporarily for cleansing and transformation before loading it into the DWH.",
+        "working": "Data Sources (OLTP, flat files) -> Staging Area (cleaning/transforming) -> Data Warehouse (long-term historical store)."
       }
     ],
-    "exercise_questions": [],
+    "exercise_questions": [
+      "Define Metadata and its significance in a Data Warehouse.",
+      "What is the main role of a staging area in the DWH architecture?"
+    ],
     "visual_moments": [
-      {"timestamp": "00:00:10", "type": "board", "description": "DBMS syllabus intro slide for IBPS SO IT Officer"},
-      {"timestamp": "00:00:45", "type": "board", "description": "DBMS exam weightage — 15-20 marks out of 60"}
+      {"timestamp": "00:00:05", "type": "board", "description": "Syllabus overview and Data Warehousing topic list"},
+      {"timestamp": "00:00:15", "type": "board", "description": "Data Warehouse exam weightage: 3-5 questions on average"},
+      {"timestamp": "00:00:34", "type": "board", "description": "Core components of Data Warehousing Architecture"}
     ],
     "teacher_quotes": [
-      "Terah-chaudah number ka toh akela DBMS hi aapko mil jayega exam mein. DBMS iklota hi kaafi hai IT officer mains ko qualify karne mein.",
-      "Hume width mein jaana hai. Hume chaudai. Aapko har topic ki knowledge honi chahiye. Zyada deep mein jaane ki zaroorat nahi hai but at least moderate level ka pata hona chahiye."
+      "Mains mein har saal aapko check karoge toh easily char question, teen question, ya paanch question on an average mil hi jayenge."
     ],
     "traps": [
-      "Do NOT skip any topic — the teacher has written actual exam questions, not just topic names.",
-      "DBMS alone can qualify you, but don't ONLY study DBMS — cover other subjects too for safety margin."
+      "Do not confuse Data Warehouse (historical, read-oriented) with OLTP databases (operational, write-oriented)."
     ],
     "tricks": [
-      "Strategy: Cover all DBMS topics at moderate depth (width-first) rather than going deep into just one or two topics."
+      "Exam tip: Metadata is often asked in MCQs; remember it as the 'directory' of the data warehouse."
     ]
   },
   {
     "block_id": "CB2",
-    "title": "Three Schema Architecture & Relational Model Basics",
-    "transcript_range_percent": [12, 22],
-    "explanation": "The Three Schema Architecture (also called ANSI/SPARC architecture) divides a database system into three levels: External (View) Level, Conceptual (Logical) Level, and Internal (Physical) Level. Direct questions are asked about each level — what is internal schema, what is view level, etc. The Relational Model is the foundation of modern RDBMS, where data is organized in tables (relations). Key terminology includes: Table/Relation (the 2D structure), Tuple/Row (a single record), Attribute/Column (a property), Arity (number of columns), Cardinality (number of rows), and Degree.",
+    "title": "OLAP vs OLTP Core Differences",
+    "transcript_range_percent": [20, 30],
+    "explanation": "OLAP (Online Analytical Processing) and OLTP (Online Transaction Processing) serve different database functions. OLTP is optimized for operational databases, focusing on fast, concurrent transactional queries (inserts, updates, deletes) with normalized structures. OLAP is optimized for data warehouses, focusing on complex, read-heavy analytical queries over massive volumes of historical data, utilizing denormalized multidimensional structures. The primary differences lie in query complexity, normalization, and performance targets.",
     "concepts": [
       {
-        "term": "Three Schema Architecture",
-        "definition": "ANSI/SPARC architecture with three levels: External (user views), Conceptual (logical structure), and Internal (physical storage). Direct exam questions are asked on each level."
+        "term": "OLTP",
+        "definition": "Online Transaction Processing. Designed for operational daily tasks with high volume of simple transactions."
       },
       {
-        "term": "Internal Schema",
-        "definition": "Describes the physical storage structure of the database — how data is actually stored on disk (files, indices, storage allocation)."
-      },
-      {
-        "term": "View Level (External Schema)",
-        "definition": "The highest level of abstraction — describes only a part of the database relevant to a particular user or application."
-      },
-      {
-        "term": "Relational Model",
-        "definition": "A data model where data is organized in tables (relations) with rows (tuples) and columns (attributes). The basis of all RDBMS."
-      },
-      {
-        "term": "Arity",
-        "definition": "The number of columns (attributes) in a table/relation. Also called the degree of the relation."
-      },
-      {
-        "term": "Cardinality",
-        "definition": "The number of rows (tuples) in a table/relation. Cardinality changes as records are inserted/deleted."
-      },
-      {
-        "term": "Tuple",
-        "definition": "A single row in a relational table, representing one record or instance of an entity."
+        "term": "OLAP",
+        "definition": "Online Analytical Processing. Designed for data analysis, business intelligence, and complex queries over historical data."
       }
     ],
     "examples": [
       {
-        "sentence": "If a Student table has 5 columns (Roll No, Name, Age, Class, Marks) and 100 rows, then Arity = 5 and Cardinality = 100.",
-        "rule": "Arity = number of columns; Cardinality = number of rows.",
-        "working": "Columns: Roll No, Name, Age, Class, Marks → Arity = 5. Rows: 100 student records → Cardinality = 100."
+        "sentence": "Compare OLTP and OLAP based on normalization level and primary query types.",
+        "rule": "OLTP uses highly normalized schemas (3NF) to prevent redundancy; OLAP uses denormalized schemas (Star/Snowflake) to speed up complex queries.",
+        "working": "OLTP: 3NF/BCNF -> optimizes writes, inserts, updates. OLAP: Star/Snowflake -> optimizes multi-table analytical joins."
       }
     ],
     "exercise_questions": [
-      "What is the arity of a table with 7 attributes?",
-      "Differentiate between internal schema and external schema.",
-      "What is a tuple in a relational database?"
+      "Differentiate between OLAP and OLTP in terms of database design and user queries.",
+      "Why is high normalization preferred in OLTP databases?"
     ],
     "visual_moments": [
-      {"timestamp": "00:01:12", "type": "board", "description": "Three Schema Architecture slide"},
-      {"timestamp": "00:01:24", "type": "board", "description": "Relational Model — table, arity, cardinality, tuples"}
+      {"timestamp": "00:00:41", "type": "board", "description": "OLAP vs OLTP conceptual slide"}
     ],
     "teacher_quotes": [
-      "Three schema architecture, jiski upar direct aapko question mil jaata hai. Internal schema, view level ke upar question aapko direct aa jayega."
+      "OLAP and OLTP: Online analytical processing, online transaction processing kya hota hai, dono ke beech mein difference kya hai."
     ],
     "traps": [
-      "Arity = columns (NOT rows). Cardinality = rows (NOT columns). This is a very common confusion in MCQs.",
-      "Degree and Arity mean the same thing — number of attributes/columns."
+      "OLTP is NOT meant for running complex aggregation queries (like SUM/AVG over years of data) as it will lock database tables."
     ],
     "tricks": [
-      "Mnemonic: 'Arity' has an 'A' for 'Attributes' (columns). 'Cardinality' has a 'C' for 'Count of rows'."
+      "Mnemonic: OLTP = 'Transactions' (writes/ops), OLAP = 'Analysis' (reads/decisions)."
     ]
   },
   {
     "block_id": "CB3",
-    "title": "Relational Algebra: Operations, Joins & Set Operations",
-    "transcript_range_percent": [22, 32],
-    "explanation": "Relational Algebra is a procedural query language that uses operators and symbols to manipulate relations (tables). It includes unary operations (Selection σ, Projection π) and binary operations (Union ∪, Intersection ∩, Set Difference −, Cartesian Product ×). Joins are critical for combining data from multiple tables: Inner Join, Outer Join (Left/Right/Full), Cross Join, and Natural Join. Questions can be symbol-based (given a relational algebra expression, determine the output) or conceptual (what does Selection vs Projection do).",
+    "title": "Multidimensional OLAP Operations",
+    "transcript_range_percent": [30, 45],
+    "explanation": "OLAP systems model data as a multidimensional hypercube. Analysts navigate this data using five core operations: Roll-up aggregates data by climbing up a dimension hierarchy or reducing dimensions; Drill-down performs the opposite, descending the hierarchy to reveal finer details; Slice selects a single dimension to produce a 2D sub-slice; Dice selects a sub-cube by specifying ranges across multiple dimensions; Pivot rotates the data axes to view the cube from a different angle.",
     "concepts": [
       {
-        "term": "Relational Algebra",
-        "definition": "A procedural query language that uses special operators (σ, π, ⋈, ∪, ∩, −) to retrieve and manipulate data from relational databases."
+        "term": "Roll-up",
+        "definition": "OLAP operation that aggregates data by climbing up a hierarchy (e.g., City -> State -> Country) or by dimension reduction."
       },
       {
-        "term": "Selection (σ)",
-        "definition": "A unary operation that selects rows (tuples) from a relation that satisfy a given predicate/condition. Operates horizontally."
+        "term": "Drill-down",
+        "definition": "OLAP operation that goes from summarized data to detailed data, descending a hierarchy (e.g., Country -> State -> City)."
       },
       {
-        "term": "Projection (π)",
-        "definition": "A unary operation that selects specific columns (attributes) from a relation, removing duplicates. Operates vertically."
+        "term": "Slice",
+        "definition": "OLAP operation that selects a single dimension of a cube, creating a lower-dimensional sub-slice (e.g., Sales for Year = 2025)."
       },
       {
-        "term": "Joins",
-        "definition": "Operations that combine rows from two or more tables based on a related column. Types: Inner Join, Outer Join (Left/Right/Full), Cross Join, Natural Join."
+        "term": "Dice",
+        "definition": "OLAP operation that selects a sub-cube by specifying ranges on two or more dimensions (e.g., Sales for Year={2024,2025} and Region={North,South})."
+      },
+      {
+        "term": "Pivot",
+        "definition": "OLAP operation that rotates the data axes to provide an alternative presentation of multidimensional data."
       }
     ],
     "examples": [
       {
-        "sentence": "Selection (σ) selects ROWS: σ(Age > 25)(Student) returns all students older than 25. Projection (π) selects COLUMNS: π(Name, Age)(Student) returns only Name and Age columns.",
-        "rule": "Selection = horizontal (filters rows by condition). Projection = vertical (picks specific columns).",
-        "working": "σ operates on rows → WHERE clause equivalent. π operates on columns → SELECT clause equivalent."
+        "sentence": "A manager wants to view sales data by individual cities instead of the currently displayed state level. Identify the OLAP operation required.",
+        "rule": "Drill-down goes from a higher level of summary (State) to a lower level of detail (City).",
+        "working": "Current view: State summary (high level) -> Operation: Drill-down -> Finer view: City-level detail (low level)."
       }
     ],
     "exercise_questions": [
-      "What is the difference between Selection and Projection in relational algebra?",
-      "Explain Natural Join vs Cross Join with an example.",
-      "What does the Union operation require from two relations?"
+      "Compare the Slice and Dice operations with a practical database example.",
+      "How does the Roll-up operation affect the dimensionality and granularity of a data cube?"
     ],
     "visual_moments": [
-      {"timestamp": "00:01:45", "type": "board", "description": "Relational Algebra — basic symbol-based operations"},
-      {"timestamp": "00:02:07", "type": "board", "description": "Joins: inner, outer, cross, natural + Union, Intersection, Minus"}
+      {"timestamp": "00:00:52", "type": "board", "description": "Slicing, Dicing, Roll-up, Drill-down, and Pivot operations on data cube"}
     ],
     "teacher_quotes": [
-      "Relational algebra mein aapke basic jo hai woh symbol based question aa sakte hain. Projection kya hota hai? Selection kya hota hai?",
-      "Joins chaahe ismein baat kar lo, chaahe SQL mein, baat ek hi hai."
+      "Chahe roll up, drill down ki baat kar lo, pivot ki baat kar lo, dicing hai, slicing hai, wo saare operations ek-ek karke karne hain."
     ],
     "traps": [
-      "Selection selects ROWS (horizontal), NOT columns. Projection selects COLUMNS (vertical), NOT rows. Don't confuse them!",
-      "Union requires both relations to have the same number of attributes (union-compatible). This is a common MCQ trap.",
-      "Cross Join = Cartesian Product = every row of Table A combined with every row of Table B."
+      "Do not confuse Slice and Dice. Slice filters on ONE dimension (e.g. Year=2025), whereas Dice filters on MULTIPLE dimensions (e.g. Year=2025 AND Product=Books)."
     ],
     "tricks": [
-      "Remember: σ (sigma) = Selection = rows. π (pi) = Projection = columns.",
-      "Natural Join automatically matches on common column names — no explicit condition needed."
+      "Mnemonic: Slice = 1 Cut (one dimension), Dice = Cubes (multiple dimensions)."
     ]
   },
   {
     "block_id": "CB4",
-    "title": "ER Model, Relationships & Types of Keys",
-    "transcript_range_percent": [32, 42],
-    "explanation": "The Entity-Relationship (ER) Model is a conceptual data model using ER Diagrams to represent entities, attributes (simple, composite, multivalued, derived), and relationships (1:1, 1:M, M:N). Keys are fundamental to relational databases: Primary Key (unique identifier), Foreign Key (references another table's primary key), Candidate Key (minimal superkey), Super Key (uniquely identifies rows), and Alternate Key (unused candidate keys). ER modeling is a core design step.",
+    "title": "Star Schema vs Snowflake Schema",
+    "transcript_range_percent": [45, 60],
+    "explanation": "Dimensional modeling represents data using Fact tables and Dimension tables. A Fact Table stores numerical measures (metrics) and foreign keys referencing dimensions. A Dimension Table stores descriptive attributes of the facts. In a Star Schema, the fact table sits at the center connected directly to denormalized dimension tables, resembling a star. In a Snowflake Schema, dimensions are normalized into multiple tables to remove redundancy, splitting the structure into sub-dimensions and resembling a snowflake.",
     "concepts": [
       {
-        "term": "ER Model",
-        "definition": "Entity-Relationship Model — a conceptual framework for database design using entities, attributes, and relationships, represented through ER diagrams."
+        "term": "Fact Table",
+        "definition": "A central table in a dimensional schema containing quantitative measurements (facts) and foreign keys to dimension tables."
       },
       {
-        "term": "Primary Key",
-        "definition": "A column (or set of columns) that uniquely identifies each row in a table. Cannot contain NULL values. Each table has exactly one primary key."
+        "term": "Dimension Table",
+        "definition": "A table containing descriptive textual context (dimensions) associated with facts, such as time, location, or product details."
       },
       {
-        "term": "Foreign Key",
-        "definition": "A column in one table that references the primary key of another table, establishing a relationship between the two tables."
+        "term": "Star Schema",
+        "definition": "A dimensional schema where a central fact table is surrounded by and directly connected to denormalized dimension tables."
       },
       {
-        "term": "Candidate Key",
-        "definition": "A minimal set of attributes that can uniquely identify a tuple. A table can have multiple candidate keys; one is chosen as the primary key."
-      },
-      {
-        "term": "Super Key",
-        "definition": "Any set of one or more attributes that, taken collectively, can uniquely identify a row. Every candidate key is a super key, but not vice versa."
-      },
-      {
-        "term": "Alternate Key",
-        "definition": "Candidate keys that are NOT selected as the primary key. They can still uniquely identify rows but are not the primary identifier."
+        "term": "Snowflake Schema",
+        "definition": "A variation of the star schema where dimension tables are normalized, splitting them into nested sub-dimension tables."
       }
     ],
     "examples": [
       {
-        "sentence": "In a Student table with columns (Roll_No, Aadhar_No, Name, Age): Roll_No and Aadhar_No are both candidate keys. If Roll_No is chosen as primary key, then Aadhar_No becomes the alternate key.",
-        "rule": "Primary Key ⊂ Candidate Keys ⊂ Super Keys. Alternate Key = Candidate Key − Primary Key.",
-        "working": "Candidate Keys: {Roll_No}, {Aadhar_No} (both can uniquely identify a student). Primary Key chosen: Roll_No. Alternate Key: Aadhar_No. Super Keys: {Roll_No}, {Aadhar_No}, {Roll_No, Name}, {Roll_No, Age}, etc."
+        "sentence": "An analyst needs to choose a schema that optimizes query performance with fewer table joins. Which dimensional schema is preferred?",
+        "rule": "Star schema is preferred for query performance as it uses denormalized dimension tables, requiring fewer joins than snowflake.",
+        "working": "Star Schema: 1 join per dimension -> High performance. Snowflake Schema: Multiple joins due to normalized dimensions -> Lower performance."
       }
     ],
     "exercise_questions": [
-      "What is the difference between a candidate key and a super key?",
-      "If a table has 3 candidate keys, how many alternate keys does it have if one is chosen as primary key?",
-      "Explain one-to-many relationship with an example."
+      "Draw the structural layout difference between a Star Schema and a Snowflake Schema.",
+      "What are the performance trade-offs when normalizing dimension tables into a Snowflake Schema?"
     ],
     "visual_moments": [
-      {"timestamp": "00:02:22", "type": "board", "description": "ER Model — diagrams and attribute types"},
-      {"timestamp": "00:02:33", "type": "board", "description": "Keys: Primary, Foreign, Candidate, Super, Alternate"}
+      {"timestamp": "00:01:03", "type": "board", "description": "Comparing Star Schema and Snowflake Schema diagrams"}
     ],
     "teacher_quotes": [
-      "Primary key kya hai? Foreign key kya hai? Candidate key kya hai? Super key kya hai? Alternate key kya hai? Ye saare points aapko pata hone chahiye."
+      "Star and snowflake schema... dimension table kya hai... Fact table, part ho gaya star snowflake ka."
     ],
     "traps": [
-      "Every Primary Key is a Candidate Key, and every Candidate Key is a Super Key — but NOT vice versa.",
-      "A table can have MULTIPLE candidate keys but only ONE primary key.",
-      "Foreign Key CAN contain NULL values (unlike primary key)."
+      "While Snowflake Schema saves storage space by normalizing dimensions, it reduces query speed because it requires many more table joins."
     ],
     "tricks": [
-      "Key hierarchy: Super Key ⊃ Candidate Key ⊃ Primary Key. Alternate Key = Candidate Key − Primary Key.",
-      "Answer to 'How many alternate keys?' = (Number of candidate keys) − 1."
+      "Remember: Star = Denormalized (fast reads), Snowflake = Normalized (efficient storage)."
     ]
   },
   {
     "block_id": "CB5",
-    "title": "Functional Dependencies, Closure & Normalization (1NF–BCNF)",
-    "transcript_range_percent": [42, 55],
-    "explanation": "Functional Dependencies (FDs) state that one attribute determines another (X → Y). Attribute Closure (X⁺) finds all attributes determined by X, which is used to identify candidate keys. Normalization reduces redundancy: 1NF eliminates repeating groups, 2NF removes partial dependencies, 3NF removes transitive dependencies, and BCNF ensures every determinant is a candidate key. Numericals on closure and candidate keys are high-yield exam topics.",
+    "title": "ETL Process, Data Marts & Data Lakes",
+    "transcript_range_percent": [60, 75],
+    "explanation": "The ETL (Extract, Transform, Load) process is the backbone of data integration. Extraction retrieves raw data from sources; Transformation cleans, formats, and integrates it; Loading writes it to the DWH. Storage architectures differ by scope: a Data Mart is a subset of a DWH focused on a single department (e.g., Sales); a Data Lake is a repository storing raw, unstructured data in its native format before processing, whereas a Data Warehouse stores processed, structured data.",
     "concepts": [
       {
-        "term": "Functional Dependency (FD)",
-        "definition": "A relationship X → Y where each value of attribute X uniquely determines the value of attribute Y. Example: Roll_No → Name."
+        "term": "ETL",
+        "definition": "Extract, Transform, and Load. The process of gathering, cleaning, formatting, and inserting data into a data warehouse."
       },
       {
-        "term": "Closure (X⁺)",
-        "definition": "The set of all attributes functionally determined by attribute set X using the given FDs. Used to find candidate keys."
+        "term": "Data Mart",
+        "definition": "A specialized, smaller subset of a data warehouse focused on a single line of business or department."
       },
       {
-        "term": "Normalization",
-        "definition": "The process of organizing database tables to minimize redundancy and dependency. Normal forms: 1NF → 2NF → 3NF → BCNF → 4NF → 5NF."
-      },
-      {
-        "term": "1NF (First Normal Form)",
-        "definition": "A table is in 1NF if it contains only atomic (indivisible) values — no repeating groups or multi-valued attributes."
-      },
-      {
-        "term": "2NF (Second Normal Form)",
-        "definition": "A table is in 2NF if it is in 1NF AND has no partial dependency (no non-prime attribute depends on a part of a candidate key)."
-      },
-      {
-        "term": "3NF (Third Normal Form)",
-        "definition": "A table is in 3NF if it is in 2NF AND has no transitive dependency (no non-prime attribute depends on another non-prime attribute)."
-      },
-      {
-        "term": "BCNF (Boyce-Codd Normal Form)",
-        "definition": "A stricter version of 3NF. A table is in BCNF if for every functional dependency X → Y, X is a superkey."
+        "term": "Data Lake",
+        "definition": "A large-scale repository that stores raw, unstructured, semi-structured, or structured data in its native format."
       }
     ],
     "examples": [
       {
-        "sentence": "Given FDs: {A→B, B→C, A→D}. Find A⁺ (closure of A). Start with A⁺ = {A}. A→B adds B → {A,B}. A→D adds D → {A,B,D}. B→C adds C → {A,B,C,D}. So A⁺ = {A,B,C,D} = all attributes. Therefore A is a candidate key.",
-        "rule": "Start with the attribute set, repeatedly apply FDs until no new attributes can be added. If closure = all attributes, it's a candidate key.",
-        "working": "A⁺: Start {A} → Apply A→B → {A,B} → Apply A→D → {A,B,D} → Apply B→C → {A,B,C,D}. Closure contains all attributes, so A is a candidate key."
+        "sentence": "Differentiate between a Data Warehouse and a Data Lake based on data structure and ingestion.",
+        "rule": "Data Warehouse uses schema-on-write (structured only); Data Lake uses schema-on-read (stores raw unstructured data).",
+        "working": "DWH: Raw Data -> Clean/Structure -> Load (Schema-on-write). Data Lake: Raw Data -> Load -> Structure during query (Schema-on-read)."
       }
     ],
     "exercise_questions": [
-      "Given FDs: {A→BC, C→D, D→A}, find all candidate keys.",
-      "What is the difference between 2NF and 3NF?",
-      "Is every 3NF table also in BCNF? Explain with an example."
+      "Explain the ETL workflow steps and how it integrates raw transactional databases.",
+      "How does a Data Mart differ from a full enterprise Data Warehouse?"
     ],
     "visual_moments": [
-      {"timestamp": "00:02:48", "type": "board", "description": "Functional Dependencies topic"},
-      {"timestamp": "00:03:02", "type": "board", "description": "Closure properties — finding candidate keys from FDs"},
-      {"timestamp": "00:03:13", "type": "board", "description": "Normalization: 2NF, 3NF, BCNF, 4NF, 5NF"}
+      {"timestamp": "00:01:17", "type": "board", "description": "ETL flow diagram from sources to data warehouse/data marts"}
     ],
     "teacher_quotes": [
-      "Table diya hua hai. Ek attribute ka closure find out karo aur batao candidate key kaun si hogi? Kitni candidate keys hongi? Woh wala topic important hai.",
-      "First se lekar second, third, BCNF, fourth and fifth saari ki saari hi karni hai."
+      "ETL process, extract, transform and load kya hai... Data mart... Data lake kya hota hai, mart kya hota hai, warehouse kya hota hai."
     ],
     "traps": [
-      "Every BCNF table is in 3NF, but NOT every 3NF table is in BCNF. BCNF is stricter.",
-      "Partial dependency (violates 2NF) occurs only when the primary key is composite — if the PK is a single attribute, 2NF is automatically satisfied.",
-      "Closure is used to FIND candidate keys — it's not the same as a candidate key itself."
+      "Do not think a Data Mart is completely independent of a DWH. It can be dependent (built from the DWH) or independent (built from source systems)."
     ],
     "tricks": [
-      "Normal form order: 1NF → 2NF (no partial dep) → 3NF (no transitive dep) → BCNF (every determinant is a superkey).",
-      "To find candidate keys: compute closure of each attribute/combination. If closure = all attributes, it's a candidate key."
+      "Ingestion Tip: DWH is like bottled water (clean/processed), while a Data Lake is like a natural lake (raw/untouched)."
     ]
   },
   {
     "block_id": "CB6",
-    "title": "SQL: Commands (DDL/DML/DCL/TCL), Clauses & Functions",
-    "transcript_range_percent": [55, 68],
-    "explanation": "SQL is categorized into DDL (CREATE, ALTER, DROP, TRUNCATE), DML (SELECT, INSERT, UPDATE, DELETE), DCL (GRANT, REVOKE), and TCL (COMMIT, ROLLBACK, SAVEPOINT). Crucial clauses include ORDER BY, GROUP BY (with HAVING), and nested subqueries. Functions are split into Aggregate Functions (COUNT, SUM, AVG, MAX, MIN) operating on row groups, and Single Row Functions (UPPER, LENGTH) operating on individual rows.",
+    "title": "Data Mining Basics & Data Preprocessing",
+    "transcript_range_percent": [75, 90],
+    "explanation": "Data Mining is the process of discovering hidden patterns, anomalies, and correlations within large datasets. For the exam, understanding basic data preprocessing is critical because raw real-world data is dirty. Preprocessing steps include: Data Cleaning (handling missing values/noise); Data Integration (combining multiple sources); Data Transformation (normalization, aggregation); Data Reduction (dimensionality reduction, compression); and Data Discretization.",
     "concepts": [
       {
-        "term": "DDL (Data Definition Language)",
-        "definition": "Commands that define/modify the database schema: CREATE (create table), ALTER (modify structure), DROP (delete table), TRUNCATE (delete all rows but keep structure)."
+        "term": "Data Mining",
+        "definition": "The computational process of discovering patterns in large datasets using machine learning, statistics, and database systems."
       },
       {
-        "term": "DML (Data Manipulation Language)",
-        "definition": "Commands that manipulate data within tables: SELECT (retrieve), INSERT (add), UPDATE (modify), DELETE (remove rows)."
+        "term": "Data Preprocessing",
+        "definition": "Steps taken to clean, integrate, transform, and reduce raw data to prepare it for mining and analysis."
       },
       {
-        "term": "DCL (Data Control Language)",
-        "definition": "Commands that control access permissions: GRANT (give privileges), REVOKE (take back privileges)."
-      },
-      {
-        "term": "TCL (Transaction Control Language)",
-        "definition": "Commands for transaction management: COMMIT (save), ROLLBACK (undo), SAVEPOINT (set restore point)."
-      },
-      {
-        "term": "Aggregate Functions",
-        "definition": "Functions that operate on a group of rows and return a single value: COUNT, SUM, AVG, MAX, MIN. Used with GROUP BY."
-      },
-      {
-        "term": "Single Row Functions",
-        "definition": "Functions that operate on individual rows and return one result per row: UPPER, LOWER, LENGTH, SUBSTR, ROUND, etc."
+        "term": "Data Cleaning",
+        "definition": "Preprocessing step that resolves missing data, corrects inconsistencies, and filters out noise."
       }
     ],
     "examples": [
       {
-        "sentence": "DDL: CREATE TABLE Student (id INT, name VARCHAR(50)); DML: INSERT INTO Student VALUES (1, 'Rahul'); DCL: GRANT SELECT ON Student TO user1; TCL: COMMIT;",
-        "rule": "DDL = Schema operations. DML = Data operations. DCL = Permission operations. TCL = Transaction operations.",
-        "working": "CREATE/ALTER/DROP/TRUNCATE → DDL (defines structure). SELECT/INSERT/UPDATE/DELETE → DML (manipulates data). GRANT/REVOKE → DCL (controls access). COMMIT/ROLLBACK/SAVEPOINT → TCL (manages transactions)."
+        "sentence": "List the correct chronological order of the primary data preprocessing steps before data mining.",
+        "rule": "The standard sequence is Data Cleaning -> Data Integration -> Data Transformation -> Data Reduction.",
+        "working": "Raw Data -> Clean (remove noise) -> Integrate (combine sources) -> Transform (format/normalize) -> Reduce (compress size) -> Mining ready."
       }
     ],
     "exercise_questions": [
-      "Classify these SQL commands into DDL/DML/DCL/TCL: CREATE, INSERT, GRANT, ROLLBACK, ALTER, DELETE, REVOKE, COMMIT.",
-      "What is the difference between DROP and TRUNCATE?",
-      "What is the difference between WHERE and HAVING clause?"
+      "Why is Data Preprocessing necessary before applying data mining algorithms?",
+      "List the four major data preprocessing steps and define each briefly."
     ],
     "visual_moments": [
-      {"timestamp": "00:03:43", "type": "board", "description": "SQL commands — DDL, DML, DCL, TCL"},
-      {"timestamp": "00:03:58", "type": "board", "description": "SQL clauses — ORDER BY, GROUP BY, subqueries"},
-      {"timestamp": "00:04:10", "type": "board", "description": "Functions — aggregate and single row functions"}
+      {"timestamp": "00:01:25", "type": "board", "description": "Data Mining syllabus and Preprocessing steps"},
+      {"timestamp": "00:01:42", "type": "board", "description": "Data preprocessing phases (cleaning, transformation, reduction)"}
     ],
     "teacher_quotes": [
-      "SQL mein har baar question aana hi aana hai DDL commands ke upar, DML commands ke upar, DCL commands ke upar.",
-      "ORDER BY kya hota hai? GROUP BY kya hota hai? Aggregate functions kya hain? Ye bhi basic basic pata hona chahiye."
+      "Data mining bhi basic level ki... preprocessing ki data ki preprocessing mein kaun-kaun se steps hain, data cleaning, aggregation."
     ],
     "traps": [
-      "DROP deletes the entire table (structure + data). TRUNCATE deletes all data but keeps the table structure. DELETE removes specific rows.",
-      "TRUNCATE is DDL (not DML) — it cannot be rolled back in most RDBMS.",
-      "WHERE filters BEFORE grouping. HAVING filters AFTER grouping (used with GROUP BY).",
-      "SELECT is a DML command, even though it doesn't modify data."
+      "Do not skip data preprocessing before mining. Mining on unprocessed, noisy data will yield garbage patterns (Garbage In, Garbage Out)."
     ],
     "tricks": [
-      "Mnemonic for DDL: 'CATS' — Create, Alter, Truncate, (Drop belongs too but CATD sounds weird).",
-      "Mnemonic for DML: 'SIDU' — Select, Insert, Delete, Update.",
-      "Aggregate functions: 'CSMMA' — Count, Sum, Max, Min, Avg."
+      "Exam tip: Remember the 5 main preprocessing tasks: Cleaning, Integration, Transformation, Reduction, and Discretization."
     ]
   },
   {
     "block_id": "CB7",
-    "title": "Transactions: ACID Properties, Concurrency Control & Indexing",
-    "transcript_range_percent": [68, 78],
-    "explanation": "Transactions follow ACID: Atomicity (all-or-none), Consistency, Isolation (concurrency control via shared/exclusive locks), and Durability. Concurrency control prevents anomalies like dirty reads or lost updates. Indexing speeds up queries and includes Primary Index (on key), Cluster Index (on non-key ordered field), and Secondary Index (on unordered field). B/B+ trees are the primary index structures.",
+    "title": "Exam Strategy & Syllabus Checklist",
+    "transcript_range_percent": [90, 100],
+    "explanation": "Data Warehouse and Mining is a high-scoring section in the IT Officer exam. Because questions are direct, candidates must focus on conceptual clarity rather than coding. Key areas to master include: comparing OLAP and OLTP features, identifying specific OLAP cube operations from scenario descriptions, understanding dimensional tables vs fact tables, identifying schema differences (Star vs Snowflake), and listing chronological data preprocessing steps.",
     "concepts": [
       {
-        "term": "ACID Properties",
-        "definition": "Atomicity (all-or-nothing), Consistency (valid state transitions), Isolation (concurrent independence), Durability (permanent after commit)."
-      },
-      {
-        "term": "Concurrency Control",
-        "definition": "Mechanisms to manage simultaneous access to the database by multiple transactions, preventing conflicts using locks, timestamps, or validation."
-      },
-      {
-        "term": "Types of Locks",
-        "definition": "Shared Lock (S-lock): allows multiple readers. Exclusive Lock (X-lock): allows only one writer. Used for concurrency control."
-      },
-      {
-        "term": "Primary Index",
-        "definition": "An index on the primary key of an ordered file. The file is physically sorted on the primary key."
-      },
-      {
-        "term": "B-Tree / B+ Tree",
-        "definition": "Balanced tree data structures used for database indexing. B+ Tree stores data only in leaf nodes and links leaves for range queries — most commonly used in RDBMS."
+        "term": "Professional Knowledge Paper",
+        "definition": "The Mains exam for IBPS SO IT Officer consisting of 60 technical questions, where Data Warehouse accounts for 3–5 questions."
       }
     ],
     "examples": [
       {
-        "sentence": "Bank transfer: Transfer ₹500 from Account A to Account B. Atomicity ensures either both debit and credit happen, or neither happens.",
-        "rule": "Atomicity = all operations in a transaction succeed together, or all fail together.",
-        "working": "Step 1: Debit ₹500 from A. Step 2: Credit ₹500 to B. If Step 2 fails, Step 1 is rolled back. The database never reflects a partial transfer."
+        "sentence": "Based on the syllabus, how many questions are typically asked from Data Warehouse and Data Mining?",
+        "rule": "Typically 3 to 5 questions are asked annually, with an average of 4 questions.",
+        "working": "Yearly trends show consistent presence: 3-5 MCQs out of 60 are devoted to Data Warehouse and Mining concepts."
       }
     ],
     "exercise_questions": [
-      "Explain each ACID property with a real-world example.",
-      "What is the difference between a shared lock and an exclusive lock?",
-      "Differentiate between B-Tree and B+ Tree."
+      "Identify the high-yield topics to study within the Data Warehouse & Mining syllabus.",
+      "What is the best preparation strategy for answering relational schema questions?"
     ],
     "visual_moments": [
-      {"timestamp": "00:04:22", "type": "board", "description": "ACID properties and transaction/concurrency control"},
-      {"timestamp": "00:04:33", "type": "board", "description": "Indexing: primary, cluster, secondary index, B/B+ tree structure"}
+      {"timestamp": "00:02:00", "type": "board", "description": "Final exam checklist and syllabus summary slide"}
     ],
     "teacher_quotes": [
-      "ACID properties kya hain? Basic transaction concurrency control ka question aa sakta hai. Types of locks ke upar basic level ka.",
-      "B and B-tree ka structure, basic structure jo hai, zyada detail mein nahi basic structure aapko pata hona chahiye."
+      "Ye saare points questions hain jo har saal kuch na kuch alag-alag tareeqe se ghum-fir ke pooche jaate hain."
     ],
     "traps": [
-      "B-Tree stores data in ALL nodes (internal + leaf). B+ Tree stores data ONLY in leaf nodes — leaves are linked for efficient range queries.",
-      "Shared Lock allows concurrent reads but blocks writes. Exclusive Lock blocks both reads and writes by others.",
-      "Durability means AFTER commit — uncommitted changes are NOT durable and can be rolled back."
+      "Do not study deep machine learning algorithms for this syllabus — only basic definitions and preprocessing steps are tested."
     ],
     "tricks": [
-      "ACID mnemonic: 'A-C-I-D' = All-or-nothing, Consistent state, Independent transactions, Data survives crashes.",
-      "B+ Tree is preferred over B-Tree in RDBMS because leaf linking enables fast range queries."
-    ]
-  },
-  {
-    "block_id": "CB8",
-    "title": "Views & PL/SQL: Triggers, Cursors, Stored Procedures",
-    "transcript_range_percent": [78, 87],
-    "explanation": "Views are virtual tables defined by SELECT queries to customize data access. Views are highly tested. PL/SQL adds procedural flow to SQL: Triggers execute on events (INSERT/UPDATE/DELETE), Cursors process query results row-by-row (Implicit/Explicit), and Stored Procedures are named, precompiled code blocks. Basic understanding of their definitions and purposes is sufficient for the exam.",
-    "concepts": [
-      {
-        "term": "Views",
-        "definition": "Virtual tables defined by SQL queries. They do not store data themselves — they dynamically reflect the underlying tables. Very frequently asked in exams."
-      },
-      {
-        "term": "Triggers",
-        "definition": "PL/SQL procedures that automatically execute in response to specific database events (INSERT, UPDATE, DELETE on a table)."
-      },
-      {
-        "term": "Cursors",
-        "definition": "Database pointers used to process query results row-by-row. Types: Implicit (automatic) and Explicit (programmer-defined)."
-      },
-      {
-        "term": "Stored Procedures",
-        "definition": "Precompiled collections of SQL statements stored in the database, callable by name. Improve performance and code reusability."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "CREATE VIEW TopStudents AS SELECT Name, Marks FROM Student WHERE Marks > 90; — This creates a virtual table showing only high-scoring students.",
-        "rule": "A View is a saved SELECT query that acts like a virtual table. No physical data is stored.",
-        "working": "The View 'TopStudents' dynamically shows Name and Marks of students with Marks > 90. If underlying Student table changes, the View automatically reflects the change."
-      }
-    ],
-    "exercise_questions": [
-      "What is a View? Can we update data through a View?",
-      "What is the difference between a Trigger and a Stored Procedure?",
-      "Name the two types of cursors in PL/SQL."
-    ],
-    "visual_moments": [
-      {"timestamp": "00:04:44", "type": "board", "description": "Views — very important topic, frequently asked"},
-      {"timestamp": "00:04:53", "type": "board", "description": "PL/SQL: Triggers, Cursors, Stored Procedures"}
-    ],
-    "teacher_quotes": [
-      "Views, very very important. Views ke upar question bahut baar aata hai.",
-      "Triggers kya hai? Kyon use karte hain? Cursors kya hain? Stored procedure kya hai? Kyon use karte hain? Zyada detail mein nahi."
-    ],
-    "traps": [
-      "Views do NOT store data physically — they are virtual tables derived from queries.",
-      "Not all Views are updatable — Views with JOINs, GROUP BY, DISTINCT, or aggregates are generally NOT updatable.",
-      "Triggers fire AUTOMATICALLY; Stored Procedures must be CALLED explicitly."
-    ],
-    "tricks": [
-      "View = Virtual table = Saved query. Trigger = Automatic procedure. Stored Procedure = Manual call.",
-      "Cursors are needed when you want to process results ONE ROW AT A TIME instead of as a set."
-    ]
-  },
-  {
-    "block_id": "CB9",
-    "title": "RAID Levels: Redundant Array of Independent Disks",
-    "transcript_range_percent": [87, 92],
-    "explanation": "RAID (Redundant Array of Independent/Inexpensive Disks) is a data storage technology that combines multiple physical disks into a single logical unit for redundancy, performance, or both. RAID has multiple levels (0, 1, 2, 3, 4, 5, 6, 10) each with different configurations of striping, mirroring, and parity. This topic is very important — direct questions appear 'every year' in the IT Officer exam. Candidates should know the basic characteristics and trade-offs of each RAID level.",
-    "concepts": [
-      {
-        "term": "RAID",
-        "definition": "Redundant Array of Independent (or Inexpensive) Disks — a technology that uses multiple disks together for redundancy, improved performance, or both."
-      },
-      {
-        "term": "RAID 0 (Striping)",
-        "definition": "Data is split across disks for speed. No redundancy — if one disk fails, all data is lost. Best performance, zero fault tolerance."
-      },
-      {
-        "term": "RAID 1 (Mirroring)",
-        "definition": "Data is duplicated on two disks. Full redundancy — if one disk fails, the mirror has a complete copy. 50% storage efficiency."
-      },
-      {
-        "term": "RAID 5 (Striping with Parity)",
-        "definition": "Data and parity information are striped across 3+ disks. Can tolerate one disk failure. Most commonly used RAID level."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "RAID 0: 4 disks of 100GB each → 400GB usable (100% efficiency, 0% redundancy). RAID 1: 4 disks of 100GB → 200GB usable (50% efficiency, full mirroring).",
-        "rule": "RAID 0 = maximum storage + speed, zero protection. RAID 1 = 50% storage, full protection.",
-        "working": "RAID 0: All 4×100GB = 400GB available. One disk fails → all data lost. RAID 1: 4 disks paired into 2 mirrors → 2×100GB = 200GB usable."
-      }
-    ],
-    "exercise_questions": [
-      "Compare RAID 0, RAID 1, and RAID 5 in terms of redundancy, performance, and storage efficiency.",
-      "How many disk failures can RAID 5 tolerate?",
-      "What is the minimum number of disks required for RAID 5?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:05:15", "type": "board", "description": "RAID levels — yearly exam question"}
-    ],
-    "teacher_quotes": [
-      "Har saal iske upar question aata tha. RAID levels direct question har baar aapke saamne aata hai."
-    ],
-    "traps": [
-      "RAID 0 has NO redundancy — it is NOT fault-tolerant. Don't assume all RAID levels provide redundancy.",
-      "RAID 5 needs MINIMUM 3 disks and can tolerate only ONE disk failure.",
-      "RAID is NOT a backup solution — it protects against hardware failure, not data corruption or deletion."
-    ],
-    "tricks": [
-      "RAID 0 = Speed only (0 redundancy). RAID 1 = Mirror (1 copy). RAID 5 = Parity (popular in enterprise).",
-      "Quick storage calculation: RAID 1 = 50% of total. RAID 5 = (N−1)/N of total (where N = number of disks)."
-    ]
-  },
-  {
-    "block_id": "CB10",
-    "title": "NoSQL, Big Data, BASE & CAP Theorem",
-    "transcript_range_percent": [92, 100],
-    "explanation": "NoSQL databases handle unstructured data scale and are categorized into Key-Value, Document, Column-family, and Graph. Big Data is defined by the 5 V's (Volume, Velocity, Variety, Veracity, Value), processed using Hadoop (HDFS, MapReduce). BASE properties focus on soft state and eventual consistency. CAP Theorem states a distributed system can only guarantee two of Consistency, Availability, and Partition Tolerance.",
-    "concepts": [
-      {
-        "term": "NoSQL",
-        "definition": "Non-relational databases designed for large-scale, flexible data. Types: Key-Value, Document, Column-family, Graph."
-      },
-      {
-        "term": "Big Data — 3V's / 5V's",
-        "definition": "3V's: Volume (size), Velocity (speed), Variety (types). 5V's add: Veracity (quality/trust) and Value (usefulness)."
-      },
-      {
-        "term": "BASE Properties",
-        "definition": "Basically Available (always responds), Soft state (state may change over time), Eventually consistent (will become consistent eventually). NoSQL counterpart of ACID."
-      },
-      {
-        "term": "CAP Theorem",
-        "definition": "In a distributed system, you can guarantee only 2 of 3: Consistency (all nodes see same data), Availability (system always responds), Partition tolerance (works despite network splits)."
-      },
-      {
-        "term": "Hadoop Ecosystem",
-        "definition": "A framework for distributed storage (HDFS) and processing (MapReduce) of Big Data. Tools include Hive, Pig, HBase, Spark, etc."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "NoSQL Types: Key-Value (Redis — caching), Document (MongoDB — JSON-like docs), Column-family (Cassandra — wide columns), Graph (Neo4j — social networks).",
-        "rule": "Four types of NoSQL databases, each suited for different use cases.",
-        "working": "Key-Value → simple lookup (shopping cart). Document → flexible schemas (content management). Column-family → massive write throughput (IoT). Graph → connected data (social networks, recommendations)."
-      }
-    ],
-    "exercise_questions": [
-      "Name the 5 V's of Big Data.",
-      "What are the four types of NoSQL databases? Give one example each.",
-      "Compare ACID and BASE properties.",
-      "State the CAP Theorem. Why can't all three be satisfied simultaneously?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:05:30", "type": "board", "description": "NoSQL and Big Data — 3V's/5V's, Hadoop"},
-      {"timestamp": "00:05:47", "type": "board", "description": "BASE and CAP properties"},
-      {"timestamp": "00:06:01", "type": "board", "description": "Summary — 15 marks on average from DBMS"}
-    ],
-    "teacher_quotes": [
-      "Three V's ya five V's of Big Data ya fir Hadoop ka ecosystem ke andar kya-kya tools hain? Woh bhi bilkul basic level ke.",
-      "Jaise ACID properties hain, aisi BASE properties hoti hain, CAP properties hain. Sirf basic basic note karke jaana."
-    ],
-    "traps": [
-      "BASE is NOT the opposite of ACID — BASE is an alternative consistency model for distributed NoSQL systems.",
-      "CAP Theorem: you MUST sacrifice one of the three (C, A, or P). Most distributed systems sacrifice Consistency (choose AP).",
-      "NoSQL does NOT mean 'No SQL' — it means 'Not Only SQL'. Some NoSQL databases support SQL-like queries."
-    ],
-    "tricks": [
-      "ACID = strong consistency (RDBMS). BASE = eventual consistency (NoSQL).",
-      "5 V's mnemonic: Very Very Various, Very Valuable (Volume, Velocity, Variety, Veracity, Value).",
-      "CAP: Most cloud databases (Cassandra, DynamoDB) choose AP (availability + partition tolerance) over strong consistency."
+      "Preparation Strategy: Focus on structural comparisons (OLTP/OLAP, Star/Snowflake) as they represent over 80% of past paper questions."
     ]
   }
 ]
