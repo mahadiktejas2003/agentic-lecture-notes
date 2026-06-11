@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, json, argparse, re
+import os, json, argparse, re, glob
 import sys
 import logging
 from docx import Document
