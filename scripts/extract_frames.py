@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys, json, subprocess, argparse, re
+import os, sys, json, subprocess, argparse, re, shutil
 from pathlib import Path
 import logging
 
@@ -99,40 +99,81 @@ def extract_frames(video_path, output_dir, timestamps=None):
         for i, ts in enumerate(timestamps):
             # Convert HH:MM:SS to seconds for ffmpeg
             parts = list(map(int, ts.split(':')))
-            seconds = parts[0]*3600 + parts[1]*60 + parts[2]
+            base_seconds = parts[0]*3600 + parts[1]*60 + parts[2]
             
             fname = f"frame_{i+1:03d}.png"
             out_path = os.path.join(output_dir, fname)
             
-            cmd = ['ffmpeg', '-ss', str(seconds), '-i', video_path, '-vframes', '1', '-y', out_path]
-            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # Sample candidates in a window around the timestamp
+            # We sample at +0, +3, +6, +9, +12 seconds to find the most complete slide (highest OCR text count)
+            candidates = [base_seconds, base_seconds + 3, base_seconds + 6, base_seconds + 9, base_seconds + 12]
             
-            if os.path.exists(out_path):
-                # Perform OCR immediately
-                try:
-                    import pytesseract
-                    from PIL import Image
-                    img = Image.open(out_path)
-                    ocr_text = pytesseract.image_to_string(img).strip()
-                except ImportError:
-                    ocr_text = "OCR unavailable"
+            best_ocr_text = ""
+            best_word_count = -1
+            best_candidate_path = None
+            
+            temp_paths = []
+            
+            for c_idx, sec in enumerate(candidates):
+                temp_fname = f"temp_frame_{i+1:03d}_c{c_idx}.png"
+                temp_path = os.path.join(output_dir, temp_fname)
                 
-                if is_logo_frame(ocr_text):
-                    logger.info(f"Skipping logo/intro frame: {fname} (detected branding content)")
+                cmd = ['ffmpeg', '-ss', str(sec), '-i', video_path, '-vframes', '1', '-y', temp_path]
+                subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                
+                if os.path.exists(temp_path):
+                    temp_paths.append(temp_path)
+                    
+                    ocr_text = ""
                     try:
-                        os.remove(out_path)
-                    except:
-                        pass
+                        import pytesseract
+                        from PIL import Image
+                        img = Image.open(temp_path)
+                        ocr_text = pytesseract.image_to_string(img).strip()
+                    except Exception as e:
+                        logger.warning(f"OCR failed for candidate {sec}s: {e}")
+                        ocr_text = ""
+                        
+                    # Count words of length >= 3
+                    words = [w for w in re.findall(r'\b\w{3,}\b', ocr_text.lower())]
+                    word_count = len(words)
+                    
+                    logger.info(f"Candidate frame at {sec}s yielded {word_count} words.")
+                    
+                    if word_count > best_word_count:
+                        best_word_count = word_count
+                        best_ocr_text = ocr_text
+                        best_candidate_path = temp_path
+            
+            if best_candidate_path and os.path.exists(best_candidate_path):
+                # Filter out logo frames
+                if is_logo_frame(best_ocr_text):
+                    logger.info(f"Skipping logo/intro frame: {fname} (detected branding content)")
+                    # Clean up all candidate temp files
+                    for p in temp_paths:
+                        try:
+                            os.remove(p)
+                        except:
+                            pass
                     continue
+                
+                shutil.copy(best_candidate_path, out_path)
                 
                 manifest[fname] = {
                     "timestamp": ts,
-                    "ocr_text": ocr_text,
+                    "ocr_text": best_ocr_text,
                     "type": "board"
                 }
-                logger.info(f"Extracted {fname} at {ts}")
+                logger.info(f"Selected best candidate for {fname} yielding {best_word_count} words.")
             else:
-                logger.warning(f"Failed to extract frame at {ts}")
+                logger.warning(f"Failed to extract any candidate frames at {ts}")
+                
+            # Clean up all candidate temp files
+            for p in temp_paths:
+                try:
+                    os.remove(p)
+                except:
+                    pass
 
     # Deduplicate manifest based on OCR similarity
     unique_manifest = {}
