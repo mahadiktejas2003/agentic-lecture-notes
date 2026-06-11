@@ -1,0 +1,17 @@
+{
+  "lecture_type": "Syllabus/Intro",
+  "notes_style": "Compact",
+  "recommended_blocks": 3,
+  "recommended_frames": 2,
+  "generate_worked_examples": false,
+  "generate_theoretical_theory": false,
+  "visual_appendix_limit": 2,
+  "focus_areas": [
+    "Syllabus Outline",
+    "Exam Weightage",
+    "Preparation Strategy"
+  ],
+  "explanation_limit": 400,
+  "word_count": 1160,
+  "syllabus_keyword_matches": 3
+}

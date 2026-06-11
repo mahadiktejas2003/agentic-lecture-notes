@@ -1,303 +1,104 @@
 [
   {
     "block_id": "CB1",
-    "lecture_title": "Data Warehouse Syllabus (IBPS SO 2025)",
-    "title": "Data Warehouse Concept & Architecture",
+    "lecture_title": "DBMS Syllabus for IBPS SO IT Officer 2025",
+    "title": "DBMS Exam Weightage & Syllabus Structure",
     "transcript_range_percent": [0, 20],
-    "explanation": "Data Warehousing is a key technical topic in the IBPS SO IT Officer Mains exam, accounting for 3–5 questions (avg 4 marks) every year. A Data Warehouse (DWH) is a centralized repository that aggregates structured data from multiple heterogeneous sources to support business intelligence and analytical decision-making. Architecture levels consist of the source layer, staging area, data warehouse database (storing historical data), and data marts (analytical slices). Metadata acts as a directory explaining the structural rules and data sources.",
+    "explanation": "DBMS is the highest weightage subject in the IBPS SO IT Officer Technical Mains paper, contributing 15–20 out of 60 marks (which matches or exceeds the typical mains cutoff of 13–14 marks). The syllabus must be prepared with width (general familiarity with all topics) rather than deep specialization in a single area.",
     "concepts": [
       {
-        "term": "Data Warehouse (DWH)",
-        "definition": "A centralized repository that stores integrated historical data from multiple sources for reporting and analysis."
+        "term": "Mains Cutoff Mark",
+        "definition": "The qualification mark threshold, typically around 13–14 marks out of 60."
       },
       {
-        "term": "Metadata",
-        "definition": "Data about data. In a DWH, it describes the schema, structure, source mappings, and transformation rules."
+        "term": "DBMS Weightage",
+        "definition": "The technical weight of DBMS in the exam, accounting for 15–20 out of 60 marks."
       }
     ],
     "examples": [
       {
-        "sentence": "Explain the main purpose of the staging area in a Data Warehouse architecture.",
-        "rule": "The staging area holds raw data temporarily for cleansing and transformation before loading it into the DWH.",
-        "working": "Data Sources (OLTP, flat files) -> Staging Area (cleaning/transforming) -> Data Warehouse (long-term historical store)."
+        "sentence": "How should a candidate allocate study time for DBMS compared to other subjects?",
+        "rule": "Prioritize DBMS width coverage since it can single-handedly cover the mains cutoff mark threshold.",
+        "working": "Cutoff ≈ 13–14 marks. DBMS marks ≈ 15–20. Coverage of all topics at moderate depth guarantees passing marks."
       }
     ],
     "exercise_questions": [
-      "Define Metadata and its significance in a Data Warehouse.",
-      "What is the main role of a staging area in the DWH architecture?"
+      "Explain why DBMS is considered the highest weightage topic for IT Officer Mains.",
+      "Describe the 'width-first' preparation strategy recommended by the teacher."
     ],
     "visual_moments": [
-      {"timestamp": "00:00:05", "type": "board", "description": "Syllabus overview and Data Warehousing topic list"},
-      {"timestamp": "00:00:15", "type": "board", "description": "Data Warehouse exam weightage: 3-5 questions on average"},
-      {"timestamp": "00:00:34", "type": "board", "description": "Core components of Data Warehousing Architecture"}
+      {"timestamp": "00:00:10", "type": "board", "description": "DBMS syllabus intro slide"},
+      {"timestamp": "00:00:45", "type": "board", "description": "DBMS weightage info (15-20 marks out of 60)"}
     ],
     "teacher_quotes": [
-      "Mains mein har saal aapko check karoge toh easily char question, teen question, ya paanch question on an average mil hi jayenge."
+      "Terah-chaudah number ka toh akela DBMS hi aapko mil jayega exam mein. DBMS iklota hi kaafi hai IT officer mains ko qualify karne mein.",
+      "Hume width mein jaana hai. Hume chaudai. Aapko har topic ki knowledge honi chahiye. Zyada deep mein jaane ki zaroorat nahi hai but at least moderate level ka pata hona chahiye."
     ],
     "traps": [
-      "Do not confuse Data Warehouse (historical, read-oriented) with OLTP databases (operational, write-oriented)."
+      "Do not skip any technical topic in DBMS; even moderate knowledge can secure full marks."
     ],
     "tricks": [
-      "Exam tip: Metadata is often asked in MCQs; remember it as the 'directory' of the data warehouse."
+      "Preparation strategy: Cover all topics conceptually without going into deep programming implementation."
     ]
   },
   {
     "block_id": "CB2",
-    "title": "OLAP vs OLTP Core Differences",
-    "transcript_range_percent": [20, 30],
-    "explanation": "OLAP (Online Analytical Processing) and OLTP (Online Transaction Processing) serve different database functions. OLTP is optimized for operational databases, focusing on fast, concurrent transactional queries (inserts, updates, deletes) with normalized structures. OLAP is optimized for data warehouses, focusing on complex, read-heavy analytical queries over massive volumes of historical data, utilizing denormalized multidimensional structures. The primary differences lie in query complexity, normalization, and performance targets.",
+    "title": "DBMS Core Topics Checklist",
+    "transcript_range_percent": [20, 100],
+    "explanation": "The technical core of the DBMS syllabus consists of 3-Schema Architecture, the Relational Model, Relational Algebra, ER modeling, Key constraints, Normalization rules (1NF to BCNF), SQL command categories (DDL/DML/DCL/TCL), Transaction ACID properties, Indexing (B+ Trees), Database Views, PL/SQL blocks (triggers, cursors, procedures), RAID configurations, and NoSQL distributed databases.",
     "concepts": [
       {
-        "term": "OLTP",
-        "definition": "Online Transaction Processing. Designed for operational daily tasks with high volume of simple transactions."
+        "term": "Three Schema Architecture",
+        "definition": "Dividing database systems into view (external), logical (conceptual), and physical (internal) levels of abstraction."
       },
       {
-        "term": "OLAP",
-        "definition": "Online Analytical Processing. Designed for data analysis, business intelligence, and complex queries over historical data."
-      }
-    ],
-    "examples": [
+        "term": "Relational Model Terms",
+        "definition": "Relation (table), Tuple (row), Attribute (column), Arity (number of columns), and Cardinality (number of rows)."
+      },
       {
-        "sentence": "Compare OLTP and OLAP based on normalization level and primary query types.",
-        "rule": "OLTP uses highly normalized schemas (3NF) to prevent redundancy; OLAP uses denormalized schemas (Star/Snowflake) to speed up complex queries.",
-        "working": "OLTP: 3NF/BCNF -> optimizes writes, inserts, updates. OLAP: Star/Snowflake -> optimizes multi-table analytical joins."
+        "term": "Normalization Forms",
+        "definition": "Database design techniques reducing redundancy: 1NF (atomic values), 2NF (no partial dependency), 3NF (no transitive dependency), and BCNF."
+      },
+      {
+        "term": "SQL Command Groups",
+        "definition": "DDL (schema creation: CREATE, ALTER), DML (data access: SELECT, UPDATE), DCL (permissions), and TCL (transaction control: COMMIT)."
       }
     ],
+    "examples": [],
     "exercise_questions": [
-      "Differentiate between OLAP and OLTP in terms of database design and user queries.",
-      "Why is high normalization preferred in OLTP databases?"
+      "Differentiate between Arity and Cardinality in a relation.",
+      "List the four command categories of SQL and provide examples for each."
     ],
     "visual_moments": [
-      {"timestamp": "00:00:41", "type": "board", "description": "OLAP vs OLTP conceptual slide"}
+      {"timestamp": "00:01:12", "type": "board", "description": "Three Schema Architecture topic"},
+      {"timestamp": "00:01:24", "type": "board", "description": "Relational Model (table, arity, cardinality, tuples)"},
+      {"timestamp": "00:01:45", "type": "board", "description": "Relational Algebra topic"},
+      {"timestamp": "00:02:07", "type": "board", "description": "Joins (inner, outer, cross, natural) and set operations"},
+      {"timestamp": "00:02:22", "type": "board", "description": "ER Model and diagrams"},
+      {"timestamp": "00:02:33", "type": "board", "description": "Keys (Primary, Foreign, Candidate, Super)"},
+      {"timestamp": "00:02:48", "type": "board", "description": "Functional Dependencies"},
+      {"timestamp": "00:03:02", "type": "board", "description": "Closure properties and candidate key finding"},
+      {"timestamp": "00:03:13", "type": "board", "description": "Normalization (2NF, 3NF, BCNF)"},
+      {"timestamp": "00:03:43", "type": "board", "description": "SQL commands (DDL, DML, DCL, TCL)"},
+      {"timestamp": "00:03:58", "type": "board", "description": "SQL clauses (ORDER BY, GROUP BY, subqueries)"},
+      {"timestamp": "00:04:10", "type": "board", "description": "Aggregate and single row functions"},
+      {"timestamp": "00:04:22", "type": "board", "description": "ACID properties and Transaction control"},
+      {"timestamp": "00:04:33", "type": "board", "description": "Indexing (primary, cluster, secondary, B/B+ tree)"},
+      {"timestamp": "00:04:44", "type": "board", "description": "Views topic"},
+      {"timestamp": "00:04:53", "type": "board", "description": "PL/SQL (Triggers, Cursors, Stored Procedures)"},
+      {"timestamp": "00:05:15", "type": "board", "description": "RAID levels"},
+      {"timestamp": "00:05:30", "type": "board", "description": "NoSQL and Big Data"},
+      {"timestamp": "00:05:47", "type": "board", "description": "BASE and CAP properties"},
+      {"timestamp": "00:06:01", "type": "board", "description": "Summary/wrap-up"}
     ],
     "teacher_quotes": [
-      "OLAP and OLTP: Online analytical processing, online transaction processing kya hota hai, dono ke beech mein difference kya hai."
+      "Three schema architecture, jiski upar direct aapko question mil jaata hai. Internal schema, view level ke upar question aapko direct aa jayega."
     ],
     "traps": [
-      "OLTP is NOT meant for running complex aggregation queries (like SUM/AVG over years of data) as it will lock database tables."
+      "Confusion between Arity (columns) and Cardinality (rows) is extremely common in technical MCQs."
     ],
     "tricks": [
-      "Mnemonic: OLTP = 'Transactions' (writes/ops), OLAP = 'Analysis' (reads/decisions)."
-    ]
-  },
-  {
-    "block_id": "CB3",
-    "title": "Multidimensional OLAP Operations",
-    "transcript_range_percent": [30, 45],
-    "explanation": "OLAP systems model data as a multidimensional hypercube. Analysts navigate this data using five core operations: Roll-up aggregates data by climbing up a dimension hierarchy or reducing dimensions; Drill-down performs the opposite, descending the hierarchy to reveal finer details; Slice selects a single dimension to produce a 2D sub-slice; Dice selects a sub-cube by specifying ranges across multiple dimensions; Pivot rotates the data axes to view the cube from a different angle.",
-    "concepts": [
-      {
-        "term": "Roll-up",
-        "definition": "OLAP operation that aggregates data by climbing up a hierarchy (e.g., City -> State -> Country) or by dimension reduction."
-      },
-      {
-        "term": "Drill-down",
-        "definition": "OLAP operation that goes from summarized data to detailed data, descending a hierarchy (e.g., Country -> State -> City)."
-      },
-      {
-        "term": "Slice",
-        "definition": "OLAP operation that selects a single dimension of a cube, creating a lower-dimensional sub-slice (e.g., Sales for Year = 2025)."
-      },
-      {
-        "term": "Dice",
-        "definition": "OLAP operation that selects a sub-cube by specifying ranges on two or more dimensions (e.g., Sales for Year={2024,2025} and Region={North,South})."
-      },
-      {
-        "term": "Pivot",
-        "definition": "OLAP operation that rotates the data axes to provide an alternative presentation of multidimensional data."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "A manager wants to view sales data by individual cities instead of the currently displayed state level. Identify the OLAP operation required.",
-        "rule": "Drill-down goes from a higher level of summary (State) to a lower level of detail (City).",
-        "working": "Current view: State summary (high level) -> Operation: Drill-down -> Finer view: City-level detail (low level)."
-      }
-    ],
-    "exercise_questions": [
-      "Compare the Slice and Dice operations with a practical database example.",
-      "How does the Roll-up operation affect the dimensionality and granularity of a data cube?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:00:52", "type": "board", "description": "Slicing, Dicing, Roll-up, Drill-down, and Pivot operations on data cube"}
-    ],
-    "teacher_quotes": [
-      "Chahe roll up, drill down ki baat kar lo, pivot ki baat kar lo, dicing hai, slicing hai, wo saare operations ek-ek karke karne hain."
-    ],
-    "traps": [
-      "Do not confuse Slice and Dice. Slice filters on ONE dimension (e.g. Year=2025), whereas Dice filters on MULTIPLE dimensions (e.g. Year=2025 AND Product=Books)."
-    ],
-    "tricks": [
-      "Mnemonic: Slice = 1 Cut (one dimension), Dice = Cubes (multiple dimensions)."
-    ]
-  },
-  {
-    "block_id": "CB4",
-    "title": "Star Schema vs Snowflake Schema",
-    "transcript_range_percent": [45, 60],
-    "explanation": "Dimensional modeling represents data using Fact tables and Dimension tables. A Fact Table stores numerical measures (metrics) and foreign keys referencing dimensions. A Dimension Table stores descriptive attributes of the facts. In a Star Schema, the fact table sits at the center connected directly to denormalized dimension tables, resembling a star. In a Snowflake Schema, dimensions are normalized into multiple tables to remove redundancy, splitting the structure into sub-dimensions and resembling a snowflake.",
-    "concepts": [
-      {
-        "term": "Fact Table",
-        "definition": "A central table in a dimensional schema containing quantitative measurements (facts) and foreign keys to dimension tables."
-      },
-      {
-        "term": "Dimension Table",
-        "definition": "A table containing descriptive textual context (dimensions) associated with facts, such as time, location, or product details."
-      },
-      {
-        "term": "Star Schema",
-        "definition": "A dimensional schema where a central fact table is surrounded by and directly connected to denormalized dimension tables."
-      },
-      {
-        "term": "Snowflake Schema",
-        "definition": "A variation of the star schema where dimension tables are normalized, splitting them into nested sub-dimension tables."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "An analyst needs to choose a schema that optimizes query performance with fewer table joins. Which dimensional schema is preferred?",
-        "rule": "Star schema is preferred for query performance as it uses denormalized dimension tables, requiring fewer joins than snowflake.",
-        "working": "Star Schema: 1 join per dimension -> High performance. Snowflake Schema: Multiple joins due to normalized dimensions -> Lower performance."
-      }
-    ],
-    "exercise_questions": [
-      "Draw the structural layout difference between a Star Schema and a Snowflake Schema.",
-      "What are the performance trade-offs when normalizing dimension tables into a Snowflake Schema?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:01:03", "type": "board", "description": "Comparing Star Schema and Snowflake Schema diagrams"}
-    ],
-    "teacher_quotes": [
-      "Star and snowflake schema... dimension table kya hai... Fact table, part ho gaya star snowflake ka."
-    ],
-    "traps": [
-      "While Snowflake Schema saves storage space by normalizing dimensions, it reduces query speed because it requires many more table joins."
-    ],
-    "tricks": [
-      "Remember: Star = Denormalized (fast reads), Snowflake = Normalized (efficient storage)."
-    ]
-  },
-  {
-    "block_id": "CB5",
-    "title": "ETL Process, Data Marts & Data Lakes",
-    "transcript_range_percent": [60, 75],
-    "explanation": "The ETL (Extract, Transform, Load) process is the backbone of data integration. Extraction retrieves raw data from sources; Transformation cleans, formats, and integrates it; Loading writes it to the DWH. Storage architectures differ by scope: a Data Mart is a subset of a DWH focused on a single department (e.g., Sales); a Data Lake is a repository storing raw, unstructured data in its native format before processing, whereas a Data Warehouse stores processed, structured data.",
-    "concepts": [
-      {
-        "term": "ETL",
-        "definition": "Extract, Transform, and Load. The process of gathering, cleaning, formatting, and inserting data into a data warehouse."
-      },
-      {
-        "term": "Data Mart",
-        "definition": "A specialized, smaller subset of a data warehouse focused on a single line of business or department."
-      },
-      {
-        "term": "Data Lake",
-        "definition": "A large-scale repository that stores raw, unstructured, semi-structured, or structured data in its native format."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "Differentiate between a Data Warehouse and a Data Lake based on data structure and ingestion.",
-        "rule": "Data Warehouse uses schema-on-write (structured only); Data Lake uses schema-on-read (stores raw unstructured data).",
-        "working": "DWH: Raw Data -> Clean/Structure -> Load (Schema-on-write). Data Lake: Raw Data -> Load -> Structure during query (Schema-on-read)."
-      }
-    ],
-    "exercise_questions": [
-      "Explain the ETL workflow steps and how it integrates raw transactional databases.",
-      "How does a Data Mart differ from a full enterprise Data Warehouse?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:01:17", "type": "board", "description": "ETL flow diagram from sources to data warehouse/data marts"}
-    ],
-    "teacher_quotes": [
-      "ETL process, extract, transform and load kya hai... Data mart... Data lake kya hota hai, mart kya hota hai, warehouse kya hota hai."
-    ],
-    "traps": [
-      "Do not think a Data Mart is completely independent of a DWH. It can be dependent (built from the DWH) or independent (built from source systems)."
-    ],
-    "tricks": [
-      "Ingestion Tip: DWH is like bottled water (clean/processed), while a Data Lake is like a natural lake (raw/untouched)."
-    ]
-  },
-  {
-    "block_id": "CB6",
-    "title": "Data Mining Basics & Data Preprocessing",
-    "transcript_range_percent": [75, 90],
-    "explanation": "Data Mining is the process of discovering hidden patterns, anomalies, and correlations within large datasets. For the exam, understanding basic data preprocessing is critical because raw real-world data is dirty. Preprocessing steps include: Data Cleaning (handling missing values/noise); Data Integration (combining multiple sources); Data Transformation (normalization, aggregation); Data Reduction (dimensionality reduction, compression); and Data Discretization.",
-    "concepts": [
-      {
-        "term": "Data Mining",
-        "definition": "The computational process of discovering patterns in large datasets using machine learning, statistics, and database systems."
-      },
-      {
-        "term": "Data Preprocessing",
-        "definition": "Steps taken to clean, integrate, transform, and reduce raw data to prepare it for mining and analysis."
-      },
-      {
-        "term": "Data Cleaning",
-        "definition": "Preprocessing step that resolves missing data, corrects inconsistencies, and filters out noise."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "List the correct chronological order of the primary data preprocessing steps before data mining.",
-        "rule": "The standard sequence is Data Cleaning -> Data Integration -> Data Transformation -> Data Reduction.",
-        "working": "Raw Data -> Clean (remove noise) -> Integrate (combine sources) -> Transform (format/normalize) -> Reduce (compress size) -> Mining ready."
-      }
-    ],
-    "exercise_questions": [
-      "Why is Data Preprocessing necessary before applying data mining algorithms?",
-      "List the four major data preprocessing steps and define each briefly."
-    ],
-    "visual_moments": [
-      {"timestamp": "00:01:25", "type": "board", "description": "Data Mining syllabus and Preprocessing steps"},
-      {"timestamp": "00:01:42", "type": "board", "description": "Data preprocessing phases (cleaning, transformation, reduction)"}
-    ],
-    "teacher_quotes": [
-      "Data mining bhi basic level ki... preprocessing ki data ki preprocessing mein kaun-kaun se steps hain, data cleaning, aggregation."
-    ],
-    "traps": [
-      "Do not skip data preprocessing before mining. Mining on unprocessed, noisy data will yield garbage patterns (Garbage In, Garbage Out)."
-    ],
-    "tricks": [
-      "Exam tip: Remember the 5 main preprocessing tasks: Cleaning, Integration, Transformation, Reduction, and Discretization."
-    ]
-  },
-  {
-    "block_id": "CB7",
-    "title": "Exam Strategy & Syllabus Checklist",
-    "transcript_range_percent": [90, 100],
-    "explanation": "Data Warehouse and Mining is a high-scoring section in the IT Officer exam. Because questions are direct, candidates must focus on conceptual clarity rather than coding. Key areas to master include: comparing OLAP and OLTP features, identifying specific OLAP cube operations from scenario descriptions, understanding dimensional tables vs fact tables, identifying schema differences (Star vs Snowflake), and listing chronological data preprocessing steps.",
-    "concepts": [
-      {
-        "term": "Professional Knowledge Paper",
-        "definition": "The Mains exam for IBPS SO IT Officer consisting of 60 technical questions, where Data Warehouse accounts for 3–5 questions."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "Based on the syllabus, how many questions are typically asked from Data Warehouse and Data Mining?",
-        "rule": "Typically 3 to 5 questions are asked annually, with an average of 4 questions.",
-        "working": "Yearly trends show consistent presence: 3-5 MCQs out of 60 are devoted to Data Warehouse and Mining concepts."
-      }
-    ],
-    "exercise_questions": [
-      "Identify the high-yield topics to study within the Data Warehouse & Mining syllabus.",
-      "What is the best preparation strategy for answering relational schema questions?"
-    ],
-    "visual_moments": [
-      {"timestamp": "00:02:00", "type": "board", "description": "Final exam checklist and syllabus summary slide"}
-    ],
-    "teacher_quotes": [
-      "Ye saare points questions hain jo har saal kuch na kuch alag-alag tareeqe se ghum-fir ke pooche jaate hain."
-    ],
-    "traps": [
-      "Do not study deep machine learning algorithms for this syllabus — only basic definitions and preprocessing steps are tested."
-    ],
-    "tricks": [
-      "Preparation Strategy: Focus on structural comparisons (OLTP/OLAP, Star/Snowflake) as they represent over 80% of past paper questions."
+      "Mnemonic: B+ Tree leaf node linking is the reason why range queries are faster than B-Trees in RDBMS."
     ]
   }
 ]

@@ -301,39 +301,46 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
         doc.add_paragraph()
 
+    # Load profile
+    profile = {}
+    if os.path.exists("lecture_profile.json"):
+        try:
+            with open("lecture_profile.json", "r", encoding="utf-8") as f:
+                profile = json.load(f)
+        except Exception as e:
+            logging.warning(f"Could not load lecture_profile.json: {e}")
+
     # Section 3: Rules, Formulas & Exam Traps
-    doc.add_heading("Section 3: Rules, Formulas & Exam Traps", level=1)
     all_traps = []
     for block in concept_blocks:
         for trap in block.get('traps', []):
             all_traps.append((trap, block.get('title', '')))
-    if all_traps:
+    if all_traps and profile.get("generate_theoretical_theory", True):
+        doc.add_heading("Section 3: Rules, Formulas & Exam Traps", level=1)
         for trap, btitle in all_traps:
             p = doc.add_paragraph(style='List Bullet')
             p.add_run("🚨 ").bold = True
             p.add_run(f"From {btitle}: {trap}")
-    else:
-        doc.add_paragraph("No specific traps recorded.")
 
     # Section 4: Final Revision Points
-    doc.add_heading("Section 4: Final Revision Points", level=1)
-    # Render ALL concept blocks, not just first 4
     points_added = 0
+    temp_p_runs = []
     for block in concept_blocks:
         title = block.get('title', '')
         examples = block.get('examples', [])
         if isinstance(examples, list) and len(examples) > 0:
             rule = examples[0].get('rule', '')
             if rule:
-                doc.add_paragraph(f"• {title}: {rule}", style='List Bullet')
+                temp_p_runs.append((title, rule))
                 points_added += 1
-    if points_added == 0:
-        doc.add_paragraph("Review all concept blocks for detailed rules.")
+    if points_added > 0 and profile.get("generate_worked_examples", True):
+        doc.add_heading("Section 4: Final Revision Points", level=1)
+        for title, rule in temp_p_runs:
+            doc.add_paragraph(f"• {title}: {rule}", style='List Bullet')
 
     import datetime
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
-    # --- VISUAL APPENDIX TO PASS GATE 7 ---
     # --- VISUAL APPENDIX TO PASS GATE 7 & 11 ---
     
     # Check both possible locations for cropped frames
@@ -349,7 +356,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 logging.info(f"Found {len(frames_found)} frames in {dir_path} for Visual Appendix")
                 break
     
-    if frames_found:
+    visual_appendix_limit = profile.get("visual_appendix_limit", 20)
+    
+    if frames_found and visual_appendix_limit > 0:
         doc.add_page_break()
         doc.add_heading("Visual Appendix", level=1)
         
@@ -364,10 +373,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
             except Exception as e:
                 logging.warning(f"Could not load frame manifest for timestamps: {e}")
         
-        # Add up to 20 frames to ensure we pass the minimum count gate without making the file too huge
+        # Add up to visual_appendix_limit frames
         count = 0
         for img_path in frames_found:
-            if count >= 20:
+            if count >= visual_appendix_limit:
                 break
                 
             fname = os.path.basename(img_path)
@@ -382,9 +391,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 logging.error(f"Failed to add image {img_path}: {e}")
                 doc.add_paragraph(f"[Image load error: {e}]")
     else:
-        logging.warning("No cropped frames found in screenshots/ or screenshots/cropped/. Visual Appendix will be empty.")
-        # Fallback: Try to add at least one placeholder image if available anywhere to prevent total zero count
-        # (Optional: You might want to generate a dummy image here if strictly needed, but fixing the path is better)
+        logging.warning("No cropped frames found or visual appendix limit is 0.")
 
     doc.save(output_path)
     logging.info(f"Notes document generated successfully at: {output_path}")

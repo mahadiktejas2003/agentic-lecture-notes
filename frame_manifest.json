@@ -1,52 +1,112 @@
 {
   "frame_001.png": {
-    "timestamp": "00:00:05",
-    "ocr_text": "\u00a2 Data Warehousing Arc\" \u00ae\n* OLAP vs OLTP\n\n* OLAP Operations\n* Star, Snowflake Schemz\n\u00b0 ETL Process\n\n\u00a2 Data Marts\n\n\u00a2 Fact & Dimensio\n\u00a2 Data Mining (Bas\n\u00a2 Data Preprocessi",
+    "timestamp": "00:00:10",
+    "ocr_text": "* Data Models: 3 Schema Architecture, Relational Model\n\n* SQL: DDL, DML\n\u00a2 Joins: Inner, O",
     "type": "board"
   },
   "frame_002.png": {
-    "timestamp": "00:00:15",
-    "ocr_text": "\u00b0 OLAP vs OLTP\n*OLAP Operations\n* Star, Snowflake Sche\n\u00b0 ETL Process\n\u00a2 Data Marts\n\u00b0 Fact & Dimens\u2019\n\u00a2 Data Mining (\n\u00b0 Data Preproce",
+    "timestamp": "00:00:45",
+    "ocr_text": "* Data Models: 3 Schema Architecture, Relatione' \"\u201c-4el\n* Relational Algebra\n* ER Model & Keys: Primary, Foreign, Candidate\n\u00b0 Functional Dependencies-& Normalization (7 ie\n*SQL: DDL, DML, DCL, TCL\n\n* Joins: Inner, Outer, Cross, Na ~a!\n\n* ACID Properties, Transactions Cu\n* Indexing(Primary, Clustering, Seconac. ,,\n* Views, Triggers, Cursors, Stored Procedures\n\u00a2 RAID Levels\n\n\u00a2 NoSQL & BIG Data Basics",
     "type": "board"
   },
   "frame_003.png": {
-    "timestamp": "00:00:34",
-    "ocr_text": "\u00a2 Data Warehousing Architecture\n* OLAP vs OLTP > f\n* OLAP Operations -\n* Star, Snowflake Schema\n\n\u00b0 ETL Process\n\n\u00a2 Data Marts\n\n* Fact & Dimension Tables\n\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
+    "timestamp": "00:01:12",
+    "ocr_text": "\u00b0 Dat> \u201cModels: 3 Schema Architecture, Relational Model\n\n(Primary, Clustering, Secondary, B & B+ Tree)\nggers, Cursors, Stored Procedures",
     "type": "board"
   },
   "frame_004.png": {
-    "timestamp": "00:00:41",
-    "ocr_text": "* Data Warehousing Archite\nour sour\u201d |\n* OLAP Operations *,\n\u00a2 Star, Snowflake Sc. -\n\u00b0 ETL Process\n\u00a2 Data Marts\n* Fact & Dimension Tai.\n\u00a2 Data Mining (Basics)\n\u00a2 Data Preprocessing",
+    "timestamp": "00:01:24",
+    "ocr_text": "* Data Models: 3 S-hema Architecture, Relational Model\n* Relational Al s :\n* ER Model &) =] Sl ary, Foreign, Candidate ?\n\n* Functional D..\n\ne NoSQL &B",
     "type": "board"
   },
   "frame_005.png": {
-    "timestamp": "00:00:52",
-    "ocr_text": "\u00b0 Data aoe Architecture\nOLAP vs omg\n\n\u00a2 Star, Snowflak\n\u00b0 ETL Process\n\n* Data Marts\n\n\u00a2 Fact & Dimension Tables\n* Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
+    "timestamp": "00:01:45",
+    "ocr_text": "Models: 3 Schema Architecture, Relational Model\n\u2018ional Algebra\nBees ode! *- \u00abaPrimary, Foreign, Candidate\nional DC ncies & Normalization (1NF to 5NF, BCNF)\n. DDL, DML)\u201d \u201cTCL\nye Natural\nctions Concurrency Control\n\n4 ng Secondary, B & B+ Tree)\nStored Procedures",
     "type": "board"
   },
   "frame_006.png": {
-    "timestamp": "00:01:03",
-    "ocr_text": "* Data Warehousing Archit~\nOLAP vs OLTP\n\n@ OLAP Operations\n\n* Star, Snowflake Schema > g\n\n* Data Mining (Basics)\n\u00a2 Data Preprocessing",
+    "timestamp": "00:02:07",
+    "ocr_text": "\u00b0 Data Models: 3 Schema Architecture, Relational Model\n_ielational Algebra\n\n\u2018R Model & Keys: Primary, Foreign, Candidate\n\nnctional Dependencies & Normalization (1NF to SNF, BCNF)",
     "type": "board"
   },
   "frame_007.png": {
-    "timestamp": "00:01:17",
-    "ocr_text": "COLAP Operations\u00bb\nStar SOW EE eee\n* ETL Process\n\n\u00a2 Data Marts\n\n\u00a2 Fact & Dimension Tables\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
+    "timestamp": "00:02:22",
+    "ocr_text": "* Data Models: 2 Schema Architecture, Relational Model\n* Relational",
     "type": "board"
   },
   "frame_008.png": {
-    "timestamp": "00:01:25",
-    "ocr_text": "OLAP Operations\n\u00a2 Star, Snowflake Schema\n\n* ETL Process\n*Data Marts \u2014\n* Fact & Dimension Tables ~\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
+    "timestamp": "00:02:33",
+    "ocr_text": "ta Models: 3 Schema Architecture, Relational Model\n\u2122 tional Algebra\n\u00bb odel & Keys: Primary, Foreign, Candidate\n\u201cional Dependencies & Normalization (1NF to 5NF, BCNF)\nDDL, DML, DCL, TCL\nner, Outer, Cross, Natural\nperties, Transactions Concurrency Control\nPrimary, Clustering, Secondary, B & B+ Tree)\nrs, Stored Procedures",
     "type": "board"
   },
   "frame_009.png": {
-    "timestamp": "00:01:42",
-    "ocr_text": "OLAP Opera ions;\nStar, Snowflake Sc.) \u2122\n* ETL Process\n*Data Marts \u2014\n\n\u00a2 Fact & Dimension Tables \u2019",
+    "timestamp": "00:02:48",
+    "ocr_text": "\u00b0 Data Models: 3 Schema Architecture, Relational Model\n_ onal Algebra\n\u201cdel & \u00bb Keys: Primary, Foreign, Candidate Safa ke\n\n\u2014\n\n~~ ral Dependencies & Normalization (1NF to 5NF, BCNF)\n\n[",
     "type": "board"
   },
   "frame_010.png": {
-    "timestamp": "00:02:00",
-    "ocr_text": "* ETL Process _\n*Data Marts \u2014\n\n\u00a2 Fact & Dimension Tables ~",
+    "timestamp": "00:03:02",
+    "ocr_text": "COs tun, Padins.\nross, oe\n\n' \u201c<y Control\nWary, B & B+ Tree)\nProcedures",
+    "type": "board"
+  },
+  "frame_011.png": {
+    "timestamp": "00:03:13",
+    "ocr_text": "* Data Models: 3 Schema Architecture, Relational Model\n\n~ sForeign, Candidate , Supa ky\nNormalization (1NF to 5NF, BCNF)\n/ C Cosine Profler ti x8.\n\nlatur.",
+    "type": "board"
+  },
+  "frame_012.png": {
+    "timestamp": "00:03:43",
+    "ocr_text": "yg \u00b0 Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\nER Model & Keys: Primary, Foreign, Candidate , Supa ky\n\n\u00bb + Functional Dependencies & Normalization (1NF to 5NF, BCNF)\n*S\u00a2ONPDL, DML, DEL, TCL CCohine Profaknr.\n\n| _ Inner, Outer, Cross, Natural\n\nProperties, Transactions Concurrency Control\n\nxing(Primary, Clustering, Secondary, B & B+ Tree)\n\nvs, Triggers, Cursors, Stored Procedures\n\nD Levels\n\nL & BIG Data Basics",
+    "type": "board"
+  },
+  "frame_013.png": {
+    "timestamp": "00:03:58",
+    "ocr_text": "* Data Models: 3 \u00a3\n\nArchitecture, Relational Model\n\n/& Normalization (1NF to 5NF, BCNF)\nCohirne Prefix tier.\n\n*SQL: DDL, DML,\n* Joins: Inne\n\ndary, B & B+ Tree)\ncedures",
+    "type": "board"
+  },
+  "frame_014.png": {
+    "timestamp": "00:04:10",
+    "ocr_text": "* Data Models: 3 Schema Architecture, Relational Model\n\n_ lary, Foreign, Candidate , Supa ky\nes & Normalization (1NF to SNF, BCNF)\n\nC bposya Profxtize._\n2 Cross, Natural, 9-4",
+    "type": "board"
+  },
+  "frame_015.png": {
+    "timestamp": "00:04:22",
+    "ocr_text": "iii\n* Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\n* ER Model & : Keys: Primary, Foreign, Candidate, ifr ky\n\u00b0 Functional Dependencies & Normalization (INF to SNF, BCNF)\nSQL: DDL, DML, DCL, TCL CCoiune proflatinn. orpayate\n* Joins: Inner, O Outer, Cross, Natural 7 Sok , hued: fonchier.\n\u00b0 ACID Properties, Transactions ConeuRrene Control\n* Indexing(Primary, Clustering, Secondary, B & B+ Tree)\nViews, Triggers, Cursors, Stored Procedures\nSiew Levels\n\u00b0 pe & BIG eit Basics",
+    "type": "board"
+  },
+  "frame_016.png": {
+    "timestamp": "00:04:33",
+    "ocr_text": "\u00b0 Data Models: 3 Schema Architecture, Relational Model\nnal Algebra\n: odel & x Keys: Primary, Foreign, Candidate /Sufa ky\n\u2122 Jonal Dependencies & Normalization (1NF to 5NF, BCNF)\nIDL, DML, DCL, TCL CCohing Proflatier. peel \u00a2\nins: : Inner, O Outer, ( Cross, Natural 7 34% , huts fonchn.\nID PropeNt aeseae\"= Concuntengy Control",
+    "type": "board"
+  },
+  "frame_017.png": {
+    "timestamp": "00:04:44",
+    "ocr_text": "aii\n\u00b0 Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\n* ER Model & Keys: Primary, Foreign, Candidate, $i fer ky\n* Functional Dependencies & Normalization (1NF to SNF, BCNF)\n*SQL: DDL, DML, DEL, TCL Clotune Prfiakinr.  oyprapat\n* Joins: Inner, Outer, Cross, Natural i 9% jhatdi forchin.\n\u00a2 ACID Properties, Transactions Concurrency Control\n* Indexing(Primary, Clustering, Secondary, B & B+ Tree)\nv fiews, Triggers, Cursors, Stored Procedures\n\u201cRAID Levels\n\u00a2 NoSQL & BIG Data Basics",
+    "type": "board"
+  },
+  "frame_018.png": {
+    "timestamp": "00:04:53",
+    "ocr_text": "\u00b0 Dat- \"\u201codels: 3 Schema Architecture, Relational Model\n| Algebra\n4! & Keys: Primary, Foreign, Candidate, $i, fer Ky\n\"al Dependencies & Normalization (1NF to SNF, BCNF)\n, DML, DCL, TCL CCohung Profixtizr. Oppel e\nner, Outer, Cross, Natural, 944%  Autd: fanchh.\n- erties, Transactions Concurrency Control\nering, Secondary, B & B+ Tree)\n\n\u2014\u2014\u2014\n\nzers By Co Procedure\n\nasics\ni\n\n| =\n. =\n\u00ae\n\nmar",
+    "type": "board"
+  },
+  "frame_019.png": {
+    "timestamp": "00:05:15",
+    "ocr_text": "ee\n\u00b0 Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\n\u00b0 ER Model & t Keys: Primary, Foreign, Candidate Safa Ky\n*\u00b0 Functional Dependencies & I Normalization (1NF to SNF, BCNF)\n*SQL: DDL, DML, DCL, TCL Cloiing Profatinn. orpayate\n* Joins: Inner, O Outer, Cross, Natural 7 34% , hutds forchien.\n* ACID ACID Prope tiie: slatisaetions Concunpenel Control\nering, Secondary, B & B+ Tree)\n\noSQL & BIG Data Basics",
+    "type": "board"
+  },
+  "frame_020.png": {
+    "timestamp": "00:05:30",
+    "ocr_text": "\u00b0 Data Models: 3 Schema Architecture, R-'-*ional Model\n* Relational Algebra\n* ER Model & Keys: Primary, Foreign, _\n* Functional Dependencies & Normali\nSQL: DDL, DML, DCL, TeL \u2014~ C (4\n\n* Joins: Inner, SHEL ness) Natural ,\n\n5 uf2 Ky\nf to 5NF, BCNF)",
+    "type": "board"
+  },
+  "frame_021.png": {
+    "timestamp": "00:05:47",
+    "ocr_text": "* Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\n* ER Model & Keys: Prim Candidate , Supa ky\n\u00a2 Functional Dependencie: - ization (1NF to SNF, BCNF)\n+SQL: DDL, DML, DCL, Tet.\n\n\u00a2 Joins: Inner, See tees",
+    "type": "board"
+  },
+  "frame_022.png": {
+    "timestamp": "00:06:01",
+    "ocr_text": "\u00b0 Data Models: 3 Schema Architecture, Relational Model\n* Relational Algebra\n* ER Model & Keys: Primary, Foreign, Candidate , Sufa Koa\n:Functional Dependencies & Normalization (1NF to 5Nt\n{SQL: DDL, DML, DEL, TCL ~~ C@ohing Proflatine._\n* Joins: Inner, Outer, Cross, Natural 7 3k , hutds forche\n* ACID ACID Pisa aeesescen coneurrenty Control",
     "type": "board"
   }
 }
