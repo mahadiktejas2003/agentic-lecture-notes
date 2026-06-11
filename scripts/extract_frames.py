@@ -19,7 +19,7 @@ def get_video_duration(video_path):
         logger.error(f"Failed to get duration: {e}")
         return 0.0
 
-def are_ocr_texts_similar(text1, text2, threshold=0.60):
+def are_ocr_texts_similar(text1, text2, threshold=0.48):
     if not text1 or not text2:
         return False
     # Extract unique words with length >= 4
@@ -37,6 +37,15 @@ def extract_frames(video_path, output_dir, timestamps=None):
     """Extract frames based on timestamps or default sampling."""
     os.makedirs(output_dir, exist_ok=True)
     
+    # Clear output_dir first to prevent leakage from previous runs
+    for f in os.listdir(output_dir):
+        fp = os.path.join(output_dir, f)
+        if os.path.isfile(fp) and f.lower().endswith(('.png', '.jpg', '.jpeg')):
+            try:
+                os.remove(fp)
+            except Exception as e:
+                logger.warning(f"Failed to clear old frame file {f}: {e}")
+                
     manifest = {}
     
     # Load or calculate timestamps
@@ -102,22 +111,25 @@ def extract_frames(video_path, output_dir, timestamps=None):
 
     # Deduplicate manifest based on OCR similarity
     unique_manifest = {}
-    last_ocr = None
     
     for fname in sorted(manifest.keys()):
         info = manifest[fname]
         current_ocr = info.get('ocr_text', '')
         
-        if last_ocr and are_ocr_texts_similar(current_ocr, last_ocr, threshold=0.60):
-            logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to previous)")
+        is_duplicate = False
+        for unique_fname, unique_info in unique_manifest.items():
+            if are_ocr_texts_similar(current_ocr, unique_info.get('ocr_text', ''), threshold=0.48):
+                is_duplicate = True
+                break
+                
+        if is_duplicate:
+            logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to an existing frame)")
             try:
                 os.remove(os.path.join(output_dir, fname))
             except Exception as e:
                 logger.warning(f"Failed to remove duplicate file {fname}: {e}")
         else:
             unique_manifest[fname] = info
-            if current_ocr.strip():
-                last_ocr = current_ocr
 
     with open('frame_manifest.json', 'w') as f:
         json.dump(unique_manifest, f, indent=2)

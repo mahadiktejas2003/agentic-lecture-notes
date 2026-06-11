@@ -19,7 +19,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn, nsdecls
 from docx.oxml import parse_xml
 
-def are_ocr_texts_similar(text1, text2, threshold=0.60):
+def are_ocr_texts_similar(text1, text2, threshold=0.48):
     if not text1 or not text2:
         return False
     # Extract unique words with length >= 4
@@ -206,7 +206,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Section 2: Detailed Concept Blocks
     doc.add_heading("Section 2: Detailed Concept Blocks", level=1)
 
-    last_inserted_ocr = None
+    inserted_ocrs = []
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
@@ -298,18 +298,35 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     if fallback_name in frames:
                         frame_fname = fallback_name
 
-            if img_path:
+            if img_path and os.path.exists(img_path):
                 current_ocr = ""
                 if frame_fname and frame_fname in frames:
                     current_ocr = frames[frame_fname].get('ocr_text', '')
                 
-                # Check similarity
-                if last_inserted_ocr and are_ocr_texts_similar(current_ocr, last_inserted_ocr, threshold=0.60):
+                # If OCR is empty but we can run OCR on the fly, do so to prevent duplicate fallbacks
+                if not current_ocr.strip():
+                    try:
+                        import pytesseract
+                        from PIL import Image
+                        img = Image.open(img_path)
+                        current_ocr = pytesseract.image_to_string(img).strip()
+                        logging.info(f"Generated on-the-fly OCR for {img_path}: {current_ocr[:50]}...")
+                    except Exception as e:
+                        logging.warning(f"Could not perform on-the-fly OCR on {img_path}: {e}")
+                
+                # Check similarity against all inserted images
+                is_duplicate = False
+                for prev_ocr in inserted_ocrs:
+                    if are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.48):
+                        is_duplicate = True
+                        break
+                
+                if is_duplicate:
                     logging.info(f"Skipping duplicate slide image: {frame_fname or img_path}")
                 else:
                     if add_image_if_exists(doc, img_path):
                         if current_ocr.strip():
-                            last_inserted_ocr = current_ocr
+                            inserted_ocrs.append(current_ocr)
 
         # Quotes, Traps, Tricks
         for q in block.get('teacher_quotes', []):
