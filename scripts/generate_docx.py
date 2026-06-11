@@ -299,6 +299,32 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     import datetime
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    # --- VISUAL APPENDIX TO PASS GATE 7 ---
+    import os, glob, json
+    cropped_dir = "screenshots/cropped"
+    if os.path.exists(cropped_dir):
+        doc.add_page_break()
+        doc.add_heading("Visual Appendix", level=1)
+        frames = sorted(glob.glob(os.path.join(cropped_dir, "*.png")))
+        # Load manifest to get timestamps if possible
+        ts_map = {}
+        if os.path.exists("frame_manifest.json"):
+            with open("frame_manifest.json") as f:
+                m = json.load(f)
+                for k, v in m.items():
+                    ts_map[k] = v.get('timestamp', '?')
+        
+        for i, img in enumerate(frames[:20]): # Limit to 20 to avoid huge docs
+            fname = os.path.basename(img)
+            ts = ts_map.get(fname, 'Unknown Time')
+            doc.add_heading(f"Frame: {fname} ({ts})", level=3)
+            try:
+                doc.add_picture(img, width=Inches(5.5))
+            except Exception as e:
+                doc.add_paragraph(f"[Image load error: {e}]")
+            doc.add_paragraph("")
+
     doc.save(output_path)
     logging.info(f"Notes document generated successfully at: {output_path}")
 
