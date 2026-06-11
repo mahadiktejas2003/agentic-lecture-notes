@@ -4,21 +4,6 @@
     "ocr_text": "\u00a2 Data Warehousing Arc\" \u00ae\n* OLAP vs OLTP\n\n* OLAP Operations\n* Star, Snowflake Schemz\n\u00b0 ETL Process\n\n\u00a2 Data Marts\n\n\u00a2 Fact & Dimensio\n\u00a2 Data Mining (Bas\n\u00a2 Data Preprocessi",
     "type": "board"
   },
-  "frame_002.png": {
-    "timestamp": "00:00:15",
-    "ocr_text": "\u00b0 OLAP vs OLTP\n*OLAP Operations\n* Star, Snowflake Sche\n\u00b0 ETL Process\n\u00a2 Data Marts\n\u00b0 Fact & Dimens\u2019\n\u00a2 Data Mining (\n\u00b0 Data Preproce",
-    "type": "board"
-  },
-  "frame_003.png": {
-    "timestamp": "00:00:34",
-    "ocr_text": "\u00a2 Data Warehousing Architecture\n* OLAP vs OLTP > f\n* OLAP Operations -\n* Star, Snowflake Schema\n\n\u00b0 ETL Process\n\n\u00a2 Data Marts\n\n* Fact & Dimension Tables\n\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
-    "type": "board"
-  },
-  "frame_004.png": {
-    "timestamp": "00:00:41",
-    "ocr_text": "* Data Warehousing Archite\nour sour\u201d |\n* OLAP Operations *,\n\u00a2 Star, Snowflake Sc. -\n\u00b0 ETL Process\n\u00a2 Data Marts\n* Fact & Dimension Tai.\n\u00a2 Data Mining (Basics)\n\u00a2 Data Preprocessing",
-    "type": "board"
-  },
   "frame_005.png": {
     "timestamp": "00:00:52",
     "ocr_text": "\u00b0 Data aoe Architecture\nOLAP vs omg\n\n\u00a2 Star, Snowflak\n\u00b0 ETL Process\n\n* Data Marts\n\n\u00a2 Fact & Dimension Tables\n* Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
@@ -32,21 +17,6 @@
   "frame_007.png": {
     "timestamp": "00:01:17",
     "ocr_text": "COLAP Operations\u00bb\nStar SOW EE eee\n* ETL Process\n\n\u00a2 Data Marts\n\n\u00a2 Fact & Dimension Tables\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
-    "type": "board"
-  },
-  "frame_008.png": {
-    "timestamp": "00:01:25",
-    "ocr_text": "OLAP Operations\n\u00a2 Star, Snowflake Schema\n\n* ETL Process\n*Data Marts \u2014\n* Fact & Dimension Tables ~\n\u00a2 Data Mining (Basics)\n\n\u00a2 Data Preprocessing",
-    "type": "board"
-  },
-  "frame_009.png": {
-    "timestamp": "00:01:42",
-    "ocr_text": "OLAP Opera ions;\nStar, Snowflake Sc.) \u2122\n* ETL Process\n*Data Marts \u2014\n\n\u00a2 Fact & Dimension Tables \u2019",
-    "type": "board"
-  },
-  "frame_010.png": {
-    "timestamp": "00:02:00",
-    "ocr_text": "* ETL Process _\n*Data Marts \u2014\n\n\u00a2 Fact & Dimension Tables ~",
     "type": "board"
   }
 }

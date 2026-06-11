@@ -19,6 +19,20 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn, nsdecls
 from docx.oxml import parse_xml
 
+def are_ocr_texts_similar(text1, text2, threshold=0.60):
+    if not text1 or not text2:
+        return False
+    # Extract unique words with length >= 4
+    w1 = set(re.findall(r'\b[a-z]{4,}\b', text1.lower()))
+    w2 = set(re.findall(r'\b[a-z]{4,}\b', text2.lower()))
+    
+    if not w1 or not w2:
+        return False
+        
+    common = w1 & w2
+    ratio = len(common) / min(len(w1), len(w2))
+    return ratio > threshold
+
 # Helper Functions (unchanged)
 def add_revision_box(doc, bullets, rule=None):
     parts = ['[⚡ Quick Rev]'] + [f'• {b}' for b in bullets]
@@ -192,6 +206,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Section 2: Detailed Concept Blocks
     doc.add_heading("Section 2: Detailed Concept Blocks", level=1)
 
+    last_inserted_ocr = None
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
@@ -262,6 +277,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
             # Determine image path from frame manifest or slide manifest
             img_path = None
+            frame_fname = None
             if v_type == 'slide':
                 # For slides, try to match by slide number
                 slide_num = vm.get('slide_number')
@@ -273,13 +289,27 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
             else:
                 # For video frames, match by timestamp
                 if ts and ts in timestamp_to_frame:
-                    img_path = os.path.join('screenshots', timestamp_to_frame[ts])
+                    frame_fname = timestamp_to_frame[ts]
+                    img_path = os.path.join('screenshots', frame_fname)
                 else:
                     # Fallback to naming convention
-                    img_path = f"screenshots/{block_id}_{ts.replace(':', '')}.jpg"
+                    fallback_name = f"{block_id}_{ts.replace(':', '')}.jpg"
+                    img_path = f"screenshots/{fallback_name}"
+                    if fallback_name in frames:
+                        frame_fname = fallback_name
 
             if img_path:
-                add_image_if_exists(doc, img_path)
+                current_ocr = ""
+                if frame_fname and frame_fname in frames:
+                    current_ocr = frames[frame_fname].get('ocr_text', '')
+                
+                # Check similarity
+                if last_inserted_ocr and are_ocr_texts_similar(current_ocr, last_inserted_ocr, threshold=0.60):
+                    logging.info(f"Skipping duplicate slide image: {frame_fname or img_path}")
+                else:
+                    if add_image_if_exists(doc, img_path):
+                        if current_ocr.strip():
+                            last_inserted_ocr = current_ocr
 
         # Quotes, Traps, Tricks
         for q in block.get('teacher_quotes', []):

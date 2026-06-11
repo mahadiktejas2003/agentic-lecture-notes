@@ -19,9 +19,25 @@ def get_video_duration(video_path):
         logger.error(f"Failed to get duration: {e}")
         return 0.0
 
+def are_ocr_texts_similar(text1, text2, threshold=0.60):
+    if not text1 or not text2:
+        return False
+    # Extract unique words with length >= 4
+    w1 = set(re.findall(r'\b[a-z]{4,}\b', text1.lower()))
+    w2 = set(re.findall(r'\b[a-z]{4,}\b', text2.lower()))
+    
+    if not w1 or not w2:
+        return False
+        
+    common = w1 & w2
+    ratio = len(common) / min(len(w1), len(w2))
+    return ratio > threshold
+
 def extract_frames(video_path, output_dir, timestamps=None):
     """Extract frames based on timestamps or default sampling."""
     os.makedirs(output_dir, exist_ok=True)
+    
+    manifest = {}
     
     # Load or calculate timestamps
     if not timestamps:
@@ -33,7 +49,6 @@ def extract_frames(video_path, output_dir, timestamps=None):
                    '-vsync', 'vfr', f'{output_dir}/frame_%03d.png']
             subprocess.run(cmd, check=True)
             # Generate manifest with calculated timestamps based on frame position
-            manifest = {}
             frame_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.png')])
             # Estimate timestamp assuming 30fps and every 300 frames = 10 seconds apart
             for i, fname in enumerate(frame_files):
@@ -48,50 +63,65 @@ def extract_frames(video_path, output_dir, timestamps=None):
                 except ImportError:
                     ocr_text = "OCR unavailable"
                 manifest[fname] = {"timestamp": ts, "ocr_text": ocr_text, "type": "board"}
-            with open('frame_manifest.json', 'w') as f: json.dump(manifest, f, indent=2)
-            logger.info(f"✅ Saved {len(manifest)} frames with estimated timestamps.")
-            return
-
-        # Default: sample every 60 seconds
-        timestamps = [f"{int(t)//3600}:{(int(t)%3600)//60:02d}:{int(t)%60:02d}" 
-                      for t in range(0, int(duration), 60)]
-
-    manifest = {}
-    
-    # Extract specific timestamps
-    for i, ts in enumerate(timestamps):
-        # Convert HH:MM:SS to seconds for ffmpeg
-        parts = list(map(int, ts.split(':')))
-        seconds = parts[0]*3600 + parts[1]*60 + parts[2]
-        
-        fname = f"frame_{i+1:03d}.png"
-        out_path = os.path.join(output_dir, fname)
-        
-        cmd = ['ffmpeg', '-ss', str(seconds), '-i', video_path, '-vframes', '1', '-y', out_path]
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        if os.path.exists(out_path):
-            # Perform OCR immediately
-            try:
-                import pytesseract
-                from PIL import Image
-                img = Image.open(out_path)
-                ocr_text = pytesseract.image_to_string(img).strip()
-            except ImportError:
-                ocr_text = "OCR unavailable"
-            
-            manifest[fname] = {
-                "timestamp": ts,
-                "ocr_text": ocr_text,
-                "type": "board"
-            }
-            logger.info(f"Extracted {fname} at {ts}")
         else:
-            logger.warning(f"Failed to extract frame at {ts}")
+            # Default: sample every 60 seconds
+            timestamps = [f"{int(t)//3600}:{(int(t)%3600)//60:02d}:{int(t)%60:02d}" 
+                          for t in range(0, int(duration), 60)]
+
+    if timestamps:
+        # Extract specific timestamps
+        for i, ts in enumerate(timestamps):
+            # Convert HH:MM:SS to seconds for ffmpeg
+            parts = list(map(int, ts.split(':')))
+            seconds = parts[0]*3600 + parts[1]*60 + parts[2]
+            
+            fname = f"frame_{i+1:03d}.png"
+            out_path = os.path.join(output_dir, fname)
+            
+            cmd = ['ffmpeg', '-ss', str(seconds), '-i', video_path, '-vframes', '1', '-y', out_path]
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            
+            if os.path.exists(out_path):
+                # Perform OCR immediately
+                try:
+                    import pytesseract
+                    from PIL import Image
+                    img = Image.open(out_path)
+                    ocr_text = pytesseract.image_to_string(img).strip()
+                except ImportError:
+                    ocr_text = "OCR unavailable"
+                
+                manifest[fname] = {
+                    "timestamp": ts,
+                    "ocr_text": ocr_text,
+                    "type": "board"
+                }
+                logger.info(f"Extracted {fname} at {ts}")
+            else:
+                logger.warning(f"Failed to extract frame at {ts}")
+
+    # Deduplicate manifest based on OCR similarity
+    unique_manifest = {}
+    last_ocr = None
+    
+    for fname in sorted(manifest.keys()):
+        info = manifest[fname]
+        current_ocr = info.get('ocr_text', '')
+        
+        if last_ocr and are_ocr_texts_similar(current_ocr, last_ocr, threshold=0.60):
+            logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to previous)")
+            try:
+                os.remove(os.path.join(output_dir, fname))
+            except Exception as e:
+                logger.warning(f"Failed to remove duplicate file {fname}: {e}")
+        else:
+            unique_manifest[fname] = info
+            if current_ocr.strip():
+                last_ocr = current_ocr
 
     with open('frame_manifest.json', 'w') as f:
-        json.dump(manifest, f, indent=2)
-    logger.info(f"✅ Saved {len(manifest)} frames with real timestamps.")
+        json.dump(unique_manifest, f, indent=2)
+    logger.info(f"✅ Saved {len(unique_manifest)} unique frames (removed {len(manifest) - len(unique_manifest)} duplicates).")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract frames from video")
