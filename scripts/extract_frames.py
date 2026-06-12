@@ -218,6 +218,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
     with open('frame_manifest.json', 'w') as f:
         json.dump(unique_manifest, f, indent=2)
     logger.info(f"✅ Saved {len(unique_manifest)} unique frames (removed {len(manifest) - len(unique_manifest)} duplicates).")
+    return True
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract frames from video")

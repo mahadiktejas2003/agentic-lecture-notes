@@ -29,6 +29,44 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from scripts.audit import run_audit
 from scripts.memory_store import store_run
 
+def find_transcript_path() -> str:
+    default_path = "lecture-input/transcript.srt"
+    if os.path.exists(default_path):
+        return default_path
+    for name in ["transcript.txt", "transcript.vtt", "TRANSCRIPT.srt", "TRANSCRIPT.txt", "TRANSCRIPT.vtt"]:
+        p = os.path.join("lecture-input", name)
+        if os.path.exists(p):
+            return p
+    return default_path
+
+def find_video_path() -> str:
+    default_path = "lecture-input/LECTURE.mp4"
+    if os.path.exists(default_path):
+        return default_path
+    for ext in ['.mp4', '.mkv', '.avi', '.webm', '.mov']:
+        for name in ['LECTURE', 'video', 'lecture', 'VIDEO']:
+            p = os.path.join("lecture-input", f"{name}{ext}")
+            if os.path.exists(p):
+                return p
+    if os.path.exists("lecture-input"):
+        for f in os.listdir("lecture-input"):
+            if any(f.lower().endswith(ext) for ext in ['.mp4', '.mkv', '.avi', '.webm', '.mov']):
+                return os.path.join("lecture-input", f)
+    return default_path
+
+def is_pid_running(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+    return True
+
 class AgentState(TypedDict):
     status: str
     concept_map_path: str
@@ -118,8 +156,8 @@ def update_workspace_state(state: AgentState, stage_name: str, status_msg: str):
     workspace_state = {
         "active_lecture": {
             "title": lecture_title,
-            "video_path": "lecture-input/LECTURE.mp4",
-            "transcript_path": "lecture-input/transcript.srt",
+            "video_path": find_video_path(),
+            "transcript_path": find_transcript_path(),
             "last_updated": datetime.datetime.now().isoformat()
         },
         "pipeline": {
@@ -156,7 +194,7 @@ def content_mapper_node(state: AgentState) -> Dict:
     os.makedirs("logs", exist_ok=True)
     
     # 1. Check transcript
-    transcript_path = "lecture-input/transcript.srt"
+    transcript_path = find_transcript_path()
     if not os.path.exists(transcript_path):
         raise FileNotFoundError(f"Error: Transcript file not found at '{transcript_path}'")
         
@@ -199,7 +237,7 @@ def content_mapper_node(state: AgentState) -> Dict:
                     cli_result = subprocess.run(
                         [
                             cli_path, "chat",
-                            "Read the transcript at lecture-input/transcript.srt. "
+                            f"Read the transcript at {transcript_path}. "
                             "Build a chronological Concept Block Map following the v8.0 Source Fidelity Protocol. "
                             "Save it as concept_block_map.json. "
                             "Also extract visual timestamps and save them as frame_manifest.json."
@@ -239,9 +277,7 @@ def example_extractor_node(state: AgentState) -> Dict:
             frames = json.load(f)
         timestamps = [info["timestamp"] for info in frames.values() if info.get("timestamp")]
         if timestamps:
-            video_path = "lecture-input/LECTURE.mp4"
-            if not os.path.exists(video_path) and os.path.exists("lecture-input/video.mp4"):
-                video_path = "lecture-input/video.mp4"
+            video_path = find_video_path()
                 
             logging.info(f"Running extract_frames.py with timestamps: {timestamps} using video: {video_path}")
             subprocess.run([
@@ -513,45 +549,70 @@ memory = SqliteSaver(conn)
 graph = builder.compile(checkpointer=memory)
 
 def run_pipeline():
-    subprocess.run(["/bin/bash", "scripts/pre-exec-check.sh"], check=True)
-    
-    initial_state = {
-        "status": "start",
-        "concept_map_path": "concept_block_map.json",
-        "frame_manifest_path": "frame_manifest.json",
-        "slide_manifest_path": "slide_manifest.json",
-        "output_path": "notes-output/LECTURE_NOTES.docx",
-        "failed_gate": 0,
-        "gate_results": {},
-        "gate_retries": {},
-        "attempts": 0
-    }
-    
-    config = {"configurable": {"thread_id": "lecture_reconstruction_run"}}
-    
-    logging.info("Starting LangGraph Orchestrator Execution...")
-    final_state = graph.invoke(initial_state, config=config)
-    
-    failed = final_state.get("failed_gate", 0)
-    status = final_state.get("status", "failed")
-    
-    # Save checkpoint JSON file
-    checkpoint_file = "logs/last_run_audit.json"
-    with open(checkpoint_file, "w", encoding="utf-8") as f:
-        json.dump(final_state.get("gate_results", {}), f, indent=2)
-    logging.info(f"Audit results written to checkpoint file: {checkpoint_file}")
-    
-    if failed == 0 and status != "aborted":
-        logging.info("🎉 LangGraph Orchestrator finished successfully! All 15 gates passed.")
-        update_workspace_state(final_state, "completed", "Pipeline completed successfully with all gates passing")
-        store_run("success", 15, [], final_state["output_path"])
-        return True
-    else:
-        logging.error(f"❌ LangGraph Orchestrator completed with errors. Status: {status}. Failed gate: {failed}.")
-        update_workspace_state(final_state, "failed", f"Pipeline failed on Gate {failed}")
-        failed_list = [f"Gate {failed}"] if failed > 0 else ["Pipeline Aborted"]
-        store_run("failed", 15 - len([k for k, v in final_state.get("gate_results", {}).items() if not v]), failed_list, final_state["output_path"])
-        return False
+    lock_file = "logs/pipeline.lock"
+    if os.path.exists(lock_file):
+        try:
+            with open(lock_file, "r") as f:
+                old_pid = int(f.read().strip())
+            if is_pid_running(old_pid):
+                logging.error(f"❌ LangGraph Orchestrator aborting: another instance (PID {old_pid}) is currently running.")
+                return False
+        except Exception:
+            pass
+            
+    try:
+        os.makedirs(os.path.dirname(lock_file), exist_ok=True)
+        with open(lock_file, "w") as f:
+            f.write(str(os.getpid()))
+            
+        subprocess.run(["/bin/bash", "scripts/pre-exec-check.sh"], check=True)
+        
+        initial_state = {
+            "status": "start",
+            "concept_map_path": "concept_block_map.json",
+            "frame_manifest_path": "frame_manifest.json",
+            "slide_manifest_path": "slide_manifest.json",
+            "output_path": "notes-output/LECTURE_NOTES.docx",
+            "failed_gate": 0,
+            "gate_results": {},
+            "gate_retries": {},
+            "attempts": 0
+        }
+        
+        config = {"configurable": {"thread_id": "lecture_reconstruction_run"}}
+        
+        logging.info("Starting LangGraph Orchestrator Execution...")
+        final_state = graph.invoke(initial_state, config=config)
+        
+        failed = final_state.get("failed_gate", 0)
+        status = final_state.get("status", "failed")
+        
+        # Save checkpoint JSON file
+        checkpoint_file = "logs/last_run_audit.json"
+        with open(checkpoint_file, "w", encoding="utf-8") as f:
+            json.dump(final_state.get("gate_results", {}), f, indent=2)
+        logging.info(f"Audit results written to checkpoint file: {checkpoint_file}")
+        
+        if failed == 0 and status != "aborted":
+            logging.info("🎉 LangGraph Orchestrator finished successfully! All 15 gates passed.")
+            update_workspace_state(final_state, "completed", "Pipeline completed successfully with all gates passing")
+            store_run("success", 15, [], final_state["output_path"])
+            return True
+        else:
+            logging.error(f"❌ LangGraph Orchestrator completed with errors. Status: {status}. Failed gate: {failed}.")
+            update_workspace_state(final_state, "failed", f"Pipeline failed on Gate {failed}")
+            failed_list = [f"Gate {failed}"] if failed > 0 else ["Pipeline Aborted"]
+            store_run("failed", 15 - len([k for k, v in final_state.get("gate_results", {}).items() if not v]), failed_list, final_state["output_path"])
+            return False
+    finally:
+        if os.path.exists(lock_file):
+            try:
+                with open(lock_file, "r") as f:
+                    content_pid = int(f.read().strip())
+                if content_pid == os.getpid():
+                    os.remove(lock_file)
+            except Exception:
+                pass
 
 if __name__ == "__main__":
     success = run_pipeline()

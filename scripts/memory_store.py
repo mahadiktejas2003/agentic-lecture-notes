@@ -5,8 +5,18 @@ import json
 import datetime
 import hashlib
 
+def find_transcript_path() -> str:
+    default_path = "lecture-input/transcript.srt"
+    if os.path.exists(default_path):
+        return default_path
+    for name in ["transcript.txt", "transcript.vtt", "TRANSCRIPT.srt", "TRANSCRIPT.txt", "TRANSCRIPT.vtt"]:
+        p = os.path.join("lecture-input", name)
+        if os.path.exists(p):
+            return p
+    return default_path
+
 def get_transcript_hash():
-    path = "lecture-input/transcript.srt"
+    path = find_transcript_path()
     if os.path.exists(path):
         with open(path, "rb") as f:
             return hashlib.sha256(f.read()).hexdigest()

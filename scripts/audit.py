@@ -94,7 +94,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     
     # Gate 9: Slide Handling - fail if slide_manifest is empty when slides are expected
     # Also check for undiscussed slides with OCR text appearing in document
-    slide_file_exists = any(os.path.exists(os.path.join("lecture-input", f)) for f in ["slides.pdf", "SLIDES.pdf", "slides.pptx", "SLIDES.pptx"])
+    slide_file_exists = any(os.path.exists(os.path.join("lecture-input", f)) for f in ["slides.pdf", "SLIDES.pdf", "slides.PDF", "SLIDES.PDF"])
     has_slides_expected = len(concept_blocks) > 0 and slide_file_exists
     slide_manifest_empty = len(slides) == 0
     

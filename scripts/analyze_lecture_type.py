@@ -64,8 +64,18 @@ def analyze_lecture(srt_path):
     profile["syllabus_keyword_matches"] = syllabus_count
     return profile
 
+def find_transcript_path() -> str:
+    default_path = "lecture-input/transcript.srt"
+    if os.path.exists(default_path):
+        return default_path
+    for name in ["transcript.txt", "transcript.vtt", "TRANSCRIPT.srt", "TRANSCRIPT.txt", "TRANSCRIPT.vtt"]:
+        p = os.path.join("lecture-input", name)
+        if os.path.exists(p):
+            return p
+    return default_path
+
 def main():
-    srt_path = "lecture-input/transcript.srt"
+    srt_path = find_transcript_path()
     if len(sys.argv) > 1:
         srt_path = sys.argv[1]
         

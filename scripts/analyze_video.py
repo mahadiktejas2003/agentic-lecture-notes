@@ -10,8 +10,23 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.crop_frames import crop_content
 import pytesseract
 
+def find_video_path() -> str:
+    default_path = "lecture-input/LECTURE.mp4"
+    if os.path.exists(default_path):
+        return default_path
+    for ext in ['.mp4', '.mkv', '.avi', '.webm', '.mov']:
+        for name in ['LECTURE', 'video', 'lecture', 'VIDEO']:
+            p = os.path.join("lecture-input", f"{name}{ext}")
+            if os.path.exists(p):
+                return p
+    if os.path.exists("lecture-input"):
+        for f in os.listdir("lecture-input"):
+            if any(f.lower().endswith(ext) for ext in ['.mp4', '.mkv', '.avi', '.webm', '.mov']):
+                return os.path.join("lecture-input", f)
+    return default_path
+
 def analyze():
-    video_path = "lecture-input/LECTURE.mp4"
+    video_path = find_video_path()
     temp_dir = "temp_screenshots"
     os.makedirs(temp_dir, exist_ok=True)
     

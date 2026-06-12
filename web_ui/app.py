@@ -80,8 +80,9 @@ def run_pipeline(lecture_id: str, video_path: str, transcript_path: str):
             json.dump(status, f)
             
         # Run the orchestrator
+        import sys
         result = subprocess.run(
-            ["python3", "scripts/langgraph_orchestrator.py"],
+            [sys.executable, "scripts/langgraph_orchestrator.py"],
             capture_output=True,
             text=True,
             timeout=1800  # 30 minute timeout
@@ -257,6 +258,11 @@ async def root():
                 <input type="file" id="transcript" name="transcript" accept=".srt,.txt" required>
             </div>
             
+            <div class="form-group">
+                <label for="slides">📊 Optional Slide Deck (PDF)</label>
+                <input type="file" id="slides" name="slides" accept=".pdf">
+            </div>
+            
             <button type="submit" id="submitBtn">Generate Notes</button>
         </form>
         
@@ -281,6 +287,11 @@ async def root():
             const formData = new FormData();
             formData.append('video', document.getElementById('video').files[0]);
             formData.append('transcript', document.getElementById('transcript').files[0]);
+            
+            const slidesFile = document.getElementById('slides').files[0];
+            if (slidesFile) {
+                formData.append('slides', slidesFile);
+            }
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
@@ -350,14 +361,14 @@ async def root():
     </script>
 </body>
 </html>
-    """
-
+"""
 
 @app.post("/process")
 async def process_lecture(
     video: UploadFile,
     transcript: UploadFile,
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    slides: Optional[UploadFile] = None
 ):
     """
     Process a lecture upload.
@@ -366,13 +377,53 @@ async def process_lecture(
         video: Uploaded video file
         transcript: Uploaded transcript file
         background_tasks: FastAPI background tasks
+        slides: Optional uploaded PDF slides file
         
     Returns:
         Lecture ID for status tracking
     """
+    # 1. Check if another pipeline run is active
+    lock_file = Path("logs/pipeline.lock")
+    if lock_file.exists():
+        try:
+            with open(lock_file, "r") as f:
+                old_pid = int(f.read().strip())
+            
+            def is_pid_running(pid: int) -> bool:
+                if pid <= 0:
+                    return False
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    return False
+                except PermissionError:
+                    return True
+                except OSError:
+                    return False
+                return True
+                
+            if is_pid_running(old_pid):
+                raise HTTPException(
+                    status_code=503,
+                    detail="The pipeline is currently busy processing another lecture. Please wait until it completes."
+                )
+        except HTTPException:
+            raise
+        except Exception:
+            pass
+
     # Generate unique lecture ID
     lecture_id = str(uuid.uuid4())[:8]
     
+    # Clear old manifests in root to force dynamic mapping for the new run
+    for manifest_name in ["concept_block_map.json", "frame_manifest.json", "slide_manifest.json"]:
+        p = Path(manifest_name)
+        if p.exists():
+            try:
+                p.unlink()
+            except Exception:
+                pass
+
     # Save uploaded files with STANDARD NAMES that orchestrator expects
     video_ext = Path(video.filename).suffix or ".mp4"
     transcript_ext = Path(transcript.filename).suffix or ".srt"
@@ -396,6 +447,16 @@ async def process_lecture(
     with open(transcript_path, "wb") as f:
         shutil.copyfileobj(transcript.file, f)
         
+    # Handle slides saving/clearing
+    slides_path = UPLOAD_DIR / "SLIDES.pdf"
+    if slides_path.exists():
+        backup_slides = UPLOAD_DIR / f"SLIDES_backup_{lecture_id}.pdf"
+        shutil.move(str(slides_path), str(backup_slides))
+        
+    if slides:
+        with open(slides_path, "wb") as f:
+            shutil.copyfileobj(slides.file, f)
+            
     # Initialize status
     initial_status = {
         "lecture_id": lecture_id,
