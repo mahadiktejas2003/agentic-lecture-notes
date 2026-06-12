@@ -43,6 +43,20 @@ def are_ocr_texts_similar(text1, text2, threshold=0.48):
     ratio = len(common) / min(len(w1), len(w2))
     return ratio > threshold
 
+def are_rules_similar(r1, r2, threshold=0.50):
+    if not r1 or not r2:
+        return False
+    w1 = set(re.findall(r'\b[a-z]{4,}\b', r1.lower()))
+    w2 = set(re.findall(r'\b[a-z]{4,}\b', r2.lower()))
+    
+    if not w1 or not w2:
+        return False
+        
+    common = w1 & w2
+    ratio = len(common) / min(len(w1), len(w2))
+    return ratio > threshold
+
+
 # Helper Functions (unchanged)
 def add_revision_box(doc, bullets, rule=None):
     parts = ['[⚡ Quick Rev]'] + [f'• {b}' for b in bullets]
@@ -127,6 +141,60 @@ def add_shaded_formula(doc, text):
     shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="EAECEE" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
     return p
+
+def get_vm_image_path(vm, block_id, slides, timestamp_to_frame, frames):
+    ts = vm.get('timestamp', '')
+    v_type = vm.get('type', 'board')
+    
+    img_path = None
+    frame_fname = None
+    if v_type == 'slide':
+        slide_num = vm.get('slide_number')
+        if slide_num and slides:
+            for s in slides:
+                if s.get('slide_number') == slide_num:
+                    img_path = s.get('image_path')
+                    break
+    else:
+        if ts and ts in timestamp_to_frame:
+            frame_fname = timestamp_to_frame[ts]
+            img_path = os.path.join('screenshots', frame_fname)
+        else:
+            fallback_name = f"{block_id}_{ts.replace(':', '')}.jpg"
+            img_path = f"screenshots/{fallback_name}"
+            if fallback_name in frames:
+                frame_fname = fallback_name
+    return img_path, frame_fname
+
+def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs):
+    img_path, frame_fname = get_vm_image_path(vm, block_id, slides, timestamp_to_frame, frames)
+    if img_path and os.path.exists(img_path):
+        current_ocr = ""
+        if frame_fname and frame_fname in frames:
+            current_ocr = frames[frame_fname].get('ocr_text', '')
+        
+        if not current_ocr.strip():
+            try:
+                import pytesseract
+                from PIL import Image
+                img = Image.open(img_path)
+                current_ocr = pytesseract.image_to_string(img).strip()
+                logging.info(f"Generated on-the-fly OCR for {img_path}: {current_ocr[:50]}...")
+            except Exception as e:
+                logging.warning(f"Could not perform on-the-fly OCR on {img_path}: {e}")
+        
+        is_duplicate = os.path.basename(img_path) in inserted_filenames
+        
+        if is_duplicate or is_logo_frame(current_ocr):
+            logging.info(f"Skipping duplicate or logo slide image: {frame_fname or img_path}")
+            return False
+        else:
+            if add_image_if_exists(doc, img_path):
+                inserted_filenames.add(os.path.basename(img_path))
+                if current_ocr.strip():
+                    inserted_ocrs.append(current_ocr)
+                return True
+    return False
 
 def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, output_path):
     doc = Document()
@@ -244,6 +312,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
         # Worked Examples
         examples = block.get('examples', [])
+        seen_rules_in_block = []
+        inserted_vm_indices = set()
+        visual_moments = block.get('visual_moments', [])
+
         if examples:
             doc.add_heading("Worked Examples:", level=3)
             for idx, ex in enumerate(examples):
@@ -251,9 +323,16 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 p_q.add_run("Q: ").bold = True
                 p_q.add_run(ex.get('sentence', 'Example Question'))
 
-                p_rule = doc.add_paragraph()
-                p_rule.add_run("Rule: ").bold = True
-                p_rule.add_run(ex.get('rule', 'Standard Rule'))
+                rule = ex.get('rule', '')
+                is_redundant_rule = False
+                if rule:
+                    is_redundant_rule = any(are_rules_similar(rule, prev) for prev in seen_rules_in_block)
+
+                if rule and not is_redundant_rule:
+                    p_rule = doc.add_paragraph()
+                    p_rule.add_run("Rule: ").bold = True
+                    p_rule.add_run(rule)
+                    seen_rules_in_block.append(rule)
 
                 working_text = ex.get('working', '')
                 if working_text:
@@ -268,6 +347,13 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     p_ans.add_run("Answer: ").bold = True
                     p_ans.add_run(ans_text)
 
+                # Place corresponding visual moment inline right under the worked example (1-to-1 mapping by index)
+                if idx < len(visual_moments):
+                    vm = visual_moments[idx]
+                    success_inserted = insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs)
+                    if success_inserted:
+                        inserted_vm_indices.add(idx)
+
         # Exercise Questions
         exercises = block.get('exercise_questions', [])
         if exercises:
@@ -279,66 +365,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 for eq in real_exercises:
                     doc.add_paragraph(eq, style='List Bullet')
 
-        # Visual Moments & Images
-        visual_moments = block.get('visual_moments', [])
-        for vm in visual_moments:
-            ts = vm.get('timestamp', '')
-            v_type = vm.get('type', 'board')
-            desc = vm.get('description', 'Visual Moment')
-
-            # Determine image path from frame manifest or slide manifest
-            img_path = None
-            frame_fname = None
-            if v_type == 'slide':
-                # For slides, try to match by slide number
-                slide_num = vm.get('slide_number')
-                if slide_num and slides:
-                    for s in slides:
-                        if s.get('slide_number') == slide_num:
-                            img_path = s.get('image_path')
-                            break
-            else:
-                # For video frames, match by timestamp
-                if ts and ts in timestamp_to_frame:
-                    frame_fname = timestamp_to_frame[ts]
-                    img_path = os.path.join('screenshots', frame_fname)
-                else:
-                    # Fallback to naming convention
-                    fallback_name = f"{block_id}_{ts.replace(':', '')}.jpg"
-                    img_path = f"screenshots/{fallback_name}"
-                    if fallback_name in frames:
-                        frame_fname = fallback_name
-
-            if img_path and os.path.exists(img_path):
-                current_ocr = ""
-                if frame_fname and frame_fname in frames:
-                    current_ocr = frames[frame_fname].get('ocr_text', '')
-                
-                # If OCR is empty but we can run OCR on the fly, do so to prevent duplicate fallbacks
-                if not current_ocr.strip():
-                    try:
-                        import pytesseract
-                        from PIL import Image
-                        img = Image.open(img_path)
-                        current_ocr = pytesseract.image_to_string(img).strip()
-                        logging.info(f"Generated on-the-fly OCR for {img_path}: {current_ocr[:50]}...")
-                    except Exception as e:
-                        logging.warning(f"Could not perform on-the-fly OCR on {img_path}: {e}")
-                
-                # Check similarity against all inserted images
-                is_duplicate = False
-                for prev_ocr in inserted_ocrs:
-                    if are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.48):
-                        is_duplicate = True
-                        break
-                
-                if is_duplicate or is_logo_frame(current_ocr):
-                    logging.info(f"Skipping duplicate or logo slide image: {frame_fname or img_path}")
-                else:
-                    if add_image_if_exists(doc, img_path):
-                        inserted_filenames.add(os.path.basename(img_path))
-                        if current_ocr.strip():
-                            inserted_ocrs.append(current_ocr)
+        # Visual Moments & Images (Leftovers)
+        leftover_moments = [vm for i, vm in enumerate(visual_moments) if i not in inserted_vm_indices]
+        for vm in leftover_moments:
+            insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs)
 
         # Quotes, Traps, Tricks
         for q in block.get('teacher_quotes', []):
@@ -371,15 +401,23 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # Section 3: Rules, Formulas & Exam Traps
     all_traps = []
+    all_tricks = []
     for block in concept_blocks:
         for trap in block.get('traps', []):
             all_traps.append((trap, block.get('title', '')))
-    if all_traps and profile.get("generate_theoretical_theory", True):
+        for trick in block.get('tricks', []):
+            all_tricks.append((trick, block.get('title', '')))
+            
+    if (all_traps or all_tricks) and profile.get("generate_theoretical_theory", True):
         doc.add_heading("Section 3: Rules, Formulas & Exam Traps", level=1)
         for trap, btitle in all_traps:
             p = doc.add_paragraph(style='List Bullet')
             p.add_run("🚨 ").bold = True
             p.add_run(f"From {btitle}: {trap}")
+        for trick, btitle in all_tricks:
+            p = doc.add_paragraph(style='List Bullet')
+            p.add_run("💡 ").bold = True
+            p.add_run(f"From {btitle}: {trick}")
 
     # Section 4: Final Revision Points
     points_added = 0

@@ -104,9 +104,14 @@ def extract_frames(video_path, output_dir, timestamps=None):
             fname = f"frame_{i+1:03d}.png"
             out_path = os.path.join(output_dir, fname)
             
-            # Sample candidates in a window around the timestamp
-            # We sample at +0, +3, +6, +9, +12 seconds to find the most complete slide (highest OCR text count)
-            candidates = [base_seconds, base_seconds + 3, base_seconds + 6, base_seconds + 9, base_seconds + 12]
+            # Search strictly before or at the target timestamp to avoid capturing the next slide
+            candidates = [
+                max(0, base_seconds - 10),
+                max(0, base_seconds - 7),
+                max(0, base_seconds - 4),
+                max(0, base_seconds - 2),
+                base_seconds
+            ]
             
             best_ocr_text = ""
             best_word_count = -1
@@ -175,27 +180,40 @@ def extract_frames(video_path, output_dir, timestamps=None):
                 except:
                     pass
 
-    # Deduplicate manifest based on OCR similarity
+    # Helper to parse seconds from HH:MM:SS
+    def get_seconds(ts):
+        parts = list(map(int, ts.split(':')))
+        return parts[0]*3600 + parts[1]*60 + parts[2]
+
+    # Deduplicate manifest based on OCR similarity within a local time window
     unique_manifest = {}
     
-    for fname in sorted(manifest.keys()):
-        info = manifest[fname]
-        current_ocr = info.get('ocr_text', '')
-        
-        is_duplicate = False
-        for unique_fname, unique_info in unique_manifest.items():
-            if are_ocr_texts_similar(current_ocr, unique_info.get('ocr_text', ''), threshold=0.48):
-                is_duplicate = True
-                break
-                
-        if is_duplicate:
-            logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to an existing frame)")
-            try:
-                os.remove(os.path.join(output_dir, fname))
-            except Exception as e:
-                logger.warning(f"Failed to remove duplicate file {fname}: {e}")
-        else:
-            unique_manifest[fname] = info
+    if timestamps:
+        unique_manifest = manifest
+        logger.info("Bypassing OCR-based deduplication because specific timestamps were requested.")
+    else:
+        for fname in sorted(manifest.keys()):
+            info = manifest[fname]
+            current_ocr = info.get('ocr_text', '')
+            current_sec = get_seconds(info['timestamp'])
+            
+            is_duplicate = False
+            for unique_fname, unique_info in unique_manifest.items():
+                unique_sec = get_seconds(unique_info['timestamp'])
+                # Only deduplicate if the frames are within 120 seconds of each other
+                if abs(current_sec - unique_sec) <= 120:
+                    if are_ocr_texts_similar(current_ocr, unique_info.get('ocr_text', ''), threshold=0.48):
+                        is_duplicate = True
+                        break
+                    
+            if is_duplicate:
+                logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to an existing frame)")
+                try:
+                    os.remove(os.path.join(output_dir, fname))
+                except Exception as e:
+                    logger.warning(f"Failed to remove duplicate file {fname}: {e}")
+            else:
+                unique_manifest[fname] = info
 
     with open('frame_manifest.json', 'w') as f:
         json.dump(unique_manifest, f, indent=2)

@@ -60,11 +60,11 @@ def run_pipeline_task():
     try:
         # Run auto_ingest.sh to check Downloads and ingest new files first!
         print("Running scripts/auto_ingest.sh...")
-        subprocess.run(["/bin/bash", "scripts/auto_ingest.sh"], check=True)
+        subprocess.run(["/bin/bash", "scripts/auto_ingest.sh"], check=True, timeout=600)
         
-        # Then run orchestrator
+        # Then run orchestrator with a 2-hour timeout to auto-kill if stuck
         print("Running scripts/langgraph_orchestrator.py...")
-        res = subprocess.run([sys.executable, "scripts/langgraph_orchestrator.py"], capture_output=True, text=True)
+        res = subprocess.run([sys.executable, "scripts/langgraph_orchestrator.py"], capture_output=True, text=True, timeout=7200)
         
         # Deactivate heartbeat monitor
         heartbeat_active.set()

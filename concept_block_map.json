@@ -1,89 +1,279 @@
 [
   {
     "block_id": "CB1",
-    "lecture_title": "Data Warehouse Syllabus (IBPS SO 2025)",
-    "title": "Data Warehouse Syllabus and Exam Structure",
-    "transcript_range_percent": [0, 50],
-    "explanation": "Data Warehouse and Data Mining is a critical technical topic for technical officer exams. Out of the 60 mains marks, it consistently accounts for 3–5 questions (averaging 4 marks) annually. This syllabus lecture details the entire topic hierarchy and overall exam strategy required to answer direct TECHNICAL questions without unnecessary programming depth.",
+    "lecture_title": "Reasoning: Direction Sense (Part-1)",
+    "title": "Primary Cardinal and Ordinal Directions",
+    "transcript_range_percent": [0, 15],
+    "explanation": "Introduces the fundamentals of direction sense, detailing the eight primary and intermediate directions. The rules for taking left and right turns depending on the current facing direction (North, South, East, West) are established.",
     "concepts": [
       {
-        "term": "Exam Weightage",
-        "definition": "Accounts for an average of 4 out of 60 marks in the Technical Mains paper (range: 3 to 5 questions)."
+        "term": "Cardinal Directions",
+        "definition": "The four main directions: North (up), South (down), East (right), and West (left)."
       },
       {
-        "term": "Data Warehouse (DWH) Architecture",
-        "definition": "A staging area, metadata directories, data warehouses, and domain-specific data marts used for business intelligence."
-      }
-    ],
-    "examples": [
-      {
-        "sentence": "How should a candidate prepare for Data Warehouse questions in the IBPS SO Mains exam?",
-        "rule": "Focus on structural comparisons (OLTP/OLAP, Star/Snowflake) and definitions, avoiding deep coding.",
-        "working": "Weightage is 3–5 questions. All past questions are direct conceptual MCQs. Therefore, prioritize theoretical definitions and structural trade-offs."
-      }
-    ],
-    "exercise_questions": [
-      "Detail the typical score contribution of Data Warehousing in technical mains exams.",
-      "List the main components of a Data Warehouse architecture mentioned in the overview."
-    ],
-    "visual_moments": [
-      {"timestamp": "00:00:05", "type": "board", "description": "Syllabus overview and Data Warehousing topic list"},
-      {"timestamp": "00:00:15", "type": "board", "description": "Data Warehouse exam weightage: 3-5 questions on average"}
-    ],
-    "teacher_quotes": [
-      "Mains mein har saal aapko check karoge toh easily char question, teen question, ya paanch question on an average mil hi jayenge."
-    ],
-    "traps": [
-      "Do not spend time on coding or complex algorithms; study structural characteristics and conceptual definitions only."
-    ],
-    "tricks": [
-      "Syllabus Strategy: Cover all topics at a conceptual level (width over depth)."
-    ]
-  },
-  {
-    "block_id": "CB2",
-    "title": "Syllabus Topics & Core Checklist",
-    "transcript_range_percent": [50, 100],
-    "explanation": "The core syllabus covers transactional vs analytical database differences (OLTP vs OLAP), cube operations (roll-up, drill-down, slice, dice, pivot), dimensional schemas (Star Schema vs Snowflake Schema), fact and dimension tables, data integration processes (ETL), and data mining preprocessing.",
-    "concepts": [
-      {
-        "term": "OLAP vs OLTP",
-        "definition": "OLAP is optimized for read-heavy multi-dimensional analysis, whereas OLTP is optimized for write-heavy concurrent transactions."
+        "term": "Ordinal / Intermediate Directions",
+        "definition": "The four sub-directions positioned between the cardinal axes: North-East (NE), South-West (SW), South-East (SE), and North-West (NW)."
       },
       {
-        "term": "OLAP Operations",
-        "definition": "Roll-up (aggregates), Drill-down (splits), Slice (cuts 1 dimension), Dice (selects sub-cube), and Pivot (rotates)."
-      },
-      {
-        "term": "Star vs Snowflake",
-        "definition": "Star Schema uses denormalized dimension tables directly connected to fact tables; Snowflake Schema normalizes dimension tables."
-      },
-      {
-        "term": "Data Preprocessing",
-        "definition": "Essential cleaning, integration, transformation, and reduction phases executed on raw data before mining."
+        "term": "Facing Turns",
+        "definition": "A right turn corresponds to a 90-degree clockwise rotation; a left turn corresponds to a 90-degree counter-clockwise rotation."
       }
     ],
     "examples": [],
     "exercise_questions": [
-      "Compare Star Schema and Snowflake Schema based on normalization.",
-      "Identify the five primary OLAP cube operations."
+      "Draw the 8 main directions and label them correctly.",
+      "Explain which direction a person faces if they make a right turn while walking South."
     ],
     "visual_moments": [
-      {"timestamp": "00:00:34", "type": "board", "description": "Core components of Data Warehousing Architecture"},
-      {"timestamp": "00:00:41", "type": "board", "description": "OLAP vs OLTP conceptual slide"},
-      {"timestamp": "00:00:52", "type": "board", "description": "OLAP cube operations: Slicing, Dicing, Roll-up, Drill-down, and Pivot"},
-      {"timestamp": "00:01:03", "type": "board", "description": "Star Schema and Snowflake Schema diagrams"},
-      {"timestamp": "00:01:17", "type": "board", "description": "ETL flow diagram"},
-      {"timestamp": "00:01:25", "type": "board", "description": "Data Mining and Preprocessing steps"}
+      {"timestamp": "00:01:43", "type": "board", "description": "Syllabus Weightage and topic checklist overview"},
+      {"timestamp": "00:06:30", "type": "board", "description": "Eight-direction axis diagram and Left/Right turn rules"}
     ],
     "teacher_quotes": [
-      "Ye saare points questions hain jo har saal kuch na kuch alag-alag tareeqe se ghum-fir ke pooche jaate hain."
+      "Directions topic mein ye three questions aate hain, hamesha aate hain."
     ],
     "traps": [
-      "OLTP database normalization prevents redundancy but slows multi-table aggregation joins."
+      "Remember that turning right while facing South goes to the West (left side of the paper)."
     ],
     "tricks": [
-      "Exam Tip: Focus heavily on the preprocessing phases and OLAP operations as they are frequently tested."
+      "Think of left/right turns as clockwise/counter-clockwise rotations relative to your walking vector."
+    ]
+  },
+  {
+    "block_id": "CB2",
+    "title": "Distance Tracking and Linear Displacement",
+    "transcript_range_percent": [15, 45],
+    "explanation": "Details the step-by-step linear path tracking methods used to calculate net displacement and the reference direction from a starting point.",
+    "concepts": [
+      {
+        "term": "Linear Path Tracking",
+        "definition": "Summing and subtracting horizontal and vertical movements to find net coordinates."
+      },
+      {
+        "term": "Starting Point Reference",
+        "definition": "Determining the direction of the final point relative to the initial starting coordinate."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "If Kuldeep moves 20meter in East direction and then turns to his left and then 15 meter and then he turns to his right and moves 25 meter. After this he turns to his right and moves 15 meter. Now how far is he from his starting point. ?",
+        "rule": "Trace East-West and North-South movements independently.",
+        "working": "East/West: +20m (East) + 25m (East) = 45m (East). North/South: +15m (North) - 15m (South) = 0m. Total distance is 45m East -> 45m East"
+      },
+      {
+        "sentence": "A cyclist goes 30km North, turns East and goes 40km, turns right and goes 20km, and finally turns right and goes 40km. Find his distance from the starting point.",
+        "rule": "Calculate final net displacement from the start.",
+        "working": "North/South: +30km (North) - 20km (South) = 10km (North). East/West: +40km (East) - 40km (West) = 0km. Final distance is 10km North -> 10km"
+      },
+      {
+        "sentence": "Manpreet Kaur faces East, turns right and walks 50m, turns left and walks 50m, turns right and walks 50m, turns right and walks 100m, and finally turns right and walks 100m. In what direction is she relative to the starting point?",
+        "rule": "Trace all turns carefully, reversing directions on right/left when facing South/West.",
+        "working": "East/West: +50m (East) - 100m (West) = -50m (West). North/South: -50m (South) - 50m (South) + 100m (North) = 0m. She is exactly 50m West of the starting point -> West"
+      },
+      {
+        "sentence": "Babbu walks a distance of 3 km towards North , the turns to his left and walks for 2 km . He again turns left and walks for 3 km . At this point he turns to his left and walks for 3 km. How many km is Babbu from the starting point ?",
+        "rule": "Left turns when facing North (goes West), West (goes South), South (goes East).",
+        "working": "North/South: +3km (North) - 3km (South) = 0km. East/West: -2km (West) + 3km (East) = 1km (East). Distance is 1km -> 1km"
+      },
+      {
+        "sentence": "I walk 30 meter in North-West direction from my house and then 30 meter in South West direction. After this I walk 30 meter in South East direction. Now I, turn to my house . Now in what direction am I going ?",
+        "rule": "Diagonal offsets form a tilted square. Determine the direction of the missing corner.",
+        "working": "The path traces 3 sides of a square offset by 45 degrees. To complete the path back to the starting point (house), the person must face North-East -> North-East"
+      },
+      {
+        "sentence": "Charnjeet kaur moves towards South-East a distance of 7km, then she moves towards West and travel a distance of 14 km. from here, she moves towards North-West a distance of 7 km and finally she moves a distance of 4 km towards East and stood at that point. How far is the starting point from where she stood ?",
+        "rule": "Identify geometric symmetry (trapezoid).",
+        "working": "The path is a symmetric trapezoid. The bottom side is 14km West. The top side is 4km East. Shortest remaining distance is 14km - 4km = 10km -> 10km"
+      },
+      {
+        "sentence": "If A is in the north of B, and C is to the west of B. In what direction is A with respect to C?",
+        "rule": "Draw reference axes from C to find A's relative quadrant.",
+        "working": "C is West, B is Center, A is North. From C, A is located in the upper-right quadrant, which is North-East -> North-East"
+      }
+    ],
+    "exercise_questions": [
+      "If a person walks 10m North, turns left 5m, and turns left 10m, how far are they from the starting point?",
+      "If X is East of Y, and Z is South of X, what is the direction of Y with respect to Z?"
+    ],
+    "visual_moments": [
+      {"timestamp": "00:10:45", "type": "board", "description": "Diagram of Kuldeep's path and distance solution"},
+      {"timestamp": "00:12:20", "type": "board", "description": "Cyclist path rectangle layout"},
+      {"timestamp": "00:14:15", "type": "board", "description": "Manpreet Kaur's multi-turn coordinate tracking"},
+      {"timestamp": "00:16:00", "type": "board", "description": "Babbu's square path tracing"},
+      {"timestamp": "00:18:10", "type": "board", "description": "North-West/South-West diagonal square trajectory"},
+      {"timestamp": "00:20:15", "type": "board", "description": "Charanjeet Kaur's trapezoid path diagram"},
+      {"timestamp": "00:21:15", "type": "board", "description": "A/B/C relative grid quadrant representation"}
+    ],
+    "teacher_quotes": [
+      "Starting point se direction kaun si hai to starting point se wo East ki taraf hai."
+    ],
+    "traps": [
+      "Ensure diagonal lengths (e.g. 30m NW and 30m SW) are equal to keep path angles at exactly 90 degrees."
+    ],
+    "tricks": [
+      "Symmetric trapezoidal paths often have remaining distances calculated simply as the difference between opposite parallel sides."
+    ]
+  },
+  {
+    "block_id": "CB3",
+    "title": "Diagonal Paths and Pythagorean Theorem Applications",
+    "transcript_range_percent": [45, 60],
+    "explanation": "Introduces calculations for shortest slant/diagonal distances between two points using the Pythagorean Theorem.",
+    "concepts": [
+      {
+        "term": "Shortest Distance",
+        "definition": "The straight-line distance (displacement) between start and end coordinates."
+      },
+      {
+        "term": "Pythagorean Theorem",
+        "definition": "In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides: H^2 = P^2 + B^2."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "A walks 12km North, turns right and walks 5km. Find the shortest distance from the starting point.",
+        "rule": "Shortest distance is the hypotenuse H of a right triangle with sides 12 and 5.",
+        "working": "Using formula: H = sqrt(12^2 + 5^2) = sqrt(144 + 25) = sqrt(169) = 13km -> 13km"
+      },
+      {
+        "sentence": "A man walks 40km East, turns left and walks 8km, and turns left and walks 25km. Find the shortest distance from the starting point.",
+        "rule": "Construct a right triangle by finding the remaining horizontal base and vertical height.",
+        "working": "Remaining base: 40km - 25km = 15km. Height: 8km. Shortest distance H = sqrt(15^2 + 8^2) = sqrt(225 + 64) = sqrt(289) = 17km -> 17km"
+      },
+      {
+        "sentence": "Ravni walks 10km North, turns South and walks 6km, and then turns East and walks 3km. Find her distance from the starting point.",
+        "rule": "Calculate remaining vertical offset and horizontal base to form a right triangle.",
+        "working": "Remaining height: 10km (North) - 6km (South) = 4km (North). Base: 3km (East). Distance H = sqrt(4^2 + 3^2) = sqrt(16 + 9) = 5km -> 5km"
+      },
+      {
+        "sentence": "Rohit walks 20km South, turns right and walks 24km, turns right and walks 27km. Find his distance from the starting point.",
+        "rule": "Subtract vertical movements to find height, and use the horizontal displacement as base.",
+        "working": "Height: 27km (North) - 20km (South) = 7km. Base: 24km. Distance H = sqrt(7^2 + 24^2) = sqrt(49 + 576) = sqrt(625) = 25km -> 25km"
+      },
+      {
+        "sentence": "Hemant walks 3km East, turns right and walks 2km, turns left and walks 1km, turns right and walks 2km, and finally turns right and walks 1km. Find his distance from the starting point.",
+        "rule": "Sum all vertical components and offset horizontal components to construct a right triangle.",
+        "working": "Vertical Height: 2km (South) + 2km (South) = 4km (South). Horizontal Base: 3km (East) + 1km (East) - 1km (West) = 3km (East). Distance H = sqrt(4^2 + 3^2) = sqrt(16 + 9) = 5km -> 5km"
+      }
+    ],
+    "exercise_questions": [
+      "Find the hypotenuse of a right-angled triangle with base 9cm and height 12cm.",
+      "A person walks 6m East, then 8m North. Find the shortest distance from the starting point."
+    ],
+    "visual_moments": [
+      {"timestamp": "00:22:30", "type": "board", "description": "Pythagorean Theorem triangle drawing and formula explanation"},
+      {"timestamp": "00:24:20", "type": "board", "description": "Shortest distance calculation for 40km East and 25km West path"},
+      {"timestamp": "00:26:30", "type": "board", "description": "Ravni's path displacement diagram and solution"},
+      {"timestamp": "00:28:00", "type": "board", "description": "Rohit's multi-step coordinate calculation"},
+      {"timestamp": "00:30:15", "type": "board", "description": "Hemant's stair-step path and right triangle construction"}
+    ],
+    "teacher_quotes": [
+      "जब भी आपने slant distance निकालना है बच्चे तो आपके पास Pythagorus theorem लगेगी।"
+    ],
+    "traps": [
+      "Do not simply add the vertical and horizontal sides when asked for 'shortest distance'; always calculate the hypotenuse."
+    ],
+    "tricks": [
+      "Memorize standard Pythagorean triples (e.g. 3-4-5, 5-12-13, 8-15-17) to quickly verify calculations."
+    ]
+  },
+  {
+    "block_id": "CB4",
+    "title": "Angular Rotations (Degrees) and Facing Direction",
+    "transcript_range_percent": [60, 80],
+    "explanation": "Teaches calculations for final facing directions using degree rotations, establishing clockwise turns as positive additions and counter-clockwise turns as negative subtractions.",
+    "concepts": [
+      {
+        "term": "Clockwise / Positive Rotation",
+        "definition": "Turning to the right, corresponding to positive degree values (e.g. +90°)."
+      },
+      {
+        "term": "Counter-Clockwise / Negative Rotation",
+        "definition": "Turning to the left, corresponding to negative degree values (e.g. -90°)."
+      },
+      {
+        "term": "Net Angular Displacement",
+        "definition": "Summing all clockwise and counter-clockwise turns to find the net rotation relative to the starting facing vector."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Sunita faces South, turns 135 degrees anticlockwise, and then turns 180 degrees clockwise. Find her final facing direction.",
+        "rule": "Net Rotation = (-135) + (+180) = +45 degrees (Clockwise).",
+        "working": "Starting South (facing down), rotate 45 degrees clockwise. This lands exactly on South-West -> South-West"
+      },
+      {
+        "sentence": "Rajlaxmi faces North-West, turns 90 degrees clockwise, and then turns 135 degrees anticlockwise. Find her final facing direction.",
+        "rule": "Net Rotation = (+90) + (-135) = -45 degrees (Anticlockwise).",
+        "working": "Starting North-West, rotate 45 degrees anticlockwise. This lands exactly on West -> West"
+      },
+      {
+        "sentence": "Jarnail Singh faces West, turns 45 degrees clockwise, then turns 180 degrees clockwise, and finally turns 270 degrees anticlockwise. Find his final facing direction.",
+        "rule": "Net Rotation = (+45) + (+180) + (-270) = -45 degrees (Anticlockwise).",
+        "working": "Starting West, rotate 45 degrees anticlockwise. This lands exactly on South-West -> South-West"
+      }
+    ],
+    "exercise_questions": [
+      "A person faces East and turns 225 degrees clockwise. What is their final facing direction?",
+      "If you face North and rotate 270 degrees counter-clockwise, which direction do you face?"
+    ],
+    "visual_moments": [
+      {"timestamp": "00:34:20", "type": "board", "description": "Sunita's angular rotation vector diagram and net math calculation"},
+      {"timestamp": "00:37:05", "type": "board", "description": "Rajlaxmi's NW clockwise and anticlockwise coordinate layout"},
+      {"timestamp": "00:39:15", "type": "board", "description": "Jarnail Singh's three-turn angular rotation and final vector"}
+    ],
+    "teacher_quotes": [
+      "जब भी आपको clockwise कहा जाए तो आप plus में लोगे, anticlockwise कहा जाए तो आप minus में लोगे।"
+    ],
+    "traps": [
+      "Do not confuse clockwise (right) with counter-clockwise (left) when working with diagonal (45-degree) increments."
+    ],
+    "tricks": [
+      "Perform the algebraic sum of degrees first to avoid tracing multiple complex back-and-forth turns on paper."
+    ]
+  },
+  {
+    "block_id": "CB5",
+    "title": "Direction and Compass Shifting (Dynamic Quadrants)",
+    "transcript_range_percent": [80, 100],
+    "explanation": "Analyzes advanced logic puzzles where the cardinal compass points are rotated (shifted) or crossing-direction poles are physically turned.",
+    "concepts": [
+      {
+        "term": "Compass Axis Shifting",
+        "definition": "Renaming direction vectors while preserving the 90-degree clockwise sequence: North -> East -> South -> West."
+      },
+      {
+        "term": "Relative Crossing Rotation",
+        "definition": "Determining actual directions when a physical pointer pole is rotated, causing misalignment between shown and true directions."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "If South-East becomes North, and North-East becomes West, and so on, what will West become?",
+        "rule": "Determine the angular shift of the primary axis (North shifted to South-East is a 135-degree clockwise shift) and apply to target.",
+        "working": "The new North is situated at the old South-East. The opposite side of new North is new South (at old North-West). The new West is at old North-East, so its opposite new East is at old South-West. Original West lies between new South and new East, making it South-East -> South-East"
+      },
+      {
+        "sentence": "A direction pole is situated at a crossing. Due to an accident, the pole turns so that the pointer showing East now shows South. A traveller walks thinking they are going West. In which actual direction is the traveller going?",
+        "rule": "Align the rotated compass pointer with true directions to determine actual path.",
+        "working": "Pointer showing East is now facing South (a 90-degree clockwise rotation of the pole). This means all pole pointers are rotated 90 degrees clockwise. The pole pointer for West is now pointing South. The traveller follows the pole's 'West' pointer, meaning they walk South -> South"
+      }
+    ],
+    "exercise_questions": [
+      "If North becomes South-West, what does East become?",
+      "An accident rotates a compass pole so that the North pointer now points North-West. In what actual direction is a traveller walking if they follow the South-East pointer?"
+    ],
+    "visual_moments": [
+      {"timestamp": "00:41:55", "type": "board", "description": "Renamed direction compass shift axes layout"},
+      {"timestamp": "00:46:25", "type": "board", "description": "Rotated crossing pole pointer accident grid representation"}
+    ],
+    "teacher_quotes": [
+      "Pole ki taraf dekh ke hi jaega na. To pole ki taraf dekh ke wo West ki taraf ja raha hai... actual mein wo South direction mein ja raha hai."
+    ],
+    "traps": [
+      "Ensure you distinguish between the traveller's intended direction (according to the broken pole) and their actual physical direction."
+    ],
+    "tricks": [
+      "Draw the true compass first, then overlay the rotated/renamed directions to visually read the answer instantly."
     ]
   }
 ]

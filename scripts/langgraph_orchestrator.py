@@ -328,42 +328,21 @@ def abort_node(state: AgentState) -> Dict:
 
 # CONDITIONAL ROUTING
 def route_after_stage_1(state: AgentState) -> str:
-    """
-    ROUTING LOGIC FIX:
-    - If Gate 4 (Content Completeness) fails, we MUST go back to 'content-mapper', 
-      NOT 'note-formatter'.
-    - If Gates 1-3 fail, we abort or retry specific steps.
-    """
     failed_gate = state.get("failed_gate", 0)
-    retry_count = state.get("retry_count", 0)
-    
     if failed_gate == 0:
-        # All passed
-        return "stage_2_audit"
-    
-    if failed_gate in [1, 2, 3]:
-        # Structural/Format errors -> Hard Fail or Retry limited times
-        if retry_count < 3:
-            print(f"⚠️ Retrying due to Gate {failed_gate} failure...")
-            return "note-formatter" # Retry formatting
-        else:
-            print("❌ Critical structural failure after 3 retries.")
-            return "end_failure"
-            
+        return "audit-stage-2"
+        
+    retries = state.get("gate_retries", {}).get(str(failed_gate), 0)
+    if retries >= 3:
+        log_abort(state, f"Gate {failed_gate} exceeded 3 retries.")
+        return "abort"
+        
     if failed_gate == 4:
-        # CONTENT COMPLETENESS FAILURE
-        # FIX: Must regenerate the map, not reformat the note!
-        print("⚠️ Content Completeness Failed. Regenerating Concept Map...")
-        return "content-mapper"  # <--- THIS IS THE FIX
-    
-    if failed_gate >= 5:
-        # Quality issues (Grammar, Tone, etc) -> Retry Formatting
-        if retry_count < 3:
-            return "note-formatter"
-        else:
-            return "end_failure"
-    
-    return "end_failure"
+        logging.info(f"Gate {failed_gate} failed. Attempt {retries}/3. Retrying content-mapper.")
+        return "content-mapper"
+        
+    logging.info(f"Gate {failed_gate} failed. Attempt {retries}/3. Retrying note-formatter.")
+    return "note-formatter"
     
 def route_after_stage_2(state: AgentState):
     failed = state.get("failed_gate", 0)

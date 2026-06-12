@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+import re
 
 def retrieve_runs(query_type="all", limit=5):
     memory_dir = "agent_memory"
@@ -28,7 +29,8 @@ def retrieve_runs(query_type="all", limit=5):
             for r in records:
                 failed = r.get("failed_gates", [])
                 for fg in failed:
-                    if str(gate_num) in fg or f"Gate {gate_num}" in fg or fg == str(gate_num):
+                    digits = re.findall(r'\d+', fg)
+                    if digits and int(digits[0]) == gate_num:
                         results.append(r)
                         break
         except ValueError:

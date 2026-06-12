@@ -45,5 +45,16 @@ description: Extracts frames from lecture videos at every visual moment, crops t
 
 6. Write `frame_manifest.json` using `write_file`. Every extracted frame must have an entry. Manifest must NOT be empty.
 
+## Hardened Specifications for Frame Extraction:
+1. **Windowed Candidate Search**:
+   - For every visual moment timestamp $T$, extract 5 candidates at `[T-8s, T-5s, T-2s, T, T+2s]`.
+   - Run OCR and select the candidate with the **maximum alphanumeric word count**.
+2. **Local Deduplication Limit (120s)**:
+   - When checking for duplicates, only compare the current frame's OCR against previously accepted unique frames if their timestamps are within **120 seconds** of each other.
+3. **Solved-State Timestamps**:
+   - Always target timestamps towards the **end** of each question explanation (right before the next segment starts) so that the teacher's final vector drawings, scribbling, and solved state are captured.
+4. **Branding Filter**:
+   - Discard any frame whose OCR contains "Gate Smashers" or similar branding text with sparse content (word count < 25 or containing subscription/social cues).
+
 ## Deliverable
 `frame_manifest.json`

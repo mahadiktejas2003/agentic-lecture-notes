@@ -18,7 +18,11 @@ All note generation and content extraction must strictly adhere to the following
 10. **Traceability**: Every claim in the notes must trace back directly to a specific timestamp/section in the source media.
 11. **Slides Supplement**: Slides must supplement, never replace, spoken words.
 12. **All Visuals in Sequence**: Place visual boards and slides in chronological order; do not skip any.
-13. **Strict Attribution Ban**: Never write phrases like "the lecturer says" or "the teacher explains"; state the facts directly as fact.
+13. **Strict Attribution Ban**: Never write phrases like "the lecturer says" or "the teacher explains" or "the instructor mentions"; state the facts directly as fact.
+14. **Bypass Deduplication for Hand-Picked Moments**: Specific, hand-picked visual timestamps represent distinct concept/worked example states and must never be deleted/deduplicated in `extract_frames.py`.
+15. **High Image Similarity Threshold (0.85)**: In `generate_docx.py`, use an OCR similarity threshold of `0.85` or higher to prevent distinct worked examples from being omitted due to common mathematical/directional terms.
+16. **Inline Screenshot Insertion**: Worked example screenshots must be placed inline directly under the worked example they illustrate using a 1-to-1 index association between `examples` and `visual_moments` (with leftovers remaining at the end of the block).
+17. **Rule Deduplication**: Filter out redundant rules in the same block using a word overlap similarity ratio (threshold of 0.50) to prevent the same concept rule from printing on consecutive worked examples.
 
 ## Worked Example Mandate
 

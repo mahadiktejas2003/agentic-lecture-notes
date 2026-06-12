@@ -35,6 +35,8 @@ NEVER write "the lecturer says", "the teacher explains", etc. Write content dire
 ## Hardened Composition Constraints
 - **Silent Visual Moments**: Never write `[BOARD MOMENT at ...]` or `[SLIDE MOMENT at ...]` in the notes. Images should be placed silently inline without any preceding descriptions or placeholder labels.
 - **Exercise Omissions**: If an exercise item has no real content (i.e. is an empty string or placeholder integer), skip it entirely. Only render exercises that contain real text content.
+- **Inline Screenshot Placement**: Always insert the corresponding visual moment screenshot inline immediately following the example's Answer/Working section. Use a 1-to-1 index matching between examples and visual moments in each block, keeping leftover images at the end of the block.
+- **Rule Deduplication**: Filter out redundant rules within the same block. A rule should not print if it has a word overlap similarity ratio > 0.50 with any rule already printed in the current block.
 
 ## Anti-Patterns List
 | Anti-Pattern | Description | Corrective Guideline |

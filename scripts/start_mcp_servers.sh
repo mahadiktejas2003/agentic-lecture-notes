@@ -1,7 +1,7 @@
 #!/bin/bash
 # start_mcp_servers.sh — Starts all three FastMCP servers in background using SSE transport.
 
-WORKSPACE_DIR="/Users/tejasmahadik/Documents/agentic-lecture-notes"
+WORKSPACE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$WORKSPACE_DIR" || exit 1
 
 # Activate venv
