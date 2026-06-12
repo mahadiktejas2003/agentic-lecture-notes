@@ -74,6 +74,81 @@ def log_abort(state: AgentState, reason: str):
         json.dump(run_record, f, indent=2)
     logging.info(f"Abort failure log written to agent_memory/failures/{filename}")
 
+def update_workspace_state(state: AgentState, stage_name: str, status_msg: str):
+    import json, os, datetime
+    
+    lecture_title = "Unknown Lecture"
+    if os.path.exists("concept_block_map.json"):
+        try:
+            with open("concept_block_map.json", "r", encoding="utf-8") as f:
+                c_map = json.load(f)
+                if c_map and isinstance(c_map, list) and len(c_map) > 0:
+                    lecture_title = c_map[0].get("lecture_title", c_map[0].get("title", "Unknown Lecture"))
+        except Exception:
+            pass
+
+    audit_results = {}
+    if os.path.exists("logs/last_run_audit.json"):
+        try:
+            with open("logs/last_run_audit.json", "r", encoding="utf-8") as f:
+                audit_results = json.load(f)
+        except Exception:
+            pass
+
+    failed_gates = []
+    passed_count = 0
+    for g_num, ok in audit_results.items():
+        if not ok:
+            failed_gates.append(f"Gate {g_num}")
+        else:
+            passed_count += 1
+
+    last_archive = None
+    if os.path.exists("notes-output"):
+        try:
+            archives = sorted([
+                f for f in os.listdir("notes-output") 
+                if f.startswith("LECTURE_NOTES_") and f.endswith(".docx")
+            ])
+            if archives:
+                last_archive = os.path.join("notes-output", archives[-1])
+        except Exception:
+            pass
+
+    workspace_state = {
+        "active_lecture": {
+            "title": lecture_title,
+            "video_path": "lecture-input/LECTURE.mp4",
+            "transcript_path": "lecture-input/transcript.srt",
+            "last_updated": datetime.datetime.now().isoformat()
+        },
+        "pipeline": {
+            "current_stage": stage_name,
+            "status_message": status_msg,
+            "gate_retries": state.get("gate_retries", {}),
+            "failed_gate": state.get("failed_gate", 0),
+            "last_updated": datetime.datetime.now().isoformat()
+        },
+        "artifacts": {
+            "concept_map": "concept_block_map.json",
+            "frame_manifest": "frame_manifest.json",
+            "slide_manifest": "slide_manifest.json",
+            "notes_output": "notes-output/LECTURE_NOTES.docx",
+            "last_archive": last_archive
+        },
+        "audit": {
+            "score": passed_count,
+            "failed_gates": failed_gates,
+            "last_checked": datetime.datetime.now().isoformat()
+        }
+    }
+
+    try:
+        with open("workspace_state.json", "w", encoding="utf-8") as f:
+            json.dump(workspace_state, f, indent=2)
+    except Exception as e:
+        logging.error(f"Failed to write workspace_state.json: {e}")
+
 # NODES
 def content_mapper_node(state: AgentState) -> Dict:
     logging.info("=== [Node: content-mapper] Mapping concepts from transcript and slides ===")
@@ -147,10 +222,12 @@ def content_mapper_node(state: AgentState) -> Dict:
     logging.info("Running process_slides.py...")
     subprocess.run([sys.executable, "scripts/process_slides.py"], check=True)
     
-    return {
+    res = {
         "status": "concepts_mapped",
         "attempts": state.get("attempts", 0) + 1
     }
+    update_workspace_state(state, "content-mapper", "Mapped concepts from transcript")
+    return res
 
 def example_extractor_node(state: AgentState) -> Dict:
     logging.info("=== [Node: example-extractor] Extracting examples and visual moments ===")
@@ -181,9 +258,11 @@ def example_extractor_node(state: AgentState) -> Dict:
     logging.info("Running crop_frames.py...")
     subprocess.run([sys.executable, "scripts/crop_frames.py"], check=True)
     
-    return {
+    res = {
         "status": "examples_extracted"
     }
+    update_workspace_state(state, "example-extractor", "Extracted video frames and visual moments")
+    return res
 
 def note_formatter_node(state: AgentState) -> Dict:
     logging.info("=== [Node: note-formatter] Generating Word Document and running Student Tester ===")
@@ -229,10 +308,12 @@ def note_formatter_node(state: AgentState) -> Dict:
     logging.info("Running student_tester.py...")
     subprocess.run([sys.executable, "scripts/student_tester.py"], check=True)
     
-    return {
+    res = {
         "status": "document_formatted",
         "failed_gate": 0
     }
+    update_workspace_state(state, "note-formatter", "Formatted notes document and ran student tests")
+    return res
 
 def run_stages_audit(state: AgentState) -> Dict:
     logging.info("Evaluating gates...")
@@ -263,11 +344,15 @@ def audit_stage_1_node(state: AgentState) -> Dict:
     if failed_gate > 0:
         gate_retries[str(failed_gate)] = gate_retries.get(str(failed_gate), 0) + 1
         
-    return {
+    res = {
         "failed_gate": failed_gate,
         "gate_results": results,
         "gate_retries": gate_retries
     }
+    temp_state = dict(state)
+    temp_state.update(res)
+    update_workspace_state(temp_state, "audit-stage-1", f"Audited stage 1. Failed gate: {failed_gate}")
+    return res
 
 def audit_stage_2_node(state: AgentState) -> Dict:
     logging.info("=== [Node: audit-stage-2] Auditing Gates 5 - 8 ===")
@@ -281,10 +366,14 @@ def audit_stage_2_node(state: AgentState) -> Dict:
     if failed_gate > 0:
         gate_retries[str(failed_gate)] = gate_retries.get(str(failed_gate), 0) + 1
         
-    return {
+    res = {
         "failed_gate": failed_gate,
         "gate_retries": gate_retries
     }
+    temp_state = dict(state)
+    temp_state.update(res)
+    update_workspace_state(temp_state, "audit-stage-2", f"Audited stage 2. Failed gate: {failed_gate}")
+    return res
 
 def audit_stage_3_node(state: AgentState) -> Dict:
     logging.info("=== [Node: audit-stage-3] Auditing Gates 9 - 12 ===")
@@ -298,10 +387,14 @@ def audit_stage_3_node(state: AgentState) -> Dict:
     if failed_gate > 0:
         gate_retries[str(failed_gate)] = gate_retries.get(str(failed_gate), 0) + 1
         
-    return {
+    res = {
         "failed_gate": failed_gate,
         "gate_retries": gate_retries
     }
+    temp_state = dict(state)
+    temp_state.update(res)
+    update_workspace_state(temp_state, "audit-stage-3", f"Audited stage 3. Failed gate: {failed_gate}")
+    return res
 
 def audit_stage_4_node(state: AgentState) -> Dict:
     logging.info("=== [Node: audit-stage-4] Auditing Gates 13 - 15 ===")
@@ -315,16 +408,22 @@ def audit_stage_4_node(state: AgentState) -> Dict:
     if failed_gate > 0:
         gate_retries[str(failed_gate)] = gate_retries.get(str(failed_gate), 0) + 1
         
-    return {
+    res = {
         "failed_gate": failed_gate,
         "gate_retries": gate_retries
     }
+    temp_state = dict(state)
+    temp_state.update(res)
+    update_workspace_state(temp_state, "audit-stage-4", f"Audited stage 4. Failed gate: {failed_gate}")
+    return res
 
 def abort_node(state: AgentState) -> Dict:
     logging.info("=== [Node: abort] Pipeline aborted due to retry limit ===")
-    return {
+    res = {
         "status": "aborted"
     }
+    update_workspace_state(state, "abort", "Pipeline aborted due to retry limit")
+    return res
 
 # CONDITIONAL ROUTING
 def route_after_stage_1(state: AgentState) -> str:
@@ -444,10 +543,12 @@ def run_pipeline():
     
     if failed == 0 and status != "aborted":
         logging.info("🎉 LangGraph Orchestrator finished successfully! All 15 gates passed.")
+        update_workspace_state(final_state, "completed", "Pipeline completed successfully with all gates passing")
         store_run("success", 15, [], final_state["output_path"])
         return True
     else:
         logging.error(f"❌ LangGraph Orchestrator completed with errors. Status: {status}. Failed gate: {failed}.")
+        update_workspace_state(final_state, "failed", f"Pipeline failed on Gate {failed}")
         failed_list = [f"Gate {failed}"] if failed > 0 else ["Pipeline Aborted"]
         store_run("failed", 15 - len([k for k, v in final_state.get("gate_results", {}).items() if not v]), failed_list, final_state["output_path"])
         return False

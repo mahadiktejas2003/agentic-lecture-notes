@@ -38,3 +38,10 @@ You read the full transcript, identify every topic change, example, question, an
 
 ## slide-parsing (Sub‑Agent)
 You convert every slide to an image, OCR the text, cross‑reference with transcript timestamps, and produce a slide manifest. Flag undiscussed slide text. Triggered by presence of .pdf or .pptx slide decks.
+
+## Workspace State Hand-off Protocol
+All agents working on this project (Orchestrator and specialist sub-agents) must coordinate and communicate using the central `workspace_state.json` file at the root.
+- **State File**: `workspace_state.json`
+- **Orchestrator Action**: Update this file at the end of each node function.
+- **Interchangeability**: When a new AI agent takes over the workspace, it must immediately read `workspace_state.json` to resume the pipeline, find generated artifacts, and trace failure states without requiring manual user prompting.
+
