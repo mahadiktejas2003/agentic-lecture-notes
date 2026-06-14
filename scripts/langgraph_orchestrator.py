@@ -95,6 +95,9 @@ GATE_MAPPING = {
     'Gate 13: Quote Quality': 13,
     'Gate 14: Meaningful Titles': 14,
     'Gate 15: Explanation Conciseness': 15,
+    'Gate 16: Table Presence': 16,
+    'Gate 17: Sequence Integrity': 17,
+    'Gate 18: Exact Worked Examples': 18,
 }
 
 def log_abort(state: AgentState, reason: str):
@@ -433,9 +436,9 @@ def audit_stage_3_node(state: AgentState) -> Dict:
     return res
 
 def audit_stage_4_node(state: AgentState) -> Dict:
-    logging.info("=== [Node: audit-stage-4] Auditing Gates 13 - 15 ===")
+    logging.info("=== [Node: audit-stage-4] Auditing Gates 13 - 18 ===")
     failed_gate = 0
-    for g in [13, 14, 15]:
+    for g in [13, 14, 15, 16, 17, 18]:
         if not state["gate_results"].get(str(g), True):
             failed_gate = g
             break

@@ -143,7 +143,7 @@ def add_shaded_formula(doc, text):
     return p
 
 def get_vm_image_path(vm, block_id, slides, timestamp_to_frame, frames):
-    ts = vm.get('timestamp', '')
+    ts = vm.get('timestamp', '').rstrip('*')
     v_type = vm.get('type', 'board')
     
     img_path = None
@@ -164,6 +164,8 @@ def get_vm_image_path(vm, block_id, slides, timestamp_to_frame, frames):
             img_path = f"screenshots/{fallback_name}"
             if fallback_name in frames:
                 frame_fname = fallback_name
+            elif f"{fallback_name}*" in frames:
+                frame_fname = f"{fallback_name}*"
     return img_path, frame_fname
 
 def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs):
@@ -184,6 +186,13 @@ def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, i
                 logging.warning(f"Could not perform on-the-fly OCR on {img_path}: {e}")
         
         is_duplicate = os.path.basename(img_path) in inserted_filenames
+        is_slide = "slides" in img_path or "slide_" in os.path.basename(img_path)
+        if current_ocr.strip() and is_slide:
+            is_duplicate = is_duplicate or any(
+                are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.98)
+                for prev_ocr, prev_is_slide in inserted_ocrs
+                if prev_is_slide == is_slide
+            )
         
         if is_duplicate or is_logo_frame(current_ocr):
             logging.info(f"Skipping duplicate or logo slide image: {frame_fname or img_path}")
@@ -192,7 +201,7 @@ def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, i
             if add_image_if_exists(doc, img_path):
                 inserted_filenames.add(os.path.basename(img_path))
                 if current_ocr.strip():
-                    inserted_ocrs.append(current_ocr)
+                    inserted_ocrs.append((current_ocr, is_slide))
                 return True
     return False
 
@@ -258,7 +267,8 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     for filename, info in frames.items():
         ts = info.get('timestamp')
         if ts:
-            timestamp_to_frame[ts] = filename
+            ts_clean = ts.rstrip('*')
+            timestamp_to_frame[ts_clean] = filename
 
     # Title
     lecture_title = "Lecture Reconstruction Notes"
@@ -271,7 +281,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
             first_title = concept_blocks[0].get('title', '')
             if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
                 lecture_title = first_title
-    doc.add_heading(f"NOTES ## {lecture_title}", 0)
+    doc.add_heading(lecture_title, 0)
 
     # Section 1: Lecture Flow Outline
     doc.add_heading("Section 1: Lecture Flow Outline", level=1)
@@ -294,12 +304,21 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         # Teacher's explanation text
         explanation = block.get('explanation', '')
         if explanation:
-            if len(explanation) > 600:
-                explanation = explanation[:500] + "... (see worked examples for detailed rules)"
             doc.add_paragraph(explanation)
         else:
             p = doc.add_paragraph()
             p.add_run("(No detailed explanation provided in the source.)").italic = True
+
+        # Table data rendering
+        table_data = block.get('table')
+        if table_data:
+            headers = table_data.get('headers', [])
+            rows = table_data.get('rows', [])
+            if headers and rows:
+                table_title = table_data.get('title', 'Reference Table')
+                doc.add_heading(table_title, level=3)
+                add_styled_table(doc, headers, rows)
+                doc.add_paragraph()
 
         # Key Concepts and Definitions
         concepts = block.get('concepts', [])
@@ -310,18 +329,22 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 p_c.add_run(item.get('term', '') + ": ").bold = True
                 p_c.add_run(item.get('definition', ''))
 
-        # Worked Examples
+        # Examples & Illustrations
         examples = block.get('examples', [])
         seen_rules_in_block = []
         inserted_vm_indices = set()
         visual_moments = block.get('visual_moments', [])
 
         if examples:
-            doc.add_heading("Worked Examples:", level=3)
+            doc.add_heading("Examples & Illustrations:", level=3)
             for idx, ex in enumerate(examples):
                 p_q = doc.add_paragraph()
-                p_q.add_run("Q: ").bold = True
-                p_q.add_run(ex.get('sentence', 'Example Question'))
+                sentence = ex.get('sentence', 'Example')
+                is_question = sentence.endswith('?') or sentence.startswith(('Q:', 'Explain', 'Describe', 'Why', 'How', 'What', 'Define', 'List'))
+                
+                pref = "Q: " if is_question else "Example: "
+                p_q.add_run(pref).bold = True
+                p_q.add_run(sentence)
 
                 rule = ex.get('rule', '')
                 is_redundant_rule = False
@@ -330,29 +353,40 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
                 if rule and not is_redundant_rule:
                     p_rule = doc.add_paragraph()
-                    p_rule.add_run("Rule: ").bold = True
+                    label = "Applicable Rule: " if is_question else "Key Concept: "
+                    p_rule.add_run(label).bold = True
                     p_rule.add_run(rule)
                     seen_rules_in_block.append(rule)
 
                 working_text = ex.get('working', '')
                 if working_text:
-                    doc.add_paragraph("Working:").runs[0].bold = True
+                    label_work = "Explanation/Working:" if is_question else "Explanation:"
+                    doc.add_paragraph(label_work).runs[0].bold = True
                     p_work = doc.add_paragraph()
                     p_work.add_run(working_text)
 
                 # Answer extraction: if working contains "->", take the part after last "->"
                 ans_text = working_text.split("->")[-1].strip() if "->" in working_text else (working_text.split("=")[-1].strip() if "=" in working_text else "")
-                if ans_text:
+                if ans_text and is_question:
                     p_ans = doc.add_paragraph()
                     p_ans.add_run("Answer: ").bold = True
                     p_ans.add_run(ans_text)
 
-                # Place corresponding visual moment inline right under the worked example (1-to-1 mapping by index)
+                # Place corresponding visual moment inline right under the example (1-to-1 mapping by index)
                 if idx < len(visual_moments):
                     vm = visual_moments[idx]
                     success_inserted = insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs)
                     if success_inserted:
                         inserted_vm_indices.add(idx)
+
+        # Important Points / Teacher's Emphasis
+        important_points = block.get('important_points', [])
+        if important_points:
+            doc.add_heading("Key Highlights (⭐ Teacher's Emphasis):", level=3)
+            for item in important_points:
+                p_i = doc.add_paragraph()
+                p_i.add_run("⭐ ").bold = True
+                p_i.add_run(item)
 
         # Exercise Questions
         exercises = block.get('exercise_questions', [])
@@ -378,15 +412,18 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         for tr in block.get('tricks', []):
             add_trick(doc, tr)
 
-        # Revision Box at the end
-        rev_bullets = []
-        if block.get('transcript_range_percent'):
-            rev_bullets.append(f"Transcript range: {block['transcript_range_percent'][0]}% – {block['transcript_range_percent'][1]}%")
-        if block.get('traps'):
-            rev_bullets.append(f"Key trap: {block['traps'][0]}")
-        if not rev_bullets:
-            rev_bullets.append("Refer to full notes for details.")
-        add_revision_box(doc, rev_bullets, rule=block.get('title', ''))
+        # Revision Box at the end (Optional - only if defined or if we have traps/revisions)
+        if block.get('revision_box', False):
+            rev_bullets = []
+            if block.get('transcript_range_percent'):
+                rev_bullets.append(f"Transcript range: {block['transcript_range_percent'][0]}% – {block['transcript_range_percent'][1]}%")
+            if block.get('traps'):
+                rev_bullets.append(f"Key trap: {block['traps'][0]}")
+            for bullet in block.get('revision_bullets', []):
+                rev_bullets.append(bullet)
+            if not rev_bullets:
+                rev_bullets.append("Refer to full notes for details.")
+            add_revision_box(doc, rev_bullets, rule=block.get('title', ''))
 
         doc.add_paragraph()
 
@@ -438,60 +475,13 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     import datetime
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
-    # --- VISUAL APPENDIX TO PASS GATE 7 & 11 ---
-    
-    # Check both possible locations for cropped frames
-    possible_dirs = ["screenshots/cropped", "screenshots"]
-    frames_found = []
-    
-    for dir_path in possible_dirs:
-        if os.path.exists(dir_path):
-            # Look for PNG files
-            matches = glob.glob(os.path.join(dir_path, "*.png"))
-            if matches:
-                frames_found = sorted(matches)
-                logging.info(f"Found {len(frames_found)} frames in {dir_path} for Visual Appendix")
-                break
-    
-    visual_appendix_limit = profile.get("visual_appendix_limit", 20)
-    
-    # Only keep frames that were NOT inserted inline
-    appendix_frames = [f for f in frames_found if os.path.basename(f) not in inserted_filenames]
-    
-    if appendix_frames and visual_appendix_limit > 0:
-        doc.add_page_break()
-        doc.add_heading("Visual Appendix", level=1)
-        
-        # Load manifest to get timestamps if possible
-        ts_map = {}
-        if os.path.exists("frame_manifest.json"):
-            try:
-                with open("frame_manifest.json") as f:
-                    m = json.load(f)
-                    for k, v in m.items():
-                        ts_map[k] = v.get('timestamp', '?')
-            except Exception as e:
-                logging.warning(f"Could not load frame manifest for timestamps: {e}")
-        
-        # Add up to visual_appendix_limit frames
-        count = 0
-        for img_path in appendix_frames:
-            if count >= visual_appendix_limit:
-                break
-                
-            fname = os.path.basename(img_path)
-            ts = ts_map.get(fname, 'Unknown Time')
-            
-            try:
-                doc.add_heading(f"Frame: {fname} ({ts})", level=3)
-                doc.add_picture(img_path, width=Inches(5.5))
-                doc.add_paragraph("") # Spacer
-                count += 1
-            except Exception as e:
-                logging.error(f"Failed to add image {img_path}: {e}")
-                doc.add_paragraph(f"[Image load error: {e}]")
-    else:
-        logging.warning("No new unique frames found for Visual Appendix or limit is 0.")
+    # Save the list of inserted image filenames for the audit tool
+    try:
+        with open("inserted_images.json", "w", encoding="utf-8") as f:
+            json.dump(list(inserted_filenames), f, indent=2)
+        logging.info(f"Saved {len(inserted_filenames)} inserted image names to inserted_images.json")
+    except Exception as e:
+        logging.warning(f"Could not save inserted_images.json: {e}")
 
     doc.save(output_path)
     logging.info(f"Notes document generated successfully at: {output_path}")

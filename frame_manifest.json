@@ -1,97 +1,42 @@
 {
   "frame_001.png": {
-    "timestamp": "00:01:43",
-    "ocr_text": "> & \u00a9 appz00mu: *\n\nIB Reasoning Question... Ay Mixed Quant Quest... Q Browse memberships F Logical Reasoning... Quanttatve Apttu.. A SSC Reasoning (Adv... A Practice Question P... A Reasoning Question. Mi Gmail >> | C3 All Bookmarks\n\n\u00ae*\\NA5\n\nBView Ge r Chat\n\n=\nrs)\n8\n\n@anh.@oe\n\nEducators .\n\nGa a\u201d\n\nStart Video Participants\n\noo",
+    "timestamp": "00:01:21*",
+    "ocr_text": "Database design\n\ns the organization of data according to a database\n\ne designer determines what data must be stored and\now the data elements interrelate. With \u2014 this\ninformation, they can begin to fit the data to the\ndatabase model.",
     "type": "board"
   },
   "frame_002.png": {
-    "timestamp": "00:06:30",
-    "ocr_text": "",
+    "timestamp": "00:02:59*",
+    "ocr_text": "EE ELSES\nLogical Designing\n\n*It deals with relationships and dependencies amongst\nthe various pieces of information have been determined.\n\nlogical structure then mapped into the storage objects\npported by the DBMS. In the case of relational\natabases the storage objects are tables which store data\nin rows and columns.\n\ny",
     "type": "board"
   },
   "frame_003.png": {
-    "timestamp": "00:10:45",
-    "ocr_text": "If Kuldeep moves 20meter in East direction and then turns to his left\nand then 15 meter and then he turns to his right and moves 25 meter.\nAfter this he turns to his right and moves 15 meter. Now how far is he\nfrom his starting point. ?\n\nA)O B) 40 C) 50 D) 45 ols\n\nish Te)",
+    "timestamp": "00:04:45*",
+    "ocr_text": "Logical Designing \u00a9 of, Caan HOE\n\n(CoA\u00a58\nC \u2019\n\ndeals with relationships and-dependencies amongst\ne various pieces of information have been determined.\n\n~A logical structure then mapped into the storage objects\n\nMpported by the DBMS. In the case of relational\nsaabases the storage objects are tables which store data\nBows and.co) fins.\n\nVv",
     "type": "board"
   },
   "frame_004.png": {
-    "timestamp": "00:12:20",
-    "ocr_text": "A cyclist goes 30 km to_Nortl North and then turning to East he goes 40 skim,\nAgain he turns to his right ar and goes 20km . After this he turns to his\nright and goes 40km. How far is he from his starting point ?\n\nA) 0 B40 C) 25 D) 40\n\ni.)\n\ndole\non\n\nYl",
+    "timestamp": "00:06:25*",
+    "ocr_text": "Database Abstraction /Database Abstraction Layers\n\n* It is an application programming interface which unifies the\ncommunication between a computer application and databases\nsuch as SQL Server, IBM Db2, MySQL, PostgreSQL, Oracle or\nSQLite.\n\n* Data Abstraction is a process of hiding unwanted or irrelevant\ndetails from the end user. It provides a different view and helps\n\nieving data independence which is used to enhance the\n\nty of data.\n\n2",
     "type": "board"
   },
   "frame_005.png": {
-    "timestamp": "00:14:15",
-    "ocr_text": "Manpreet kaur faces towards East. Turning to his right he walks 50\nmeter and then turning to his left , he walks 50 meter. After this he\nturns to his right and walks 50 meter . Again he turns to his+ight and\nwalks 100 meter. Finally he turns to his right and walks 100 meter.\nNow in what direction is he from his starting point?\n\nA) East B) West C) North D) South\n\n58 Jon ison\n| - Son",
+    "timestamp": "00:08:35*",
+    "ocr_text": "* Physical or Internal Level -> It is the lowest level of abstraction\nfor DBMS which defines how the data is actually stored, it\ndefines data-structures to store data and access methods used\n\n\u2018a the database.\n\n* Logical or Conceptual Level -> It is the intermediate level or\nnext higher level. It describes what data is stored in the\ndatabase and what relationship exists among those data.\n\n* View or External Level -> It is the highest level. In view level,\nthere are different levels of views and every view only defines a\npart of the entire data. It also simplifies interaction with the\nuser and it provides many views or multiple views of the same\ndatabase.",
     "type": "board"
   },
   "frame_006.png": {
-    "timestamp": "00:16:00",
-    "ocr_text": "Babbu walks a distance of 3 km towards North , the turns to his left\nand walks for 2 km . He again turns left and walks for 3 km. At this\npoint he turns to his left and walks for 3 km. How many km is Babbu\nfrom the starting point ?\n\nA) 1km_~ B) 2 km C)3 km D)5 km\n\nakn",
+    "timestamp": "00:09:27*",
+    "ocr_text": "ical or Internal Level -> It is the lowest level of abstraction\nBMS which defines how the data is actually stored, it\n\nnes data-structures to store data and access methods used\nhe database.\n\ngical or Conceptual Level -> It is the intermediate level or\nxt higher level. It describes what data is stored in the\natabase and what relationship exists among those data.\n\niew or External Level -> It is the highest level. In view level,\nthere are different levels of views and every view only defines a\npart of the entire data. It also simplifies interaction with the\nuser and it provides many views or multiple views of the same\ndatabase.",
     "type": "board"
   },
   "frame_007.png": {
-    "timestamp": "00:18:10",
-    "ocr_text": "] rai 30 meter in North-West direction from my house and fen 30\nmeter in South West direction. After this | walk 30 meter in South _\nEast direction. Now |, turn to my house . Now in what direction am |\ngoing ? \u2014_\n\nA) North East \u2014_B) ror West C)South East D) South West",
-    "type": "board"
-  },
-  "frame_008.png": {
-    "timestamp": "00:20:15",
-    "ocr_text": "Charnjeet kaur moves towards South-East a distance of 7km, then she\nmoves towards West and travel a distance of 14 km. from here, she moves\ntowards North-West a distance of 7 km and finally she moves a distance of\n4 km towards East and stood at that point. How far is the starting point from\nwhere she stood ?\n\nA) 3km B) 4 Km C) 10 km D) 11 km",
-    "type": "board"
-  },
-  "frame_009.png": {
-    "timestamp": "00:21:15",
-    "ocr_text": "If A is in the North of B and Cis in the West of B. In what direction\nis A with respect to C?\nA) North-East \u2014B) East C) South D)South-West",
-    "type": "board"
-  },
-  "frame_010.png": {
-    "timestamp": "00:22:30",
-    "ocr_text": "A man walks 12 km towards North and then he turns right and\nwalks 5 km . How far is he from the starting point ?\nA) 13 km B) 12 km C) 17 km D) 20km",
-    "type": "board"
-  },
-  "frame_011.png": {
-    "timestamp": "00:24:20",
-    "ocr_text": "A man walks 40 km in East, then he turns left and walks 8 km and\nfinally he turns to his left and walks 25 km. then find how far is he\nfrom the starting point and in which direction from the starting point.\n\naoe!\n\nBiles\n\not",
-    "type": "board"
-  },
-  "frame_012.png": {
-    "timestamp": "00:26:30",
-    "ocr_text": "Ravneet walks 10 km towards North. From there she walks and 6 km\ntowards South. Then she walks 3 km towards East. How far and in\nwhich direction is she with reference to her starting point ?\n\noh 1a\nI an ybe stpyt",
-    "type": "board"
-  },
-  "frame_013.png": {
-    "timestamp": "00:28:00",
-    "ocr_text": "Rohit walks 20 km in the direction of South and then turns to his\nright and walks 24 meter and finally turns to his right and walks 27\nmeter. How far is he from the starting point and in which direction\nfrom the starting point.?\n\na\n\n_\na Hot kes\n\nrf . Le!S\n\nU1\n\n\u2018Saving document",
-    "type": "board"
-  },
-  "frame_014.png": {
-    "timestamp": "00:30:15",
-    "ocr_text": "gin\n\nUES",
-    "type": "board"
-  },
-  "frame_015.png": {
-    "timestamp": "00:34:20",
-    "ocr_text": "Sunita is facing south. She turns 135 degree in the anti clockwise\ndirection and then 180_degree in the clockwise direction.Which\ndirection in the facing now ?\n\nA) North- East B) North-West C) South-East D) South-West\n\nplu rv Cw ACY\n\nple \u2019\nmi \u00a3 \u2014j3S \u00a3189 = (HHS)",
-    "type": "board"
-  },
-  "frame_016.png": {
-    "timestamp": "00:37:05",
-    "ocr_text": "Rajlaxmi is facing North-West. She turns 90 degree in the clockwise\ndirection and 135 degree in the anticlockwise direction. Which\n\ndirection is facing now ?\n\nA) East B) West C) North D) South\nMy vic\n: +tJo \u2014[35\n= - -45\nsly SIE",
-    "type": "board"
-  },
-  "frame_017.png": {
-    "timestamp": "00:39:15",
-    "ocr_text": "Jarnail singh is facing towards west and turns through 45 degree\nclockwise, again 180 degree clockwise aand then turns through 270\ndegree anti clockwise. In which direction is jarnail singh facing now\n\nA) West B) North-West C)South D)South-West\nI<\nHee ths 189-2\n5 g1s\u20142te\naD",
-    "type": "board"
-  },
-  "frame_018.png": {
-    "timestamp": "00:41:55",
+    "timestamp": "00:12:30*",
     "ocr_text": "",
     "type": "board"
   },
-  "frame_019.png": {
-    "timestamp": "00:46:25",
-    "ocr_text": "A direction pole was situated on the crossing. Due to an accident the\npole turned in such a manner that the pointer which was showing East,\nstarted showing South. One traveller went to wrong direction thinking\nto be West. In what direction actually he was travelling?\n\nA) South B) West \u20ac ir C) North D) East\n\nNet Sosth",
+  "frame_008.png": {
+    "timestamp": "00:14:39*",
+    "ocr_text": "Schema Architecture\n\n/\n\n/ /\n(External Level>|\n\nLogical Data Independence\n\nPhysical Data Independence",
     "type": "board"
   }
 }

@@ -97,21 +97,31 @@ def extract_frames(video_path, output_dir, timestamps=None):
     if timestamps:
         # Extract specific timestamps
         for i, ts in enumerate(timestamps):
+            exact = False
+            if ts.endswith('*'):
+                exact = True
+                ts_clean = ts[:-1]
+            else:
+                ts_clean = ts
+            
             # Convert HH:MM:SS to seconds for ffmpeg
-            parts = list(map(int, ts.split(':')))
+            parts = list(map(int, ts_clean.split(':')))
             base_seconds = parts[0]*3600 + parts[1]*60 + parts[2]
             
             fname = f"frame_{i+1:03d}.png"
             out_path = os.path.join(output_dir, fname)
             
-            # Search strictly before or at the target timestamp to avoid capturing the next slide
-            candidates = [
-                max(0, base_seconds - 10),
-                max(0, base_seconds - 7),
-                max(0, base_seconds - 4),
-                max(0, base_seconds - 2),
-                base_seconds
-            ]
+            # If exact, only check base_seconds, else run windowed candidate search.
+            if exact:
+                candidates = [base_seconds]
+            else:
+                candidates = [
+                    max(0, base_seconds - 8),
+                    max(0, base_seconds - 5),
+                    max(0, base_seconds - 2),
+                    base_seconds,
+                    base_seconds + 2
+                ]
             
             best_ocr_text = ""
             best_word_count = -1

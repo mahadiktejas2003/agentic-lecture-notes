@@ -35,6 +35,7 @@ description: Analyzes lecture transcripts to produce a chronological Concept Blo
 - **Meaningful Block Titles**: Use the grammatical concept being taught as the title for each concept block, never generic question ranges (e.g. use "Disease Names & 'One Of' SVA Rules" instead of "Noun Practice Test Discussion (Questions 1 to 5)").
 - **Quote Quality**: Clean each extracted teacher quote. Strip all SRT metadata (timestamps/line counters), leading stray vowel signs or symbols, ensure it is a complete sentence, and deduplicate identical quotes.
 - **Lecture Title**: Store a dedicated `"lecture_title"` field in the first block of the manifest based on the overall topic (e.g., "English Discussion on Noun Exercise & Pronoun -1 (Live-7)").
+- **Support for Tables**: If a concept block introduces a reference grid or table (such as the pronouns case grid), include a `"table"` property with `"title"`, `"headers"`, and `"rows"` so that the note compiler can render it as a styled Word table.
 
 ## Density Verification Gate (MANDATORY — run before saving)
 
