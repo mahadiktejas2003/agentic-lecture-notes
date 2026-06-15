@@ -1,175 +1,317 @@
 [
   {
     "block_id": "CB1",
-    "title": "Database Design Phases: Logical vs. Physical Designing",
-    "lecture_title": "Database Management System: Database Design & Schema Architecture",
-    "transcript_range_percent": [0, 39],
-    "explanation": "Database design organizes data using a model. Before implementation, experienced designers gather requirements to create a blueprint, similar to drawing a house blueprint map before construction. Database designers are highly experienced professionals; newcomers do not design. The designer first analyzes the business domain (e.g. food delivery like Zomato, car reservation like BlaBlaCar, or ticket reservation like Indigo/MMT) to determine which model to fit the data into. Designing consists of two phases:\n1. Logical/Conceptual Design: Defines relationships, dependencies, and entities (e.g., ER diagrams) without hardware details.\n2. Physical Design: Configures storage media, file mappings, sectors/tracks, RAID, partitioning, backups, security, and replication.",
+    "title": "Pure Quadratic & Cube Roots",
+    "lecture_title": "Quantitative Aptitude: Advance Quadratic Equations (Live-2)",
+    "transcript_range_percent": [
+      0,
+      15
+    ],
+    "explanation": "Equations of the form x^2 = C have two real roots, positive and negative: x = \u00b1\u221aC. On the other hand, cubic equations of the form y^3 = C have only one unique real root: y = \u221bC. When comparing roots, both values of x must be compared against the single value of y.",
     "concepts": [
       {
-        "term": "Database Design",
-        "definition": "The organization of data according to a database model, determining what data must be stored and how data elements interrelate."
+        "term": "Pure Quadratic Equation",
+        "definition": "An equation of the form ax^2 + c = 0 containing only the square of the variable."
       },
       {
-        "term": "Database Designer",
-        "definition": "An experienced professional who gathers client requirements to plan what data must be stored and how elements interrelate."
-      },
-      {
-        "term": "Logical Design",
-        "definition": "The phase of database design that deals with defining the conceptual entities, attributes, relationships, and dependencies without hardware details."
-      },
-      {
-        "term": "Physical Design",
-        "definition": "The phase of database design specifying the configuration of data on storage media, including partitioning, replication, RAID levels, backups, and security."
+        "term": "Pure Cubic Equation",
+        "definition": "An equation of the form ay^3 + c = 0 containing only the cube of the variable."
       }
     ],
     "examples": [
       {
-        "sentence": "Designing a database structure for applications like Zomato (food delivery) or BlaBlaCar/Indigo/MMT (reservations) by gathering requirements.",
-        "working": "Gather requirements from client -> analyze type of data (food, car, ticket) -> decide what data to store -> fit data into model (e.g. relational tables)."
-      },
-      {
-        "sentence": "Creating an Entity-Relationship (ER) diagram for a university database.",
-        "working": "Identify entities (Student, Faculty, Hostels, Courses) -> determine relationships (Student enrolls in Course) and cardinalities (one-to-one, one-to-many) -> map dependencies (attributes)."
-      },
-      {
-        "sentence": "Partitioning database files and setting up RAID configurations on server storage.",
-        "working": "Decide where files reside on physical hardware sectors/tracks -> configure redundant backup storage (RAID) -> schedule restore points to prevent data loss."
+        "sentence": "Solve the equations and compare: I. x^2 = 361, II. y^3 = 7269 + 731",
+        "rule": "x^2 = C gives x = \u00b1\u221aC. y^3 = C gives y = \u221bC.",
+        "working": "1. Solve for x:\n   x^2 = 361\n   x = \u00b1\u221a361\n   x = \u00b119\n2. Solve for y:\n   y^3 = 7269 + 731\n   y^3 = 8000\n   y = \u221b8000\n   y = 20\n3. Compare roots:\n   Comparing x_1 = 19 and y = 20 -> x_1 < y\n   Comparing x_2 = -19 and y = 20 -> x_2 < y\n   Therefore, x < y.",
+        "answer": "x < y"
       }
-    ],
-    "important_points": [
-      "Database designers are highly experienced professionals. Newcomers do not perform database designing; they only help in gathering initial requirements.",
-      "Always complete logical designing and blueprints before starting coding or database physical implementation."
     ],
     "visual_moments": [
       {
-        "timestamp": "00:01:21*",
+        "timestamp": "00:08:08",
         "type": "board",
-        "description": "Database design and requirements slide highlighting organization and fit to models."
-      },
-      {
-        "timestamp": "00:02:59*",
-        "type": "board",
-        "description": "Logical Designing notes detailing relationships, dependencies, and mapping to DBMS tables."
-      },
-      {
-        "timestamp": "00:04:45*",
-        "type": "board",
-        "description": "Physical Design slide showing storage media configuration, RAID, partitioning, and backup schemes."
+        "description": "Whiteboard showing solutions for x^2 = 361 and y^3 = 8000."
       }
     ],
     "teacher_quotes": [
-      "Database design is simply the organization of data according to a database model.",
-      "Logical designing simply deals with relationships and dependencies amongst various objects."
+      "Aptitude is a basic math, but it requires timing."
+    ],
+    "traps": [
+      "Forgetting the negative root for x^2, leading to incorrect comparisons."
+    ],
+    "tricks": [
+      "Always add the constants first before taking the cube root to make the number simple."
     ]
   },
   {
     "block_id": "CB2",
-    "title": "Data Abstraction Layers and Three-Schema Architecture",
-    "transcript_range_percent": [39, 85],
-    "explanation": "Introduces Data Abstraction and the Three-Schema Architecture to hide hardware details from users.\n\nIt consists of three levels:\n1. Physical/Internal Level: Defines physical storage in hardware (tracks, sectors), hidden from users (e.g. YouTube California server locations).\n2. Logical/Conceptual Level: Defines what data is stored and relationships (tables, types, schemas), managed by DBAs.\n3. External/View Level: Defines how users view data via front-end UIs (e.g. Student vs Chancellor university logins).\n\nThe teacher maps this architecture to a Three-Tier Web Application:\n- View Level = Front-end UI (Laptops, desktop browsers, or mobile apps using HTML/CSS).\n- Conceptual Level = Backend Server (Application code in PHP, Java, C# handling request processing).\n- Physical Level = Database Server (Physical data store in MySQL, Oracle, SQL Server).\n\nFront-end requests go to the server, which validates them against the database. This protects the physical database from direct user access.",
+    "title": "General Quadratic Equations with Splitting Method",
+    "transcript_range_percent": [
+      15,
+      30
+    ],
+    "explanation": "Standard quadratic equations ax^2 + bx + c = 0 are solved by splitting the middle term bx into two terms px and qx such that p + q = b and p * q = a * c. The roots are then obtained by reversing the signs of the factors and dividing by the lead coefficient a.",
     "concepts": [
       {
-        "term": "Data Abstraction",
-        "definition": "The process of hiding unwanted, irrelevant, or low-level technical details from the end user to simplify database interaction."
+        "term": "Middle-Term Splitting",
+        "definition": "A technique to factorize quadratic trinomials by breaking the linear coefficient into two parts that multiply to the product of the quadratic and constant coefficients."
       },
       {
-        "term": "Three-Schema Architecture",
-        "definition": "A standard DBMS framework dividing database views into three layers: View level (External), Conceptual level (Logical), and Internal level (Physical)."
-      },
-      {
-        "term": "Three-Tier Web Architecture",
-        "definition": "An architecture where the client UI (View level) requests data from a middle application server (Conceptual level) which queries the database server (Physical level)."
+        "term": "Coefficient Division",
+        "definition": "Dividing the factors by the lead coefficient of the quadratic term to obtain the actual roots."
       }
     ],
     "examples": [
       {
-        "sentence": "A user searches for 'Best course for RPSC programmer' on Google.",
-        "working": "User enters query in Chrome UI (External/View Level) -> Request goes to server (Conceptual Level) -> Server queries database storage (Internal Level) -> returns results to UI without showing table schemas."
+        "sentence": "Solve the equations and compare: I. 15x^2 + x - 6 = 0, II. 5y^2 - 23y + 12 = 0",
+        "rule": "Split middle term and divide by lead coefficient. Compare all combinations.",
+        "working": "1. Solve for x:\n   15x^2 + x - 6 = 0\n   Product = 15 * (-6) = -90, Sum = 1\n   Factors are +10 and -9\n   Reverse signs and divide by 15:\n   x_1 = -10/15 = -2/3 \u2248 -0.67\n   x_2 = 9/15 = 3/5 = 0.6\n2. Solve for y:\n   5y^2 - 23y + 12 = 0\n   Product = 5 * 12 = 60, Sum = -23\n   Factors are -20 and -3\n   Reverse signs and divide by 5:\n   y_1 = 20/5 = 4\n   y_2 = 3/5 = 0.6\n3. Compare roots:\n   x_1 = -0.67 < y_1 = 4\n   x_1 = -0.67 < y_2 = 0.6\n   x_2 = 0.6 < y_1 = 4\n   x_2 = 0.6 = y_2 = 0.6\n   Therefore, x \u2264 y.",
+        "answer": "x \u2264 y"
       },
       {
-        "sentence": "A university portal shows different views to a Student compared to an HOD, Principal, or Chancellor.",
-        "working": "Student login displays grade table only. Chancellor login displays full database views and faculty salary details (Role-based View Level access)."
+        "sentence": "Solve the equations and compare: I. 2x^2 + 15x + 28 = 0, II. 2y^2 + 13y + 21 = 0",
+        "rule": "Reverse signs and divide factors by coefficient 2.",
+        "working": "1. Solve for x:\n   2x^2 + 15x + 28 = 0\n   Product = 2 * 28 = 56, Sum = 15\n   Factors are +8 and +7\n   Reverse signs and divide by 2:\n   x_1 = -8/2 = -4\n   x_2 = -7/2 = -3.5\n2. Solve for y:\n   2y^2 + 13y + 21 = 0\n   Product = 2 * 21 = 42, Sum = 13\n   Factors are +7 and +6\n   Reverse signs and divide by 2:\n   y_1 = -7/2 = -3.5\n   y_2 = -6/2 = -3\n3. Compare roots:\n   x_1 = -4 < y_1 = -3.5 and x_1 = -4 < y_2 = -3\n   x_2 = -3.5 = y_1 = -3.5 and x_2 = -3.5 < y_2 = -3\n   Therefore, x \u2264 y.",
+        "answer": "x \u2264 y"
       },
       {
-        "sentence": "Hiding the exact server disk location of YouTube videos from end-users.",
-        "working": "User Clicks Play -> Extracted stream ID -> Translated block address on server disk -> Abstracted stream to screen."
+        "sentence": "I. x^2 - 8x - 20 = 0, II. 3y^2 - 60y + 297 = 0",
+        "rule": "Simplify the second equation by dividing by 3, then solve both using splitting.",
+        "working": "1. Solve for x:\n   x^2 - 8x - 20 = 0\n   Product = -20, Sum = -8\n   Factors are -10 and +2\n   Roots are x_1 = 10, x_2 = -2\n2. Solve for y:\n   3y^2 - 60y + 297 = 0\n   Divide by 3: y^2 - 20y + 99 = 0\n   Product = 99, Sum = -20\n   Factors are -11 and -9\n   Roots are y_1 = 11, y_2 = 9\n3. Compare roots:\n   x_1 = 10 < y_1 = 11 but x_1 = 10 > y_2 = 9\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established",
+        "is_homework": true
       },
       {
-        "sentence": "A web application (such as Google or Facebook) requesting and fetching data using a Three-Tier Web Architecture.",
-        "working": "User fills out a form or enters login details on the Front-end UI (View Level) -> Request is sent to the Server (Conceptual Level) running backend code (PHP, Java, C#) -> Server connects to the Database (Physical Level, such as MySQL or Oracle) to verify credentials or query data -> Database processes physical files and returns data -> Server compiles data -> Server sends response back to client UI."
+        "sentence": "I. 2x^2 + 9x + 7 = 0, II. y^2 + 4y + 4 = 0",
+        "rule": "Factors for x equation split to 7 and 2. y equation is a perfect square.",
+        "working": "1. Solve for x:\n   2x^2 + 9x + 7 = 0\n   Product = 14, Sum = 9\n   Factors are +7 and +2\n   Roots are x_1 = -7/2 = -3.5, x_2 = -2/2 = -1\n2. Solve for y:\n   y^2 + 4y + 4 = 0\n   Factors are +2 and +2\n   Roots are y_1 = -2, y_2 = -2\n3. Compare roots:\n   x_1 = -3.5 < y = -2 but x_2 = -1 > y = -2\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established",
+        "is_homework": true
       }
-    ],
-    "important_points": [
-      "Data Abstraction acts as an API layer that prevents end-users from directly accessing the database, which is vital for database security.",
-      "In Web Applications (Three-Tier), users never have direct access to database files; all requests must flow through the application server layer."
     ],
     "visual_moments": [
       {
-        "timestamp": "00:06:25*",
+        "timestamp": "00:09:51",
         "type": "board",
-        "description": "Database Abstraction layers definition slide explaining hidden details."
+        "description": "Whiteboard showing solutions for 15x^2 + x - 6 = 0."
       },
       {
-        "timestamp": "00:08:35*",
+        "timestamp": "00:17:57",
         "type": "board",
-        "description": "Three-Schema Architecture diagram showing External, Conceptual, and Internal levels."
-      },
-      {
-        "timestamp": "00:09:27*",
-        "type": "board",
-        "description": "Descriptions of Physical/Internal Level and Logical/Conceptual Level on screen."
-      },
-      {
-        "timestamp": "00:12:30*",
-        "type": "board",
-        "description": "Three-Tier Web Architecture diagram mapping front-end UI, middle-tier server, and database."
+        "description": "Whiteboard showing splitting factors for 2x^2 + 15x + 28 = 0."
       }
     ],
     "teacher_quotes": [
-      "Data abstraction is a process of hiding unwanted irrelevant details from the end user.",
-      "Data abstraction is unified communication between a computer application and database."
+      "If equations are multiples of a number, simplify them first."
+    ],
+    "traps": [
+      "Neglecting to simplify 3y^2 - 60y + 297 = 0 before factoring, making calculations unnecessarily large."
+    ],
+    "tricks": [
+      "Always look for common factors across all terms to quickly simplify lead coefficients to 1."
     ]
   },
   {
     "block_id": "CB3",
-    "title": "Logical and Physical Data Independence",
-    "transcript_range_percent": [85, 100],
-    "explanation": "Details Data Independence enabled by Three-Schema Architecture, ensuring lower-level schema changes do not require rewriting higher-level schemas or applications:\n1. Physical Data Independence: Conceptual schema and application programs are unaffected when physical storage changes (e.g., swapping hard disks, migrating to SSDs, changing folder paths, or altering block sizes). SQL queries remain identical.\n2. Logical Data Independence: External schemas and application UIs are unaffected when conceptual schema changes (e.g., adding/renaming columns, deleting attributes, or altering data types).\nWithout data independence, the application would crash frequently, and you would have to write programs from scratch every time schema changes.",
+    "title": "Fractional & Combined Exponent Equations",
+    "transcript_range_percent": [
+      30,
+      60
+    ],
+    "explanation": "Equations with fractional exponents are solved by using exponent laws, primarily combining powers of the same base (x^a * x^b = x^(a+b)) and clearing fractional denominators by multiplying the entire equation by the denominator term.",
     "concepts": [
       {
-        "term": "Logical Data Independence",
-        "definition": "The ability to modify the conceptual schema (tables, columns, types) without changing the external schema or application programs."
+        "term": "Exponent Addition Rule",
+        "definition": "The mathematical rule where multiplying powers with the same base allows addition of the exponents: y^a * y^b = y^(a+b)."
       },
       {
-        "term": "Physical Data Independence",
-        "definition": "The ability to modify the physical schema (storage location, hard disk hardware, block sizes) without changing the conceptual schema or application code."
+        "term": "Denominator Clearing",
+        "definition": "Multiplying both sides of an equation by a radical denominator (like \u221ax) to convert the equation into a linear or polynomial form."
       }
     ],
     "examples": [
       {
-        "sentence": "A database administrator migrates data files from one physical hard drive to another or moves them due to disk failure.",
-        "working": "Copy physical data files -> update storage mapping in DBMS -> SQL queries run identically without rewriting code (Physical Data Independence)."
+        "sentence": "Solve the equations and compare: I. x^2 + (343)^1/3 = 56, II. (y)^4/3 * (y)^5/3 - 295 = 217",
+        "rule": "Express constant bases as powers to clear fractional exponents. Add exponents with the same base.",
+        "working": "1. Solve for x:\n   x^2 + (343)^(1/3) = 56\n   Since 343 = 7^3, we get (343)^(1/3) = 7\n   x^2 + 7 = 56\n   x^2 = 49\n   x = \u00b17\n2. Solve for y:\n   (y)^(4/3) * (y)^(5/3) - 295 = 217\n   Add exponents: 4/3 + 5/3 = 9/3 = 3\n   y^3 - 295 = 217\n   y^3 = 512\n   y = \u221b512\n   y = 8\n3. Compare roots:\n   x_1 = 7 < y = 8 and x_2 = -7 < y = 8\n   Therefore, x < y.",
+        "answer": "x < y"
       },
       {
-        "sentence": "An application update is pushed to WhatsApp, introducing new fields/features in the database table without requiring users to download a rewritten app from scratch.",
-        "working": "Push server-side update adding table column -> user updates app to see new features -> existing database operations run smoothly without breaking (Logical Data Independence)."
+        "sentence": "Solve the equations and compare: I. x^2 - (10)^5/2 / \u221ax = 0, II. 18 / \u221ay - \u221ay = 7 / \u221ay",
+        "rule": "Multiply by \u221ax and \u221ay respectively to clear the fractional terms.",
+        "working": "1. Solve for x:\n   x^2 - (10)^(5/2) / \u221ax = 0\n   Multiply the entire equation by \u221ax:\n   x^2 * x^(1/2) - 10^(5/2) = 0\n   x^(5/2) = 10^(5/2)\n   x = 10\n2. Solve for y:\n   18 / \u221ay - \u221ay = 7 / \u221ay\n   Multiply the entire equation by \u221ay:\n   18 - y = 7\n   y = 11\n3. Compare roots:\n   x = 10 < y = 11\n   Therefore, x < y.",
+        "answer": "x < y"
+      },
+      {
+        "sentence": "I. 4 / \u221ax + 6 / \u221ax = 5\u221ax, II. y^2 + \u221a256 = \u221a625",
+        "rule": "Combine terms with common denominator, then multiply by \u221ax.",
+        "working": "1. Solve for x:\n   4 / \u221ax + 6 / \u221ax = 5\u221ax\n   (4 + 6) / \u221ax = 5\u221ax\n   10 / \u221ax = 5\u221ax\n   10 = 5x\n   x = 2\n2. Solve for y:\n   y^2 + \u221a256 = \u221a625\n   y^2 + 16 = 25\n   y^2 = 9\n   y = \u00b13\n3. Compare roots:\n   x = 2 > y_2 = -3 but x = 2 < y_1 = 3\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established",
+        "is_homework": true
       }
-    ],
-    "important_points": [
-      "Data independence ensures we do not have to write programs from scratch when schemas change.",
-      "Physical changes (like switching hard drives) should be completely transparent to SQL query engines."
     ],
     "visual_moments": [
       {
-        "timestamp": "00:14:39*",
+        "timestamp": "00:22:13",
         "type": "board",
-        "description": "Data Independence mappings shown on the Three-Schema Architecture diagram."
+        "description": "Whiteboard showing calculations for y^3 = 512."
+      },
+      {
+        "timestamp": "00:37:25",
+        "type": "board",
+        "description": "Whiteboard showing multiplication of exponent terms by root variable."
       }
     ],
     "teacher_quotes": [
-      "If we change physical level, conceptual level and external level will have no effect.",
-      "Data independence ensures we do not have to write program from scratch when schemas change."
+      "Clear the denominator by multiplying it out first."
+    ],
+    "traps": [
+      "Confusing division and multiplication in y^(4/3) * y^(5/3) and subtracting exponents instead of adding them."
+    ],
+    "tricks": [
+      "If you see a common variable root in the denominator of both terms, sum their numerators immediately."
+    ]
+  },
+  {
+    "block_id": "CB4",
+    "title": "Radical & Square Root Equations",
+    "transcript_range_percent": [
+      60,
+      65
+    ],
+    "explanation": "Radical equations are solved by isolating the square root expression on one side of the equation and squaring both sides. This clears the radical and yields a solvable linear or quadratic form. When taking the square root of a constant, remember to include both positive and negative values.",
+    "concepts": [
+      {
+        "term": "Radical Isolation",
+        "definition": "Arranging the terms of an equation so that a single term under a radical sign is isolated on one side."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Solve the equations and compare: I. \u221a49 + \u221a(x + 15) = \u221a169, II. y^2 - 212 = 364",
+        "rule": "Isolate the radical term, square both sides to solve for x. Include negative root for y^2.",
+        "working": "1. Solve for x:\n   \u221a49 + \u221a(x + 15) = \u221a169\n   7 + \u221a(x + 15) = 13\n   \u221a(x + 15) = 6\n   Square both sides:\n   x + 15 = 36\n   x = 21\n2. Solve for y:\n   y^2 - 212 = 364\n   y^2 = 576\n   y = \u00b1\u221a576\n   y = \u00b124\n3. Compare roots:\n   x = 21 < y_1 = 24 but x = 21 > y_2 = -24\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established"
+      }
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:34:51",
+        "type": "board",
+        "description": "Whiteboard showing steps to square both sides for \u221a(x + 15) = 6."
+      }
+    ],
+    "teacher_quotes": [
+      "Squaring both sides removes the radical completely."
+    ],
+    "traps": [
+      "Stating y = 24 only, which overlooks the y = -24 root and leads to a false comparison."
+    ],
+    "tricks": [
+      "Remember that 576 is the square of 24 (whereas 676 is the square of 26)."
+    ]
+  },
+  {
+    "block_id": "CB5",
+    "title": "Quadratic Equations with Irrational Middle Terms",
+    "transcript_range_percent": [
+      65,
+      80
+    ],
+    "explanation": "Quadratic equations containing an irrational linear term (e.g. ax^2 - b\u221aKx + c = 0) can be solved using a simple shortcut: divide the constant term c by K (the square of \u221aK), find the factors for this simplified quadratic equation, and then multiply the final factors by \u221aK to obtain the actual roots.",
+    "concepts": [
+      {
+        "term": "Irrational Middle Term",
+        "definition": "A quadratic equation where the middle term coefficient contains a radical value (like \u221a3 or \u221a7)."
+      },
+      {
+        "term": "Radical Factoring Shortcut",
+        "definition": "Dividing the constant by the radical's base, factorizing normally, and multiplying the roots by the radical."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Solve the equations and compare: I. x^2 - 4\u221a7x + 21 = 0, II. 2y^2 - 8\u221a5y - 50 = 0",
+        "rule": "Divide constant by radical square, solve simplified equation, multiply roots by radical.",
+        "working": "1. Solve for x:\n   x^2 - 4\u221a7x + 21 = 0\n   Divide constant 21 by 7: 21 / 7 = 3\n   Solve simplified equation: x^2 - 4x + 3 = 0\n   Product = 3, Sum = -4 -> factors are -3 and -1\n   Multiply roots by \u221a7:\n   x_1 = 3\u221a7 \u2248 3 * 2.65 = 7.95\n   x_2 = \u221a7 \u2248 2.65\n2. Solve for y:\n   2y^2 - 8\u221a5y - 50 = 0\n   Divide by lead coefficient 2: y^2 - 4\u221a5y - 25 = 0\n   Divide constant 25 by 5: 25 / 5 = 5\n   Solve simplified equation: y^2 - 4y - 5 = 0\n   Product = -5, Sum = -4 -> factors are -5 and +1\n   Multiply roots by \u221a5:\n   y_1 = 5\u221a5 \u2248 5 * 2.24 = 11.2\n   y_2 = -\u221a5 \u2248 -2.24\n3. Compare roots:\n   x_1 = 7.95 < y_1 = 11.2 but x_1 = 7.95 > y_2 = -2.24\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established"
+      },
+      {
+        "sentence": "I. x^2 - 7\u221a3x + 36 = 0, II. y^2 - 11\u221a3y + 84 = 0",
+        "rule": "Divide constant terms by 3, solve simplified equations, multiply final roots by \u221a3.",
+        "working": "1. Solve for x:\n   x^2 - 7\u221a3x + 36 = 0\n   Divide constant 36 by 3: 36 / 3 = 12\n   Solve: x^2 - 7x + 12 = 0\n   Product = 12, Sum = -7 -> factors are -4 and -3\n   Multiply roots by \u221a3: x_1 = 4\u221a3, x_2 = 3\u221a3\n2. Solve for y:\n   y^2 - 11\u221a3y + 84 = 0\n   Divide constant 84 by 3: 84 / 3 = 28\n   Solve: y^2 - 11y + 28 = 0\n   Product = 28, Sum = -11 -> factors are -7 and -4\n   Multiply roots by \u221a3: y_1 = 7\u221a3, y_2 = 4\u221a3\n3. Compare roots:\n   x_1 = 4\u221a3 < y_1 = 7\u221a3 and x_1 = 4\u221a3 = y_2 = 4\u221a3\n   x_2 = 3\u221a3 < y_1 = 7\u221a3 and x_2 = 3\u221a3 < y_2 = 4\u221a3\n   Therefore, x \u2264 y.",
+        "answer": "x \u2264 y",
+        "is_homework": true
+      },
+      {
+        "sentence": "I. x^2 - 4\u221a3x + 9 = 0, II. y^2 - \u221a3y - 18 = 0",
+        "rule": "Divide constant terms by 3, factor simplified quadratics, multiply by \u221a3.",
+        "working": "1. Solve for x:\n   x^2 - 4\u221a3x + 9 = 0\n   Divide constant 9 by 3: 9 / 3 = 3\n   Solve: x^2 - 4x + 3 = 0\n   Product = 3, Sum = -4 -> factors are -3 and -1\n   Multiply roots by \u221a3: x_1 = 3\u221a3, x_2 = \u221a3\n2. Solve for y:\n   y^2 - \u221a3y - 18 = 0\n   Divide constant 18 by 3: 18 / 3 = 6\n   Solve: y^2 - y - 6 = 0\n   Product = -6, Sum = -1 -> factors are -3 and +2\n   Multiply roots by \u221a3: y_1 = 3\u221a3, y_2 = -2\u221a3\n3. Compare roots:\n   x_1 = 3\u221a3 = y_1 = 3\u221a3 but x_1 = 3\u221a3 > y_2 = -2\u221a3\n   x_2 = \u221a3 < y_1 = 3\u221a3 but x_2 = \u221a3 > y_2 = -2\u221a3\n   Therefore, relationship cannot be established.",
+        "answer": "relationship can't be established",
+        "is_homework": true
+      }
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:44:12",
+        "type": "board",
+        "description": "Whiteboard showing steps to factor quadratic equations with root coefficients."
+      }
+    ],
+    "teacher_quotes": [
+      "If root exists in the middle, divide the constant by it."
+    ],
+    "traps": [
+      "Forgetting to divide the entire y equation by 2 first in 2y^2 - 8\u221a5y - 50 = 0 before applying the radical division shortcut."
+    ],
+    "tricks": [
+      "Always check if the lead coefficient can divide all other coefficients to simplify the equation first."
+    ]
+  },
+  {
+    "block_id": "CB6",
+    "title": "Vedic Math: Two-Digit Squaring Shortcut Method & Pure Quadratic",
+    "transcript_range_percent": [
+      80,
+      100
+    ],
+    "explanation": "Squaring any two-digit number AB can be done quickly using a visual method derived from (10A + B)^2. First, write A^2 and B^2 side-by-side as a 4-digit number. Next, calculate 2 * A * B. Add this product below the 4-digit number with the units place left blank, and sum them.",
+    "concepts": [
+      {
+        "term": "Two-Digit Squaring Shortcut",
+        "definition": "A Vedic math method to square a number by combining the squares of individual digits and adding twice their product."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Calculate the square of 98 using the Vedic math squaring shortcut method.",
+        "rule": "Write A^2 and B^2 side-by-side, then add 2 * A * B with units place blank.",
+        "working": "1. Write squares of digits:\n   9^2 = 81\n   8^2 = 64\n   Combine them -> 8164\n2. Calculate twice the product of digits:\n   2 * 9 * 8 = 144\n3. Place 144 one place to the left because the units place is left blank:\n     8164\n    +1440\n    -----\n     9604\n   Therefore, 98^2 = 9604.",
+        "answer": "9604"
+      },
+      {
+        "sentence": "I. x^2 - 9 = 0, II. 2y^2 + 13y + 21 = 0",
+        "rule": "x^2 = C gives two roots. Splitting method for y equation.",
+        "working": "1. Solve for x:\n   x^2 - 9 = 0\n   x^2 = 9\n   x = \u00b13\n2. Solve for y:\n   2y^2 + 13y + 21 = 0\n   Product = 2 * 21 = 42, Sum = 13\n   Factors are +7 and +6\n   Reverse signs and divide by 2:\n   y_1 = -7/2 = -3.5\n   y_2 = -6/2 = -3\n3. Compare roots:\n   x_1 = 3 > y_1 = -3.5 and x_1 = 3 > y_2 = -3\n   x_2 = -3 > y_1 = -3.5 and x_2 = -3 = y_2 = -3\n   Therefore, x \u2265 y.",
+        "answer": "x \u2265 y",
+        "is_homework": true
+      }
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:25:36",
+        "type": "board",
+        "description": "Whiteboard showing visual addition for 98^2 calculation."
+      }
+    ],
+    "teacher_quotes": [
+      "Vedic math methods save a lot of time in standard exams."
+    ],
+    "traps": [
+      "Leaving the units place of the 4-digit number filled when adding twice the product, which shifts the sum and gives an incorrect answer."
+    ],
+    "tricks": [
+      "For numbers ending in 5, the square is even simpler: prefix with A*(A+1) and suffix with 25 (e.g. 35^2 -> 3*4=12, suffix 25 -> 1225)."
     ]
   }
 ]

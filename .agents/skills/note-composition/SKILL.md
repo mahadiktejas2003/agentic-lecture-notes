@@ -39,6 +39,7 @@ NEVER write "the lecturer says", "the teacher explains", etc. Write content dire
 - **Rule Deduplication**: Filter out redundant rules within the same block. A rule should not print if it has a word overlap similarity ratio > 0.50 with any rule already printed in the current block.
 - **Drawn Table Support**: If a concept block contains a `"table"` property, render it as a styled Word table in the document.
 - **No Explanation Truncation**: Never truncate or abbreviate explanations or concepts; print the full text to preserve grammar rules and context.
+- **Math Explanations & Layout**: Ensure that all mathematical workings are formatted step-by-step with each step on a new sentence/line (splitting on '->' or step indicators). Show Golden Rule checks first, prime factorization combinations clearly, divisions explicitly, and original fractional/decimal equations first before simplified forms. Label homework questions explicitly as "Homework Questions (HW Que): Try:". Do not mix them with lecture examples. Do not hallucinate or invent extra questions.
 
 ## Anti-Patterns List
 | Anti-Pattern | Description | Corrective Guideline |

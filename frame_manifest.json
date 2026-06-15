@@ -1,42 +1,42 @@
 {
   "frame_001.png": {
-    "timestamp": "00:01:21*",
-    "ocr_text": "Database design\n\ns the organization of data according to a database\n\ne designer determines what data must be stored and\now the data elements interrelate. With \u2014 this\ninformation, they can begin to fit the data to the\ndatabase model.",
+    "timestamp": "00:08:08",
+    "ocr_text": "Lecture \u2014 2 (LIVE)\n\nDirections: In each of these questions, two equations (I) and (II) are given. You have to solve both\nthe equations and give answer.\n\nql.\nLx? = 361 I. y3 = 7269 + 731\nA. ifx<y B.ifx>y Cifx2y D.ifxsy\n\nE. if x = y or relationship between x and y can't be established\n\n\u201c \u00a2 \u00b0\nAVabasec",
     "type": "board"
   },
   "frame_002.png": {
-    "timestamp": "00:02:59*",
-    "ocr_text": "EE ELSES\nLogical Designing\n\n*It deals with relationships and dependencies amongst\nthe various pieces of information have been determined.\n\nlogical structure then mapped into the storage objects\npported by the DBMS. In the case of relational\natabases the storage objects are tables which store data\nin rows and columns.\n\ny",
+    "timestamp": "00:09:51",
+    "ocr_text": "Q2.\n\n1. 15x2+x-6=0 Il. 5y? \u2014 23y + 12=0\nA. ifx>y B.ifxsy C.ifx2y D.ifx<y\nE. if x = y or relationship between x and y can't be established",
     "type": "board"
   },
   "frame_003.png": {
-    "timestamp": "00:04:45*",
-    "ocr_text": "Logical Designing \u00a9 of, Caan HOE\n\n(CoA\u00a58\nC \u2019\n\ndeals with relationships and-dependencies amongst\ne various pieces of information have been determined.\n\n~A logical structure then mapped into the storage objects\n\nMpported by the DBMS. In the case of relational\nsaabases the storage objects are tables which store data\nBows and.co) fins.\n\nVv",
+    "timestamp": "00:17:57",
+    "ocr_text": "Qs.\n\n1. 2x? + 15x +28=0 Il, 2y? +13y+21=0\n\nA.ifx>y B.ifx2y Cifx<y D.ifxsy\nE. if x= yor relationship between x and y can't be established",
     "type": "board"
   },
   "frame_004.png": {
-    "timestamp": "00:06:25*",
-    "ocr_text": "Database Abstraction /Database Abstraction Layers\n\n* It is an application programming interface which unifies the\ncommunication between a computer application and databases\nsuch as SQL Server, IBM Db2, MySQL, PostgreSQL, Oracle or\nSQLite.\n\n* Data Abstraction is a process of hiding unwanted or irrelevant\ndetails from the end user. It provides a different view and helps\n\nieving data independence which is used to enhance the\n\nty of data.\n\n2",
+    "timestamp": "00:22:13",
+    "ocr_text": "1. x74 (343)1/3= 56 I. (y)*3 x (y)5/3 - 295 = 217\nA.ifx>y B.ifxsy C.ifx2y D.ifx<y\nE. if x = y or relationship between x and y can't be established",
     "type": "board"
   },
   "frame_005.png": {
-    "timestamp": "00:08:35*",
-    "ocr_text": "* Physical or Internal Level -> It is the lowest level of abstraction\nfor DBMS which defines how the data is actually stored, it\ndefines data-structures to store data and access methods used\n\n\u2018a the database.\n\n* Logical or Conceptual Level -> It is the intermediate level or\nnext higher level. It describes what data is stored in the\ndatabase and what relationship exists among those data.\n\n* View or External Level -> It is the highest level. In view level,\nthere are different levels of views and every view only defines a\npart of the entire data. It also simplifies interaction with the\nuser and it provides many views or multiple views of the same\ndatabase.",
-    "type": "board"
-  },
-  "frame_006.png": {
-    "timestamp": "00:09:27*",
-    "ocr_text": "ical or Internal Level -> It is the lowest level of abstraction\nBMS which defines how the data is actually stored, it\n\nnes data-structures to store data and access methods used\nhe database.\n\ngical or Conceptual Level -> It is the intermediate level or\nxt higher level. It describes what data is stored in the\natabase and what relationship exists among those data.\n\niew or External Level -> It is the highest level. In view level,\nthere are different levels of views and every view only defines a\npart of the entire data. It also simplifies interaction with the\nuser and it provides many views or multiple views of the same\ndatabase.",
-    "type": "board"
-  },
-  "frame_007.png": {
-    "timestamp": "00:12:30*",
+    "timestamp": "00:25:36",
     "ocr_text": "",
     "type": "board"
   },
+  "frame_006.png": {
+    "timestamp": "00:34:51",
+    "ocr_text": "1.V49 +Vx + 15= V169 Il. y?- 212 = 364\nA. ifx>y B.ifxsy C.ifx2y D.ifx<y\nE. if x = y or relationship between x and y can't be established\n\nit a4ig6= *",
+    "type": "board"
+  },
+  "frame_007.png": {
+    "timestamp": "00:37:25",
+    "ocr_text": "2 (109572 _\nI. x?--\u2014\u2014=0 + B 5 VIG\n\nA.ifx>y \u201d B.ifxsy citey D. if)\nE. if x = y or relationship between x and y can't be established",
+    "type": "board"
+  },
   "frame_008.png": {
-    "timestamp": "00:14:39*",
-    "ocr_text": "Schema Architecture\n\n/\n\n/ /\n(External Level>|\n\nLogical Data Independence\n\nPhysical Data Independence",
+    "timestamp": "00:44:12",
+    "ocr_text": "Q14.\n\n1x2 -av7%21=0 ll. 2y2-8,/5y-50=0\nA.ifx>y B.ifxsy C.ifx2y D.ifx<y\nE. if x = y or relationship between x and y can't be established",
     "type": "board"
   }
 }

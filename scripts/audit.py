@@ -5,6 +5,8 @@ import argparse
 import sys
 import logging
 from docx import Document
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from scripts.generate_docx import format_math_text
 
 # Configure logging
 os.makedirs("logs", exist_ok=True)
@@ -147,7 +149,8 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     for b in concept_blocks:
         for ex in b.get('examples', []):
             sent = ex.get('sentence', '').strip()
-            norm_sent = "".join(c.lower() for c in sent if c.isalnum())
+            formatted_sent = format_math_text(sent)
+            norm_sent = "".join(c.lower() for c in formatted_sent if c.isalnum())
             norm_doc = "".join(c.lower() for c in all_text if c.isalnum())
             if norm_sent not in norm_doc:
                 missing_examples.append(sent)

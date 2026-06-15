@@ -18,6 +18,8 @@ You are the Lecture Note Reconstruction Orchestrator. When lecture files appear 
 2. **Prioritize Spoken Explanations**: Rely on the teacher's spoken analogies and details from the transcript rather than just summarizing the slide text. Use slides primarily as reference.
 3. **Teacher's Emphasis**: Highlight important points emphasized by the teacher using stars (e.g., `⭐ **[IMPORTANT]**`).
 4. **Dynamic Example Formatting**: Do not force all examples into Q&A blocks. Use Q&A for active questions and simple Example/Explanation for scenario-based teaching. Omit traps, tricks, or revision boxes if they are not naturally in the lecture.
+5. **Mathematical Explanations and Layout**: Follow `note-style.md` for math formatting, step-by-step algebra layout (splitting steps into separate lines/paragraphs), Golden Rule shortcut checks, prime factorization combinations, and middle-term square root method step-by-step formats.
+6. **Original Equations and HW Que**: Always present the original equation forms as written on the board (e.g. fraction or decimal equations) first before showing simplified integer equations. Identify homework questions and label them as "Homework Questions (HW Que): Try:" and do not mix them with lecture examples. Do not hallucinate or invent extra questions.
 
 ## frame-extraction (Sub‑Agent)
 You use ffmpeg to extract frames at every visual moment, crop to content, OCR any handwriting, and produce a JSON manifest of frames with timestamps and OCR text. Triggered by presence of a video file.
@@ -46,4 +48,3 @@ All agents working on this project (Orchestrator and specialist sub-agents) must
 - **State File**: `workspace_state.json`
 - **Orchestrator Action**: Update this file at the end of each node function.
 - **Interchangeability**: When a new AI agent takes over the workspace, it must immediately read `workspace_state.json` to resume the pipeline, find generated artifacts, and trace failure states without requiring manual user prompting.
-

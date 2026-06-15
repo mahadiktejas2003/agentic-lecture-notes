@@ -36,6 +36,10 @@ description: Analyzes lecture transcripts to produce a chronological Concept Blo
 - **Quote Quality**: Clean each extracted teacher quote. Strip all SRT metadata (timestamps/line counters), leading stray vowel signs or symbols, ensure it is a complete sentence, and deduplicate identical quotes.
 - **Lecture Title**: Store a dedicated `"lecture_title"` field in the first block of the manifest based on the overall topic (e.g., "English Discussion on Noun Exercise & Pronoun -1 (Live-7)").
 - **Support for Tables**: If a concept block introduces a reference grid or table (such as the pronouns case grid), include a `"table"` property with `"title"`, `"headers"`, and `"rows"` so that the note compiler can render it as a styled Word table.
+- **Math Explanations & Layout**: Ensure that all algebraic workings are detailed step-by-step and equations are written clearly. Highlight the Golden Rule check first. State "Don't even need to solve for roots" when roots are trivially compared.
+- **Prime Factorization Method**: Map the grouping combinations and prime factors ladder for large constants.
+- **Original Equations**: Extract original equations from the transcript/slides (like denominator variables or decimals) first.
+- **Homework Questions (HW Que)**: Label homework questions clearly as "Homework Questions (HW Que): Try:" and map them correctly. Do not mix them with lecture examples. Do not hallucinate or invent extra questions.
 
 ## Density Verification Gate (MANDATORY — run before saving)
 

@@ -1,27 +1,27 @@
 {
   "active_lecture": {
-    "title": "Database Management System: Database Design & Schema Architecture",
-    "video_path": "lecture-input/LECTURE.mp4",
+    "title": "Quantitative Aptitude: Advance Quadratic Equations (Live-2)",
+    "video_path": "lecture-input/video.mp4",
     "transcript_path": "lecture-input/transcript.srt",
-    "last_updated": "2026-06-14T08:29:42.741908"
+    "last_updated": "2026-06-15T18:48:00.000000"
   },
   "pipeline": {
     "current_stage": "completed",
     "status_message": "Pipeline completed successfully with all gates passing",
     "gate_retries": {},
     "failed_gate": 0,
-    "last_updated": "2026-06-14T08:29:42.741909"
+    "last_updated": "2026-06-15T18:48:00.000000"
   },
   "artifacts": {
     "concept_map": "concept_block_map.json",
     "frame_manifest": "frame_manifest.json",
     "slide_manifest": "slide_manifest.json",
     "notes_output": "notes-output/LECTURE_NOTES.docx",
-    "last_archive": "notes-output/LECTURE_NOTES_Reasoning_Distance_and_Direction_Practice_Live-4_Parts_1_and_2_2026-06-12_11-29-26.docx"
+    "last_archive": "notes-output/LECTURE_NOTES_Quantitative_Aptitude_Advance_Quadratic_Equations_Live-2_2026-06-15_18-48-00.docx"
   },
   "audit": {
     "score": 18,
     "failed_gates": [],
-    "last_checked": "2026-06-14T08:29:42.741910"
+    "last_checked": "2026-06-15T18:48:05.000000"
   }
 }

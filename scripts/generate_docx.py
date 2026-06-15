@@ -15,7 +15,7 @@ logging.basicConfig(
     ]
 )
 from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_COLOR_INDEX
 from docx.oxml.ns import qn, nsdecls
 from docx.oxml import parse_xml
 
@@ -57,48 +57,270 @@ def are_rules_similar(r1, r2, threshold=0.50):
     return ratio > threshold
 
 
-# Helper Functions (unchanged)
+# Helper Functions
+def format_math_text(text):
+    if not text:
+        return text
+        
+    # Clean LaTeX delimiters
+    text = text.replace(r'\(', '').replace(r'\)', '').replace(r'\[', '').replace(r'\]', '')
+    text = re.sub(r'(?<!\\)\$', '', text)
+    
+    # Exponents
+    superscripts = {
+        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+        '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹',
+        '-': '⁻', '+': '⁺', '=': '⁼', '(': '⁽', ')': '⁾',
+        'n': 'ⁿ', 'i': 'ⁱ', 'x': 'ˣ', 'y': 'ʸ'
+    }
+    
+    def repl_exp(m):
+        base = m.group(1)
+        exp_str = m.group(2)
+        res = ""
+        for char in exp_str:
+            res += superscripts.get(char, char)
+        return f"{base}{res}"
+
+    def repl_fraction_exp(m):
+        base = m.group(1)
+        numerator = ''.join(superscripts.get(char, char) for char in m.group(2))
+        denominator = ''.join(superscripts.get(char, char) for char in m.group(3))
+        return f"{base}{numerator}/{denominator}"
+
+    text = re.sub(r'(\([^)]*\)|[A-Za-z0-9_\-\+]+)\^([0-9]+)\s*/\s*([0-9]+)', repl_fraction_exp, text)
+    text = re.sub(r'([A-Za-z0-9_\-\+]+)\^([0-9a-zA-Z\-\+]+)', repl_exp, text)
+    text = re.sub(r'([A-Za-z0-9_\-\+]+)\^\(([^)]+)\)', repl_exp, text)
+    text = re.sub(r'(\([A-Za-z0-9_\-\+±\*/]+\))\^([0-9a-zA-Z\-\+]+)', repl_exp, text)
+    text = re.sub(r'(\([A-Za-z0-9_\-\+±\*/]+\))\^\(([^)]+)\)', repl_exp, text)
+    
+    # Subscripts
+    subscripts = {
+        '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+        '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
+        '-': '₋', '+': '₊', '=': '₌', '(': '₍', ')': '₎',
+        'n': 'ₙ', 'i': 'ᵢ', 'x': 'ₓ', 'y': 'ᵧ'
+    }
+    
+    def repl_sub(m):
+        base = m.group(1)
+        sub_str = m.group(2)
+        res = ""
+        for char in sub_str:
+            res += subscripts.get(char, char)
+        return f"{base}{res}"
+        
+    text = re.sub(r'([A-Za-z0-9_\-\+]+)_([0-9a-zA-Z\-\+]+)', repl_sub, text)
+    text = re.sub(r'([A-Za-z0-9_\-\+]+)_\(([^)]+)\)', repl_sub, text)
+    
+    # LaTeX commands
+    text = text.replace(r'\pm', '±')
+    text = text.replace(r'\times', '×')
+    text = text.replace(r'\leq', '≤')
+    text = text.replace(r'\geq', '≥')
+    text = text.replace(r'\neq', '≠')
+    text = text.replace(r'\approx', '≈')
+    text = text.replace(r'\div', '÷')
+    text = text.replace(r'\cdot', '·')
+    text = text.replace(r'\rightarrow', '→')
+    text = text.replace(r'\leftarrow', '←')
+    text = text.replace(r'\Rightarrow', '⇒')
+    text = text.replace(r'\infty', '∞')
+    
+    # Handle sqrt variants
+    text = re.sub(r'\\sqrt\{([^}]*)\}', r'√(\1)', text)
+    text = re.sub(r'\\sqrt\s*', '√', text)
+    text = re.sub(r'\bsqrt\((.*?)\)', r'√(\1)', text)
+    
+    # ASCII equivalents
+    text = re.sub(r'(?<=[0-9a-zA-Z\)])\s*\*\s*(?=[0-9a-zA-Z\(√])', ' × ', text)
+    text = re.sub(r'\s+\*\s+', ' × ', text)
+    text = text.replace('->', '→')
+    text = text.replace('<-', '←')
+    text = text.replace('=>', '⇒')
+    text = text.replace('<=', '≤')
+    text = text.replace('>=', '≥')
+    text = text.replace('!=', '≠')
+    text = text.replace('+/-', '±')
+    
+    fractions = {'1/2': '½', '1/4': '¼', '3/4': '¾', '1/3': '⅓', '2/3': '⅔', '1/5': '⅕', '2/5': '⅖', '3/5': '⅗', '4/5': '⅘', '1/6': '⅙', '5/6': '⅚', '1/8': '⅛', '3/8': '⅜', '5/8': '⅝', '7/8': '⅞'}
+    for f_str, f_uni in fractions.items():
+        text = re.sub(rf'\b{f_str}\b', f_uni, text)
+        
+    greek = {
+        'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'delta': 'δ', 'epsilon': 'ε',
+        'zeta': 'ζ', 'eta': 'η', 'theta': 'θ', 'iota': 'ι', 'kappa': 'κ',
+        'lambda': 'λ', 'mu': 'μ', 'nu': 'ν', 'xi': 'ξ', 'pi': 'π', 'rho': 'ρ',
+        'sigma': 'σ', 'tau': 'τ', 'upsilon': 'υ', 'phi': 'φ', 'chi': 'χ',
+        'psi': 'ψ', 'omega': 'ω'
+    }
+    for g_str, g_uni in greek.items():
+         text = re.sub(rf'\b{g_str}\b', g_uni, text, flags=re.IGNORECASE)
+
+    return text
+
+def add_rich_runs(p, text, default_bold=False, default_italic=False, default_underline=False, default_color_rgb=None, default_highlight=None):
+    if not text:
+        return
+    
+    # Parse HTML-like tags: <b>, <i>, <u>, <color rgb="...">, <highlight color="...">
+    pattern = re.compile(r'(</?[a-zA-Z_]+(?:\s+[a-zA-Z_]+="[^"]*")*>)')
+    tokens = pattern.split(text)
+    
+    style_stack = []
+    
+    for token in tokens:
+        if not token:
+            continue
+        if token.startswith('<') and token.endswith('>'):
+            is_closing = token.startswith('</')
+            tag_name_match = re.match(r'</?([a-zA-Z_]+)', token)
+            if tag_name_match:
+                tag_name = tag_name_match.group(1).lower()
+                if is_closing:
+                    for i in range(len(style_stack) - 1, -1, -1):
+                        if style_stack[i]['tag'] == tag_name:
+                            style_stack.pop(i)
+                            break
+                else:
+                    attrs = {}
+                    attr_matches = re.findall(r'([a-zA-Z_]+)="([^"]*)"', token)
+                    for k, v in attr_matches:
+                        attrs[k.lower()] = v
+                    style_stack.append({'tag': tag_name, 'attrs': attrs})
+        else:
+            cleaned_text = format_math_text(token)
+            run = p.add_run(cleaned_text)
+            run.font.name = 'Calibri'
+            
+            bold = default_bold
+            italic = default_italic
+            underline = default_underline
+            color_rgb = default_color_rgb
+            highlight_color = default_highlight
+            
+            for style in style_stack:
+                t = style['tag']
+                attrs = style['attrs']
+                if t == 'b':
+                    bold = True
+                elif t == 'i':
+                    italic = True
+                elif t == 'u':
+                    underline = True
+                elif t == 'color':
+                    color_rgb = attrs.get('rgb')
+                elif t == 'highlight':
+                    highlight_color = attrs.get('color')
+            
+            if bold:
+                run.bold = True
+            if italic:
+                run.italic = True
+            if underline:
+                run.underline = True
+            if color_rgb:
+                try:
+                    hex_color = color_rgb.lstrip('#')
+                    run.font.color.rgb = RGBColor(
+                        int(hex_color[0:2], 16),
+                        int(hex_color[2:4], 16),
+                        int(hex_color[4:6], 16)
+                    )
+                except Exception as e:
+                    pass
+            if highlight_color:
+                try:
+                    hc_upper = highlight_color.upper()
+                    if hasattr(WD_COLOR_INDEX, hc_upper):
+                        run.font.highlight_color = getattr(WD_COLOR_INDEX, hc_upper)
+                except Exception as e:
+                    pass
+
+def add_custom_heading(doc, text, level):
+    h = doc.add_heading(text, level=level)
+    color_rgb = None
+    if level == 0:
+        color_rgb = RGBColor(0x13, 0x28, 0x4B)  # Deep Navy Title
+    elif level == 1:
+        color_rgb = RGBColor(0x2A, 0x4B, 0x7E)  # Slate Blue H1
+    elif level == 2 or level == 3:
+        color_rgb = RGBColor(0x3F, 0x6C, 0xAF)  # Steel Blue H2/H3
+        
+    for r in h.runs:
+        r.font.name = 'Calibri'
+        if color_rgb:
+            r.font.color.rgb = color_rgb
+    return h
+
+def add_bold_prefix(p, text):
+    run = p.add_run(text)
+    run.bold = True
+    run.font.name = 'Calibri'
+    return run
+
 def add_revision_box(doc, bullets, rule=None):
     parts = ['[⚡ Quick Rev]'] + [f'• {b}' for b in bullets]
     if rule:
         parts.append(f'Rule: {rule}')
-    text = '\n'.join(parts)
     p = doc.add_paragraph()
-    run = p.add_run(text)
-    run.bold = True
-    run.font.size = Pt(9)
+    p.paragraph_format.space_before = Pt(6)
+    p.paragraph_format.space_after = Pt(6)
+    
+    for idx, part in enumerate(parts):
+        if idx > 0:
+            p.add_run('\n')
+        if part.startswith('[⚡ Quick Rev]'):
+            add_rich_runs(p, part, default_bold=True)
+        else:
+            add_rich_runs(p, part)
+            
     shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="D6EAF8" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
+    
+    for run in p.runs:
+        run.font.size = Pt(9)
+        run.font.name = 'Calibri'
     return p
 
 def add_trap(doc, text):
     p = doc.add_paragraph()
-    run = p.add_run(f'🚨 TRAP: {text}')
-    run.bold = True
-    run.font.size = Pt(10)
+    p.add_run("🚨 TRAP: ").bold = True
+    add_rich_runs(p, text, default_bold=True)
+    for run in p.runs:
+        run.font.size = Pt(10)
+        run.font.name = 'Calibri'
     return p
 
 def add_trick(doc, text):
     p = doc.add_paragraph()
-    run = p.add_run(f'💡 TRICK: {text}')
-    run.bold = True
-    run.font.size = Pt(10)
+    p.add_run("💡 TRICK: ").bold = True
+    add_rich_runs(p, text, default_bold=True)
+    for run in p.runs:
+        run.font.size = Pt(10)
+        run.font.name = 'Calibri'
     return p
 
 def add_quote(doc, text):
     p = doc.add_paragraph()
-    run = p.add_run(f'📝 QUOTE: "{text}"')
-    run.italic = True
-    run.font.size = Pt(10)
+    p.add_run("📝 QUOTE: ").bold = True
+    add_rich_runs(p, f'"{text}"', default_italic=True)
+    for run in p.runs:
+        run.font.size = Pt(10)
+        run.font.name = 'Calibri'
     return p
 
 def add_correction(doc, wrong, correct):
     p = doc.add_paragraph()
-    run_wrong = p.add_run(wrong)
+    p.add_run("Wrong: ").bold = True
+    run_wrong = p.add_run(format_math_text(wrong))
     run_wrong.font.strike = True
+    run_wrong.font.name = 'Calibri'
     p.add_run(' → ')
-    run_correct = p.add_run(correct)
+    p.add_run("Correct: ").bold = True
+    run_correct = p.add_run(format_math_text(correct))
     run_correct.bold = True
+    run_correct.font.name = 'Calibri'
     return p
 
 def add_styled_table(doc, headers, rows):
@@ -106,21 +328,23 @@ def add_styled_table(doc, headers, rows):
     table.style = 'Table Grid'
     for i, header in enumerate(headers):
         cell = table.rows[0].cells[i]
-        cell.text = header
-        for paragraph in cell.paragraphs:
-            for run in paragraph.runs:
-                run.bold = True
-                run.font.color.rgb = RGBColor(255, 255, 255)
-                run.font.size = Pt(9)
+        p = cell.paragraphs[0]
+        p.text = ""
+        add_rich_runs(p, header, default_bold=True, default_color_rgb="FFFFFF")
+        for run in p.runs:
+            run.font.size = Pt(9)
+            run.font.name = 'Calibri'
         shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="2C3E50" w:val="clear"/>')
         cell._element.get_or_add_tcPr().append(shading)
     for ri, row_data in enumerate(rows):
         for ci, value in enumerate(row_data):
             cell = table.rows[ri + 1].cells[ci]
-            cell.text = str(value)
-            for paragraph in cell.paragraphs:
-                for run in paragraph.runs:
-                    run.font.size = Pt(9)
+            p = cell.paragraphs[0]
+            p.text = ""
+            add_rich_runs(p, str(value))
+            for run in p.runs:
+                run.font.size = Pt(9)
+                run.font.name = 'Calibri'
             if ri % 2 == 1:
                 shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F2F3F4" w:val="clear"/>')
                 cell._element.get_or_add_tcPr().append(shading)
@@ -135,12 +359,81 @@ def add_image_if_exists(doc, path, width=Inches(4.5)):
 def add_shaded_formula(doc, text):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run(text)
+    run = p.add_run(format_math_text(text))
     run.bold = True
     run.font.size = Pt(11)
+    run.font.name = 'Calibri'
     shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="EAECEE" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
     return p
+
+def add_formatted_explanation_paragraphs(doc, text):
+    if not text:
+        return
+    # Split text into lines first
+    lines = text.split('\n')
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        # If line contains HTML formatting tags, avoid sentence splitting to prevent tag breakage
+        if '<' in line and '>' in line:
+            if line.startswith(('•', '-', '*')):
+                sent_clean = line.lstrip('•-* ').strip()
+                p = doc.add_paragraph(style='List Bullet')
+                add_rich_runs(p, sent_clean)
+            elif re.match(r'^\d+[\.\)]', line):
+                match = re.match(r'^(\d+[\.\)])\s*(.*)', line)
+                prefix = match.group(1)
+                body = match.group(2)
+                p = doc.add_paragraph()
+                p.add_run(prefix + " ").bold = True
+                add_rich_runs(p, body)
+            else:
+                p = doc.add_paragraph()
+                add_rich_runs(p, line)
+        else:
+            # Standard sentence splitting
+            sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z0-9a-z\-±\+\(\*])', line)
+            for sent in sentences:
+                sent = sent.strip()
+                if not sent:
+                    continue
+                if sent.startswith(('•', '-', '*')):
+                    sent_clean = sent.lstrip('•-* ').strip()
+                    p = doc.add_paragraph(style='List Bullet')
+                    add_rich_runs(p, sent_clean)
+                elif re.match(r'^\d+[\.\)]', sent):
+                    match = re.match(r'^(\d+[\.\)])\s*(.*)', sent)
+                    prefix = match.group(1)
+                    body = match.group(2)
+                    p = doc.add_paragraph()
+                    p.add_run(prefix + " ").bold = True
+                    add_rich_runs(p, body)
+                else:
+                    p = doc.add_paragraph()
+                    add_rich_runs(p, sent)
+
+def get_explicit_answer(ex, working_text):
+    answer = ex.get('answer')
+    if answer:
+        return answer
+
+    if not working_text:
+        return ""
+
+    # Prefer the final stated conclusion when the author did not supply an explicit answer.
+    for line in reversed([ln.strip() for ln in working_text.split('\n') if ln.strip()]):
+        if line.lower().startswith('therefore'):
+            return line.split('Therefore,', 1)[-1].strip().lstrip(':').strip()
+
+    # Fallback only if the working text explicitly ends with a result-like line.
+    if '->' in working_text:
+        return working_text.split('->')[-1].strip()
+
+    return ""
+
 
 def get_vm_image_path(vm, block_id, slides, timestamp_to_frame, frames):
     ts = vm.get('timestamp', '').rstrip('*')
@@ -211,6 +504,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     font = style.font
     font.name = 'Calibri'
     font.size = Pt(11)
+    font.color.rgb = RGBColor(0x2B, 0x2F, 0x36)
 
     # Load manifests
     if not os.path.exists(concept_map_path):
@@ -237,26 +531,23 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # SEMANTIC COHERENCE CHECK: Warn if concept blocks and frames appear mismatched
     if concept_blocks and frames:
-        # Extract keywords from concept block titles
         import re
         concept_keywords = set()
         for block in concept_blocks[:3]:  # Check first few blocks
             title = block.get('title', '').lower()
-            words = re.findall(r'\b[a-z]{4,}\b', title)  # Words 4+ chars
+            words = re.findall(r'\b[a-z]{4,}\b', title)
             concept_keywords.update(words)
         
-        # Extract keywords from frame OCR text
         frame_keywords = set()
         for fname, info in list(frames.items())[:10]:  # Check first 10 frames
             ocr = info.get('ocr_text', '').lower()
             words = re.findall(r'\b[a-z]{4,}\b', ocr)
             frame_keywords.update(words)
         
-        # Check for overlap
         common = concept_keywords & frame_keywords
         overlap_ratio = len(common) / max(len(concept_keywords), 1)
         
-        if overlap_ratio < 0.15:  # Less than 15% keyword overlap
+        if overlap_ratio < 0.15:
             logging.warning(f"⚠️  SEMANTIC COHERENCE WARNING: Concept blocks and frames may be from different lectures!")
             logging.warning(f"   Concept keywords: {list(concept_keywords)[:10]}")
             logging.warning(f"   Frame keywords: {list(frame_keywords)[:10]}")
@@ -272,42 +563,77 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
 
     # Title
     lecture_title = "Lecture Reconstruction Notes"
-    # Check if the manifest provides a dedicated lecture title
     if concept_blocks and isinstance(concept_blocks, list) and len(concept_blocks) > 0:
         if "lecture_title" in concept_blocks[0]:
             lecture_title = concept_blocks[0]["lecture_title"]
         else:
-            # Fallback: use first block's title only if it doesn't look like a question range
             first_title = concept_blocks[0].get('title', '')
             if first_title and not re.match(r'^.*\(Questions?\s*\d+', first_title):
                 lecture_title = first_title
-    doc.add_heading(lecture_title, 0)
+    add_custom_heading(doc, lecture_title, 0)
 
     # Section 1: Lecture Flow Outline
-    doc.add_heading("Section 1: Lecture Flow Outline", level=1)
+    add_custom_heading(doc, "Section 1: Lecture Flow Outline", level=1)
     for block in concept_blocks:
         p = doc.add_paragraph(style='List Bullet')
         run = p.add_run(block.get('title', 'Untitled Concept Block'))
         run.bold = True
+        run.font.name = 'Calibri'
     doc.add_paragraph()
 
     # Section 2: Detailed Concept Blocks
-    doc.add_heading("Section 2: Detailed Concept Blocks", level=1)
+    add_custom_heading(doc, "Section 2: Detailed Concept Blocks", level=1)
 
     inserted_ocrs = []
     inserted_filenames = set()
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
-        doc.add_heading(f"{block_id}: {title}", level=2)
+        add_custom_heading(doc, f"{block_id}: {title}", level=2)
 
         # Teacher's explanation text
         explanation = block.get('explanation', '')
         if explanation:
-            doc.add_paragraph(explanation)
+            add_formatted_explanation_paragraphs(doc, explanation)
         else:
             p = doc.add_paragraph()
             p.add_run("(No detailed explanation provided in the source.)").italic = True
+
+        # Mnemonic section
+        mnemonic = block.get('mnemonic')
+        if mnemonic:
+            p_m_lbl = doc.add_paragraph()
+            p_m_lbl.paragraph_format.space_before = Pt(6)
+            p_m_lbl.paragraph_format.space_after = Pt(2)
+            add_bold_prefix(p_m_lbl, "@ Mnemonic:")
+            
+            p_m_val = doc.add_paragraph()
+            p_m_val.paragraph_format.space_before = Pt(0)
+            p_m_val.paragraph_format.space_after = Pt(4)
+            add_rich_runs(p_m_val, mnemonic.get('text', ''))
+            
+            p_bd_lbl = doc.add_paragraph()
+            p_bd_lbl.paragraph_format.space_before = Pt(4)
+            p_bd_lbl.paragraph_format.space_after = Pt(2)
+            add_bold_prefix(p_bd_lbl, "The Breakdown:")
+            
+            for item in mnemonic.get('breakdown', []):
+                p_item = doc.add_paragraph()
+                p_item.paragraph_format.space_before = Pt(0)
+                p_item.paragraph_format.space_after = Pt(2)
+                add_rich_runs(p_item, item)
+                
+            p_sp_lbl = doc.add_paragraph()
+            p_sp_lbl.paragraph_format.space_before = Pt(4)
+            p_sp_lbl.paragraph_format.space_after = Pt(2)
+            add_bold_prefix(p_sp_lbl, "The \"Specialized\" Trio (The remaining 3):")
+            
+            for item in mnemonic.get('specialized', []):
+                p_item = doc.add_paragraph()
+                p_item.paragraph_format.space_before = Pt(0)
+                p_item.paragraph_format.space_after = Pt(2)
+                add_rich_runs(p_item, item)
+            doc.add_paragraph()
 
         # Table data rendering
         table_data = block.get('table')
@@ -316,18 +642,38 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
             rows = table_data.get('rows', [])
             if headers and rows:
                 table_title = table_data.get('title', 'Reference Table')
-                doc.add_heading(table_title, level=3)
+                add_custom_heading(doc, table_title, level=3)
                 add_styled_table(doc, headers, rows)
                 doc.add_paragraph()
 
         # Key Concepts and Definitions
         concepts = block.get('concepts', [])
         if concepts:
-            doc.add_heading("Key Concepts & Definitions:", level=3)
+            add_custom_heading(doc, "Key Concepts & Definitions:", level=3)
             for item in concepts:
                 p_c = doc.add_paragraph(style='List Bullet')
-                p_c.add_run(item.get('term', '') + ": ").bold = True
-                p_c.add_run(item.get('definition', ''))
+                add_bold_prefix(p_c, item.get('term', '') + ": ")
+                add_rich_runs(p_c, item.get('definition', ''))
+
+        # Exam Imp section
+        exam_imp = block.get('exam_imp', [])
+        if exam_imp:
+            p_head = doc.add_paragraph()
+            p_head.paragraph_format.space_before = Pt(6)
+            p_head.paragraph_format.space_after = Pt(2)
+            run_head = p_head.add_run("EXAM IMP:")
+            run_head.bold = True
+            run_head.underline = True
+            run_head.font.size = Pt(10)
+            run_head.font.color.rgb = RGBColor(0x00, 0x70, 0xC0)
+            run_head.font.name = 'Calibri'
+            
+            for item in exam_imp:
+                p_item = doc.add_paragraph()
+                p_item.paragraph_format.space_before = Pt(0)
+                p_item.paragraph_format.space_after = Pt(3)
+                add_rich_runs(p_item, item)
+            doc.add_paragraph()
 
         # Examples & Illustrations
         examples = block.get('examples', [])
@@ -336,68 +682,97 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         visual_moments = block.get('visual_moments', [])
 
         if examples:
-            doc.add_heading("Examples & Illustrations:", level=3)
-            for idx, ex in enumerate(examples):
-                p_q = doc.add_paragraph()
-                sentence = ex.get('sentence', 'Example')
-                is_question = sentence.endswith('?') or sentence.startswith(('Q:', 'Explain', 'Describe', 'Why', 'How', 'What', 'Define', 'List'))
-                
-                pref = "Q: " if is_question else "Example: "
-                p_q.add_run(pref).bold = True
-                p_q.add_run(sentence)
+            solved_examples = [ex for ex in examples if not ex.get('is_homework')]
+            hw_examples = [ex for ex in examples if ex.get('is_homework')]
 
-                rule = ex.get('rule', '')
-                is_redundant_rule = False
-                if rule:
-                    is_redundant_rule = any(are_rules_similar(rule, prev) for prev in seen_rules_in_block)
+            if solved_examples:
+                add_custom_heading(doc, "Examples & Illustrations:", level=3)
+                for idx, ex in enumerate(solved_examples):
+                    p_q = doc.add_paragraph()
+                    sentence = ex.get('sentence', 'Example')
+                    is_question = sentence.endswith('?') or sentence.startswith(('Q:', 'Explain', 'Describe', 'Why', 'How', 'What', 'Define', 'List', 'Solve', 'Calculate', 'Find', 'Determine', 'Evaluate', 'Compare', 'Verify'))
+                    
+                    pref = "Q: " if is_question else "Example: "
+                    add_bold_prefix(p_q, pref)
+                    add_rich_runs(p_q, sentence)
 
-                if rule and not is_redundant_rule:
-                    p_rule = doc.add_paragraph()
-                    label = "Applicable Rule: " if is_question else "Key Concept: "
-                    p_rule.add_run(label).bold = True
-                    p_rule.add_run(rule)
-                    seen_rules_in_block.append(rule)
+                    rule = ex.get('rule', '')
+                    is_redundant_rule = False
+                    if rule:
+                        is_redundant_rule = any(are_rules_similar(rule, prev) for prev in seen_rules_in_block)
 
-                working_text = ex.get('working', '')
-                if working_text:
-                    label_work = "Explanation/Working:" if is_question else "Explanation:"
-                    doc.add_paragraph(label_work).runs[0].bold = True
-                    p_work = doc.add_paragraph()
-                    p_work.add_run(working_text)
+                    if rule and not is_redundant_rule:
+                        p_rule = doc.add_paragraph()
+                        label = "Applicable Rule: " if is_question else "Key Concept: "
+                        add_bold_prefix(p_rule, label)
+                        add_rich_runs(p_rule, rule)
+                        seen_rules_in_block.append(rule)
 
-                # Answer extraction: if working contains "->", take the part after last "->"
-                ans_text = working_text.split("->")[-1].strip() if "->" in working_text else (working_text.split("=")[-1].strip() if "=" in working_text else "")
-                if ans_text and is_question:
-                    p_ans = doc.add_paragraph()
-                    p_ans.add_run("Answer: ").bold = True
-                    p_ans.add_run(ans_text)
+                    working_text = ex.get('working', '')
+                    if working_text:
+                        label_work = "Explanation/Working:" if is_question else "Explanation:"
+                        p_work_lbl = doc.add_paragraph()
+                        add_bold_prefix(p_work_lbl, label_work)
+                        add_formatted_explanation_paragraphs(doc, working_text)
 
-                # Place corresponding visual moment inline right under the example (1-to-1 mapping by index)
-                if idx < len(visual_moments):
-                    vm = visual_moments[idx]
-                    success_inserted = insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs)
-                    if success_inserted:
-                        inserted_vm_indices.add(idx)
+                    ans_text = get_explicit_answer(ex, working_text)
+                    if ans_text and is_question:
+                        p_ans = doc.add_paragraph()
+                        add_bold_prefix(p_ans, "Answer: ")
+                        add_rich_runs(p_ans, ans_text)
+
+                    # Place corresponding visual moment inline right under the example
+                    if idx < len(visual_moments):
+                        vm = visual_moments[idx]
+                        success_inserted = insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs)
+                        if success_inserted:
+                            inserted_vm_indices.add(idx)
+
+            if hw_examples:
+                add_custom_heading(doc, "Homework Questions (HW Que): Try:", level=3)
+                for idx, ex in enumerate(hw_examples):
+                    p_q = doc.add_paragraph()
+                    sentence = ex.get('sentence', 'Example')
+                    add_bold_prefix(p_q, "Q: ")
+                    add_rich_runs(p_q, sentence)
+
+                    rule = ex.get('rule', '')
+                    if rule:
+                        p_rule = doc.add_paragraph()
+                        add_bold_prefix(p_rule, "Concept: ")
+                        add_rich_runs(p_rule, rule)
+
+                    working_text = ex.get('working', '')
+                    if working_text:
+                        p_work_lbl = doc.add_paragraph()
+                        add_bold_prefix(p_work_lbl, "Working/Solution: ")
+                        add_formatted_explanation_paragraphs(doc, working_text)
+
+                    ans_text = get_explicit_answer(ex, working_text)
+                    if ans_text:
+                        p_ans = doc.add_paragraph()
+                        add_bold_prefix(p_ans, "Answer: ")
+                        add_rich_runs(p_ans, ans_text)
 
         # Important Points / Teacher's Emphasis
         important_points = block.get('important_points', [])
         if important_points:
-            doc.add_heading("Key Highlights (⭐ Teacher's Emphasis):", level=3)
+            add_custom_heading(doc, "Key Highlights (⭐ Teacher's Emphasis):", level=3)
             for item in important_points:
                 p_i = doc.add_paragraph()
-                p_i.add_run("⭐ ").bold = True
-                p_i.add_run(item)
+                add_bold_prefix(p_i, "⭐ ")
+                add_rich_runs(p_i, item)
 
         # Exercise Questions
         exercises = block.get('exercise_questions', [])
         if exercises:
-            # Only print the “Exercise Questions:” heading if there is at least one real question text
             real_exercises = [eq for eq in exercises if isinstance(eq, str) and eq.strip()]
             if real_exercises:
                 p = doc.add_paragraph()
-                p.add_run("Exercise Questions:").bold = True
+                add_bold_prefix(p, "Exercise Questions:")
                 for eq in real_exercises:
-                    doc.add_paragraph(eq, style='List Bullet')
+                    p_ex = doc.add_paragraph(style='List Bullet')
+                    add_rich_runs(p_ex, eq)
 
         # Visual Moments & Images (Leftovers)
         leftover_moments = [vm for i, vm in enumerate(visual_moments) if i not in inserted_vm_indices]
@@ -412,18 +787,17 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         for tr in block.get('tricks', []):
             add_trick(doc, tr)
 
-        # Revision Box at the end (Optional - only if defined or if we have traps/revisions)
-        if block.get('revision_box', False):
-            rev_bullets = []
-            if block.get('transcript_range_percent'):
-                rev_bullets.append(f"Transcript range: {block['transcript_range_percent'][0]}% – {block['transcript_range_percent'][1]}%")
-            if block.get('traps'):
-                rev_bullets.append(f"Key trap: {block['traps'][0]}")
-            for bullet in block.get('revision_bullets', []):
-                rev_bullets.append(bullet)
-            if not rev_bullets:
-                rev_bullets.append("Refer to full notes for details.")
-            add_revision_box(doc, rev_bullets, rule=block.get('title', ''))
+        # Revision boxes are required by the note style contract.
+        rev_bullets = []
+        if block.get('transcript_range_percent'):
+            rev_bullets.append(f"Transcript range: {block['transcript_range_percent'][0]}% – {block['transcript_range_percent'][1]}%")
+        if block.get('traps'):
+            rev_bullets.append(f"Key trap: {block['traps'][0]}")
+        for bullet in block.get('revision_bullets', []):
+            rev_bullets.append(bullet)
+        if not rev_bullets:
+            rev_bullets.append("Refer to full notes for details.")
+        add_revision_box(doc, rev_bullets, rule=block.get('title', ''))
 
         doc.add_paragraph()
 
@@ -446,15 +820,15 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
             all_tricks.append((trick, block.get('title', '')))
             
     if (all_traps or all_tricks) and profile.get("generate_theoretical_theory", True):
-        doc.add_heading("Section 3: Rules, Formulas & Exam Traps", level=1)
+        add_custom_heading(doc, "Section 3: Rules, Formulas & Exam Traps", level=1)
         for trap, btitle in all_traps:
             p = doc.add_paragraph(style='List Bullet')
-            p.add_run("🚨 ").bold = True
-            p.add_run(f"From {btitle}: {trap}")
+            add_bold_prefix(p, "🚨 ")
+            add_rich_runs(p, f"From <b>{btitle}</b>: {trap}")
         for trick, btitle in all_tricks:
             p = doc.add_paragraph(style='List Bullet')
-            p.add_run("💡 ").bold = True
-            p.add_run(f"From {btitle}: {trick}")
+            add_bold_prefix(p, "💡 ")
+            add_rich_runs(p, f"From <b>{btitle}</b>: {trick}")
 
     # Section 4: Final Revision Points
     points_added = 0
@@ -468,9 +842,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 temp_p_runs.append((title, rule))
                 points_added += 1
     if points_added > 0 and profile.get("generate_worked_examples", True):
-        doc.add_heading("Section 4: Final Revision Points", level=1)
+        add_custom_heading(doc, "Section 4: Final Revision Points", level=1)
         for title, rule in temp_p_runs:
-            doc.add_paragraph(f"• {title}: {rule}", style='List Bullet')
+            p = doc.add_paragraph(style='List Bullet')
+            add_rich_runs(p, f"<b>{title}</b>: {rule}")
 
     import datetime
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
