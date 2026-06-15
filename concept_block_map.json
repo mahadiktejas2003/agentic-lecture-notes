@@ -313,5 +313,54 @@
     "tricks": [
       "For numbers ending in 5, the square is even simpler: prefix with A*(A+1) and suffix with 25 (e.g. 35^2 -> 3*4=12, suffix 25 -> 1225)."
     ]
+  },
+  {
+    "block_id": "CB7",
+    "title": "Vedic Math: Square Root Determination Method for Perfect Squares",
+    "transcript_range_percent": [
+      85,
+      100
+    ],
+    "explanation": "A Vedic math method to find the square root of a perfect square by mapping the units digit and approximating the tens digit. The units digit of the square root must square to end in the same digit as the target number. Ignoring the last two digits of the target number, we identify the largest integer whose square is less than or equal to the remaining prefix; this represents the tens digit of the square root. The correct square root is selected by verifying the squares of the two resulting candidate numbers.",
+    "concepts": [
+      {
+        "term": "Units Digit Mapping",
+        "definition": "Determining possible units digits of the square root based on the units digit of the target perfect square (e.g. 4 maps to 2 or 8)."
+      },
+      {
+        "term": "Prefix Approximation",
+        "definition": "Determining the tens digit by finding the highest integer whose square is less than or equal to the number remaining after omitting the last two digits."
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Calculate the square root of 9604 using the Vedic math square root determination method.",
+        "rule": "Map the units digit and approximate the tens digit, then check candidate squares.",
+        "working": "1. Identify the last digit:\n   The number 9604 ends in 4.\n   The units digit of the square root must be 2 or 8 (since 2² = 4 and 8² = 64).\n2. Find the tens digit:\n   Ignore the last two digits (04) to leave the prefix 96.\n   Find the largest integer whose square is less than or equal to 96:\n   9² = 81 and 10² = 100.\n   Since 81 ≤ 96 < 100, the tens digit is 9.\n3. Identify candidates:\n   The square root is either 92 or 98.\n4. Test candidates using the Vedic squaring shortcut:\n   - For 92:\n     9² = 81, 2² = 04 → 8104\n     2 * 9 * 2 = 36\n     Place 36 one place to the left:\n       8104\n      + 360\n      -----\n       8464\n     Since 8464 ≠ 9604, 92 is incorrect.\n   - For 98:\n     9² = 81, 8² = 64 → 8164\n     2 * 9 * 8 = 144\n     Place 144 one place to the left:\n       8164\n      +1440\n      -----\n       9604\n     Since 9604 = 9604, 98 is correct.\n5. Therefore, √9604 = 98.",
+        "answer": "98"
+      },
+      {
+        "sentence": "Calculate the square root of 9801 using the Vedic math square root determination method.",
+        "rule": "Map units digit (1 maps to 1 or 9) and approximate tens digit (98 prefix maps to 9), then check candidates.",
+        "working": "1. Identify the last digit:\n   The number 9801 ends in 1.\n   The units digit of the square root must be 1 or 9 (since 1² = 1 and 9² = 81).\n2. Find the tens digit:\n   Ignore the last two digits (01) to leave the prefix 98.\n   Find the largest integer whose square is less than or equal to 98:\n   9² = 81 and 10² = 100.\n   Since 81 ≤ 98 < 100, the tens digit is 9.\n3. Identify candidates:\n   The square root is either 91 or 99.\n4. Test candidates using the Vedic squaring shortcut:\n   - For 91:\n     9² = 81, 1² = 01 → 8101\n     2 * 9 * 1 = 18\n     Place 18 one place to the left:\n       8101\n      + 180\n      -----\n       8281\n     Since 8281 ≠ 9801, 91 is incorrect.\n   - For 99:\n     9² = 81, 9² = 81 → 8181\n     2 * 9 * 9 = 162\n     Place 162 one place to the left:\n       8181\n      +1620\n      -----\n       9801\n     Since 9801 = 9801, 99 is correct.\n5. Therefore, √9801 = 99.",
+        "answer": "99"
+      }
+    ],
+    "visual_moments": [
+      {
+        "timestamp": "00:30:38",
+        "type": "board",
+        "description": "Whiteboard showing steps to find the square root of 9604 using candidate selection."
+      }
+    ],
+    "teacher_quotes": [
+      "This Vedic math trick works for any perfect square number."
+    ],
+    "traps": [
+      "Assuming a non-perfect square is perfect, which will yield incorrect candidate checks."
+    ],
+    "tricks": [
+      "The sum of the units digits of the two possible candidate roots always equals 10 (e.g. 2 + 8 = 10, or 1 + 9 = 10)."
+    ]
   }
 ]

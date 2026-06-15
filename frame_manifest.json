@@ -38,5 +38,10 @@
     "timestamp": "00:44:12",
     "ocr_text": "Q14.\n\n1x2 -av7%21=0 ll. 2y2-8,/5y-50=0\nA.ifx>y B.ifxsy C.ifx2y D.ifx<y\nE. if x = y or relationship between x and y can't be established",
     "type": "board"
+  },
+  "frame_009.png": {
+    "timestamp": "00:30:38",
+    "ocr_text": "sqrt(9604) or (92)^2 or (98)^2",
+    "type": "board"
   }
 }
