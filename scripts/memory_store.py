@@ -22,7 +22,7 @@ def get_transcript_hash():
             return hashlib.sha256(f.read()).hexdigest()
     return "unknown"
 
-def store_run(status, audit_score=15, failed_gates=None, docx_path="notes-output/LECTURE_NOTES.docx"):
+def store_run(status, audit_score=19, failed_gates=None, docx_path="notes-output/LECTURE_NOTES.docx"):
     if failed_gates is None:
         failed_gates = []
         
@@ -55,6 +55,6 @@ def store_run(status, audit_score=15, failed_gates=None, docx_path="notes-output
 
 if __name__ == "__main__":
     status = sys.argv[1] if len(sys.argv) > 1 else "success"
-    score = int(sys.argv[2]) if len(sys.argv) > 2 else 15
+    score = int(sys.argv[2]) if len(sys.argv) > 2 else 19
     failed_gates_arg = sys.argv[3].split(",") if len(sys.argv) > 3 and sys.argv[3] else []
     store_run(status, score, failed_gates_arg)

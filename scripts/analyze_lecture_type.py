@@ -33,7 +33,9 @@ def analyze_lecture(srt_path):
     
     # Classification logic
     # Syllabus lectures are typically short (<10 minutes, <1500 words) and have high syllabus keyword density
-    is_syllabus = (word_count < 1800 and syllabus_count >= 2) or ("syllabus" in text.lower())
+    # However, if it mentions technical terms like "series", "pattern", "equation", "number", it's technical content.
+    is_technical = any(kw in text.lower() for kw in ['series', 'pattern', 'equation', 'number', 'wrong number', 'missing number'])
+    is_syllabus = ((word_count < 1800 and syllabus_count >= 2) or ("syllabus" in text.lower())) and not is_technical
     
     if is_syllabus:
         profile = {
@@ -57,7 +59,7 @@ def analyze_lecture(srt_path):
             "generate_theoretical_theory": True,
             "visual_appendix_limit": 20,
             "focus_areas": ["Detailed Concepts", "Worked Examples", "Traps and Tricks"],
-            "explanation_limit": 600
+            "explanation_limit": 2000
         }
         
     profile["word_count"] = word_count

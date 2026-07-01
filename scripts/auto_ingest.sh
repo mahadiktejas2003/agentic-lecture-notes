@@ -2,40 +2,23 @@
 # auto_ingest.sh — Autonomous Ingestion Daemon Script
 # Checks Downloads directory for new lecture files, ingests them, and triggers the process.
 
-DOWNLOADS_DIR="${DOWNLOADS_DIR:-$HOME/Downloads}"
-WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/Documents/agentic-lecture-notes}"
+WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$WORKSPACE_DIR"
 
-echo "Checking for new lecture materials in $DOWNLOADS_DIR..."
+# Activate virtualenv if available
+if [ -d "venv" ]; then
+    source venv/bin/activate
+fi
 
-# Find the latest PDF, MP4, and SRT matching lecture patterns
-LATEST_PDF=$(ls -t "$DOWNLOADS_DIR"/*.pdf 2>/dev/null | head -n 1 || true)
-LATEST_MP4=$(ls -t "$DOWNLOADS_DIR"/*.mp4 2>/dev/null | head -n 1 || true)
-LATEST_SRT=$(ls -t "$DOWNLOADS_DIR"/*.srt 2>/dev/null | head -n 1 || true)
+# Run the smart ingestion python script
+python3 scripts/smart_ingest.py
 
-if [ -n "$LATEST_MP4" ] && [ -n "$LATEST_SRT" ]; then
-    echo "Found new potential lecture files:"
-    echo "  MP4: $LATEST_MP4"
-    echo "  SRT: $LATEST_SRT"
-    
-    # Copying mandatory files
-    cp "$LATEST_MP4" "$WORKSPACE_DIR/lecture-input/LECTURE.mp4"
-    cp "$LATEST_SRT" "$WORKSPACE_DIR/lecture-input/transcript.srt"
-    
-    # Copying optional PDF slide deck if available
-    if [ -n "$LATEST_PDF" ]; then
-        echo "  PDF: $LATEST_PDF (optional)"
-        cp "$LATEST_PDF" "$WORKSPACE_DIR/lecture-input/SLIDES.pdf"
-    else
-        echo "  No optional PDF slide deck found. Skipping PDF copy."
-        rm -f "$WORKSPACE_DIR/lecture-input/SLIDES.pdf"
-    fi
-    
-    echo "Successfully ingested files into lecture-input/"
+if [ $? -eq 0 ]; then
+    echo "Ingestion completed successfully."
     
     # Execute composition pipeline steps individually if manifests exist
     if [ -f "concept_block_map.json" ] && [ -f "frame_manifest.json" ]; then
         echo "Found existing manifests. Running local composition..."
-        source venv/bin/activate
         python3 scripts/generate_docx.py --concept-map concept_block_map.json --frame-manifest frame_manifest.json --slide-manifest slide_manifest.json --output notes-output/LECTURE_NOTES.docx
         python3 scripts/audit.py --docx notes-output/LECTURE_NOTES.docx --concept-map concept_block_map.json --frame-manifest frame_manifest.json --slide-manifest slide_manifest.json
     else
@@ -46,5 +29,6 @@ if [ -n "$LATEST_MP4" ] && [ -n "$LATEST_SRT" ]; then
         echo "========================================================================="
     fi
 else
-    echo "No new lecture files (MP4 and SRT) found in Downloads."
+    echo "No new matching lecture files found in Downloads."
 fi
+

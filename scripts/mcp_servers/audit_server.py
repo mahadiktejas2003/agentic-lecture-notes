@@ -22,7 +22,7 @@ RULES = {
     5: "Gate 5: Factual Accuracy - The number of worked examples in the docx must be greater than or equal to the total examples in the map (or > 0 if no examples mapped).",
     6: "Gate 6: Image Integrity - Visual anchor errors/failures is 0.",
     7: "Gate 7: Minimum Counts - Heading 2 count is at least 1, and the image count in the docx is at least 80% of the expected images (from frames and discussed slides).",
-    8: "Gate 8: Source Traceability - The number of traps or quotes is at least 50% of the number of concept blocks.",
+    8: "Gate 8: Source Traceability - The document title must match the active concept map title.",
     9: "Gate 9: Slide Handling - Banned slides (not discussed) must not have their OCR text present in the document.",
     10: "Gate 10: Example Coverage - The number of worked examples in the docx is at least the total examples in the map.",
     11: "Gate 11: Visual Coverage - The image count in the docx is at least 80% of the expected images.",
@@ -30,6 +30,13 @@ RULES = {
     13: "Gate 13: Quote Quality - Quotes must not contain raw SRT artifacts (garbled text, timestamps, mid-sentence starts).",
     14: "Gate 14: Meaningful Titles - Concept block titles must be meaningful (not generic question ranges).",
     15: "Gate 15: Explanation Conciseness - Explanations must be concise (no verbose text, <= 600 characters, no repeated 'First,').",
+    16: "Gate 16: Table Presence - Concept map table definitions must render as Word tables.",
+    17: "Gate 17: Sequence Integrity - Generated Heading 2 sections must follow concept block order.",
+    18: "Gate 18: Exact Worked Examples - Worked examples from the concept map must appear in the document.",
+    19: "Gate 19: Friction Index Constraint - Cloze and Cornell cue density must remain within the configured friction range.",
+    20: "Gate 20: Transcript Coverage - Concept block transcript ranges must cover at least 80% of the lecture duration, and at least 80% of concept block headings must appear in the document.",
+    21: "Gate 21: English Enforcement - Devanagari script is forbidden and transliterated Hinglish keywords must remain within the configured threshold.",
+    22: "Gate 22: Styling and Highlighting Conformity - Quick Revision boxes, Student Note boxes, run shading, and native Word highlighting must match the approved styling rules.",
 }
 
 RECOVERIES = {
@@ -47,7 +54,14 @@ RECOVERIES = {
     12: "Edit concept block map to remove empty placeholder exercise questions.",
     13: "Filter out SRT timestamps or bad prefixes from the quotes block.",
     14: "Rename concept block titles to avoid generic ranges like 'Questions X-Y'.",
-    15: "Shorten verbose explanation blocks to be under 600 characters and remove redundant headers.",
+    15: "Shorten verbose explanation blocks to be under 2000 characters and remove redundant headers.",
+    16: "Re-run note-formatter and verify table definitions render as styled Word tables.",
+    17: "Re-run content-mapper or note-formatter to restore concept block ordering.",
+    18: "Re-run note-formatter and verify every mapped worked example appears exactly enough for audit matching.",
+    19: "Adjust cloze/Cornell cue density in the concept map or generator, then re-run note formatting.",
+    20: "Preserve transcript range metadata and ensure concept block titles actually render as Heading 2 sections in the final document.",
+    21: "Clean Devanagari script and excessive Hinglish from mapped content, then regenerate the document.",
+    22: "Fix paragraph shading, run shading, and any native Word highlights so the document matches the approved style contract.",
 }
 
 GATE_MAPPING = {
@@ -66,6 +80,13 @@ GATE_MAPPING = {
     13: 'Gate 13: Quote Quality',
     14: 'Gate 14: Meaningful Titles',
     15: 'Gate 15: Explanation Conciseness',
+    16: 'Gate 16: Table Presence',
+    17: 'Gate 17: Sequence Integrity',
+    18: 'Gate 18: Exact Worked Examples',
+    19: 'Gate 19: Friction Index Constraint',
+    20: 'Gate 20: Transcript Coverage',
+    21: 'Gate 21: English Enforcement',
+    22: 'Gate 22: Styling and Highlighting Conformity',
 }
 
 @mcp.tool()
@@ -73,7 +94,7 @@ def run_audit(gate_number: int, docx_path: str, api_key: str = None) -> Dict[str
     """
     Runs the audit for a specific gate number on a docx document.
     
-    gate_number: The integer gate number to audit (1-15).
+    gate_number: The integer gate number to audit (1-22).
     docx_path: The path to the generated document.
     api_key: Optional API key for request validation.
     """
@@ -83,8 +104,8 @@ def run_audit(gate_number: int, docx_path: str, api_key: str = None) -> Dict[str
             "status": "error",
             "gate": str(gate_number),
             "error_type": "invalid_gate",
-            "details": f"Gate number {gate_number} is not a valid gate (1-15).",
-            "suggested_recovery": "Use a gate number between 1 and 15."
+            "details": f"Gate number {gate_number} is not a valid gate (1-22).",
+            "suggested_recovery": "Use a gate number between 1 and 22."
         }
         
     try:
@@ -132,7 +153,7 @@ def run_audit(gate_number: int, docx_path: str, api_key: str = None) -> Dict[str
 @mcp.resource("audit://rules/{gate}")
 def get_rule(gate: str) -> str:
     """
-    Returns the rule text for the given gate number (1-15).
+    Returns the rule text for the given gate number (1-22).
     """
     try:
         gate_num = int(gate)

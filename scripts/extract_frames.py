@@ -2,6 +2,8 @@
 import os, sys, json, subprocess, argparse, re, shutil
 from pathlib import Path
 import logging
+import imagehash
+from PIL import Image
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ def is_logo_frame(text):
             return True
     return False
 
-def are_ocr_texts_similar(text1, text2, threshold=0.48):
+def are_ocr_texts_similar(text1, text2, threshold=0.85):
     if not text1 or not text2:
         return False
     # Extract unique words with length >= 4
@@ -40,8 +42,23 @@ def are_ocr_texts_similar(text1, text2, threshold=0.48):
         return False
         
     common = w1 & w2
-    ratio = len(common) / min(len(w1), len(w2))
+    ratio = len(common) / max(len(w1), len(w2))
     return ratio > threshold
+
+def parse_timestamp_to_seconds(ts_str):
+    """Parse timestamp format (HH:MM:SS, MM:SS, or SS) to total seconds."""
+    ts_str = ts_str.rstrip('*')
+    parts = ts_str.split(':')
+    try:
+        if len(parts) == 3:
+            return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+        elif len(parts) == 2:
+            return int(parts[0]) * 60 + int(parts[1])
+        elif len(parts) == 1:
+            return int(parts[0])
+    except ValueError:
+        pass
+    return 0
 
 def extract_frames(video_path, output_dir, timestamps=None):
     """Extract frames based on timestamps or default sampling."""
@@ -64,7 +81,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
         if duration <= 0:
             logger.warning("Could not determine duration. Using default sampling.")
             # Fallback: every 300 frames approx
-            cmd = ['ffmpeg', '-i', video_path, '-vf', r'select=eq(n\,0)+not(mod(n\,300))', 
+            cmd = ['ffmpeg', '-threads', '4', '-i', video_path, '-vf', r'select=eq(n\,0)+not(mod(n\,300))', 
                    '-vsync', 'vfr', f'{output_dir}/frame_%03d.png']
             subprocess.run(cmd, check=True)
             # Generate manifest with calculated timestamps based on frame position
@@ -104,14 +121,12 @@ def extract_frames(video_path, output_dir, timestamps=None):
             else:
                 ts_clean = ts
             
-            # Convert HH:MM:SS to seconds for ffmpeg
-            parts = list(map(int, ts_clean.split(':')))
-            base_seconds = parts[0]*3600 + parts[1]*60 + parts[2]
+            # Convert timestamp to seconds for ffmpeg
+            base_seconds = parse_timestamp_to_seconds(ts_clean)
             
             fname = f"frame_{i+1:03d}.png"
             out_path = os.path.join(output_dir, fname)
             
-            # If exact, only check base_seconds, else run windowed candidate search.
             if exact:
                 candidates = [base_seconds]
             else:
@@ -133,7 +148,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
                 temp_fname = f"temp_frame_{i+1:03d}_c{c_idx}.png"
                 temp_path = os.path.join(output_dir, temp_fname)
                 
-                cmd = ['ffmpeg', '-ss', str(sec), '-i', video_path, '-vframes', '1', '-y', temp_path]
+                cmd = ['ffmpeg', '-threads', '4', '-ss', str(sec), '-i', video_path, '-vframes', '1', '-y', temp_path]
                 subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 
                 if os.path.exists(temp_path):
@@ -192,8 +207,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
 
     # Helper to parse seconds from HH:MM:SS
     def get_seconds(ts):
-        parts = list(map(int, ts.split(':')))
-        return parts[0]*3600 + parts[1]*60 + parts[2]
+        return parse_timestamp_to_seconds(ts)
 
     # Deduplicate manifest based on OCR similarity within a local time window
     unique_manifest = {}
@@ -208,13 +222,25 @@ def extract_frames(video_path, output_dir, timestamps=None):
             current_sec = get_seconds(info['timestamp'])
             
             is_duplicate = False
-            for unique_fname, unique_info in unique_manifest.items():
-                unique_sec = get_seconds(unique_info['timestamp'])
-                # Only deduplicate if the frames are within 120 seconds of each other
-                if abs(current_sec - unique_sec) <= 120:
-                    if are_ocr_texts_similar(current_ocr, unique_info.get('ocr_text', ''), threshold=0.48):
-                        is_duplicate = True
-                        break
+            try:
+                current_img_path = os.path.join(output_dir, fname)
+                current_hash = imagehash.dhash(Image.open(current_img_path))
+            except Exception as e:
+                logger.warning(f"Could not compute hash for {fname}: {e}")
+                current_hash = None
+                
+            if current_hash is not None:
+                for unique_fname, unique_info in unique_manifest.items():
+                    unique_sec = get_seconds(unique_info['timestamp'])
+                    if abs(current_sec - unique_sec) <= 120:
+                        unique_img_path = os.path.join(output_dir, unique_fname)
+                        try:
+                            unique_hash = imagehash.dhash(Image.open(unique_img_path))
+                            if current_hash - unique_hash <= 4:
+                                is_duplicate = True
+                                break
+                        except:
+                            pass
                     
             if is_duplicate:
                 logger.info(f"Removing duplicate frame: {fname} at {info['timestamp']} (similar to an existing frame)")

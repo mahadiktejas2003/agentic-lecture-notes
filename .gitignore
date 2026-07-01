@@ -18,6 +18,7 @@ venv/
 .DS_Store
 logs/
 agent_memory/
+backups/
 
 # Editors
 .vscode/
@@ -34,4 +35,18 @@ lecture-input/**/*.pdf
 lecture-input/archive_*/
 notes-output/
 screenshots/
+screenshots_test/
+screenshots_test_new/
 slides/
+frames-cache/
+scratch/
+scratch_slice.py
+*.egg-info/
+.cursor
+.cursor/memory.json
+.amp/settings.json
+.claude
+lecture-input-backup-*/
+test_extracted_images/
+reference_pages/
+reference_screenshots/

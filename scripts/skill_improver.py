@@ -128,7 +128,7 @@ PROPOSED_DIFFS = {
 --- a/.agents/skills/transcript-mapping/SKILL.md
 +++ b/.agents/skills/transcript-mapping/SKILL.md
 @@ -38,2 +38,3 @@
- - **Explanation Conciseness**: Keep explanation texts under 600 characters and avoid starting sentences with repetitive phrases like "First,".
+ - **Explanation Conciseness**: Keep explanation texts under 2000 characters and avoid starting sentences with repetitive phrases like "First,".
 """
 }
 

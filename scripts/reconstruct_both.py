@@ -9,9 +9,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
-# Paths
-DOWNLOADS_DIR = "/Users/tejasmahadik/Downloads"
-WORKSPACE_DIR = "/Users/tejasmahadik/Documents/agentic-lecture-notes"
+DOWNLOADS_DIR = os.environ.get("DOWNLOADS_DIR", os.path.expanduser("~/Downloads"))
+WORKSPACE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 INPUT_DIR = os.path.join(WORKSPACE_DIR, "lecture-input")
 OUTPUT_DIR = os.path.join(WORKSPACE_DIR, "notes-output")
 
@@ -345,6 +344,13 @@ def run_pipeline_for_lecture(video_src, transcript_src, concept_map, frame_manif
     if result.returncode != 0:
         logger.error("LangGraph pipeline failed.")
         return False
+        
+    # Copy output doc to a lecture-specific path while preserving the canonical handoff path.
+    safe_name = lecture_name.replace(" ", "_")
+    final_docx = os.path.join(OUTPUT_DIR, f"{safe_name}_NOTES.docx")
+    if os.path.exists(active_docx):
+        shutil.copy2(active_docx, final_docx)
+        logger.info(f"Saved notes to {final_docx}")
         
     logger.info(f"🎉 Completed pipeline run successfully for: {lecture_name}")
     return True
