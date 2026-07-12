@@ -1,0 +1,16 @@
+Created At: 2026-06-30T10:51:14Z
+Completed At: 2026-06-30T10:51:15Z
+File Path: `file:///Users/tejasmahadik/Documents/agentic-lecture-notes/logs/pipeline.log`
+Total Lines: 28407
+Total Bytes: 2206023
+Showing lines 28400 to 28407
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+28400: 2026-06-30 16:18:06,144 [INFO] Injecting 8 reference notes into block 'Reading Comprehension: Passage Title Selection Strategy' (block 2/5)...
+28401: 2026-06-30 16:18:06,146 [INFO] Calling Antigravity CLI...
+28402: 2026-06-30 16:19:10,519 [ERROR] All JSON parsing attempts failed. Raw output: 
+28403: 
+28404: 2026-06-30 16:19:10,520 [INFO] Injecting 7 reference notes into block 'Reading Comprehension: Identifying and Analyzing Passage Tones' (block 3/5)...
+28405: 2026-06-30 16:19:10,521 [INFO] Calling Antigravity CLI...
+28406: 2026-06-30 16:20:07,533 [ERROR] ❌ LangGraph Orchestrator aborting: another instance (PID 18135) is currently running.
+28407: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

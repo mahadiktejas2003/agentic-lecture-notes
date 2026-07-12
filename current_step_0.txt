@@ -1,0 +1,522 @@
+<USER_REQUEST>
+You MUST respond with ONLY valid JSON and nothing else. No explanations, no commentary — ONLY a raw JSON object.
+
+REFERENCE NOTES FOR THIS BLOCK (user's manual handwritten notes):
+[
+ {
+  "slide_number": 4,
+  "image_path": "reference_pages/ref_004.png",
+  "ocr_text": "-> @ 2nd type- Tone-\nMeaning of Tone-  The way the author appraoches the topic- the mood, style and attitude towards the \npassage / topic.\nHow to find the Tone of the passage:\n-\n-\nFor this- note the words- adjectives, nouns- that indicate the mood, phrases, and idioms- these have to \nbe noted, they collectively tell the tone/mood of author of writing the passage.\n2nd case tone is of streess- based on way of writing\nThis is the Tone\n=>eg. Of Tones-\nQue- if the tone is possitive or negatinve??\nNote all keywords- for tone- thy will tell\n->NOTE: for tone-  \nWe must wait and see the choices- bcz multiple options are possible.\n\n[OCR/Visual Text]:\n-> @ 2nd type- Tone-\nMeaning of Tone- The way the author appraoches the topic- the mood, style and attitude towards the\npassage / topic.\n\n- How to find the Tone of the passage:\n\na = pa\nfess Uh\n\nConsul |\nc\n(Reatenie, Identifying RC Tones\n\nTo grasp a passage better, the reader needs to identify the author's attitude or\ntone. Evaluating the tone gives the reader a better understanding of the author's\nargument and purpose of writing.\n\nThe author's tone is closely associated with the purpose. The author uses a certain\nvoice to convey the main ideas and the purpose of the passage. This voice often\nreveals the author's attitude towards the subject e.g. compare the passages below:\n\nweyds > adjeckve\nadver\nnou\n\nFor this- note the words- adjectives, nouns- that indicate the mood, phrases, and idioms- these have to\nbe noted, they collectively tell the tone/mood of author of writing the passage.\n\n2nd case tone is of streess- based on way of writing\nThis is the Tone\n\n=>eg. Of Tones-\n\n@) DOU = kets y\nHow would you describe this author's attitude towards the treadmill? a.\nPassage Il\n\nThat machine began whirling and my heart began pounding faster\nun an the belt could go. In place of pressing the \u201cselect\u201d button on\nmy remote control to find solace in a TV show, | had chosen \u201cPower\n@ Run.\u201d A marvellous screen with a set of red lines showed me the\nmR) train which | was running on. Those lines looked like a pulse,\nnyt ich had me running farther and faster than | could run outside,\nK oN orried about weather, work or others. It didn\u2019t appear | was going\nas anywhere then, but | had just escaped a 10-year slump.\nloxhr (< \u2014\u2014\u2014\u2014\u2014\u2014\u2014\nQue- if the tone is possitive or negatinve??\n\nNote all keywords- for tone- thy will tell\n->NOTE: for tone-\nWe must wait and see the choices- bcz multiple options are possible.\n\nHome Inert Oraw Design Layout References Maings Review View Help Ec bt\nHow would you describe this author's attitude towards the treadmill? iw .|\nPassage Il\n\nThat machine began whirling and my heart began pounding faster",
+  "discussed_at": "00:36:42",
+  "discussed": true
+ },
+ {
+  "slide_number": 5,
+  "image_path": "reference_pages/ref_005.png",
+  "ocr_text": "The tone is negative=\nSee words- pondung fasster. Escaped slump.\nPower run\n\n[OCR/Visual Text]:\nthan the belt could go. In place of pressing the \u201cselect\u201d button on\nmy remote control to find solace in a TV show, | had chosen \u201cPower\nRun.\u201d A marvellous screen with a set of red lines showed me the\nterrain which | wi nning on. Those lines looked like a pulse,\nwhich had me running farther and faster than | could run outside,\nworried about weather, work or others. It didn\u2019t appear | was going\nanywhere then, but | had just escaped a 10-year slump.\nLe\n\nThe tone is negative=\nSee words- pondung fasster. Escaped slump.\nPower run\n\n\u201cold, run down\u201d Feacxoa MY\n\n\u201c... run \u2014 or charge forward\u201d\n\u201c,.. one of its least likeable parts\u201d\n\nAll the above words/ expression carry negative connotations.\n\nThe words we can use here to describe the author's tone can be pessimistic,\ncritical and cynical.\n\nNow, compare this tone with the author's tone in Passage II, where he has a\npositive view of the entire experience. To know why, have a look at the details, the\ncomparisons and the word choices mentioned here.\n\nHome Inset Oraw Design Layout References Malings Review View Help G\nCUMIPONOUNS CHU UIC WOIE UUIGES HICHUUIEU HET.\n\nSpecific Details\n\n| had chosen \u201cPower Run\u201d, a sentence, which conveys ambition and confidence\nabout a positive result.\n\nHome Inset Draw Design Layout References Malings Review View Help\n\n\u201coma,\n\nThe sentence \u201cI had just escaped a 10-year slump\u201d points to the positive impact\nthe workout had on the author's life.\n\nComparisons\n\nThe sentence \u201cmy heart began pounding faster than the belt could\u201d indicates\nthe intense feelings experienced by the author whereas the expression \u201cred lines\nlooked like a pulse\u201d points to the author's energy or liveliness.",
+  "discussed_at": "00:36:42",
+  "discussed": true
+ },
+ {
+  "slide_number": 6,
+  "image_path": "reference_pages/ref_006.png",
+  "ocr_text": "-> SOME TONES-- typically asked in Exam:\n\n[OCR/Visual Text]:\nCe\nWord Choices\n\nThe words \u201cfarther and faster\u201d convey the benefits of running inside while the\nword \u201cmarvellous\u201d conveys the author's positive opinion about the screen on the\nmachine.\n\nThese expressions point to the positive views the author has about his experience\nwith the machine.\n\nThe words we can employ here to describe the author's tone could be exhilarated,\nenthused, and excited.\n\nOther nonular des\n\nintors of an author's tane can he\n\nThe words \u201cfarther and faster\u201d convey the benefits of running inside EEity.,. Ma\nword \u201d conveys the author's positive opinion about the screen on the\nmachine.\n\nThese expressions point to the positive views the author has about his experience\nwith the machine.\n\nThe words we can employ here to describe the author\u2019s tone could be exhilarated,\nenthused, and excited.\n\nOther popular descriptors of an author's tone can be\n\nAngry Sarcastic Ironical Sombre\nCynical Depressed Optimistic Nostalgic\nSympathetic Cheerful Indifferent Agitated\nVindictive Intense Reflective / Contemplative\n\n-> SOME TONES-- typically asked in Exam:\n\nCea\nAngry Sarcastic Ironical Sombre\nCynical Depressed Optimistic Nostalgic\nSympathetic Cheerful Indifferent Agitated\n\nVindictive Intense Reflective / Contemplative",
+  "discussed_at": "00:53:50",
+  "discussed": true
+ },
+ {
+  "slide_number": 7,
+  "image_path": "reference_pages/ref_007.png",
+  "ocr_text": "indifferent- means  koi lena denahi nahi hai- uninterested .\nAgitated- means troubled, bohot gussa ho man mei, aggressive ho, shanti na ho\nVindictive- revegnous\nThese are imp words- know their meanings- note them.\nIronic- conflicting batte\nProces-\nSee if words are positive/negative/neurtral\n\n[OCR/Visual Text]:\nindifferent- means koi lena denahi nahi hai- uninterested .\n\nAgitated- means troubled, bohot gussa ho man mei, aggressive ho, shanti na ho\n\nVindictive- revegnous\n\nra Sa\nAngry Sarcastic Ironical Sombre\nica) 7 PES oe ;\nCynical Depressed Optimistic Nostalgic\nSympathetic Cheerful Indifferent Agitated\n-_\u2014 ee\nVindictive 3 ver Intense Reflective / Contemplative\nThese are imp words- know their meanings- note them.\nlronic- conflicting batte\nProces-\nva\n\nIdentifying RC Tones\n\ne Focus on the adjectives, adverbs, nouns/ verbs used by\nthe author to convey various ideas.\n\nKind, degree, situation? Temove Zhan\nDislike \u2014Criticize----Hate-----Excoriate\n\u2014\u2014. \u2014\n\nSee if words are positive/negative/neurtral\ni Sa\n\nIdentifying RC Tones\n\ne Focus on the adjectives, adverbs, nouns/ verbs used by",
+  "discussed_at": "00:40:20",
+  "discussed": true
+ },
+ {
+  "slide_number": 9,
+  "image_path": "reference_pages/ref_009.png",
+  "ocr_text": "NOTE: normally sarcastic thing- written in inverted commas (\" \" )->VIMP\nE.g.\nNext see the  whether all words are positive or negative--with these we can conclude tone . \nSee the below point-\nE.g.\n-> humarous means- light ly funny or light heated fun\n-\n\n[OCR/Visual Text]:\nNOTE: normally sarcastic thing- written in inverted commas (\"'\" )->VIMP.\n\nOu abpsnta \u201che A\nhow 5. Siete\nOMe id Belin oydne CM.\n\nNext see the whether all words are positive or negative--with these we can conclude tone .\n\nSee the below point-\na _ Mt, . @ '\niw BpedsROuhn Sytre CP.\n4. Is there a consistent pattern found in the use of words? Are they all\n-ve or +ve? If yes, we can safely conclude on either side.\n\nKk, spike, buoyant\nGapress'y\n\nmihe V\nvated\n\nsoa\n\nSURE om . co DP,\nd yess i} sn im |\n\u00a2 S|\n\nPositive Tones\nvw 1. Cheerful, Optimistic........ Hopeful abt future\n\nmt With all necessary things in place, India seems poised to\ndominate the world in the next century.\n\nqpU Sky iS the Only limit how fr V-\n\nwi We\u2019re going to win, come what may. cus\nAT Me COXMidere A. toen!s\n-> humarous means- light ly funny or light heated fun\n\n>\n\\\nWe\u2019re going to win, come what may. cus\noC ke Carsiden\n\nAW) 2. Humourous...... funny, light-hearted, amusing, entertaining\n\nWhile being liberal with spending otherwise, grandpa used to guard\nhis old \u201ctreasure\u201d of that 5 rupee coin very fiercely.\n\nSos, hn Gah & bnncely\u201d\nJn ayy nt Cae, ap 7\nWA he wis ahhe bo Sque\n\na Leofhi\u201dY aamounst A",
+  "discussed_at": "00:48:22",
+  "discussed": true
+ },
+ {
+  "slide_number": 10,
+  "image_path": "reference_pages/ref_010.png",
+  "ocr_text": "-imp tone- narrative//descriptive:\nNewspaper style- narrative - no positive/negative.\n->descriptive:\nHint:  if u eveer find the Incident description's words- very good- or more words, - sundar words mile- then it\nS a Descriptive tone example/\nE.g. of it=\nTONE:  DESCRIPTIVE. \nMetaphor, and many comparision/analogy, - it\u2019s never the narrative.\nBohot sundar descirbe kiyi hai chize\nVery cheerful tone is there. In entire passage , tone is - joyful, cheerful. Style-Descriptive, Bright and upbeat, \ncheerful, optimistic, positive tone\nThere are these all tones.\n\n[OCR/Visual Text]:\nDraw Design Layout References Maiings Review View Help >\n\nContemplative .......... Analyzing one\u2019s own feelings/ ppt ).%\nmotives\n\n-imp tone- narrative//descriptive:\nNewspaper style- narrative - no positive/negative.\n\n->descriptive:\n\nNarrative, descriptive, analytical\n\n.\nyl spe \u2014 , ;\n(SN The pitch dark of the night outside seemed to match the one\n\n\u00a7!\nfen inside me- the same vacuum, loneliness and bereft of a single\nsoul. . 4 \u2019\nThe gen) nadent ZAI!\n\nHint: if u eveer find the Incident description's words- very good- or more words, - sundar words mile- then it\nS a Descriptive tone example/\n\nE.g. of it=\n\nShe hem Cc nea MWUCweYW LOC.\nSunshine dripped like honey through the leaves, dappling the\npicnic blanket with warmth. Laughter bubbled up like a fizzy drink,\ncontagious and light. The scent of wildflowers migted with the\nsweet_aroma of fried chicken, making everyone's stomach rumble\nin delight. Ants, the only uninvited guests, were playfully chased\n\npelt dear \u2014 \u2014\n\naway by cr \u2014\u2014\u2014_ \u2014\n\numbs sailing through the air. It was a day spun from pure joy, a day\nthat promised good company, delicious food, and memories that\nwould make you smile long after the sun dipped below the horizon.\n\na :\n\nTONE: DESCRIPTIVE.\nMetaphor, and many comparision/analogy, - it\u2019s never the narrative.\n\nBohot sundar descirbe kiyi hai chize\nVery cheerful tone is there. In entire passage , tone is - joyful, cheerful. Style-Descriptive, Bright and upbeat,\ncheerful, optimistic, positive tone\n\nThere are these all tones.",
+  "discussed_at": "00:53:25",
+  "discussed": true
+ },
+ {
+  "slide_number": 11,
+  "image_path": "reference_pages/ref_011.png",
+  "ocr_text": "optimistic, Fun , cheerful, overflowing, exciting, - all these are tones- these are all positive tones.\nPractice tones- practice files:: HW- next class->read and asnwer tones\n@ 3rd que type- Place of Publication?\nVIMP que --aajkal aarha jayada\n-\nPace of publication depends on 2/3 things-\n1. topic \nTopic's treatment -depth- gehrai topic ki\n2.\nLanguage\n3.\nThee factors descide the Place of publication/kahase liya hoga.\nE.g. usage of ginger\n\n[OCR/Visual Text]:\nWhistles like happy birdsong tilled the air as trends piled into the\noverflowing car. Sunlight glinted off windows, turning the inside into a\ndisco ball. The beat thumped Tfom the speakers, a soundtrack to their\nadventure. Anticipation crackled like electricity, promises of laughter\nand new experiences dancing just out of reach. With every twist and\nturn of the road, the world seemed to unfurl before them, a giant\ninvitation to explore_and conquer. It was the start of a weekend\nbrimming with possibilities, a chance to create memories that would\n\nshine brighter than the summer sun.\n\u2014\n\nset \u2014_ Des OS '\n\noptimistic, Fun , cheerful, overflowing, exciting, - all these are tones- these are all positive tones.\n\nPractice tones- practice files:: HW- next class->read and asnwer tones\n\nie Vome taut ro) espn Lae) Rene bangs Ree ~ % wm \u201cbas = a hd i]\n\npo grads  Econmy\nDN\n\npore\npow Diu sShichy ~\n\nPlace A Publiason\n\n@ 3rd que type- Place of Publication?\n\nVIMP que --aajkal aarha jayada\n\nPace of publication depends on 2/3 things-\n\n1. topic\n2. Topic's treatment -depth- gehrai topic ki\n3. Language\n\n\u201cTdhic\n\nbh\nbeet eA meni\nAngu fe\n\nThee factors descide the Place of publication/kahase liya hoga.\n\nE.g. usage of ginger",
+  "discussed_at": "00:55:00",
+  "discussed": true
+ }
+]
+
+CONCEPT BLOCK TO UPDATE:
+{
+ "title": "Reading Comprehension: Identifying and Analyzing Passage Tones",
+ "explanation": "This section introduces how to identify the author's tone\u2014representing their attitude, style, and mood\u2014by analyzing specific vocabulary choices and observing how sentence structures and word arrangements modify emphasis.\n\nAn author's tone is determined not only by the individual words chosen but also by how those words are structured and arranged in a sentence. To evaluate tone, readers must analyze the emotional direction (positive, negative, or neutral), the degree of intensity of the vocabulary, the situational context, and the distinction between the author's voice and external opinions.\n\nTo identify the author's tone and attitude in reading comprehension, one must focus on the specific adjectives, nouns, verbs, and adverbs used in the passage. Words must be categorized by their polarity (positive, negative, or neutral) and their intensity or degree.\n\nA critical distinction must be made between the author's own views and the opinions of others quoted in the passage. Questions about the author's tone or attitude must be answered based solely on the author's personal statements.\n\nSarcasm involves saying the opposite of what is genuinely meant, often to mock or criticize. Authors use contextual clues and punctuation markers to signal sarcastic intent rather than a literal meaning.\n\nDifferent styles of writing express distinct tones. This section contrasts cheerful and humorous tones and details the critical differences between narrative and descriptive styles.\n\nUnderstanding how to recognize and differentiate various tones and writing styles used by an author to convey specific emotional qualities, such as humor, contemplation, narration, or descriptive richness.",
+ "concept_explanations": [
+  {
+   "concept_name": "Linguistic Indicators of Tone",
+   "detailed_explanation": "An author's tone is expressed through specific words distributed across the text. To identify tone, a reader must focus on the choice of adjectives, adverbs, nouns that reflect mood, idioms, and phrases. The collective presence of these words reveals the writer's attitude toward the subject."
+  },
+  {
+   "concept_name": "Syntactic Influences on Tone",
+   "detailed_explanation": "Tone is not determined solely by the choice of vocabulary. The arrangement of words in a sentence changes the emphasis and stress. By altering the structure of a sentence (such as using inversion), an author can transform a plain, flat statement into a stressed or emphatic one without changing the basic meaning or vocabulary."
+  },
+  {
+   "concept_name": "Syntactic Arrangement and Sentence Tone",
+   "detailed_explanation": "Sentence structure directly dictates emphasis. A flat, simple statement presents information neutrally, whereas rearranging the word order (such as placing negative adverbs or adverbial phrases at the beginning) creates syntactic inversion. This inversion places stress on specific elements, converting a plain statement into a stressed or emphatic one. Therefore, two sentences containing the exact same words and literal meaning can convey entirely different tones to the reader."
+  },
+  {
+   "concept_name": "Degrees of Vocabulary Intensity",
+   "detailed_explanation": "Words sharing the same general meaning can differ significantly in their degree of intensity. For instance, when analyzing negative criticism, the vocabulary spans a spectrum from mild disapproval to extreme condemnation. An author selecting a highly intense word like 'excoriate' is signaling a much stronger emotional stance than if they had used 'criticize'. Identifying the level of intensity (the scale) is essential for identifying the precise tone of a passage."
+  },
+  {
+   "concept_name": "Categorization of Common Textual Tones",
+   "detailed_explanation": "Written passages employ distinct emotional profiles. A sarcastic tone uses sharp, hurtful comments to mock or criticize, distinguishing it from lighthearted humor. A cynical tone conveys a hopeless perspective, viewing actions and events negatively. Reflective or contemplative tones represent deep thinking about the past, present, or future, whereas a nostalgic tone is restricted exclusively to remembering past memories. Agitated tones represent mental unrest and turmoil, while indifferent tones show a complete lack of interest or emotional investment."
+  },
+  {
+   "concept_name": "Polarity and Intensity of Word Choice",
+   "detailed_explanation": "The tone of a passage is established through the author's choice of vocabulary. Evaluating a word involves classifying its polarity (positive, negative, or neutral) and determining its intensity (degree). Words can share a similar dictionary definition and negative polarity, but differ significantly in strength. Light or mild words convey subtle disapproval, whereas strong words indicate intense opposition or criticism."
+  },
+  {
+   "concept_name": "Author's Attitude vs. Quoted Sources",
+   "detailed_explanation": "When an author quotes an external source or researcher (e.g., using markers like 'according to so-and-so'), the attitude expressed in that quote belongs to the cited individual, not the author. To answer questions regarding the author's attitude or tone, the reader must isolate the author's direct assertions from these external quotes, as they can sometimes contradict each other."
+  },
+  {
+   "concept_name": "Sarcasm Markers and Punctuation Clues",
+   "detailed_explanation": "Sarcastic remarks mock situations by stating a highly positive phrase under negative circumstances. In written text, authors frequently place the sarcastic keyword or phrase inside inverted commas (quotation marks) to alert the reader that the literal meaning should not be applied. Evaluating the overall tone also requires analyzing if a passage uses uniformly negative or positive words, or a mixture of both to establish a dominant tone."
+  },
+  {
+   "concept_name": "Cheerful and Humorous Tones",
+   "detailed_explanation": "A cheerful tone is optimistic, happy, and confident about the future. A humorous tone uses funny, light-hearted descriptions to entertain. Unlike sarcastic or aggressive tones, the primary goal of humor is not to put someone down or humiliate them, but to highlight amusing human behaviors."
+  },
+  {
+   "concept_name": "Narrative vs. Descriptive Tones",
+   "detailed_explanation": "Narrative and descriptive tones are common in passages but have distinct differences:\n1. **Narrative Tone**: Factual, emotionless, and plain reporting of events (similar to a newspaper news report). It outlines what occurred, who was involved, and the outcomes without expressing personal feelings, opinions, or deep imagery.\n2. **Descriptive Tone**: Highly detailed, sensory-focused writing. It uses vivid imagery (e.g., describing the dark night) to paint a picture in the reader's mind, focusing on look, feel, and atmosphere rather than just listing plain facts."
+  },
+  {
+   "concept_name": "Narrative vs. Descriptive Style Dinarism",
+   "detailed_explanation": "The primary distinction between narrative and descriptive styles lies in the emotional depth and vocabulary complexity used to recount events. A narrative style presents facts, incidents, or reports in a plain, simple, and direct manner without subjective emotions or views (e.g., standard newspaper reporting of an accident). Conversely, a descriptive style uses rich vocabulary, vivid imagery, metaphors, and comparisons to describe a scene, incident, or emotional state to evoke a sensory response from the reader."
+  }
+ ],
+ "_chunk_start": 1455.296,
+ "_chunk_end": 3479.936,
+ "concepts": [
+  {
+   "term": "Tone",
+   "definition": "The **style, mood, and attitude** that an author adopts when writing about a particular topic.\nAlso: The **emotional attitude** or **mood** of the author toward the subject matter, conveyed through word choice, sentence structure, and arrangement."
+  },
+  {
+   "term": "Sarcastic Tone",
+   "definition": "A mocking, ironic, or <highlight color='RED'>\u0935\u094d\u092f\u0902\u0917\u093e\u0924\u094d\u092e\u0915</highlight> tone that uses sharp, hurtful comments to criticize or make fun of something in a negative way.\nAlso: A tone where the intended meaning is the opposite of the literal words used, usually carrying a mocking or ironic intent."
+  },
+  {
+   "term": "Cynical Tone",
+   "definition": "A hopeless or pessimistic tone where the author finds **nothing good or positive** in the world or situation discussed."
+  },
+  {
+   "term": "Nostalgic Tone",
+   "definition": "A tone characterized by **remembering and longing for the past**, focusing on personal memories or prior times."
+  },
+  {
+   "term": "Reflective / Contemplative Tone",
+   "definition": "A tone of **deep, analytical thinking** that can apply to the past, the present, or future possibilities."
+  },
+  {
+   "term": "Indifferent Tone",
+   "definition": "A neutral, **uninterested** tone showing a complete lack of concern, care, or interest in the outcome or events."
+  },
+  {
+   "term": "Agitated Tone",
+   "definition": "A troubled, restless, or anxious tone representing **mental unrest** and a lack of peace."
+  },
+  {
+   "term": "Vindictive Tone",
+   "definition": "A retaliatory tone focused on **revenge** or getting back at someone."
+  },
+  {
+   "term": "Excoriate",
+   "definition": "To <highlight color='BLUE'>criticize severely</highlight> or express extremely strong disapproval; represents the highest intensity on the criticism scale."
+  },
+  {
+   "term": "Paradox",
+   "definition": "A situation, statement, or concept where two elements are in **conflict** or exhibit a distinct **contrast** with one another."
+  },
+  {
+   "term": "Word Degree (Intensity)",
+   "definition": "The relative strength or force of a word's meaning. For instance, negative words can range from <highlight color='BLUE'>mild/light</highlight> (e.g., dislike) to <highlight color='RED'>extremely strong</highlight> (e.g., exporiate)."
+  },
+  {
+   "term": "Author's Opinion",
+   "definition": "The direct viewpoint, attitude, or stance of the writer of the passage."
+  },
+  {
+   "term": "Quoted Opinion",
+   "definition": "The viewpoint of an external entity or person referenced by the author (e.g., using 'according to...')."
+  },
+  {
+   "term": "Inverted Commas Indicator",
+   "definition": "The use of quotation marks around a word (e.g. 'special' duties) to indicate a non-literal, sarcastic, or ironic meaning."
+  },
+  {
+   "term": "Cheerful Tone",
+   "definition": "An optimistic, positive, and happy tone showing readiness for success."
+  },
+  {
+   "term": "Humorous Tone",
+   "definition": "A light-hearted tone designed to be funny without intending to demean or offend.\nAlso: A lighthearted writing tone where the author's intent is to create amusement or fun, rather than to demean or put others down. It often relies on ironical or exaggerated word choices, such as calling a minor object a **treasure**."
+  },
+  {
+   "term": "Narrative Tone",
+   "definition": "A style of writing that presents facts and events in a plain, straightforward, and objective manner."
+  },
+  {
+   "term": "Descriptive Tone",
+   "definition": "A style of writing characterized by detailed imagery, sensory details, and atmospheric descriptions."
+  },
+  {
+   "term": "Contemplative Tone",
+   "definition": "A reflective and serious tone where the author thinks deeply about their past, present, or future circumstances."
+  },
+  {
+   "term": "Narrative Style",
+   "definition": "A plain, straightforward manner of writing that focuses on presenting events chronologically and factually without emotional commentary or stylistic metaphors."
+  },
+  {
+   "term": "Descriptive Style",
+   "definition": "A style characterized by the use of highly evocative words, **metaphors**, and comparisons to portray a scene or emotion vividly."
+  }
+ ],
+ "examples": [
+  {
+   "timestamp": "00:33:08",
+   "sentence": "Compare the tone and emphasis of the following two sentences: (A) 'You will not find this kind of thing anywhere else.' and (B) 'Nowhere else will you find this kind of thing.'",
+   "rule": "Observe how syntactic inversion shifts the tone from plain to emphatic.",
+   "working": "1. Sentence A ('You will not find...') uses standard word order. The tone is plain, flat, and informative.\n2. Sentence B ('Nowhere else will you...') begins with the negative phrase 'Nowhere else' and inverts the subject and verb. This structure places strong emphasis and emotional stress on the exclusivity of the object, resulting in a stressed tone.",
+   "student_notes": "Even with identical words and meanings, sentence structure alone changes the tone from flat to stressed.",
+   "method2": "",
+   "cloze_text": "Sentence inversion can alter a passage's tone from a flat or plain statement to an <cloze answer='emphatic' hint='stressed or highlighted'>[......]</cloze> or stressed expression.",
+   "cornell_cues": [
+    "How does rearranging the words in a sentence affect the author's tone if the meaning remains the same?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:33:58",
+   "sentence": "Analyze the difference in meaning and tone between the statements: (A) 'Look, I am not a doctor.' and (B) 'Look, I am no doctor.'",
+   "rule": "Distinguish between factual negation ('not a') and qualitative disclaimer ('no').",
+   "working": "1. Statement A ('I am not a doctor') is a plain, direct statement of fact regarding one's profession or lack thereof.\n2. Statement B ('I am no doctor') goes beyond factual negation to imply a disclaimer of expertise or lack of professional capability, adopting a more colloquial or defensive tone.",
+   "student_notes": "The use of 'no' instead of 'not a' shifts the statement from a neutral fact to a qualitative disclaimer.",
+   "method2": "",
+   "cloze_text": "The phrase 'I am not a doctor' states a fact, whereas <cloze answer='I am no doctor' hint='colloquial disclaimer of skill'>[......]</cloze> implies a disclaimer of professional expertise.",
+   "cornell_cues": [
+    "What is the semantic and tonal difference between saying 'not a' and 'no' before a noun?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:33:08",
+   "sentence": "Sentence A: 'You will not find this kind of thing anywhere else.' vs. Sentence B: 'Nowhere else will you find this kind of thing.'",
+   "rule": "Syntactic Inversion for Tone Stress",
+   "working": "Sentence A is written in standard declarative order, conveying a flat, plain tone. Sentence B moves the negative adverbial phrase 'nowhere else' to the beginning, forcing the auxiliary verb 'will' to precede the subject 'you'. This syntactic inversion changes the tone from a flat statement to a stressed, highly emphatic assertion.",
+   "student_notes": "Both sentences share identical words and literal meanings. The difference lies entirely in the emotional delivery and emphasis created by sentence structure.",
+   "method2": "",
+   "cloze_text": "Rearranging sentence structure to place negative adverbs first creates <cloze answer='syntactic inversion' hint='structural shift for emphasis'>[......]</cloze> to stress a point.",
+   "cornell_cues": [
+    "How does word order alter sentence tone without changing literal meaning?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:34:24",
+   "sentence": "Statement A: 'Look, I am not a doctor.' vs. Statement B: 'Look, I am no doctor.'",
+   "rule": "Vocabulary-Driven Emphasis",
+   "working": "Statement A is a simple, direct statement of fact. Statement B uses 'no' instead of 'not a' to convey a defensive, colloquial emphasis, meaning 'I am not a doctor at all' or 'I am no doctor, after all.'",
+   "student_notes": "Using 'no doctor' instead of 'not a doctor' introduces a conversational, slightly defensive tone rather than a plain declaration.",
+   "method2": "",
+   "cloze_text": "Replacing a standard negation with 'no [noun]' shifts the tone to be more <cloze answer='defensive and conversational' hint='colloquial focus'>[......]</cloze>.",
+   "cornell_cues": [
+    "What is the difference in tone between 'I am not a doctor' and 'I am no doctor'?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:37:09",
+   "sentence": "Passage snippet: '...find solace in a TV show I had chosen... marvelous screen... running farther and faster and I had just escaped a ten year slump... my heart began pounding...'",
+   "rule": "Keyword-Based Tone Identification",
+   "working": "Analyze the vocabulary elements. Positive elements: 'find solace', 'marvelous screen', 'running farther and faster', 'escaped a ten-year slump'. Negative elements: 'my heart began pounding'. By identifying these adjectives, verbs, and physical descriptions, the reader can evaluate the emotional shifts and identify whether the overall tone is positive, negative, or stressed.",
+   "student_notes": "Tracking adjectives (marvelous) and physical symptoms (heart pounding) provides concrete clues to determine the author's underlying emotional state.",
+   "method2": "",
+   "cloze_text": "To identify tone, readers must focus on the <cloze answer='adjectives, nouns, verbs, and adverbs' hint='parts of speech carrying emotion'>[......]</cloze> used by the author.",
+   "cornell_cues": [
+    "How do keyword indicators like 'solace' or 'pounding heart' reveal textual tone?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:41:28",
+   "sentence": "The scale of criticism: Dislike -> Criticize -> Hate -> Excoriate.",
+   "rule": "Vocabulary Intensity Scaling",
+   "working": "All four terms belong to the same semantic category of negative feelings or actions. However, they are arranged in ascending order of intensity: 'Dislike' is a mild preference, 'Criticize' is a standard intellectual reaction, 'Hate' is a strong emotional reaction, and 'Excoriate' represents the absolute highest degree of severe, public criticism.",
+   "student_notes": "Understanding intensity scaling prevents misinterpreting the severity of the author's feelings. Excoriate means to completely tear down or strongly criticize.",
+   "method2": "",
+   "cloze_text": "The strongest degree of criticism on the negative scale is represented by the word <cloze answer='excoriate' hint='to criticize severely'>[......]</cloze>.",
+   "cornell_cues": [
+    "What are the four levels of the negative criticism scale discussed in the lecture?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:41:28",
+   "sentence": "dislike, criticize, hate, exporiate",
+   "rule": "Word Degree and Intensity Rule",
+   "working": "Analyze the four words: 'dislike', 'criticize', 'hate', and 'exporiate'. All four have negative polarity and similar core meanings. However, they scale in intensity: 'dislike' is a mild word, 'criticize' is stronger, 'hate' is even stronger, and 'exporiate' represents very strong criticism (bashing or highlighting faults severely).",
+   "student_notes": "Exporiate means very strong criticism, such as someone speaking strongly against another in parliament.",
+   "method2": "",
+   "cloze_text": "Even when words share negative polarity, they differ in their <cloze answer='degree' hint='intensity/strength'>[......]</cloze>.",
+   "cornell_cues": [
+    "How do words with the same negative tone differ in reading comprehension?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:43:35",
+   "sentence": "The authoritative parenting style is beneficial in terms of cultivating discipline. According to Piaget, however, such a style can create problems.",
+   "rule": "Attribution Isolation Rule",
+   "working": "The passage contains two sentences. Sentence 1 expresses the author's direct opinion that authoritative parenting is beneficial (positive tone). Sentence 2 quotes Piaget, who believes the style creates problems (negative tone). If a question asks for the author's attitude, the correct answer is positive, ignoring Piaget's negative view.",
+   "student_notes": "Be careful when tone questions are asked: you must answer based on the author's tone, not the quoted person's tone.",
+   "method2": "",
+   "cloze_text": "When asked about the author's attitude, do not use the <cloze answer='quoted opinion' hint='viewpoint of another person'>[......]</cloze> as the basis of your answer.",
+   "cornell_cues": [
+    "Why must we separate the author's opinion from quoted opinions in reading comprehension?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:45:05",
+   "sentence": "A business owner suffers a major financial loss, and someone comments: 'What a great achievement.'",
+   "rule": "Irony and Context Clue Rule",
+   "working": "The context is a business loss (negative situation). The words used are 'great achievement' (highly positive). The stark contrast between the negative situation and positive words indicates the comment is sarcastic, not literal.",
+   "student_notes": "A sarcastic comment is used to make fun of or mock a situation.",
+   "method2": "",
+   "cloze_text": "A positive statement made in response to a business loss is interpreted as <cloze answer='sarcastic' hint='mocking/ironic'>[......]</cloze>.",
+   "cornell_cues": [
+    "How does context help identify sarcasm in text?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:45:55",
+   "sentence": "She has been given certain 'special' duties by the CM.",
+   "rule": "Punctuation-Based Sarcasm Rule",
+   "working": "In the sentence, the word 'special' is placed in inverted commas. Rather than meaning the duties are actually elite or prestigious, the quotation marks show that the author is mocking the nature of these duties, indicating they are routine or insignificant.",
+   "student_notes": "Normally, sarcastic comments or words are highlighted by putting them in inverted commas.",
+   "method2": "",
+   "cloze_text": "Putting words in <cloze answer='inverted commas' hint='quotation marks'>[......]</cloze> is a common way for authors to signal sarcasm.",
+   "cornell_cues": [
+    "What does a word placed in quotation marks often represent in tone analysis?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:46:40",
+   "sentence": "dreary, stark, morbid, bleak",
+   "rule": "Consistent Polarity Rule",
+   "working": "Review the group of words: 'dreary', 'stark', 'morbid', and 'bleak'. All four words carry a negative, sad, and hopeless meaning. If a passage uses such words consistently, the overall tone is clearly negative.",
+   "student_notes": "If all words are negative, the final tone is negative and straightforward to identify.",
+   "method2": "",
+   "cloze_text": "A passage using dreary, stark, morbid, and bleak maintains a consistently <cloze answer='negative' hint='hopeless/sad'>[......]</cloze> tone.",
+   "cornell_cues": [
+    "What tone is established when dreary, stark, morbid, and bleak are used together?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:47:15",
+   "sentence": "uptick, spike, poignant, depressing",
+   "rule": "Dominant Polarity Rule",
+   "working": "Analyze the mixture: 'uptick' (positive increase), 'spike' (positive increase), and 'poignant' (moving/emotional, often positive context here), mixed with 'depressing' (negative). Since three out of four indicators lean positive, the broad tone of the passage remains positive, despite the single negative element.",
+   "student_notes": "Note: The transcript uses the term 'point' which phonetically refers to 'poignant' or a similar positive term. Look at the balance of words to find the overall tone.",
+   "method2": "",
+   "cloze_text": "When positive and negative words are mixed, determine the tone based on the <cloze answer='broadly dominant' hint='majority direction'>[......]</cloze> sentiment.",
+   "cornell_cues": [
+    "How do you determine the overall tone of a passage when positive and negative words are mixed?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:48:05",
+   "sentence": "With all the necessary things in place India seems poised to dominate the world in the next century.",
+   "rule": "Cheerful Tone Rule",
+   "working": "The sentence expresses confidence ('poised to dominate') and high optimism about India's future. The words used are happy and forward-looking, signaling a cheerful/optimistic tone.",
+   "student_notes": "'Poised' in this context means 'ready' or 'almost there'.",
+   "method2": "",
+   "cloze_text": "The sentence predicting India's dominance shows a highly <cloze answer='cheerful' hint='optimistic/positive'>[......]</cloze> tone.",
+   "cornell_cues": [
+    "What makes a sentence cheerful or optimistic?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:48:55",
+   "sentence": "While being liberal with spending otherwise, Grandpa used to guard his old treasure of that five rupee coin very fiercely.",
+   "rule": "Humorous Tone Rule | Application of the **Humorous Tone**",
+   "working": "The contrast between being liberal with money in general while 'fiercely' guarding a single five-rupee coin as a 'treasure' creates an amusing, light-hearted image of the grandfather's behavior. The goal is funny, making it humorous.\n\nThe sentence presents a humorous contrast. Grandpa is described as spending liberally on other items but guarding a small, insignificant five-rupee coin as if it were an old 'treasure'. The choice of the word 'treasure' for a small coin creates a playful effect.",
+   "student_notes": "Humor does not aim to lower the dignity of a person, it just highlights an amusing habit.\n\nThe teacher uses the word 'treasure' as the core marker showing that the author is playful and humorous without trying to insult the grandfather.",
+   "method2": "",
+   "cloze_text": "Highlighting a grandfather guarding a five-rupee coin represents a <cloze answer='humorous' hint='funny/light-hearted'>[......]</cloze> tone. Characterizing a small five-rupee coin as a <cloze answer='treasure' hint='grandpa's coin description'>[......]</cloze> creates a humorous tone.",
+   "cornell_cues": [
+    "How does a humorous tone differ from a sarcastic one?",
+    "Why is the grandfather's behavior with the coin classified as humorous rather than critical?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:49:45",
+   "sentence": "Newspaper reports detailing a train accident in Kolkata: listing passenger counts, location, and injuries in a plain manner.",
+   "rule": "Narrative Tone Rule",
+   "working": "Analyze the newspaper style: it states the facts of the accident simply, without personal opinions, emotional vocabulary, or subjective analysis. This objective storytelling is narrative.",
+   "student_notes": "Newspaper reports are typically written in a narrative style, keeping emotions out of the facts.",
+   "method2": "",
+   "cloze_text": "A plain, emotionless report of a train accident is an example of a <cloze answer='narrative' hint='factual/newspaper-like'>[......]</cloze> tone.",
+   "cornell_cues": [
+    "What is the key characteristic of a narrative tone?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:50:10",
+   "sentence": "The pitch dark of the night outside seemed to...",
+   "rule": "Descriptive Tone Rule",
+   "working": "The phrase uses sensory language ('pitch dark') to establish an atmosphere and paint a vivid picture of the setting, moving beyond plain statements of facts to evoke imagery.",
+   "student_notes": "Descriptive writing focuses on creating imagery for the reader.",
+   "method2": "",
+   "cloze_text": "Sensory descriptions of the night represent a <cloze answer='descriptive' hint='vivid imagery'>[......]</cloze> tone.",
+   "cornell_cues": [
+    "How does a descriptive tone contrast with a narrative tone?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:50:30",
+   "sentence": "The pitch dark of the night outside seemed to match the one inside me. The same vacuum, loneliness, and not a single soul there.",
+   "rule": "Application of the **Descriptive Style**",
+   "working": "The writer compares the dark night outside with their internal feelings of loneliness and vacuum, employing rich and evocative words such as 'vacuum', 'loneliness', and 'not a single soul' to create an emotional setting.",
+   "student_notes": "The text does not simply state 'it was dark and I felt lonely' (which would be narrative); it builds a detailed scene using visual and emotional metaphors.",
+   "method2": "",
+   "cloze_text": "Comparing the external darkness to an internal feeling of void is a hallmark of a <cloze answer='descriptive' hint='opposite of narrative'>[......]</cloze> writing style.",
+   "cornell_cues": [
+    "How does descriptive language differ from simple narrative reporting in emotional impact?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:54:10",
+   "sentence": "Sunshine dripped like honey through the leaves, dappling the blanket with warmth. Laughter bubbled up like a fizzy drink, contagious. The scent of wild flowers mingled with the sweet aroma of fried chicken, making everyone's stomach rumble in delight. Ants, the only uninvited guests, were playfully chased away by crumbs sailing through the air. It was a day spun from pure joy. A day that promised good company, delicious food, that would make you smile long after Sunday.",
+   "rule": "Vivid metaphor interpretation and tone identification (cheerful, joyful, upbeat, optimistic)",
+   "working": "1. 'Sunshine dripped like honey' is a metaphor comparing sunlight to sweet, slow-flowing honey.\n2. 'Dappling' refers to spots of light and shadow falling on the blanket.\n3. 'Laughter bubbled up like a fizzy drink' is a simile comparing spontaneous laughter to the release of gas bubbles when opening a carbonated beverage.\n4. 'Contagious' indicates that the laughter spread rapidly to others.\n5. 'Stomach rumble in delight' is a physical description indicating anticipation of food.\n6. 'Ants, the only uninvited guests' is a humorous framing of picnic pests.\n7. The final phrases ('day spun from pure joy', 'make you smile') set an upbeat, bright, hopeful, satisfying, and cheerful tone.",
+   "student_notes": "The teacher translates the physical reactions to Hindi during the lecture (stomach rumble = 'pet mein chuhe kudna') to explain the sensory nature of the descriptive style. Ants are humorously described as guests.",
+   "method2": "",
+   "cloze_text": "Comparing sunshine to honey is a <cloze answer='metaphor' hint='figure of comparison'>[......]</cloze> that gives the passage a warm, cheerful tone.",
+   "cornell_cues": [
+    "What specific vocabulary choices indicate that the picnic passage has an upbeat and optimistic tone?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  },
+  {
+   "timestamp": "00:55:43",
+   "sentence": "Whistles like happy bird song filled the air as friends piled into the overflowing car. Sunlight glinted off windows, turning the inside into a disco ball. The beat thumped from the speakers, a soundtrack to their adventure. Anticipation crackled like electricity. New experiences, dancing just out of reach. With every twist and turn, the world seemed to unfold before them\u2014a giant invitation to explore and conquer. It was the start of a weekend brimming with possibilities, a chance to create memories that would shine brighter than the summer sun.",
+   "rule": "Identifying enthusiastic, adventurous, and excited tones in descriptive passages",
+   "working": "1. 'Whistles like happy bird song' establishes an upbeat, auditory description.\n2. 'Sunlight glinted... disco ball' uses a light reflection comparison to create a party-like atmosphere.\n3. 'Anticipation crackled like electricity' uses an energy comparison to describe the excitement.\n4. 'Giant invitation to explore and conquer' shows an adventurous theme.\n5. 'Brimming with possibilities' and 'shine brighter than the summer sun' indicate high optimism and excitement.",
+   "student_notes": "The students in class successfully identified this passage's tone as adventurous, excited, optimistic, and happy based on the energetic imagery of the trip.",
+   "method2": "",
+   "cloze_text": "The phrase 'brimming with possibilities' indicates an <cloze answer='optimistic' hint='hopeful and positive'>[......]</cloze> and adventurous outlook.",
+   "cornell_cues": [
+    "How does the author use comparative language to build excitement and anticipation in this road trip passage?"
+   ],
+   "srs_tag": "[SRS: +3 Days]"
+  }
+ ],
+ "visual_moments": [
+  {
+   "timestamp": "00:32:01",
+   "type": "slide",
+   "description": "Displaying a document titled 'RC tones, identifying RC tones' highlighting adjectives, adverbs, nouns, idioms, and phrases as indicators of tone."
+  },
+  {
+   "timestamp": "00:33:58",
+   "type": "board",
+   "description": "Writing and comparing the sentences 'I am not a doctor' and 'I am no doctor' to illustrate semantic and tonal differences."
+  },
+  {
+   "timestamp": "00:33:08",
+   "type": "board",
+   "description": "Sentence comparisons demonstrating how flat vs. stressed tones are produced by changing word placement."
+  },
+  {
+   "timestamp": "00:34:24",
+   "type": "board",
+   "description": "Comparison between standard and colloquial negations for semantic emphasis."
+  },
+  {
+   "timestamp": "00:37:09",
+   "type": "board",
+   "description": "Reading comprehension passage containing adjectives and verbs indicating positive and negative emotional states."
+  },
+  {
+   "timestamp": "00:41:28",
+   "type": "board",
+   "description": "A vertical or horizontal scale displaying words of varying emotional intensity: dislike, criticize, hate, and excoriate."
+  },
+  {
+   "timestamp": "00:43:35",
+   "type": "board",
+   "description": "Comparison lines showing author's positive stance vs. Piaget's negative stance on parenting styles"
+  },
+  {
+   "timestamp": "00:45:05",
+   "type": "board",
+   "description": "Contrast diagram showing business loss vs. the comment 'What a great achievement'"
+  },
+  {
+   "timestamp": "00:45:55",
+   "type": "board",
+   "description": "Sentence written on board with the word 'special' in inverted commas"
+  },
+  {
+   "timestamp": "00:46:40",
+   "type": "board",
+   "description": "List of negative words (dreary, stark, morbid, bleak) on the board"
+  },
+  {
+   "timestamp": "00:47:15",
+   "type": "board",
+   "description": "List of mixed tone words (uptick, spike, point/poignant, depressing) showing a dominant positive direction"
+  },
+  {
+   "timestamp": "00:48:05",
+   "type": "board",
+   "description": "Sentence showing India's poise for next-century dominance"
+  },
+  {
+   "timestamp": "00:48:55",
+   "type": "board",
+   "description": "Grandpa's five rupee coin treasure sentence showing humorous style"
+  },
+  {
+   "timestamp": "00:49:45",
+   "type": "board",
+   "description": "Comparison notes explaining the objective newspaper style of a train accident report"
+  },
+  {
+   "timestamp": "00:50:10",
+   "type": "board",
+   "description": "Visual contrast of descriptive text containing 'pitch dark of the night' showi
+<truncated 6941 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

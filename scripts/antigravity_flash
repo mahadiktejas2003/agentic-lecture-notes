@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+import sys
+import os
+import json
+import subprocess
+import time
+
+def main():
+    args = sys.argv[1:]
+    if not args:
+        print("Usage: antigravity <command> [args]")
+        print("Commands:")
+        print("  chat <prompt>")
+        sys.exit(1)
+        
+    cmd = args[0]
+    if cmd == "chat":
+        if len(args) < 2:
+            print("Usage: antigravity chat <prompt>")
+            sys.exit(1)
+        prompt = args[1]
+        
+        # Call agentapi new-conversation
+        agentapi_bin = os.path.expanduser("~/.gemini/antigravity/bin/agentapi")
+        if not os.path.exists(agentapi_bin):
+            agentapi_bin = "agentapi"
+            
+        print(f"[Antigravity CLI] Launching agent session...", file=sys.stderr)
+        res = subprocess.run([agentapi_bin, "new-conversation", "--model=flash", prompt], capture_output=True, text=True)
+        if res.returncode != 0:
+            print(f"[Antigravity CLI] Error starting conversation: {res.stderr}", file=sys.stderr)
+            sys.exit(res.returncode)
+            
+        try:
+            res_data = json.loads(res.stdout)
+            conv_id = res_data["response"]["newConversation"]["conversationId"]
+        except Exception as e:
+            print(f"[Antigravity CLI] Failed to parse conversation response: {e}\nOutput: {res.stdout}", file=sys.stderr)
+            sys.exit(1)
+            
+        print(f"[Antigravity CLI] Started conversation: {conv_id}. Polling response...", file=sys.stderr)
+        
+        # Poll transcript
+        transcript_path = os.path.expanduser(f"~/.gemini/antigravity/brain/{conv_id}/.system_generated/logs/transcript_full.jsonl")
+        
+        import re
+        start_time = time.time()
+        while time.time() - start_time < 600:  # 10 minutes max
+            if os.path.exists(transcript_path):
+                try:
+                    with open(transcript_path, "r", encoding="utf-8") as f:
+                        lines = [line.strip() for line in f if line.strip()]
+                    if lines:
+                        # Scan all lines to track running tasks
+                        running_tasks = set()
+                        for line in lines:
+                            obj = json.loads(line)
+                            if obj.get("status") == "RUNNING":
+                                content = obj.get("content", "")
+                                match = re.search(r'task id:\s*([^\s\n]+)', content)
+                                if match:
+                                    running_tasks.add(match.group(1).strip('"\''))
+                            if obj.get("source") == "SYSTEM" and obj.get("type") == "SYSTEM_MESSAGE":
+                                content = obj.get("content", "")
+                                match = re.search(r'Task id\s*\"([^\"]+)\"\s*finished', content)
+                                if match:
+                                    task_id = match.group(1)
+                                    if task_id in running_tasks:
+                                        running_tasks.remove(task_id)
+                        
+                        # Only check for completion if no background tasks are running
+                        if not running_tasks:
+                            model_response = None
+                            for line in reversed(lines):
+                                try:
+                                    obj = json.loads(line)
+                                    if obj.get("source") == "MODEL" and obj.get("type") == "PLANNER_RESPONSE":
+                                        model_response = obj
+                                        break
+                                    if obj.get("type") == "USER_INPUT":
+                                        break
+                                except Exception:
+                                    pass
+                            
+                            if model_response is not None:
+                                tool_calls = model_response.get("tool_calls", [])
+                                if not tool_calls:
+                                    content = model_response.get("content", "")
+                                    print(content)
+                                    print(f"[Antigravity CLI] Done.", file=sys.stderr)
+                                    sys.exit(0)
+                except Exception as e:
+                    pass
+            time.sleep(2.0)
+            
+        print(f"[Antigravity CLI] Timeout waiting for response.", file=sys.stderr)
+        sys.exit(1)
+    else:
+        # Pass through other commands to agentapi
+        agentapi_bin = os.path.expanduser("~/.gemini/antigravity/bin/agentapi")
+        if not os.path.exists(agentapi_bin):
+            agentapi_bin = "agentapi"
+        res = subprocess.run([agentapi_bin] + args)
+        sys.exit(res.returncode)
+
+if __name__ == "__main__":
+    main()

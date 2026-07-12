@@ -3,22 +3,40 @@ import os
 import sys
 
 def convert_soundscribe_to_srt(manifest_path, srt_path):
-    with open(manifest_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    try:
+        with open(manifest_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"Error reading or parsing SoundScribe manifest {manifest_path}: {e}")
+        return False
         
-    chunks = data.get("chunks", [])
+    sample_rate = float(data.get("sampleRate", data.get("samplerate", 16000.0)))
+    if sample_rate <= 0:
+        sample_rate = 16000.0
+
     srt_lines = []
     
+    chunks = data.get("chunks", data.get("subtitles", data.get("segments", [])))
+    if isinstance(data, list):
+        chunks = data
+
     # Sort chunks by startSample
-    chunks = sorted(chunks, key=lambda x: x.get("startSample", 0))
+    chunks = sorted(chunks, key=lambda x: x.get("startSample", 0) if isinstance(x, dict) else 0)
+
     
-    for i, chunk in enumerate(chunks):
+    # Filter out empty or whitespace-only chunks
+    valid_chunks = []
+    for chunk in chunks:
+        if chunk.get("transcript", "").strip():
+            valid_chunks.append(chunk)
+            
+    for i, chunk in enumerate(valid_chunks):
         start_sample = chunk.get("startSample", 0)
         end_sample = chunk.get("endSample", 0)
         text = chunk.get("transcript", "").strip()
         
-        start_sec = start_sample / 16000.0
-        end_sec = end_sample / 16000.0
+        start_sec = start_sample / sample_rate
+        end_sec = end_sample / sample_rate
         
         def to_srt_time(sec):
             h = int(sec // 3600)

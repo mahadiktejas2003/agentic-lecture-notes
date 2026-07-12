@@ -13,10 +13,12 @@ You are the Lecture Note Reconstruction Orchestrator. When lecture files appear 
 4. Collect their structured outputs: frame_manifest.json, concept_block_map.json, slide_manifest.json.
 5. Invoke the note-composition skill with these manifests and the original source files.
 6. Generate a parallel short revision note (`*_SHORTNOTE.md`) from the concept map and transcript. This must be a compact revision artifact and must not replace or weaken the full lecture notes.
-7. Run the quality audit (all 22 gates). Fix any failures. Regenerate if needed.
+7. Run the quality audit (all 24 gates). Fix any failures. Regenerate if needed.
    - **Gate 20: Transcript Coverage**: Validates chronological coverage calculations properly span the transcript duration (at least 80% coverage) and H2 heading presence (at least 80% headings found in docx).
    - **Gate 21: English Enforcement**: Verifies Devanagari script is strictly cleaned from all text fields and limits transliterated Hinglish keywords to at most 40.
    - **Gate 22: Styling and Highlighting Conformity**: Enforces zero native Word highlights, pastel shades for run shading, specific paragraph shading for Quick Revision boxes (`#D6EAF8`), and Student Note/Doubt boxes (`#F0F4F8`).
+   - **Gate 23: Word Count Budget**: Ensures word count scales dynamically based on the number of concept blocks and examples, preventing overly dense or sparse notes.
+   - **Gate 24: Callout Box Cap**: Restricts callout boxes to at most 6 per document to maintain formatting cleanliness.
 8. Save the final .docx to notes‑output/. Save the short revision note to `notes-output/` as a separate Markdown artifact. Never output notes in chat.
 
 ## short-note-composer (Sub‑Agent)
@@ -37,17 +39,15 @@ Rules:
 6. **Original Equations and HW Que**: Always present the original equation forms as written on the board (e.g. fraction or decimal equations) first before showing simplified integer equations. Identify homework questions and label them as "Homework Questions (HW Que): Try:" and do not mix them with lecture examples. Do not hallucinate or invent extra questions.
 7. **Topper-Grade Tone & Explanatory Balance**: Eliminate childish, conversational commentary. Write in direct, analytical English prose. Hindi/Hinglish must ONLY be used when strictly necessary to explain the meaning of an English concept, or if a specific Hindi analogy is irreplaceable. Do not default to Hinglish. Extract common student doubts/warnings from the transcript and document them concisely as inline `student_notes` callouts. Map grammatical prepositions exhaustively as defined in `note-style.md`.
 8. **Method 2 Callouts**: Relational pointing-type examples must include both standard tracing (backward from "my") and Method 2 (visual drawing with numbered nodes).
-9. **Friction-Optimized Note Generation**: Combat cognitive offloading by compiling notes using the three-layer Friction-Optimized Note Matrix:
-   - *Layer 1*: AI Synthesis (Passive Base conceptual outlines & outline trees).
-   - *Layer 2*: Friction Overlay (Cloze deletions using `<cloze answer="X" hint="Y">[......]</cloze>` for key formulas, definitions, and conclusions; Cornell "Why/How" cues; and spaced-repetition tags like `[SRS: +3 Days]`).
-   - *Layer 3*: Unsolved edge-case boundary testing questions.
+9. **Clean Note Generation**: Notes must be clean, scannable study documents. Avoid excessive callout boxes, revision boxes, and scaffolding elements (no mandatory cloze deletions, Cornell cues, or SRS tags). Let the content speak for itself. Total callout boxes (traps, tricks, cautions, quotes) must not exceed 6 per document.
 10. **Bolding and Highlighting with Colored Markers**: Use markdown bolding (`**text**`) extensively for key terms, definitions, and important phrases. Apply color highlighting using tags like `<highlight color="BLUE">text</highlight>`, `<highlight color="RED">text</highlight>`, `<highlight color="PURPLE">text</highlight>`, or `<highlight color="ORANGE">text</highlight>` for critical rules, standout facts, or crucial formulas. Standard neon yellow/green highlights are strictly banned; all highlight tags must be rendered as soft pastel shades via run-level shading.
 11. **Strict Attribution Ban and Layout Cleanliness**: Conversational attributions like "the teacher outlines", "the lecturer explains", etc. are strictly banned. Paragraphs must remain unified and not be split into single-sentence blocks in the compiled Word output. Markdown formatting using single asterisks (like *plays*, *play*) must be used for italicized text.
 12. **Devanagari Script Ban**: All text fields, including verbatim teacher quotes and headings, must be strictly cleaned of Devanagari script (Hindi characters). Use a post-processing linguistic filter to translate Devanagari to English or write it in transliterated Roman script to satisfy Gate 21.
 13. **Transcript Coverage Mapping**: The `transcript_range_percent` of each block must map to chunk boundaries rather than shrinking around example timestamps, ensuring chronological coverage calculations properly span the transcript duration to satisfy Gate 20.
-14. **Concept Block Consolidation & Alignment**: Do not invent arbitrary or extra concept block titles or levels of categorization that are not explicitly present in the lecture slides or transcript. Align the block titles strictly with the actual lecture topics, slides headings, or core concepts discussed. Group related explanations, examples, and questions under these primary topic blocks rather than splitting them into many tiny, unnecessary, or custom-named concept blocks.
-15. **Smart Synthesis Policy**: The notes must capture all concepts, rules, formulas, and worked examples from the lecture. However, verbose teacher explanations must be synthesized into concise, exam-ready bullet points. Preserve all FACTS but express them EFFICIENTLY. Target: 4,000–6,000 words for a 1-hour lecture. Do not pad notes with filler prose, essay-length analogies, or redundant re-statements.
-16. **Transcript-First Extraction**: The transcript is the primary source of truth. Slides and reference notes supplement the transcript. Extract teaching logic, key analogies, and step-by-step solutions concisely. Paraphrase teacher explanations into formal English study-note prose — do not transcribe verbatim speech.
+14. **Concept Block Consolidation & Alignment**: Do not invent arbitrary or extra concept block titles. Align the block titles strictly with the actual lecture topics or slide headings. Do NOT merge distinct sub-topics together using fuzzy title matching. Each main topic must remain its own distinct H2 section.
+15. **Smart Synthesis Policy (High-Quality Student Notes)**: The notes must capture all concepts, rules, formulas, and worked examples from the lecture. Verbose teacher speech and conversational filler must be synthesized into concise, exam-ready bullet points. Preserve 100% of all FACTS, rules, and worked steps, but express them EFFICIENTLY. Target: **2,500–3,500 words** for a 1-hour lecture (ceiling 4,000 words). Do not pad notes with essay-length prose, repetitive callouts, or redundant restatements.
+16. **Explicit-Only Teacher Cautions**: Teacher cautions (traps/tricks/common mistakes) must NOT be auto-generated. They must be extracted ONLY when the teacher explicitly flags a caution or shortcut in the transcript. Maximum 1 caution per concept block, maximum 6 per entire document.
+17. **Transcript-First Extraction**: The transcript is the primary source of truth. Slides and reference notes supplement the transcript. Extract teaching logic, key analogies, and step-by-step solutions concisely into clean study prose.
 
 ### Hardened Constraints for Syllogism/Logic Lectures:
 1. **Exclusivity of "Only A are B"**:
@@ -115,8 +115,36 @@ If the user provides `lecture-input/REFERENCE_NOTES.pdf` (processed into `refere
 ## slide-parsing (Sub‑Agent)
 You convert every slide to an image, OCR the text, cross‑reference with transcript timestamps, and produce a slide manifest. Flag undiscussed slide text. Triggered by presence of .pdf or .pptx slide decks.
 
+## FSRS-Optimized Mixed-Pattern Anki Flashcard System
+**Generation Policy: ON-DEMAND ONLY.** Anki flashcards are NOT generated by default during the note reconstruction pipeline. They are only created when the user explicitly requests them in their prompt (e.g., "also generate Anki cards for this lecture"). To trigger Anki generation programmatically, set `"anki_requested": true` in `workspace_state.json` before running the orchestrator. The `concept_block_map.json` is always archived so Anki decks can be regenerated at any time.
+
+To maximize long-term retention and support the FSRS algorithm, all generated Anki flashcards must follow these constraints:
+1. **Output Format**: Write to a pipe-separated (`|`) CSV file with exactly four columns: `Front`, `Back`, `Extra`, `Tags`.
+2. **Attribution Ban**: Never write "the lecturer says" or "the teacher explains". State concepts directly as facts.
+3. **Card Types Distribution**:
+   - **Targeted Q&A**: e.g., Front: `Define: <b>[Term]</b>` | Back: `<b>[Definition]</b>`
+   - **Simulated Cloze (Fill-in-the-Blank)**: Use `[......]` on the Front for the term, and the term on the Back.
+   - **True/False + Correction**: Front: `True or False: [misconception]` | Back: `<b>False.</b><br>🚨 TRAP: [Correction]`
+   - **Worked Examples**: Front: `Q: [Problem statement]` | Back: `<b>Rule:</b> [Rule]<br><b>Answer:</b> <b>[Answer]</b>` | Extra: `<b>Working:</b><br>[Step-by-step]`
+   - **Tricks & Shortcuts**: Back of cards must capture warnings and shortcuts formatted as `🚨 TRAP:` or `💡 TRICK:`.
+4. **Hierarchical Tagging**: Tag cards using the format `{LectureName}::{BlockTitle}::[type]`.
+5. **Sanitization**: Strip any literal pipe characters (`|`) from fields, and replace physical line breaks with `<br>`.
+
 ## Workspace State Hand-off Protocol
 All agents working on this project (Orchestrator and specialist sub-agents) must coordinate and communicate using the central `workspace_state.json` file at the root.
 - **State File**: `workspace_state.json`
 - **Orchestrator Action**: Update this file at the end of each node function.
 - **Interchangeability**: When a new AI agent takes over the workspace, it must immediately read `workspace_state.json` to resume the pipeline, find generated artifacts, and trace failure states without requiring manual user prompting.
+
+## Downloads Ingestion & Scheduler Policy
+- **Single Source of Truth**: All downloads scanning, multi-source file grouping (1-5 files), transcription fallback, orchestration, audit checking, cloud upload, and post-upload cleanup are handled solely by `scripts/downloads_tracker.py`.
+- **Scheduling**: Tasks are scheduled natively using the Antigravity Agent Workspace Scheduler (`schedule` tool with cron `*/20 7-12 * * *`), ensuring full environment variables (`ANTIGRAVITY_LS_ADDRESS`, tokens, project IDs) are available.
+- **Safety-Gated 2-Phase Commit Cleanup**: Raw source files (`.mp4`, `.pdf`, `.srt`) are purged from `~/Downloads/` ONLY AFTER:
+  1. The 24-gate audit returns exit code `0` (100% pass).
+  2. R2 `head_object` verifies non-zero byte size of uploaded notes and video.
+  3. Supabase pipeline runs table logs `'completed'` status.
+  - Files are NEVER deleted if audit gates fail or cloud upload encounters an error.
+- **Path Sanitization & Symlink Guard**:
+  - `os.path.realpath` checks enforce that deleted paths reside inside `~/Downloads/`. Symlinks are strictly banned.
+
+

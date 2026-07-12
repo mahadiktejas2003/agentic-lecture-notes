@@ -1,0 +1,7 @@
+{
+  "frame_001.png": {
+    "timestamp": "00:05:00",
+    "ocr_text": "SELECT A FROM R WHERE EXISTS (SELECT * FROM S WHERE R.A > S.B)",
+    "type": "board"
+  }
+}

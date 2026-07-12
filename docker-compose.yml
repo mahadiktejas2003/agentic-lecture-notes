@@ -2,10 +2,9 @@ services:
   pipeline:
     build: .
     volumes:
-      - ./lecture-input:/app/lecture-input
-      - ./notes-output:/app/notes-output
-      - ./agent_memory:/app/agent_memory
-      - ./logs:/app/logs
+      - .:/app
+      - /app/venv
+      - /app/.git
     env_file:
       - .env
     environment:

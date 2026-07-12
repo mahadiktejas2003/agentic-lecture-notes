@@ -1,0 +1,31 @@
+{
+  "lecture_title": "Reasoning Seating Arrangements",
+  "blocks": [
+    {
+      "block_id": "CB1",
+      "title": "Circular Seating Arrangement - 8 Persons",
+      "explanation": "To solve circular arrangements, first fix the position of one person, then arrange others relative to them. Clockwise is left and anti-clockwise is right when everyone faces the center.",
+      "concepts": [
+        {
+          "term": "Circular Arrangement",
+          "definition": "Arranging elements in a circle facing inward or outward."
+        }
+      ],
+      "examples": [
+        {
+          "sentence": "Eight people A, B, C, D, E, F, G, H are sitting around a circular table facing the center. A is sitting second to the left of B.",
+          "rule": "Left is clockwise and right is counter-clockwise when facing inward.",
+          "working": "1. Place B at the bottom. Since everyone faces center, A is second to the left of B (clockwise), which is position 2.",
+          "timestamp": "00:10:00"
+        }
+      ],
+      "visual_moments": [
+        {
+          "timestamp": "00:10:00",
+          "type": "board",
+          "filename": "seating_chart.png"
+        }
+      ]
+    }
+  ]
+}

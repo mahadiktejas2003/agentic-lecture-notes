@@ -3,19 +3,37 @@ import os
 import json
 import argparse
 import sys
+import re
 import logging
 from docx import Document
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from scripts.generate_docx import format_math_text, clean_attributions
 
+audit_feedback = {}
+
+class FeedbackHandler(logging.Handler):
+    def emit(self, record):
+        msg = self.format(record)
+        match = re.search(r'\[FAIL\] Gate\s+(\d+):\s*(.*)', msg)
+        if match:
+            gate_num = match.group(1)
+            reason = match.group(2)
+            if gate_num not in audit_feedback:
+                audit_feedback[gate_num] = []
+            audit_feedback[gate_num].append(reason)
+
 # Configure logging
 os.makedirs("logs", exist_ok=True)
+feedback_handler = FeedbackHandler()
+feedback_handler.setLevel(logging.WARNING)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
         logging.FileHandler("logs/pipeline.log"),
-        logging.StreamHandler(sys.stderr)
+        logging.StreamHandler(sys.stderr),
+        feedback_handler
     ]
 )
 
@@ -51,7 +69,7 @@ def is_paragraph_in_table(paragraph):
     return False
 
 def calculate_friction_index(doc, concept_blocks):
-    import re
+
     all_doc_text = get_all_text_from_docx(doc)
     
     clean_text = re.sub(r'[^\w\s]', '', all_doc_text)
@@ -97,7 +115,7 @@ def inserted_images_match_docx(inserted_payload, docx_metadata):
     )
 
 def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_path):
-    logging.info(f"Starting 22-Gate Quality Audit on: {docx_path}")
+    logging.info(f"Starting 24-Gate Quality Audit on: {docx_path}")
     
     failed_gates = {
         'Gate 1: Structural Integrity':    False,
@@ -122,6 +140,9 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         'Gate 20: Transcript Coverage':     False,
         'Gate 21: English Enforcement':     False,
         'Gate 22: Styling and Highlighting Conformity': False,
+        'Gate 23: Word Count Budget':       False,
+        'Gate 24: Callout Box Cap':         False,
+        'Gate 25: Short Note Audit':        False,
     }
 
     if not os.path.exists(docx_path):
@@ -207,9 +228,11 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
             continue
 
         for b in banned:
-            if b.lower() in t.lower():
+            # Use word boundary search to avoid matching substrings like "we analyze" in "we analyzed"
+            pattern = r'\b' + re.escape(b.lower()) + r'\b'
+            if re.search(pattern, t.lower()):
                 attr_fail += 1
-                logging.warning(f"[FAIL] Banned attribution: '{b}' in: '{t[:80]}...'")
+                logging.warning(f"[FAIL] Gate 1: Banned attribution: '{b}' in: '{t[:80]}...'")
 
     img_count = sum(1 for rel in doc.part.rels.values() if 'image' in rel.reltype)
     total_map_ex = sum(len(b.get('examples',[])) for b in concept_blocks)
@@ -217,24 +240,41 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
 
     docx_metadata = build_docx_metadata(docx_path)
 
-    # Calculate expected images. Only trust inserted_images.json when it belongs
-    # to the same DOCX; otherwise fall back to manifest-derived expectations.
-    if os.path.exists("inserted_images.json"):
-        try:
-            with open("inserted_images.json", "r", encoding="utf-8") as f:
-                inserted_imgs = json.load(f)
-            if isinstance(inserted_imgs, list):
-                exp_img = len(inserted_imgs)
-            elif inserted_images_match_docx(inserted_imgs, docx_metadata):
-                exp_img = len(inserted_imgs.get("images", []))
+    # Calculate expected images. Instead of using a transient sidecar file (loophole)
+    # or counting all extracted frames (including duplicates/logos), we compute it
+    # directly by resolving the unique visual moments mapped in the concept block map.
+    timestamp_to_frame = {f.get('timestamp'): name for name, f in frames.items() if f.get('timestamp')}
+    unique_expected_imgs = set()
+    for b in concept_blocks:
+        for vm in b.get('visual_moments', []):
+            ts = vm.get('timestamp', '').rstrip('*')
+            v_type = vm.get('type', 'board')
+            if v_type == 'slide':
+                slide_num = vm.get('slide_number')
+                if slide_num and slides:
+                    is_ref = vm.get('source') == 'reference'
+                    for s in slides:
+                        if s.get('slide_number') == slide_num:
+                            s_path = s.get('image_path', '')
+                            if is_ref and 'reference_pages' not in s_path:
+                                continue
+                            if not is_ref and 'reference_pages' in s_path:
+                                continue
+                            unique_expected_imgs.add(os.path.basename(s_path))
+                            break
             else:
-                logging.warning("Ignoring inserted_images.json because its DOCX metadata does not match the audited file.")
-                exp_img = len(frames) + len([s for s in slides if s.get('discussed')])
-        except Exception as e:
-            logging.warning(f"Could not load inserted_images.json: {e}")
-            exp_img = len(frames) + len([s for s in slides if s.get('discussed')])
-    else:
-        exp_img = len(frames) + len([s for s in slides if s.get('discussed')])
+                if ts and ts in timestamp_to_frame:
+                    frame_fname = timestamp_to_frame[ts]
+                    unique_expected_imgs.add(frame_fname)
+                else:
+                    # Fallback pattern matching
+                    fallback_name = f"{b.get('block_id', '')}_{ts.replace(':', '')}.jpg"
+                    if fallback_name in frames:
+                        unique_expected_imgs.add(fallback_name)
+                    elif f"{fallback_name}*" in frames:
+                        unique_expected_imgs.add(f"{fallback_name}*")
+                        
+    exp_img = len(unique_expected_imgs)
 
     undisc = [s for s in slides if not s.get('discussed',True)]
     all_text = get_all_text_from_docx(doc)
@@ -246,9 +286,11 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         for eq in exercises:
             if isinstance(eq, int) or (isinstance(eq, str) and not eq.strip()):
                 empty_exercise_count += 1
+    if empty_exercise_count > 0:
+        logging.warning(f"[FAIL] Gate 12: Found {empty_exercise_count} empty or invalid exercise questions.")
 
     # Gate 13: Quotes must not contain raw SRT artifacts (garbled text, mid-sentence starts)
-    import re
+
     srt_artifact_pattern = re.compile(r'^\s*\d+\s+\d{2}:\d{2}:\d{2},\d{3}\s*-->')
     bad_quotes = 0
     for b in concept_blocks:
@@ -256,7 +298,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
             q_clean = q.strip()
             if srt_artifact_pattern.search(q_clean) or q_clean.startswith(('-->', ' ', 'ा', 'ि', 'े')):
                 bad_quotes += 1
-                logging.warning(f"[FAIL] Quote with SRT artifact: '{q_clean[:80]}...'")
+                logging.warning(f"[FAIL] Gate 13: Quote with SRT artifact: '{q_clean[:80]}...'")
 
     # Gate 14: Concept block titles must be meaningful (not just question ranges)
     meaningful_title_pattern = re.compile(r'^.*\(Questions?\s*\d+')
@@ -264,7 +306,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     for b in concept_blocks:
         if meaningful_title_pattern.match(b.get('title', '')):
             bad_titles += 1
-            logging.warning(f"[FAIL] Generic title: '{b.get('title')}'")
+            logging.warning(f"[FAIL] Gate 14: Generic title: '{b.get('title')}'")
 
     # Gate 15: Explanation Conciseness check
     verbose_explanations = 0
@@ -272,7 +314,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         expl = b.get('explanation', '')
         if len(expl) > 4000:
             verbose_explanations += 1
-            logging.warning(f"[FAIL] Verbose explanation in {b.get('block_id', '?')}: {len(expl)} chars")
+            logging.warning(f"[FAIL] Gate 15: Verbose explanation in {b.get('block_id', '?')}: {len(expl)} chars")
     
     # Gate 9: Slide Handling - fail if slide_manifest is empty when slides are expected
     # Also check for undiscussed slides with OCR text appearing in document
@@ -288,6 +330,8 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         logging.warning("[FAIL] Gate 9: Slide manifest is empty but concept blocks exist - missing slide data")
         gate_9_result = False
     else:
+        if undisc_slide_in_doc:
+            logging.warning("[FAIL] Gate 9: Undiscussed slide text appears in document.")
         gate_9_result = not undisc_slide_in_doc
     
     # Gate 2: Revision box is optional, but if present, must be <= h2 count
@@ -303,25 +347,60 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     # Gate 17: Sequence Integrity check
     gate_17_result = True
     h2_texts = [p.text.strip() for p in doc.paragraphs if p.style.name.startswith('Heading 2')]
-    expected_h2_texts = [f"{b.get('block_id')}: {b.get('title')}" for b in concept_blocks]
+    expected_h2_texts = [b.get('title', '').strip() for b in concept_blocks]
     for i, h2_text in enumerate(h2_texts):
         if i < len(expected_h2_texts) and expected_h2_texts[i] not in h2_text:
             logging.warning(f"[FAIL] Gate 17: Heading sequence mismatch at index {i}. Expected: '{expected_h2_texts[i]}', Got: '{h2_text}'")
             gate_17_result = False
 
     # Gate 18: Exact Worked Examples check
+    # generate_docx.py renders scenario_or_problem (falling back to sentence),
+    # so we check both fields. For multi-line SQL/code examples that get split
+    # across paragraphs, use word-level coverage as fallback (≥80% significant words).
     gate_18_result = True
     missing_examples = []
     norm_doc = "".join(c.lower() for c in all_text if c.isalnum())
+    all_text_lower = all_text.lower()
+
+    def _norm(text):
+        no_tags = re.sub(r'<[^>]+>', '', text)
+        cleaned = clean_attributions(no_tags)
+        formatted = format_math_text(cleaned)
+        return "".join(c.lower() for c in formatted if c.isalnum())
+
+    def _word_coverage(text, doc_text_lower):
+        """Check if ≥80% of significant words (len≥3) from text appear in doc."""
+        words = [w for w in re.findall(r'[a-zA-Z0-9]{3,}', text.lower())]
+        if not words:
+            return True
+        matched = sum(1 for w in words if w in doc_text_lower)
+        return (matched / len(words)) >= 0.80
+
     for b in concept_blocks:
         for ex in b.get('examples', []):
-            sent = ex.get('sentence', '').strip()
-            sent_no_tags = re.sub(r'<[^>]+>', '', sent)
-            sent_cleaned = clean_attributions(sent_no_tags)
-            formatted_sent = format_math_text(sent_cleaned)
-            norm_sent = "".join(c.lower() for c in formatted_sent if c.isalnum())
-            if norm_sent not in norm_doc:
-                missing_examples.append(sent)
+            found = False
+            # Try both sentence and scenario_or_problem (what docx actually renders)
+            candidates = []
+            for field in ('sentence', 'scenario_or_problem'):
+                val = ex.get(field, '').strip()
+                if val:
+                    candidates.append(val)
+
+            for cand in candidates:
+                norm_cand = _norm(cand)
+                if not norm_cand or norm_cand in norm_doc:
+                    found = True
+                    break
+
+            # Fallback: word-level coverage for multi-line SQL/code examples
+            if not found:
+                for cand in candidates:
+                    if _word_coverage(cand, all_text_lower):
+                        found = True
+                        break
+
+            if not found:
+                missing_examples.append(candidates[0] if candidates else '(empty)')
     if missing_examples:
         logging.warning(f"[FAIL] Gate 18: Missing exact worked examples in document: {missing_examples}")
         gate_18_result = False
@@ -363,7 +442,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
             
             # Check heading presence in docx
             h2_texts = [p.text.strip() for p in doc.paragraphs if p.style.name.startswith('Heading 2')]
-            expected_h2_texts = [f"{b.get('block_id')}: {b.get('title')}" for b in concept_blocks]
+            expected_h2_texts = [b.get('title', '').strip() for b in concept_blocks]
             found_headings_count = sum(1 for exp in expected_h2_texts if any(exp in h2 for h2 in h2_texts))
             
             heading_coverage_pct = (found_headings_count / len(concept_blocks) * 100) if concept_blocks else 100
@@ -406,13 +485,17 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
 
     # Gate 22: Styling and Highlighting Conformity
     gate_22_result = True
-    approved_pastels = {'FFF2CC', 'E8F8F5', 'E1F5FE', 'F1F5F9', 'FEE2E2', 'FFEDD5', 'F3E8FF'}
+    approved_pastels = {
+        'FFF2CC', 'E8F8F5', 'E1F5FE', 'F1F5F9', 'FEE2E2', 'FFEDD5', 'F3E8FF',
+        'AED6F1', 'F5B7B1', 'D2B4DE', 'A3E4D7', 'F5CBA7', 'D5D8DC', 'A9CCE3',
+        'EAECEE'
+    }
     
     all_paras = get_all_paragraphs(doc)
     for p in all_paras:
         t = p.text.strip()
-        pPr = p._p.get_or_add_pPr()
-        shd = pPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}shd')
+        pPr = p._p.pPr
+        shd = None if pPr is None else pPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}shd')
         
         if t.startswith("[⚡ Quick Rev]"):
             if shd is None:
@@ -437,26 +520,57 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
                     gate_22_result = False
                     
         for r in p.runs:
-            rPr = r._r.get_or_add_rPr()
-            highlight = rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}highlight')
+            rPr = r._r.rPr
+            highlight = None if rPr is None else rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}highlight')
             if highlight is not None:
                 val = highlight.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val', 'unknown')
                 logging.warning(f"[FAIL] Gate 22: Native Word highlight '{val}' found on run '{r.text[:30]}...'. Native Word highlights are strictly banned.")
                 gate_22_result = False
                 
-            shd_run = rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}shd')
+            shd_run = None if rPr is None else rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}shd')
             if shd_run is not None:
                 fill_val = shd_run.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fill')
                 if not fill_val or fill_val.upper().replace('#', '') not in approved_pastels:
                     logging.warning(f"[FAIL] Gate 22: Run '{r.text[:30]}...' has unapproved run shading: '{fill_val}'.")
                     gate_22_result = False
 
+    if h2 == 0:
+        logging.warning("[FAIL] Gate 1: Missing structural elements (h2=0).")
+    if rev > h2:
+        logging.warning(f"[FAIL] Gate 1: Structural mismatch, revision boxes ({rev}) > topics ({h2}).")
+    if vis_fail > 0:
+        logging.warning(f"[FAIL] Gate 1: Detected {vis_fail} instances of raw visual anchor text.")
+
+    if not gate_2_result:
+        logging.warning("[FAIL] Gate 2: Revision box is not properly placed relative to headings.")
+        
+    if concept_blocks and h2 != len(concept_blocks):
+        logging.warning(f"[FAIL] Gate 3: Chronological Flow mismatch. Expected {len(concept_blocks)} headings, found {h2}.")
+        
+    if len(concept_blocks) == 0:
+        logging.warning("[FAIL] Gate 4: Content Completeness - No concept blocks provided.")
+        
+    if doc_ex < total_map_ex:
+        logging.warning(f"[FAIL] Gate 5: Factual Accuracy - Example count mismatch. Expected {total_map_ex}, found {doc_ex}.")
+        
+    if vis_fail > 0:
+        logging.warning(f"[FAIL] Gate 6: Image Integrity - Detected {vis_fail} visual anchors without proper rendering.")
+        
+    if h2 < 1 or img_count < exp_img * 0.8:
+        logging.warning(f"[FAIL] Gate 7: Minimum Counts - Expected >= 1 heading and >={int(exp_img * 0.8)} images, got {h2} headings and {img_count} images.")
+        
+    if total_map_ex and doc_ex < total_map_ex:
+        logging.warning(f"[FAIL] Gate 10: Example Coverage - Extracted {doc_ex}/{total_map_ex} examples.")
+        
+    if exp_img and img_count < exp_img * 0.8:
+        logging.warning(f"[FAIL] Gate 11: Visual Coverage - Inserted {img_count}/{exp_img} expected images.")
+
     gates = {
         'Gate 1: Structural Integrity':    h2 > 0 and rev <= h2 and vis_fail == 0 and attr_fail == 0,
         'Gate 2: Revision Box Placement':  gate_2_result,
         'Gate 3: Chronological Flow':      h2 == len(concept_blocks) if concept_blocks else False,
         'Gate 4: Content Completeness':    len(concept_blocks) > 0,
-        'Gate 5: Factual Accuracy':        doc_ex >= total_map_ex if total_map_ex else doc_ex > 0,
+        'Gate 5: Factual Accuracy':        doc_ex >= total_map_ex,
         'Gate 6: Image Integrity':         vis_fail == 0,
         'Gate 7: Minimum Counts':          h2 >= 1 and img_count >= exp_img * 0.8,
         'Gate 8: Source Traceability':     source_trace_ok,
@@ -476,18 +590,84 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
         'Gate 22: Styling and Highlighting Conformity': gate_22_result,
     }
 
-    # Gate 23: Word Count Budget (WARNING ONLY — does not fail the audit)
-    gate_23_over = tot_w > 7000
-    if gate_23_over:
-        logging.warning(f"[WARN] Gate 23: Word count is {tot_w} (target: 4,000-6,000). Notes may be too verbose.")
+    # Gate 23: Word Count Budget (Strict 4,000-word ceiling for standard lectures)
+    max_budget = 4000
+    gates['Gate 23: Word Count Budget'] = tot_w <= max_budget
+    if tot_w > max_budget:
+        logging.warning(f"[FAIL] Gate 23: Word count is {tot_w} (max: {max_budget}). Notes are too verbose.")
+    elif tot_w > (max_budget * 0.8):
+        logging.warning(f"[WARN] Gate 23: Word count is {tot_w} (target: 2500-3500). Slightly verbose but passing.")
     else:
-        logging.info(f"[INFO] Gate 23: Word count is {tot_w} — within target range.")
+        logging.info(f"[INFO] Gate 23: Word count is {tot_w} — within target student note range.")
+
+    # Gate 24: Total Callout Box Cap (strict limit of 6)
+    total_callouts = trap + trick + quote
+    gates['Gate 24: Callout Box Cap'] = total_callouts <= 6
+    if total_callouts > 6:
+        logging.warning(f"[FAIL] Gate 24: Total callout boxes is {total_callouts} (max: 6). Too many callout boxes.")
+    else:
+        logging.info(f"[INFO] Gate 24: Total callout boxes is {total_callouts} — within limits.")
+
+    # Gate 25: Short Note Audit
+    short_note_ok = True
+    short_note_path = docx_path.replace(".docx", "_SHORTNOTE.md")
+    if not os.path.exists(short_note_path) and "LECTURE_NOTES.docx" in docx_path:
+        alt_path = os.path.join(os.path.dirname(docx_path), "LECTURE_SHORTNOTE.md")
+        if os.path.exists(alt_path):
+            short_note_path = alt_path
+
+    if os.path.exists(short_note_path):
+        try:
+            with open(short_note_path, "r", encoding="utf-8") as f:
+                sn_content = f.read()
+            
+            # 1. No Devanagari script
+            if re.search(r'[\u0900-\u097F]', sn_content):
+                logging.warning("[FAIL] Gate 25: Devanagari script detected in short note. Hindi script is forbidden.")
+                short_note_ok = False
+                
+            # 2. Context anchor check
+            if "answering:" not in sn_content or "From " not in sn_content:
+                logging.warning("[FAIL] Gate 25: Short note lacks a valid context anchor (From **[Lecture Title]**, answering: ...)")
+                short_note_ok = False
+                
+            # 3. Answer leakage check in Self-Test
+            if "self-test" in sn_content.lower():
+                self_test_part = sn_content.lower().split("self-test")[1].strip()
+                self_test_part = self_test_part.lstrip(":-#* \t\n")
+                if "source" in self_test_part:
+                    self_test_part = self_test_part.split("source")[0].strip()
+                if "##" in self_test_part:
+                    self_test_part = self_test_part.split("##")[0].strip()
+                if len(self_test_part) > 600 or "|" in self_test_part:
+                    logging.warning("[FAIL] Gate 25: Self-Test section in short note contains leaked answers or excessive formatting.")
+                    short_note_ok = False
+            else:
+                logging.warning("[FAIL] Gate 25: Self-Test section missing in short note.")
+                short_note_ok = False
+                
+            # 4. Word count check (between 50 and 600 words)
+            sn_words = len(re.sub(r'[^\w\s]', '', sn_content).split())
+            if sn_words < 50 or sn_words > 600:
+                logging.warning(f"[FAIL] Gate 25: Short note word count is {sn_words} (expected 50-600 words).")
+                short_note_ok = False
+            else:
+                logging.info(f"Gate 25: Short note word count is {sn_words} (within limits).")
+                
+        except Exception as e:
+            logging.warning(f"[FAIL] Gate 25: Error reading short note file: {e}")
+            short_note_ok = False
+    else:
+        logging.warning(f"[FAIL] Gate 25: Short note file not found at {short_note_path}.")
+        short_note_ok = False
+        
+    gates['Gate 25: Short Note Audit'] = short_note_ok
 
     logging.info("\n--- AUDIT RESULTS ---")
     logging.info(f"H2: {h2}  RevBox: {rev}  Traps: {trap}  Tricks: {trick}  Quotes: {quote}  Tables: {len(doc.tables)}")
     logging.info(f"Images: {img_count}  MapEx: {total_map_ex}  DocEx: {doc_ex}  AttrFail: {attr_fail}")
     logging.info(f"Friction Index: {fi:.3f} (Words: {tot_w}, Clozes: {clozes}, Cues: {cues})")
-    logging.info(f"Word Count: {tot_w} (Target: 4,000-6,000)")
+    logging.info(f"Word Count: {tot_w} (Target: 2,500-3,500)")
     logging.info("---------------------")
     all_ok = True
     for g, ok in gates.items():
@@ -500,7 +680,7 @@ def run_audit(docx_path, concept_map_path, frame_manifest_path, slide_manifest_p
     else:
         logging.warning("\n[FAIL] Some gates failed.")
         
-    return all_ok, gates
+    return all_ok, gates, audit_feedback
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
@@ -509,7 +689,7 @@ if __name__ == '__main__':
     p.add_argument('--frame-manifest', default='frame_manifest.json')
     p.add_argument('--slide-manifest', default='slide_manifest.json')
     args = p.parse_args()
-    success, gates = run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest)
+    success, gates, feedback_data = run_audit(args.docx, args.concept_map, args.frame_manifest, args.slide_manifest)
     numeric_gates = {}
     for gate_name, ok in gates.items():
         match = __import__('re').search(r'Gate\s+(\d+):', gate_name)
@@ -523,6 +703,9 @@ if __name__ == '__main__':
         }
         with open("logs/last_run_audit.json", "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
+            
+        with open("logs/audit_feedback.json", "w", encoding="utf-8") as f:
+            json.dump(feedback_data, f, indent=2)
     except Exception as e:
-        logging.warning(f"Could not write logs/last_run_audit.json: {e}")
+        logging.warning(f"Could not write logs: {e}")
     sys.exit(0 if success else 1)

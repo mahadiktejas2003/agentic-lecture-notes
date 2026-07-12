@@ -1,0 +1,428 @@
+[
+  {
+    "candidateId": "TEJAS_MAHADIK_2026",
+    "examId": "IBPS_SO_APT_MOCK_2026",
+    "score": "3.75",
+    "correctCount": 4,
+    "incorrectCount": 1,
+    "timeline": [
+      {
+        "time": "00:00",
+        "timestamp": 1782638458015.0,
+        "event": "Exam Session Started in Secure Lockdown Mode"
+      },
+      {
+        "time": "04:31",
+        "timestamp": 1782638729303.0,
+        "event": "Selected Option A on Question 1"
+      },
+      {
+        "time": "04:33",
+        "timestamp": 1782638731553.0,
+        "event": "Save & Next clicked - Question 1 marked Answered"
+      },
+      {
+        "time": "04:33",
+        "timestamp": 1782638731555.0,
+        "event": "Advanced to Question 2"
+      },
+      {
+        "time": "04:41",
+        "timestamp": 1782638739986.0,
+        "event": "Navigated to Question 3 via Palette"
+      },
+      {
+        "time": "06:42",
+        "timestamp": 1782638860714.0,
+        "event": "Selected Option D on Question 3"
+      },
+      {
+        "time": "06:44",
+        "timestamp": 1782638862549.0,
+        "event": "Save & Next clicked - Question 3 marked Answered"
+      },
+      {
+        "time": "06:44",
+        "timestamp": 1782638862551.0,
+        "event": "Advanced to Question 4"
+      },
+      {
+        "time": "06:57",
+        "timestamp": 1782638875064.0,
+        "event": "Navigated to Question 5 via Palette"
+      },
+      {
+        "time": "07:02",
+        "timestamp": 1782638880579.0,
+        "event": "Navigated to Question 6 via Palette"
+      },
+      {
+        "time": "07:02",
+        "timestamp": 1782638880879.0,
+        "event": "Navigated to Question 6 via Palette"
+      },
+      {
+        "time": "11:32",
+        "timestamp": 1782639150270.0,
+        "event": "Navigated to Question 7 via Palette"
+      },
+      {
+        "time": "13:18",
+        "timestamp": 1782639256233.0,
+        "event": "Navigated to Question 8 via Palette"
+      },
+      {
+        "time": "13:24",
+        "timestamp": 1782639262233.0,
+        "event": "Navigated to Question 9 via Palette"
+      },
+      {
+        "time": "13:27",
+        "timestamp": 1782639265931.0,
+        "event": "Navigated to Question 20 via Palette"
+      },
+      {
+        "time": "13:29",
+        "timestamp": 1782639267098.0,
+        "event": "Navigated to Question 19 via Palette"
+      },
+      {
+        "time": "13:30",
+        "timestamp": 1782639268516.0,
+        "event": "Navigated to Question 18 via Palette"
+      },
+      {
+        "time": "13:32",
+        "timestamp": 1782639270149.0,
+        "event": "Navigated to Question 19 via Palette"
+      },
+      {
+        "time": "13:35",
+        "timestamp": 1782639273647.0,
+        "event": "Navigated to Question 9 via Palette"
+      },
+      {
+        "time": "13:43",
+        "timestamp": 1782639281532.0,
+        "event": "Navigated to Question 10 via Palette"
+      },
+      {
+        "time": "19:53",
+        "timestamp": 1782639651551.0,
+        "event": "Selected Option B on Question 10"
+      },
+      {
+        "time": "19:56",
+        "timestamp": 1782639654017.0,
+        "event": "Save & Next clicked - Question 10 marked Answered"
+      },
+      {
+        "time": "19:56",
+        "timestamp": 1782639654018.0,
+        "event": "Advanced to Question 11"
+      },
+      {
+        "time": "20:15",
+        "timestamp": 1782639673983.0,
+        "event": "Navigated to Question 10 via Palette"
+      },
+      {
+        "time": "20:17",
+        "timestamp": 1782639675549.0,
+        "event": "Navigated to Question 11 via Palette"
+      },
+      {
+        "time": "24:28",
+        "timestamp": 1782639926507.0,
+        "event": "Mark for Review & Next clicked - Question 11 Marked (No selection)"
+      },
+      {
+        "time": "24:28",
+        "timestamp": 1782639926509.0,
+        "event": "Advanced to Question 12"
+      },
+      {
+        "time": "24:30",
+        "timestamp": 1782639928657.0,
+        "event": "Navigated to Question 11 via Palette"
+      },
+      {
+        "time": "25:21",
+        "timestamp": 1782639979672.0,
+        "event": "Selected Option D on Question 11"
+      },
+      {
+        "time": "25:22",
+        "timestamp": 1782639980855.0,
+        "event": "Save & Next clicked - Question 11 marked Answered"
+      },
+      {
+        "time": "25:22",
+        "timestamp": 1782639980857.0,
+        "event": "Advanced to Question 12"
+      },
+      {
+        "time": "25:24",
+        "timestamp": 1782639982855.0,
+        "event": "Navigated to Question 18 via Palette"
+      },
+      {
+        "time": "25:29",
+        "timestamp": 1782639987321.0,
+        "event": "Navigated to Question 13 via Palette"
+      },
+      {
+        "time": "25:31",
+        "timestamp": 1782639989738.0,
+        "event": "Navigated to Question 14 via Palette"
+      },
+      {
+        "time": "25:32",
+        "timestamp": 1782639990988.0,
+        "event": "Navigated to Question 15 via Palette"
+      },
+      {
+        "time": "25:34",
+        "timestamp": 1782639992204.0,
+        "event": "Navigated to Question 16 via Palette"
+      },
+      {
+        "time": "25:35",
+        "timestamp": 1782639993271.0,
+        "event": "Navigated to Question 17 via Palette"
+      },
+      {
+        "time": "25:37",
+        "timestamp": 1782639995038.0,
+        "event": "Navigated to Question 7 via Palette"
+      },
+      {
+        "time": "25:43",
+        "timestamp": 1782640001770.0,
+        "event": "Navigated to Question 8 via Palette"
+      },
+      {
+        "time": "28:54",
+        "timestamp": 1782640192447.0,
+        "event": "Selected Option A on Question 8"
+      },
+      {
+        "time": "29:18",
+        "timestamp": 1782640216095.0,
+        "event": "Navigated to Question 7 via Palette"
+      },
+      {
+        "time": "29:31",
+        "timestamp": 1782640229928.0,
+        "event": "Navigated to Question 11 via Palette"
+      },
+      {
+        "time": "29:32",
+        "timestamp": 1782640230478.0,
+        "event": "Navigated to Question 11 via Palette"
+      },
+      {
+        "time": "29:34",
+        "timestamp": 1782640232679.0,
+        "event": "Navigated to Question 12 via Palette"
+      },
+      {
+        "time": "29:35",
+        "timestamp": 1782640233794.0,
+        "event": "Navigated to Question 10 via Palette"
+      },
+      {
+        "time": "29:37",
+        "timestamp": 1782640235927.0,
+        "event": "Navigated to Question 3 via Palette"
+      },
+      {
+        "time": "29:39",
+        "timestamp": 1782640237262.0,
+        "event": "Navigated to Question 12 via Palette"
+      },
+      {
+        "time": "29:40",
+        "timestamp": 1782640238411.0,
+        "event": "Navigated to Question 15 via Palette"
+      },
+      {
+        "time": "29:40",
+        "timestamp": 1782640238862.0,
+        "event": "Navigated to Question 14 via Palette"
+      },
+      {
+        "time": "29:41",
+        "timestamp": 1782640239551.0,
+        "event": "Navigated to Question 11 via Palette"
+      },
+      {
+        "time": "29:43",
+        "timestamp": 1782640241979.0,
+        "event": "Navigated to Question 10 via Palette"
+      },
+      {
+        "time": "29:45",
+        "timestamp": 1782640243995.0,
+        "event": "Navigated to Question 3 via Palette"
+      },
+      {
+        "time": "29:47",
+        "timestamp": 1782640245760.0,
+        "event": "Navigated to Question 6 via Palette"
+      },
+      {
+        "time": "29:48",
+        "timestamp": 1782640246662.0,
+        "event": "Navigated to Question 7 via Palette"
+      },
+      {
+        "time": "29:49",
+        "timestamp": 1782640247895.0,
+        "event": "Navigated to Question 12 via Palette"
+      },
+      {
+        "time": "29:50",
+        "timestamp": 1782640248578.0,
+        "event": "Navigated to Question 15 via Palette"
+      },
+      {
+        "time": "29:52",
+        "timestamp": 1782640250095.0,
+        "event": "Navigated to Question 14 via Palette"
+      },
+      {
+        "time": "29:53",
+        "timestamp": 1782640251711.0,
+        "event": "Navigated to Question 13 via Palette"
+      },
+      {
+        "time": "29:54",
+        "timestamp": 1782640252545.0,
+        "event": "Navigated to Question 17 via Palette"
+      },
+      {
+        "time": "29:55",
+        "timestamp": 1782640253862.0,
+        "event": "Navigated to Question 18 via Palette"
+      },
+      {
+        "time": "29:57",
+        "timestamp": 1782640255911.0,
+        "event": "Navigated to Question 19 via Palette"
+      },
+      {
+        "time": "29:59",
+        "timestamp": 1782640257311.0,
+        "event": "Navigated to Question 20 via Palette"
+      },
+      {
+        "time": "30:00",
+        "timestamp": 1782640258949.0,
+        "event": "Timer Expired - Triggering Auto-Submission"
+      }
+    ],
+    "answersMap": [
+      {
+        "id": 1,
+        "choice": "A",
+        "correct": "A"
+      },
+      {
+        "id": 2,
+        "choice": null,
+        "correct": "B"
+      },
+      {
+        "id": 3,
+        "choice": "D",
+        "correct": "D"
+      },
+      {
+        "id": 4,
+        "choice": null,
+        "correct": "A"
+      },
+      {
+        "id": 5,
+        "choice": null,
+        "correct": "A"
+      },
+      {
+        "id": 6,
+        "choice": null,
+        "correct": "B"
+      },
+      {
+        "id": 7,
+        "choice": null,
+        "correct": "C"
+      },
+      {
+        "id": 8,
+        "choice": "A",
+        "correct": "A"
+      },
+      {
+        "id": 9,
+        "choice": null,
+        "correct": "A"
+      },
+      {
+        "id": 10,
+        "choice": "B",
+        "correct": "C"
+      },
+      {
+        "id": 11,
+        "choice": "D",
+        "correct": "D"
+      },
+      {
+        "id": 12,
+        "choice": null,
+        "correct": "A"
+      },
+      {
+        "id": 13,
+        "choice": null,
+        "correct": "D"
+      },
+      {
+        "id": 14,
+        "choice": null,
+        "correct": "B"
+      },
+      {
+        "id": 15,
+        "choice": null,
+        "correct": "D"
+      },
+      {
+        "id": 16,
+        "choice": null,
+        "correct": "A"
+      },
+      {
+        "id": 17,
+        "choice": null,
+        "correct": "B"
+      },
+      {
+        "id": 18,
+        "choice": null,
+        "correct": "C"
+      },
+      {
+        "id": 19,
+        "choice": null,
+        "correct": "D"
+      },
+      {
+        "id": 20,
+        "choice": null,
+        "correct": "A"
+      }
+    ]
+  }
+]

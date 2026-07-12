@@ -55,12 +55,12 @@ def is_logo_frame(text):
             return True
     return False
 
-def are_ocr_texts_similar(text1, text2, threshold=0.85):
+def are_ocr_texts_similar(text1, text2, threshold=0.95):
     if not text1 or not text2:
         return False
-    # Extract unique words with length >= 2 including numbers and variables
-    w1 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{2,}\b', text1.lower()))
-    w2 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{2,}\b', text2.lower()))
+    # Extract unique words with length >= 1 including numbers and variables
+    w1 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{1,}\b', text1.lower()))
+    w2 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{1,}\b', text2.lower()))
     
     if not w1 or not w2:
         return False
@@ -72,8 +72,8 @@ def are_ocr_texts_similar(text1, text2, threshold=0.85):
 def are_rules_similar(r1, r2, threshold=0.85):
     if not r1 or not r2:
         return False
-    w1 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{2,}\b', r1.lower()))
-    w2 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{2,}\b', r2.lower()))
+    w1 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{1,}\b', r1.lower()))
+    w2 = set(re.findall(r'\b[a-zA-Z0-9_\-\+]{1,}\b', r2.lower()))
     
     if not w1 or not w2:
         return False
@@ -90,48 +90,27 @@ def clean_attributions(text):
         
     replacements = [
         (r"\bthis is discussed in the lecture\b", "this is discussed"),
-        (r"\bthe teacher explains that\b", "it is explained that"),
-        (r"\bthe lecturer explains that\b", "it is explained that"),
-        (r"\bthe instructor explains that\b", "it is explained that"),
-        (r"\bthe teacher explains\b", "one explains"),
-        (r"\bthe lecturer explains\b", "one explains"),
-        (r"\bthe instructor explains\b", "one explains"),
-        (r"\bthe teacher introduces\b", "one introduces"),
-        (r"\bthe lecturer introduces\b", "one introduces"),
-        (r"\bthe instructor introduces\b", "one introduces"),
-        (r"\bthe teacher describes\b", "one describes"),
-        (r"\bthe lecturer describes\b", "one describes"),
-        (r"\bthe instructor describes\b", "one describes"),
-        (r"\bthe teacher outlines\b", "one outlines"),
-        (r"\bthe lecturer outlines\b", "one outlines"),
-        (r"\bthe instructor outlines\b", "one outlines"),
-        (r"\bthe teacher demonstrates\b", "one demonstrates"),
-        (r"\bthe lecturer demonstrates\b", "one demonstrates"),
-        (r"\bthe instructor demonstrates\b", "one demonstrates"),
-        (r"\bthe teacher analyzes\b", "one analyzes"),
-        (r"\bthe lecturer analyzes\b", "one analyzes"),
-        (r"\bthe instructor analyzes\b", "one analyzes"),
-        (r"\bthe teacher reviews\b", "one reviews"),
-        (r"\bthe lecturer reviews\b", "one reviews"),
-        (r"\bthe instructor reviews\b", "one reviews"),
-        (r"\bthe teacher teaches\b", "one teaches"),
-        (r"\bthe lecturer teaches\b", "one teaches"),
-        (r"\bthe instructor teaches\b", "one teaches"),
-        (r"\bthe teacher shows\b", "one shows"),
-        (r"\bthe lecturer shows\b", "one shows"),
-        (r"\bthe instructor shows\b", "one shows"),
-        (r"\bthe teacher discusses\b", "one discusses"),
-        (r"\bthe lecturer discusses\b", "one discusses"),
-        (r"\bthe instructor discusses\b", "one discusses"),
-        (r"\bthe teacher shares\b", "one shares"),
-        (r"\bthe lecturer shares\b", "one shares"),
-        (r"\bthe instructor shares\b", "one shares"),
-        (r"\bthe teacher mentions\b", "one mentions"),
-        (r"\bthe lecturer mentions\b", "one mentions"),
-        (r"\bthe instructor mentions\b", "one mentions"),
-        (r"\bthe lecturer says\b", "one states"),
-        (r"\bthe teacher says\b", "one states"),
-        (r"\bthe instructor says\b", "one states"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+explains?\s+that\b", "it is explained that"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+explains?\b", "it is explained"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+introduces?\b", "it is introduced"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+describes?\b", "it is described"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+outlines?\b", "it is outlined"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+demonstrates?\b", "it is demonstrated"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+analyzes?\b", "it is analyzed"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+reviews?\b", "it is reviewed"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+teaches?\b", "it is taught"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+shows?\b", "it is shown"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+discusses?\b", "it is discussed"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+shares?\b", "it is shared"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+mentions?\b", "it is mentioned"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+says?\b", "it is stated"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+warns?\b", "it is warned"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+notes?\b", "it is noted"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+highlights?\b", "it is highlighted"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+compares?\b", "it is compared"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+contrasts?\b", "it is contrasted"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+recommends?\b", "it is recommended"),
+        (r"\bthe\s+(?:teacher|lecturer|instructor)\s+points?\s+out\b", "it is pointed out"),
         (r"\blet's look at\b", "examine"),
         (r"\blet's see\b", "examine"),
         (r"\blet's look\b", "examine"),
@@ -228,12 +207,13 @@ def parse_latex_fractions(text):
         text = text[:idx] + f"({num}) / ({den})" + text[close2+1:]
     return text
 
-def format_math_text(text):
+def format_math_text(text, is_code=False):
     if not text:
         return text
-        
-    text = text.replace('`', '')
+    if is_code:
+        return text
     text = text.replace(r'\(', '').replace(r'\)', '').replace(r'\[', '').replace(r'\]', '')
+    text = re.sub(r'\\text\{([^}]+)\}', r'\1', text)
     text = re.sub(r'(?<!\\)\$', '', text)
     
     # Parse fractions recursively
@@ -268,6 +248,12 @@ def format_math_text(text):
 
     # LaTeX commands
     text = text.replace(r'\pm', '±')
+    text = text.replace(r'\oplus', '⊕')
+    text = text.replace(r'\dots', '...')
+    text = text.replace(r'\lfloor', '⌊')
+    text = text.replace(r'\rfloor', '⌋')
+    text = text.replace(r'\langle', '⟨')
+    text = text.replace(r'\rangle', '⟩')
     text = text.replace(r'\times', '×')
     text = text.replace(r'\leq', '≤')
     text = text.replace(r'\geq', '≥')
@@ -279,6 +265,29 @@ def format_math_text(text):
     text = text.replace(r'\leftarrow', '←')
     text = text.replace(r'\Rightarrow', '⇒')
     text = text.replace(r'\infty', '∞')
+    text = text.replace(r'\min', 'min')
+    text = text.replace(r'\max', 'max')
+    text = text.replace(r'\sum', '∑')
+    text = text.replace(r'\prod', '∏')
+    text = text.replace(r'\int', '∫')
+    text = text.replace(r'\forall', '∀')
+    text = text.replace(r'\exists', '∃')
+    text = re.sub(r'(?<![a-zA-Z])\\in(?![a-zA-Z])', '∈', text)
+    text = text.replace(r'\notin', '∉')
+    text = text.replace(r'\subset', '⊂')
+    text = text.replace(r'\supset', '⊃')
+    text = text.replace(r'\cup', '∪')
+    text = text.replace(r'\cap', '∩')
+    text = text.replace(r'\emptyset', '∅')
+    text = text.replace(r'\triangle', '△')
+    text = text.replace(r'\angle', '∠')
+    text = text.replace(r'\degree', '°')
+    text = text.replace(r'\circ', '°')
+    text = text.replace(r'\log', 'log')
+    text = text.replace(r'\ln', 'ln')
+    text = text.replace(r'\sin', 'sin')
+    text = text.replace(r'\cos', 'cos')
+    text = text.replace(r'\tan', 'tan')
     
     # Handle sqrt variants
     text = re.sub(r'\\sqrt\{([^}]*)\}', r'√(\1)', text)
@@ -308,7 +317,12 @@ def format_math_text(text):
         'psi': 'ψ', 'omega': 'ω'
     }
     for g_str, g_uni in greek.items():
-         text = re.sub(rf'\b{g_str}\b', g_uni, text, flags=re.IGNORECASE)
+        text = re.sub(rf'\\?\b{g_str}\b', g_uni, text)
+        text = re.sub(rf'\\?\b{g_str.capitalize()}\b', g_uni, text)
+
+    # Clean stray LaTeX backslashes and leftover $ after all conversions
+    text = re.sub(r'\\(?=[a-zA-Z])', '', text)  # stray \letter
+    text = re.sub(r'(?<!\\)\$', '', text)  # stray $ not escaped
 
     return text
 
@@ -323,14 +337,67 @@ def add_rich_runs(p, text, default_bold=False, default_italic=False, default_und
     else:
         text = str(text)
 
-    # Clean attributions and backticks
+    # Pre-convert LaTeX math commands to Unicode equivalents at the very beginning
+    text = text.replace(r'\pm', '±')
+    text = text.replace(r'\times', '×')
+    text = text.replace(r'\leq', '≤')
+    text = text.replace(r'\geq', '≥')
+    text = text.replace(r'\neq', '≠')
+    text = text.replace(r'\approx', '≈')
+    text = text.replace(r'\div', '÷')
+    text = text.replace(r'\cdot', '·')
+    text = text.replace(r'\rightarrow', '→')
+    text = text.replace(r'\leftarrow', '←')
+    text = text.replace(r'\Rightarrow', '⇒')
+    text = text.replace(r'\infty', '∞')
+    text = text.replace(r'\min', 'min')
+    text = text.replace(r'\max', 'max')
+    text = text.replace(r'\sum', '∑')
+    text = text.replace(r'\prod', '∏')
+    text = text.replace(r'\int', '∫')
+    text = text.replace(r'\forall', '∀')
+    text = text.replace(r'\exists', '∃')
+    text = re.sub(r'(?<![a-zA-Z])\\in(?![a-zA-Z])', '∈', text)
+    text = text.replace(r'\notin', '∉')
+    text = text.replace(r'\subset', '⊂')
+    text = text.replace(r'\supset', '⊃')
+    text = text.replace(r'\cup', '∪')
+    text = text.replace(r'\cap', '∩')
+    text = text.replace(r'\emptyset', '∅')
+    text = text.replace(r'\triangle', '△')
+    text = text.replace(r'\angle', '∠')
+    text = text.replace(r'\degree', '°')
+    text = text.replace(r'\circ', '°')
+    text = text.replace(r'\log', 'log')
+    text = text.replace(r'\ln', 'ln')
+    text = text.replace(r'\sin', 'sin')
+    text = text.replace(r'\cos', 'cos')
+    text = text.replace(r'\tan', 'tan')
+
+    # Clean attributions
     text = clean_attributions(text)
+    
+    # Normalize potential LLM-generated code tags to standard no-underscore tags
+    text = text.replace('<code_inline>', '<codeinline>').replace('</code_inline>', '</codeinline>')
+    text = text.replace('<code>', '<codeinline>').replace('</code>', '</codeinline>')
+    text = text.replace('<code_block>', '<codeblock>').replace('</code_block>', '</codeblock>')
+
+    # Convert code blocks and inline code backticks to custom XML tags
+    # We use no-underscore tag names 'codeblock' and 'codeinline' to prevent 
+    # the subscript parser _([a-zA-Z0-9]) below from matching and splitting the tags.
+    text = re.sub(r'```(.*?)```', r'<codeblock>\1</codeblock>', text, flags=re.DOTALL)
+    text = re.sub(r'`([^`]+)`', r'<codeinline>\1</codeinline>', text)
+    # Remove any unmatched backticks
     text = text.replace('`', '')
+    
+    text = re.sub(r'([a-zA-Z0-9])_?\{?\\text\{([^}]+)\}\}?', r'\1<sub>\2</sub>', text)
+    text = re.sub(r'\\text\{([^}]+)\}', r'\1', text)
 
     # Pre-convert LaTeX exponents and subscripts to HTML-like tags
     text = re.sub(r'\^\{([^}]+)\}', r'<sup>\1</sup>', text)
     text = re.sub(r'_\{([^}]+)\}', r'<sub>\1</sub>', text)
     text = re.sub(r'\^([a-zA-Z0-9])', r'<sup>\1</sup>', text)
+    text = re.sub(r'_([a-zA-Z0-9])', r'<sub>\1</sub>', text)
     # Pre-convert markdown bold, highlight, and italic to HTML-like tags
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
     text = re.sub(r'==(.*?)==', r'<highlight color="BLUE">\1</highlight>', text)
@@ -364,9 +431,10 @@ def add_rich_runs(p, text, default_bold=False, default_italic=False, default_und
                         attrs[k.lower()] = v
                     style_stack.append({'tag': tag_name, 'attrs': attrs})
         else:
-            cleaned_text = format_math_text(token)
+            is_code = any(style['tag'] in ('codeblock', 'codeinline', 'code_block', 'code_inline') for style in style_stack)
+            cleaned_text = format_math_text(token, is_code=is_code)
             run = p.add_run(cleaned_text)
-            run.font.name = 'Calibri'
+            run.font.name = 'Consolas' if is_code else 'Calibri'
             if default_font_size is not None:
                 run.font.size = default_font_size
             
@@ -422,18 +490,21 @@ def add_rich_runs(p, text, default_bold=False, default_italic=False, default_und
                         )
                 except Exception as e:
                     pass
-            if highlight_color:
-                color_map = {
-                    'YELLOW': 'FFF2CC', 
-                    'GREEN': 'E8F8F5',  
-                    'BLUE': 'E1F5FE',   
-                    'GRAY': 'F1F5F9',   
-                    'RED': 'FEE2E2',    
-                    'ORANGE': 'FFEDD5', 
-                    'PURPLE': 'F3E8FF', 
-                }
-                hc_upper = highlight_color.upper()
-                hex_fill = color_map.get(hc_upper, 'E1F5FE')
+            if highlight_color or is_code:
+                if is_code:
+                    hex_fill = 'EAECEE' # Light gray shading for code blocks/inline code
+                else:
+                    color_map = {
+                        'YELLOW': 'F5CBA7', 
+                        'GREEN': 'A3E4D7',  
+                        'BLUE': 'AED6F1',   
+                        'GRAY': 'D5D8DC',   
+                        'RED': 'F5B7B1',    
+                        'ORANGE': 'F5CBA7', 
+                        'PURPLE': 'D2B4DE', 
+                    }
+                    hc_upper = highlight_color.upper()
+                    hex_fill = color_map.get(hc_upper, 'AED6F1')
                 try:
                     rPr = run._r.get_or_add_rPr()
                     set_shading(rPr, hex_fill)
@@ -495,7 +566,7 @@ def add_revision_box(doc, bullets, rule=None):
         else:
             add_rich_runs(p, part)
             
-    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="D6EAF8" w:val="clear"/>')
+    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="A9CCE3" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
     
     for run in p.runs:
@@ -554,7 +625,7 @@ def add_styled_table(doc, headers, rows):
         for run in p.runs:
             run.font.size = Pt(9)
             run.font.name = 'Calibri'
-        shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="2C3E50" w:val="clear"/>')
+        shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="2C3E50" w:val="clear"/>')  # Keep dark header
         cell._element.get_or_add_tcPr().append(shading)
     for ri, row_data in enumerate(rows):
         for ci, value in enumerate(row_data):
@@ -568,23 +639,33 @@ def add_styled_table(doc, headers, rows):
             if ri % 2 == 1:
                 shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F2F3F4" w:val="clear"/>')
                 cell._element.get_or_add_tcPr().append(shading)
+                for run in p.runs:
+                    if run.font.color.rgb is None:
+                        run.font.color.rgb = RGBColor(0, 0, 0)
     return table
 
 def add_image_if_exists(doc, path, width=Inches(4.5)):
     if os.path.exists(path):
-        doc.add_picture(path, width=width)
-        return True
+        try:
+            doc.add_picture(path, width=width)
+            return True
+        except Exception as e:
+            logger.warning(f"Failed to insert image {path}: {e}")
+            p = doc.add_paragraph(f"[Image failed to load: {os.path.basename(path)}]")
+            p.italic = True
+            return False
     return False
 
 def add_shaded_formula(doc, text):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = p.add_run(format_math_text(text))
-    run.bold = True
-    run.font.size = Pt(11)
-    run.font.name = 'Calibri'
+    add_rich_runs(p, text, default_bold=True, default_font_size=Pt(11))
     shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="EAECEE" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
+    for run in p.runs:
+        run.font.name = 'Calibri'
+        if run.font.color.rgb is None:
+            run.font.color.rgb = RGBColor(0, 0, 0)
     return p
 
 def add_super_key_additions(doc):
@@ -665,6 +746,8 @@ def add_super_key_additions(doc):
         run.font.name = 'Calibri'
         if run.font.size is None:
             run.font.size = Pt(10)
+        if run.font.color.rgb is None:
+            run.font.color.rgb = RGBColor(0, 0, 0)
         
     doc.add_paragraph()
 
@@ -730,6 +813,8 @@ def add_super_key_additions(doc):
         run.font.name = 'Calibri'
         if run.font.size is None:
             run.font.size = Pt(10)
+        if run.font.color.rgb is None:
+            run.font.color.rgb = RGBColor(0, 0, 0)
         
     doc.add_paragraph()
 
@@ -806,7 +891,7 @@ def add_cornell_block(doc, cue_text, content, srs_tag=None):
         )
         tcPr.append(cell_borders)
         
-    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F2F2F2" w:val="clear"/>')
+    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="D5DBDB" w:val="clear"/>')
     cell_cue._tc.get_or_add_tcPr().append(shading)
     
     p_cue = cell_cue.paragraphs[0]
@@ -817,6 +902,7 @@ def add_cornell_block(doc, cue_text, content, srs_tag=None):
     run_cue.font.name = 'Calibri'
     run_cue.font.size = Pt(11)
     run_cue.italic = True
+    run_cue.font.color.rgb = RGBColor(0, 0, 0)
     
     if srs_tag:
         p_srs = cell_cue.add_paragraph()
@@ -854,12 +940,18 @@ def add_cornell_block(doc, cue_text, content, srs_tag=None):
                     try:
                         shading_el = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
                         p_new._p.get_or_add_pPr().append(shading_el)
+                        for r in p_new.runs:
+                            if r.font.color.rgb is None:
+                                r.font.color.rgb = RGBColor(0, 0, 0)
                     except Exception:
                         pass
                 elif line_clean.startswith("💡 Teacher's Intuition & Analogies:"):
                     try:
                         shading_el = parse_xml(f'<w:shd {nsdecls("w")} w:fill="FFF2CC" w:val="clear"/>')
                         p_new._p.get_or_add_pPr().append(shading_el)
+                        for r in p_new.runs:
+                            if r.font.color.rgb is None:
+                                r.font.color.rgb = RGBColor(0, 0, 0)
                     except Exception:
                         pass
     else:
@@ -882,12 +974,18 @@ def add_cornell_block(doc, cue_text, content, srs_tag=None):
                 try:
                     shading_el = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
                     p_new._p.get_or_add_pPr().append(shading_el)
+                    for r in p_new.runs:
+                        if r.font.color.rgb is None:
+                            r.font.color.rgb = RGBColor(0, 0, 0)
                 except Exception:
                     pass
             elif line_clean.startswith("💡 Teacher's Intuition & Analogies:"):
                 try:
                     shading_el = parse_xml(f'<w:shd {nsdecls("w")} w:fill="FFF2CC" w:val="clear"/>')
                     p_new._p.get_or_add_pPr().append(shading_el)
+                    for r in p_new.runs:
+                        if r.font.color.rgb is None:
+                            r.font.color.rgb = RGBColor(0, 0, 0)
                 except Exception:
                     pass
         
@@ -926,15 +1024,30 @@ def add_formatted_explanation_paragraphs(doc, text):
             match = re.match(r'^(\d+[\.\)])\s*(.*)', line)
             prefix = match.group(1)
             body = match.group(2)
+            # Use normal paragraph with left indent to avoid Word's automatic list numbering continuation bug
             p = doc.add_paragraph()
+            p.paragraph_format.left_indent = Inches(0.25)
             p.paragraph_format.space_after = Pt(6)
             p.add_run(prefix + " ").bold = True
             add_rich_runs(p, body)
         else:
-            # Render the entire line as a single paragraph block
-            p = doc.add_paragraph()
-            p.paragraph_format.space_after = Pt(6)
-            add_rich_runs(p, line)
+            # Render the line, checking if it exceeds 350 characters
+            if len(line) > 200:
+                sentences = re.split(r'(?<!\bi\.e)(?<!\be\.g)(?<!\bvs)(?<!\bapprox)(?<!\bfig)(?<!\bno)(?<=[.!?])\s+(?=[A-Z"“0-9])', line)
+                chunks = []
+                for i in range(0, len(sentences), 3):
+                    chunk = sentences[i:i+3]
+                    chunk_text = " ".join(chunk).strip()
+                    if chunk_text:
+                        chunks.append(chunk_text)
+                for chunk_text in chunks:
+                    p = doc.add_paragraph()
+                    p.paragraph_format.space_after = Pt(6)
+                    add_rich_runs(p, chunk_text)
+            else:
+                p = doc.add_paragraph()
+                p.paragraph_format.space_after = Pt(6)
+                add_rich_runs(p, line)
 
 def get_explicit_answer(ex, working_text):
     answer = ex.get('answer')
@@ -1070,17 +1183,28 @@ def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, i
             for item in inserted_ocrs:
                 prev_hash = item.get('hash')
                 prev_ocr = item.get('ocr', '')
-                # Visual dhash similarity check (increased threshold to 10 to avoid skipping solved states)
-                if prev_hash is not None and current_hash - prev_hash <= 10:
-                    is_duplicate = True
-                    logging.info(f"Visual duplicate detected (hash diff <= 10) for: {img_path}")
-                    break
-                # Textual OCR Jaccard similarity check (increased threshold to 0.95)
-                if current_ocr.strip() and prev_ocr.strip():
-                    if are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.95):
-                        is_duplicate = True
-                        logging.info(f"Textual duplicate detected (OCR similarity > 0.95) for: {img_path}")
-                        break
+                
+                # Check visual difference (lower threshold to 3 to ensure distinct steps are kept)
+                if prev_hash is not None:
+                    diff = current_hash - prev_hash
+                    if diff <= 3:
+                        # Visually similar: check if OCR is also similar
+                        if current_ocr.strip() and prev_ocr.strip():
+                            if are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.95):
+                                is_duplicate = True
+                                logging.info(f"Duplicate detected: visually similar (diff {diff} <= 3) and OCR similar (> 0.95)")
+                                break
+                        else:
+                            is_duplicate = True
+                            logging.info(f"Duplicate detected: visually similar (diff {diff} <= 3) with empty OCR")
+                            break
+                else:
+                    # Fallback to OCR check only
+                    if current_ocr.strip() and prev_ocr.strip():
+                        if are_ocr_texts_similar(current_ocr, prev_ocr, threshold=0.95):
+                            is_duplicate = True
+                            logging.info(f"Duplicate detected: OCR similar (> 0.95) and no hash available")
+                            break
         
         if is_duplicate or is_logo_frame(current_ocr):
             logging.info(f"Skipping duplicate or logo slide image: {frame_fname or img_path}")
@@ -1095,7 +1219,7 @@ def insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, i
                 return True
     return False
 
-def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, output_path):
+def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, output_path, audit_feedback_path=None):
     global CLOZE_ANSWERS
     CLOZE_ANSWERS = []
     
@@ -1173,11 +1297,11 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
         for block in concept_blocks[:3]:  # Check first few blocks
             # Titles
             title = block.get('title', '').lower()
-            concept_keywords.update(re.findall(r'\b[a-z]{4,}\b', title))
+            concept_keywords.update(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', title))
             
             # Explanations
             expl = block.get('explanation', '').lower()
-            concept_keywords.update(re.findall(r'\b[a-z]{4,}\b', expl))
+            concept_keywords.update(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', expl))
             
             # Concept terms
             for c in block.get('concepts', []):
@@ -1185,21 +1309,29 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     term = c.get('term', '').lower()
                 else:
                     term = str(c).split(':', 1)[0].lower()
-                concept_keywords.update(re.findall(r'\b[a-z]{4,}\b', term))
+                concept_keywords.update(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', term))
                 
             # Example sentences
             for ex in block.get('examples', []):
                 sent = ex.get('sentence', '').lower()
-                concept_keywords.update(re.findall(r'\b[a-z]{4,}\b', sent))
+                concept_keywords.update(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', sent))
         
-        # Remove common noise words
-        noise = {"about", "above", "after", "again", "against", "along", "could", "would", "should", "their", "there", "these", "those", "which", "where", "under", "family"}
+        # Remove common noise words and short grammatical/filler words
+        noise = {
+            "about", "above", "after", "again", "against", "along", "could", "would", "should", 
+            "their", "there", "these", "those", "which", "where", "under", "family",
+            "the", "a", "an", "and", "or", "but", "if", "then", "else", "of", "at", "by", "for", 
+            "with", "to", "from", "in", "on", "into", "over", "is", "was", "were", "are", "be", 
+            "been", "have", "has", "had", "do", "does", "did", "we", "you", "he", "she", "it", 
+            "they", "i", "my", "our", "your", "his", "her", "its", "them", "us", "this", "that", 
+            "not", "no", "yes", "so", "as", "than", "very", "can", "will", "just", "now"
+        }
         concept_keywords = concept_keywords - noise
         
         frame_keywords = set()
         for fname, info in list(frames.items())[:10]:  # Check first 10 frames
             ocr = info.get('ocr_text', '').lower()
-            words = re.findall(r'\b[a-z]{4,}\b', ocr)
+            words = re.findall(r'\b[a-z0-9_\-\+]{1,}\b', ocr)
             frame_keywords.update(words)
         frame_keywords = frame_keywords - noise
         
@@ -1233,24 +1365,29 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 lecture_title = first_title
     add_custom_heading(doc, lecture_title, 0)
 
-    # Section 1: Lecture Flow Outline
-    add_custom_heading(doc, "Section 1: Lecture Flow Outline", level=1)
-    for block in concept_blocks:
-        p = doc.add_paragraph(style='List Bullet')
-        run = p.add_run(block.get('title', 'Untitled Concept Block'))
-        run.bold = True
-        run.font.name = 'Calibri'
-    doc.add_paragraph()
-
-    # Section 2: Detailed Concept Blocks
-    add_custom_heading(doc, "Section 2: Detailed Concept Blocks", level=1)
+    # Section 1 & 2 Outline headers removed to follow single-subject outline policy
 
     inserted_ocrs = []
     inserted_filenames = set()
+    global_callout_count = 0
+    MAX_CALLOUTS = 6
+    
+    total_callouts_rendered = 0
+    enforce_callout_cap = False
+    if audit_feedback_path and os.path.exists(audit_feedback_path):
+        try:
+            with open(audit_feedback_path, 'r', encoding='utf-8') as f:
+                audit_feedback = json.load(f)
+                if "24" in audit_feedback:  # Gate 24: Total Callout Box Cap
+                    enforce_callout_cap = True
+        except Exception as e:
+            logging.warning(f"Could not load audit feedback: {e}")
+    global_callout_count = 0
+    MAX_CALLOUTS = 6
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
-        add_custom_heading(doc, f"{block_id}: {title}", level=2)
+        add_custom_heading(doc, title, level=2)
 
         # Check if the block has a custom flow
         flow = block.get('flow', [])
@@ -1297,17 +1434,25 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             add_rich_runs(p_q, sentence)
 
                         rule = ex.get('core_principles', ex.get('rule', ''))
+                        is_redundant_rule = False
                         if rule:
-                            p_rule = doc.add_paragraph()
-                            label = "Applicable Rule: " if is_question else "Key Concept: "
-                            add_bold_prefix(p_rule, label)
-                            add_rich_runs(p_rule, rule)
+                            is_redundant_rule = any(are_rules_similar(rule, prev) for prev in seen_rules_in_block)
+                            if working_text and (rule.lower() in working_text.lower() or working_text.lower() in rule.lower()):
+                                is_redundant_rule = True
+                            if sentence and (rule.lower() in sentence.lower() or sentence.lower() in rule.lower()):
+                                is_redundant_rule = True
+                                
+                            if not is_redundant_rule:
+                                p_rule = doc.add_paragraph()
+                                label = "Rule: " if is_question else ""
+                                if label:
+                                    add_bold_prefix(p_rule, label)
+                                add_rich_runs(p_rule, f"<b>{rule}</b>" if not label else rule)
+                                seen_rules_in_block.append(rule)
 
                         working_text = ex.get('step_by_step_logic', ex.get('working', ''))
                         if working_text:
-                            label_work = "Explanation/Working:" if is_question else "Explanation:"
-                            p_work_lbl = doc.add_paragraph()
-                            add_bold_prefix(p_work_lbl, label_work)
+                            # Drop the bulky header and just render the steps directly
                             add_formatted_explanation_paragraphs(doc, working_text)
 
                         # Render method2 if present
@@ -1319,33 +1464,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             add_bold_prefix(p_m2, "Alternative Approach (Method 2): ")
                             add_rich_runs(p_m2, method2)
 
-                        # Render teacher analogies if present
-                        analogies = ex.get('teacher_analogies')
-                        if analogies:
-                            p_ana = doc.add_paragraph()
-                            p_ana.paragraph_format.space_before = Pt(4)
-                            p_ana.paragraph_format.space_after = Pt(4)
-                            add_bold_prefix(p_ana, "💡 Teacher's Intuition & Analogies: ")
-                            add_rich_runs(p_ana, analogies)
-                            try:
-                                shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="FFF2CC" w:val="clear"/>')
-                                p_ana._p.get_or_add_pPr().append(shading)
-                            except Exception:
-                                pass
 
-                        # Render student notes if present
-                        student_notes = ex.get('student_notes', elem.get('student_notes'))
-                        if student_notes:
-                            p_sn = doc.add_paragraph()
-                            p_sn.paragraph_format.space_before = Pt(4)
-                            p_sn.paragraph_format.space_after = Pt(4)
-                            add_bold_prefix(p_sn, "💡 Student Note / Doubt: ")
-                            add_rich_runs(p_sn, student_notes)
-                            try:
-                                shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
-                                p_sn._p.get_or_add_pPr().append(shading)
-                            except Exception:
-                                pass
 
                         ans_text = get_explicit_answer(ex, working_text)
                         if ans_text:
@@ -1383,11 +1502,17 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             if target_idx != -1:
                                 inserted_vm_indices.add(target_idx)
                 elif el_type == 'trap':
+                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
                     add_trap(doc, elem.get('text', ''))
+                    total_callouts_rendered += 1
                 elif el_type == 'trick':
+                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
                     add_trick(doc, elem.get('text', ''))
+                    total_callouts_rendered += 1
                 elif el_type == 'quote':
+                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
                     add_quote(doc, elem.get('text', ''))
+                    total_callouts_rendered += 1
                 elif el_type == 'highlight':
                     p_i = doc.add_paragraph()
                     add_bold_prefix(p_i, "⭐ [IMPORTANT] ")
@@ -1407,25 +1532,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     add_cornell_block(doc, cue, content, srs_tag)
         else:
             # Fallback to standard sequential rendering
-            explanation = block.get('explanation', '')
-            if explanation:
-                add_formatted_explanation_paragraphs(doc, explanation)
+
             
-            # Render concept explanations (crucial for Deep-Extraction mode)
-            concept_explanations = block.get('concept_explanations', [])
-            if concept_explanations:
-                for ce in concept_explanations:
-                    name = ce.get('concept_name', '')
-                    detail = ce.get('detailed_explanation', '')
-                    if name or detail:
-                        p_ce = doc.add_paragraph()
-                        p_ce.paragraph_format.space_before = Pt(4)
-                        p_ce.paragraph_format.space_after = Pt(2)
-                        run_name = p_ce.add_run(name)
-                        run_name.bold = True
-                        run_name.font.size = Pt(11)
-                        if detail:
-                            add_formatted_explanation_paragraphs(doc, detail)
+
             
             if title == "Super Key":
                 add_super_key_additions(doc)
@@ -1542,8 +1651,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     working_text = ex.get('step_by_step_logic', ex.get('working', ''))
                     cloze_text = ex.get('cloze_text')
                     method2 = ex.get('method2')
-                    analogies = ex.get('teacher_analogies')
-                    student_notes = ex.get('student_notes')
+
                     ans_text = get_explicit_answer(ex, working_text)
 
                     # Render Cornell Block if cues are present (Layer 2 of Friction-Optimized Note Matrix)
@@ -1564,10 +1672,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             content_list.append(f"<b>{label_work}</b> {working_text}")
                         if method2:
                             content_list.append(f"<b>Alternative Approach (Method 2):</b> {method2}")
-                        if analogies:
-                            content_list.append(f"<b>💡 Teacher's Intuition & Analogies:</b> {analogies}")
-                        if student_notes:
-                            content_list.append(f"<b>💡 Student Note / Doubt:</b> {student_notes}")
+
                         if ans_text:
                             content_list.append(f"<b>Answer:</b> {ans_text}")
                         add_cornell_block(doc, cue_text, content_list, srs_tag)
@@ -1581,20 +1686,26 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             add_rich_runs(p_q, sentence)
 
                         if rule and not is_redundant_rule:
-                            p_rule = doc.add_paragraph()
-                            label = "Applicable Rule: " if is_question else "Key Concept: "
-                            add_bold_prefix(p_rule, label)
-                            add_rich_runs(p_rule, rule)
-                            seen_rules_in_block.append(rule)
+                            # aggressively check if rule is just repeating the sentence or working text
+                            if working_text and (rule.lower() in working_text.lower() or working_text.lower() in rule.lower()):
+                                is_redundant_rule = True
+                            if sentence and (rule.lower() in sentence.lower() or sentence.lower() in rule.lower()):
+                                is_redundant_rule = True
+                                
+                            if not is_redundant_rule:
+                                p_rule = doc.add_paragraph()
+                                label = "Rule: " if is_question else ""
+                                if label:
+                                    add_bold_prefix(p_rule, label)
+                                add_rich_runs(p_rule, f"<b>{rule}</b>" if not label else rule)
+                                seen_rules_in_block.append(rule)
 
                         if cloze_text:
                             p_cl = doc.add_paragraph()
                             add_bold_prefix(p_cl, "Explanation (Active Recall): ")
                             add_rich_runs(p_cl, cloze_text)
                         elif working_text:
-                            label_work = "Explanation/Working:" if is_question else "Explanation:"
-                            p_work_lbl = doc.add_paragraph()
-                            add_bold_prefix(p_work_lbl, label_work)
+                            # Drop the bulky 'Explanation:' header and just render the steps
                             add_formatted_explanation_paragraphs(doc, working_text)
 
                         # Render method2 if present
@@ -1605,31 +1716,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             add_bold_prefix(p_m2, "Alternative Approach (Method 2): ")
                             add_rich_runs(p_m2, method2)
 
-                        # Render teacher analogies if present
-                        if analogies:
-                            p_ana = doc.add_paragraph()
-                            p_ana.paragraph_format.space_before = Pt(4)
-                            p_ana.paragraph_format.space_after = Pt(4)
-                            add_bold_prefix(p_ana, "💡 Teacher's Intuition & Analogies: ")
-                            add_rich_runs(p_ana, analogies)
-                            try:
-                                shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="FFF2CC" w:val="clear"/>')
-                                p_ana._p.get_or_add_pPr().append(shading)
-                            except Exception:
-                                pass
 
-                        # Render student notes if present (legacy)
-                        if student_notes:
-                            p_sn = doc.add_paragraph()
-                            p_sn.paragraph_format.space_before = Pt(4)
-                            p_sn.paragraph_format.space_after = Pt(4)
-                            add_bold_prefix(p_sn, "💡 Student Note / Doubt: ")
-                            add_rich_runs(p_sn, student_notes)
-                            try:
-                                shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
-                                p_sn._p.get_or_add_pPr().append(shading)
-                            except Exception:
-                                pass
 
                         if ans_text:
                             p_ans = doc.add_paragraph()
@@ -1646,19 +1733,9 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                                 vm_to_insert = vm
                                 target_idx = v_idx
                                 break
-                    if not vm_to_insert:
-                        if idx < len(visual_moments) and idx not in inserted_vm_indices:
-                            vm_to_insert = visual_moments[idx]
-                            target_idx = idx
-                        else:
-                            for v_idx in range(len(visual_moments)):
-                                if v_idx not in inserted_vm_indices:
-                                    vm_to_insert = visual_moments[v_idx]
-                                    target_idx = v_idx
-                                    break
                     if vm_to_insert:
                         context_text = sentence + " " + (cloze_text or working_text)
-                        success_inserted = insert_image_for_vm(doc, vm_to_insert, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs, embedded_screenshots, context_text)
+                        insert_image_for_vm(doc, vm_to_insert, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs, embedded_screenshots, context_text)
                         if target_idx != -1:
                             inserted_vm_indices.add(target_idx)
 
@@ -1671,15 +1748,20 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                     add_rich_runs(p_q, sentence)
 
                     rule = ex.get('core_principles', ex.get('rule', ''))
+                    is_redundant_rule = False
                     if rule:
-                        p_rule = doc.add_paragraph()
-                        add_bold_prefix(p_rule, "Concept: ")
-                        add_rich_runs(p_rule, rule)
+                        if working_text and (rule.lower() in working_text.lower() or working_text.lower() in rule.lower()):
+                            is_redundant_rule = True
+                        if sentence and (rule.lower() in sentence.lower() or sentence.lower() in rule.lower()):
+                            is_redundant_rule = True
+                        
+                        if not is_redundant_rule:
+                            p_rule = doc.add_paragraph()
+                            add_bold_prefix(p_rule, "Rule: ")
+                            add_rich_runs(p_rule, rule)
 
                     working_text = ex.get('step_by_step_logic', ex.get('working', ''))
                     if working_text:
-                        p_work_lbl = doc.add_paragraph()
-                        add_bold_prefix(p_work_lbl, "Working/Solution: ")
                         add_formatted_explanation_paragraphs(doc, working_text)
 
                     # Render method2 if present
@@ -1691,33 +1773,7 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                         add_bold_prefix(p_m2, "Alternative Approach (Method 2): ")
                         add_rich_runs(p_m2, method2)
 
-                    # Render teacher analogies if present
-                    analogies = ex.get('teacher_analogies')
-                    if analogies:
-                        p_ana = doc.add_paragraph()
-                        p_ana.paragraph_format.space_before = Pt(4)
-                        p_ana.paragraph_format.space_after = Pt(4)
-                        add_bold_prefix(p_ana, "💡 Teacher's Intuition & Analogies: ")
-                        add_rich_runs(p_ana, analogies)
-                        try:
-                            shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="FFF2CC" w:val="clear"/>')
-                            p_ana._p.get_or_add_pPr().append(shading)
-                        except Exception:
-                            pass
 
-                    # Render student notes if present
-                    student_notes = ex.get('student_notes')
-                    if student_notes:
-                        p_sn = doc.add_paragraph()
-                        p_sn.paragraph_format.space_before = Pt(4)
-                        p_sn.paragraph_format.space_after = Pt(4)
-                        add_bold_prefix(p_sn, "💡 Student Note / Doubt: ")
-                        add_rich_runs(p_sn, student_notes)
-                        try:
-                            shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
-                            p_sn._p.get_or_add_pPr().append(shading)
-                        except Exception:
-                            pass
 
                     ans_text = get_explicit_answer(ex, working_text)
                     if ans_text:
@@ -1755,40 +1811,29 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 context_text = block.get('explanation', '')
                 insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs, embedded_screenshots, context_text)
 
-        # Render block-level elements (Quotes capped at 5, Traps, Tricks)
+        # Render block-level elements with document-wide caps
         block_quotes = block.get('teacher_quotes', [])
-        for q in block_quotes[:5]:  # Cap at 5 teacher quotes per block
+        for q in block_quotes[:1]:  # Cap at 1 teacher quote per block
+            if global_callout_count >= MAX_CALLOUTS:
+                break
             add_quote(doc, q)
-        for t in block.get('traps', []):
-            add_trap(doc, t)
-        for tr in block.get('tricks', []):
-            add_trick(doc, tr)
+            global_callout_count += 1
+            total_callouts_rendered += 1
+        # Support both old schema (traps/tricks) and new schema (teacher_cautions)
+        traps = block.get('traps') or []
+        tricks = block.get('tricks') or []
+        cautions = (block.get('teacher_cautions') or []) or (traps[:1] + tricks[:1])
+        for c in cautions:
+            if global_callout_count >= MAX_CALLOUTS:
+                break
+            if c and isinstance(c, str) and c.strip():
+                add_trap(doc, c)
+                global_callout_count += 1
+                total_callouts_rendered += 1
 
-        # Student Notes callouts (block-level)
-        for sn in block.get('student_notes', []):
-            p_sn = doc.add_paragraph()
-            p_sn.paragraph_format.space_before = Pt(4)
-            p_sn.paragraph_format.space_after = Pt(4)
-            run_icon = p_sn.add_run('📝 Student Note: ')
-            run_icon.bold = True
-            from docx.shared import RGBColor as _SN_RGB
-            run_icon.font.color.rgb = _SN_RGB(0x2C, 0x3E, 0x50)
-            add_rich_runs(p_sn, sn)
-            try:
-                shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="F0F4F8" w:val="clear"/>')
-                p_sn._p.get_or_add_pPr().append(shading)
-            except Exception:
-                pass
 
-        # Revision boxes
-        rev_bullets = []
-        if block.get('traps'):
-            rev_bullets.append(f"Key trap: {block['traps'][0]}")
-        for bullet in block.get('revision_bullets', []):
-            rev_bullets.append(bullet)
-        if not rev_bullets:
-            rev_bullets.append("Refer to full notes for details.")
-        add_revision_box(doc, rev_bullets, rule=block.get('title', ''))
+
+
 
         doc.add_paragraph()
 
@@ -1846,7 +1891,8 @@ if __name__ == '__main__':
     parser.add_argument('--frame-manifest', default='frame_manifest.json')
     parser.add_argument('--slide-manifest', default='slide_manifest.json')
     parser.add_argument('--output', default='notes-output/LECTURE_NOTES.docx')
+    parser.add_argument('--audit-feedback', default=None, help='Path to audit feedback JSON')
     args = parser.parse_args()
-    success, archive_path = build_document(args.concept_map, args.frame_manifest, args.slide_manifest, args.output)
+    success, archive_path = build_document(args.concept_map, args.frame_manifest, args.slide_manifest, args.output, args.audit_feedback)
     import sys
     sys.exit(0 if success else 1)

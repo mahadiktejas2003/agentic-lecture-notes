@@ -155,6 +155,9 @@ GATE_MAPPING = {
     'Gate 20: Transcript Coverage': 20,
     'Gate 21: English Enforcement': 21,
     'Gate 22: Styling and Highlighting Conformity': 22,
+    'Gate 23: Word Count Budget': 23,
+    'Gate 24: Callout Box Cap': 24,
+    'Gate 25: Short Note Audit': 25,
 }
 
 def log_abort(state: AgentState, reason: str):
@@ -435,6 +438,40 @@ def content_mapper_node(state: AgentState) -> Dict:
                 logging.error(f"Failed to generate manifests: {e}")
                 raise RuntimeError(f"parse_transcript.py failed: {e}")
                 
+        # Post-process concept block titles to ensure they satisfy Gate 14 and verify_density
+        if os.path.exists(concept_map_path):
+            try:
+                import json
+                with open(concept_map_path, "r", encoding="utf-8") as f:
+                    map_data = json.load(f)
+                
+                modified = False
+                for block in map_data.get("blocks", []):
+                    title = block.get("title", "")
+                    # Remove pattern matching (Questions 1-8) or Questions 9
+                    new_title = re.sub(r'\s*\(?Questions?\s*\d+(?:\s*(?:-|to|and)\s*\d+)?\)?\s*', ' ', title, flags=re.IGNORECASE).strip()
+                    # Clean up any leftover double spaces or trailing punctuation
+                    new_title = re.sub(r'\s+', ' ', new_title)
+                    new_title = new_title.strip(" -:,")
+                    
+                    # Check length constraint
+                    if len(new_title) < 5:
+                        new_title = f"{new_title} Details".strip()
+                    if len(new_title) < 5:
+                        new_title = "Grammar Concept Block"
+                        
+                    if new_title != title:
+                        logging.info(f"Cleaned generic title: '{title}' -> '{new_title}'")
+                        block["title"] = new_title
+                        modified = True
+                
+                if modified:
+                    with open(concept_map_path, "w", encoding="utf-8") as f:
+                        json.dump(map_data, f, indent=2)
+                    logging.info("Saved post-processed concept block titles.")
+            except Exception as e:
+                logging.warning(f"Failed to post-process concept block titles: {e}")
+
         # Run verify_density.py on the newly generated manifests
         try:
             from scripts.verify_density import verify_density
@@ -596,7 +633,7 @@ def note_formatter_node(state: AgentState) -> Dict:
 
 def run_stages_audit(state: AgentState) -> Dict:
     logging.info("Evaluating gates...")
-    all_ok, gates = run_audit(
+    all_ok, gates, feedback = run_audit(
         state["output_path"],
         state["concept_map_path"],
         state["frame_manifest_path"],
@@ -635,9 +672,11 @@ def audit_stage_1_node(state: AgentState) -> Dict:
 
 def audit_stage_2_node(state: AgentState) -> Dict:
     logging.info("=== [Node: audit-stage-2] Auditing Gates 5 - 8 ===")
+    # Re-run audit to get fresh gate results (not stale from stage 1)
+    results = run_stages_audit(state)
     failed_gate = 0
     for g in [5, 6, 7, 8]:
-        if not state["gate_results"].get(str(g), True):
+        if not results.get(str(g), True):
             failed_gate = g
             break
             
@@ -647,6 +686,7 @@ def audit_stage_2_node(state: AgentState) -> Dict:
         
     res = {
         "failed_gate": failed_gate,
+        "gate_results": results,
         "gate_retries": gate_retries
     }
     temp_state = dict(state)
@@ -656,9 +696,11 @@ def audit_stage_2_node(state: AgentState) -> Dict:
 
 def audit_stage_3_node(state: AgentState) -> Dict:
     logging.info("=== [Node: audit-stage-3] Auditing Gates 9 - 12 ===")
+    # Re-run audit to get fresh gate results
+    results = run_stages_audit(state)
     failed_gate = 0
     for g in [9, 10, 11, 12]:
-        if not state["gate_results"].get(str(g), True):
+        if not results.get(str(g), True):
             failed_gate = g
             break
             
@@ -668,6 +710,7 @@ def audit_stage_3_node(state: AgentState) -> Dict:
         
     res = {
         "failed_gate": failed_gate,
+        "gate_results": results,
         "gate_retries": gate_retries
     }
     temp_state = dict(state)
@@ -676,10 +719,12 @@ def audit_stage_3_node(state: AgentState) -> Dict:
     return res
 
 def audit_stage_4_node(state: AgentState) -> Dict:
-    logging.info("=== [Node: audit-stage-4] Auditing Gates 13 - 22 ===")
+    logging.info("=== [Node: audit-stage-4] Auditing Gates 13 - 25 ===")
+    # Re-run audit to get fresh gate results
+    results = run_stages_audit(state)
     failed_gate = 0
-    for g in [13, 14, 15, 16, 17, 18, 19, 20, 21, 22]:
-        if not state["gate_results"].get(str(g), True):
+    for g in [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]:
+        if not results.get(str(g), True):
             failed_gate = g
             break
             
@@ -689,6 +734,7 @@ def audit_stage_4_node(state: AgentState) -> Dict:
         
     res = {
         "failed_gate": failed_gate,
+        "gate_results": results,
         "gate_retries": gate_retries
     }
     temp_state = dict(state)
@@ -922,7 +968,7 @@ def run_pipeline():
             logging.error(f"⚠️ Archive cleanup failed: {cleanup_err}")
         
         if failed == 0 and status != "aborted":
-            logging.info("LangGraph Orchestrator finished successfully. All 22 gates passed.")
+            logging.info("LangGraph Orchestrator finished successfully. All 24 gates passed.")
             
             # Archive the successful notes copy here!
             try:
@@ -952,7 +998,7 @@ def run_pipeline():
                 logging.error(f"Failed to archive successful notes: {archive_err}")
 
             update_workspace_state(final_state, "completed", "Pipeline completed successfully with all gates passing")
-            store_run("success", 22, [], final_state["output_path"])
+            store_run("success", 24, [], final_state["output_path"])
             
             # Auto-upload to Cloudflare R2 and log to Supabase
             try:

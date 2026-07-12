@@ -1,0 +1,45 @@
+{
+  "lecture_title": "Lec-37 Correlated nested query",
+  "blocks": [
+    {
+      "block_id": "CB1",
+      "title": "Correlated Nested Queries",
+      "transcript_range_percent": [0, 95],
+      "explanation": "A correlated nested subquery is a query where the inner query depends on the outer query's attribute. The execution of a correlated query is a row-by-row top-down approach, meaning for each row in the outer query, the inner query is evaluated once. This is different from independent non-correlated subqueries that run bottom-up.",
+      "concepts": [
+        {
+          "term": "Correlated Nested Query",
+          "definition": "A nested subquery that depends on the outer query's table or attributes and cannot be executed standalone."
+        },
+        {
+          "term": "Top-to-Down Execution Flow",
+          "definition": "The execution model where for each row of the outer table, the inner query is executed once."
+        }
+      ],
+      "examples": [
+        {
+          "sentence": "SELECT A FROM R WHERE EXISTS (SELECT * FROM S WHERE R.A > S.B)",
+          "rule": "For each row in outer table R, evaluate if there exists at least one row in table S where R.A is strictly greater than S.B.",
+          "working": "1. Initialize Table R and S.\n2. Evaluate R.A = 10: inner query yields empty. EXISTS returns FALSE. Exclude 10.\n3. Evaluate R.A = 20: inner query yields non-empty. EXISTS returns TRUE. Include 20.\n4. Final output: {20}.",
+          "timestamp": "00:05:00"
+        },
+        {
+          "sentence": "SELECT A FROM R WHERE EXISTS (SELECT * FROM S WHERE R.A > S.B)",
+          "rule": "For each row in outer table R, evaluate if there exists at least one row in table S where R.A is strictly greater than S.B.",
+          "working": "1. Initialize Table R and S.\n2. Evaluate R.A = 10: inner query yields empty. EXISTS returns FALSE. Exclude 10.\n3. Evaluate R.A = 20: inner query yields non-empty. EXISTS returns TRUE. Include 20.\n4. Final output: {20}.",
+          "timestamp": "00:05:00"
+        }
+      ],
+      "traps": [
+        "Always remember the working of correlated nested queries: it evaluates top-to-down, running the inner query for each row of the outer query, which is different from the bottom-up evaluation of non-correlated queries."
+      ],
+      "visual_moments": [
+        {
+          "timestamp": "00:05:00",
+          "type": "board",
+          "filename": "frame_001.png"
+        }
+      ]
+    }
+  ]
+}

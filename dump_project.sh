@@ -9,7 +9,7 @@
 set -e  # Exit on error
 
 # Configuration
-PROJECT_DIR="/Users/tejasmahadik/Documents/agentic-lecture-notes"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT_FILE="$HOME/Downloads/agentic-source-context.txt"
 EXCLUDE_DIRS=("venv" ".git" "node_modules" "__pycache__" "agent_memory" 
               "lecture-input" "notes-output" "screenshots" "slides" "scratch")

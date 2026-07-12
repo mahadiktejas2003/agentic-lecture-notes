@@ -19,16 +19,26 @@ def test_notes():
     
     # Fix Bug #6: Check ALL 5 banned phrases
     BANNED_PHRASES = [
-        "the lecturer says",
-        "the teacher explains",
-        "the instructor mentions",
-        "this is discussed in the lecture",
-        "the teacher describes"
+        "the lecturer says", "the teacher explains", "the instructor mentions",
+        "this is discussed in the lecture", "the teacher describes",
+        "the teacher outlines", "the teacher demonstrates", "the teacher analyzes",
+        "the teacher shares", "the teacher introduces", "the teacher reviews",
+        "the teacher teaches", "the teacher shows", "the teacher discusses",
+        "the instructor outlines", "the instructor demonstrates", "the instructor analyzes",
+        "the instructor shares", "the instructor introduces", "the instructor reviews",
+        "the instructor teaches", "the instructor shows", "the instructor discusses",
+        "the lecturer outlines", "the lecturer demonstrates", "the lecturer analyzes",
+        "the lecturer shares", "the lecturer introduces", "the lecturer reviews",
+        "the lecturer teaches", "the lecturer shows", "the lecturer discusses",
+        "we see", "we analyze", "let's see", "let's look"
     ]
     
     found_issues = False
     for p_idx, p in enumerate(doc.paragraphs):
-        text_lower = p.text.lower()
+        text = p.text.strip()
+        if "📝 QUOTE" in text or p.style.name.lower() in ("quote", "intense quote", "block quote"):
+            continue
+        text_lower = text.lower()
         for phrase in BANNED_PHRASES:
             if phrase in text_lower:
                 feedback.append(f"  - [FAIL] Banned attribution '{phrase}' found in paragraph {p_idx+1}")

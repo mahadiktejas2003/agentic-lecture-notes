@@ -31,10 +31,13 @@ All note generation and content extraction must strictly adhere to the following
 1. **Chronological flow**: Follow the teacher's sequence and teaching flow exactly.
 2. **Prioritize teacher's spoken explanations**: If slides differ from what the teacher says to simplify concepts, prioritize the teacher's actual words. Use slides primarily as reference.
 3. **No mandatory worked examples / Q&A format**: Do not force all examples into `Q: / Rule: / Working: / Answer:` layout. If it's a question, use `Q:` and `Answer:`. If it's a scenario/situation, just call it `Example:` and `Explanation:`.
-4. **Highlights & Emphasis**: Highlight points that the teacher says are important, should be noted down, or will appear in exams with stars (e.g. `⭐ **[IMPORTANT]**` or `[⭐ IMPORTANT]`).
-5. **Optional Revisions, Traps, & Tricks**: Traps (`🚨 TRAP`), Tricks (`💡 TRICK`), and Revision Boxes (`[⚡ Quick Rev]`) are optional. Only include them when essential or mentioned in the lecture. Do not include fake exercise questions not mentioned by the teacher.
-6. **No "NOTES ##" Prefix**: Do not start the title with "NOTES ##". The title must be the actual topic/title of the lecture.
-7. **Strict Attribution Ban**: State facts directly. Do not write phrases like "the teacher says", "the lecturer explains", or "the instructor mentions".
+4. **Semantic Differentiation (Anti-Redundancy)**: Do NOT repeat definitions. If the `concepts` list is used to define formal terms, the `explanation` block must *strictly* be used for high-level context, real-world analogies, and the 'Why'. If there is no high-level analogy to give, leave the `explanation` empty and let the `concepts` list stand alone.
+5. **Highlights & Emphasis**: Highlight points that the teacher says are important, should be noted down, or will appear in exams with stars (e.g. `⭐ **[IMPORTANT]**` or `[⭐ IMPORTANT]`).
+6. **Optional Revisions, Traps, & Tricks**: Traps (`🚨 TRAP`), Tricks (`💡 TRICK`), and Revision Boxes (`[⚡ Quick Rev]`) are optional. Only include them when essential or mentioned in the lecture. Do not include fake exercise questions not mentioned by the teacher.
+7. **No "NOTES ##" Prefix**: Do not start the title with "NOTES ##". The title must be the actual topic/title of the lecture.
+8. **Strict Attribution Ban**: State facts directly. Do not write phrases like "the teacher says", "the lecturer explains", or "the instructor mentions".
+9. **Point-Wise Clarity**: Any concept taking more than 3 sentences to explain MUST be formatted as a bulleted list or a Markdown table.
+10. **Progressive Bolding**: Extensively bold the `**most critical keywords**` within sentences so a student can skim the page in 5 minutes before an exam.
 
 ## Examples and Illustrations Mandate
 
@@ -79,5 +82,5 @@ To enable seamless coordination and interchangeability between different AI agen
 
 If you are an AI assistant running in an environment that cannot access or parse files in the `.agents/` directory:
 1. Read the instructions in this file (`CLAUDE.md`) and `CROSS_PLATFORM.md` at the project root as your primary instructions.
-2. The core pipeline is orchestrated using `scripts/langgraph_orchestrator.py`. Run this Python script inside the project's virtual environment (`venv`) to orchestrate frame extraction, document compilation, student testing, and quality gate auditing.
+2. The core pipeline is orchestrated using `scripts/langgraph_orchestrator.py`. Run this Python script inside the project's virtual environment (`venv`) to orchestrate frame extraction, document compilation, student testing, and all 24 quality gates auditing.
 3. Use the MCP servers under `scripts/mcp_servers/` for document creation, quality audits, and frame extraction if your client interface supports MCP tools.

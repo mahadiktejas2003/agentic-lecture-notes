@@ -99,6 +99,14 @@ def process_pdf(pdf_path, output_dir, manifest_path, srt_segments):
     manifest = []
     prefix = "slide" if "slide" in manifest_path else "ref"
     
+    # Open PDF once for digital text extraction (outside loop)
+    fitz_doc = None
+    try:
+        import fitz
+        fitz_doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"PyMuPDF (fitz) not available for digital text extraction: {e}")
+    
     for idx, page in enumerate(pages):
         img_filename = f"{prefix}_{idx+1:03d}.png"
         img_path = os.path.join(output_dir, img_filename)
@@ -115,14 +123,11 @@ def process_pdf(pdf_path, output_dir, manifest_path, srt_segments):
             print(f"OCR failed for {prefix} {idx+1}: {e}")
             ocr_text = "OCR failed or tesseract not found"
             
-        # Also extract digital text from PDF page if available
+        # Extract digital text from PDF page if available
         dig_text = ""
         try:
-            import fitz
-            doc = fitz.open(pdf_path)
-            if idx < len(doc):
-                dig_text = doc[idx].get_text().strip()
-            doc.close()
+            if fitz_doc and idx < len(fitz_doc):
+                dig_text = fitz_doc[idx].get_text().strip()
         except Exception as e:
             print(f"Digital text extraction failed for page {idx+1}: {e}")
 
@@ -149,7 +154,11 @@ def process_pdf(pdf_path, output_dir, manifest_path, srt_segments):
 def extract_embedded_screenshots(pdf_path, output_dir="reference_screenshots", manifest_path="embedded_manifest.json"):
     print(f"Extracting embedded screenshots from {pdf_path}...")
     os.makedirs(output_dir, exist_ok=True)
-    doc = fitz.open(pdf_path)
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"Error opening PDF {pdf_path}: {e}")
+        return
     
     xref_to_pages = {}
     for i in range(len(doc)):

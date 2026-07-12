@@ -1,0 +1,25 @@
+{
+  "lecture_title": "English Grammar Pronouns",
+  "blocks": [
+    {
+      "block_id": "CB1",
+      "title": "Pronoun Cases and Comparisons",
+      "explanation": "Subject pronouns must be used after comparative connectors like 'than' or 'as' when comparing subjects.",
+      "concepts": [
+        {
+          "term": "Comparative Pronoun Subject Case",
+          "definition": "Always use subject case (he/she/I) after 'than' or 'as' in subjective comparison."
+        }
+      ],
+      "examples": [
+        {
+          "sentence": "Compare subjective pronoun cases.",
+          "wrong": "He is taller than me.",
+          "correct": "He is taller than I.",
+          "rule": "Use the nominative/subjective case after than/as.",
+          "working": "He is taller than I (am taller)."
+        }
+      ]
+    }
+  ]
+}

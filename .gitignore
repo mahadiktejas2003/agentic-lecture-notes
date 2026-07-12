@@ -50,3 +50,18 @@ lecture-input-backup-*/
 test_extracted_images/
 reference_pages/
 reference_screenshots/
+
+# Cache and local archives
+local-archive/
+extracted_images/
+
+# Sub-agent workspaces and explorer runs inside .agents
+.agents/challenger_*/
+.agents/explorer_*/
+.agents/reviewer_*/
+.agents/sentinel/
+.agents/teamwork_preview_*/
+.agents/victory_auditor_*/
+.agents/orchestrator_*/
+.agents/remediation_worker/
+.agents/implementer_*/

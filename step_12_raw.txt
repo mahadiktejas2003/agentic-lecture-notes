@@ -1,0 +1,371 @@
+# Conversation History
+Here are the conversation IDs, titles, and summaries of your most recent 20 conversations, in reverse chronological order:
+
+<conversation_summaries>
+## Conversation ffc0d89b-4514-4858-8dc1-7ba65265b305: {
+- Created: 2026-06-30T10:49:10Z
+- Last modified: 2026-06-30T10:49:30Z
+
+### USER Objective:
+{
+ "title": "Reading Comprehension: Identifying and Analyzing Passage Tones",
+ "explanation": "This section introduces how to identify the author's tone\u2014representing their attitude, style, and mood\u2014by analyzing specific vocabulary choices and observing how sentence structures and word arrangements modify emphasis.\n\nAn author's tone is determined not only by the individual words chosen but also by how those words are structured and arranged in a sentence. To evaluate tone, readers must analyze the emotional direction (positive, negative, or neutral), the degree of intensity of the vocabulary, the situational context, and the distinction between the author's voice and external opinions.\n\nTo identify the author's tone and attitude in reading comprehension, one must focus on the specific adjectives, nouns, verbs, and adverbs used in the passage. Words must be categorized by their polarity (positive, negative, or neutral) and their intensity or degree.\n\nA critical distinctio
+<truncated 7617 bytes>
+
+## Conversation 492a6bfe-b0a9-487b-9060-002066c3862d: {
+- Created: 2026-06-30T10:47:50Z
+- Last modified: 2026-06-30T10:48:04Z
+
+### USER Objective:
+{
+ "title": "Online Reading Comprehension Strategy",
+ "explanation": "The instructor provides a framework for handling Reading Comprehension (RC) in online tests where direct annotation is impossible. The strategy involves using scratch paper for paragraph mapping and specific techniques for identifying Title, Tone, Place of Publication, and Author's Profession.",
+ "concept_explanations": [
+  {
+   "concept_name": "Scratch Paper Paragraph Mapping",
+   "detailed_explanation": "For online examinations, direct text annotation is unavailable. Candidates should use a rough sheet of paper to record a brief summary of each paragraph. This mapping must consist solely of keywords or short phrases (never complete sentences) to capture the central idea. By listing the core subject of each paragraph, the candidate creates a structural index, enabling them to solve global questions and maintain the 'big picture'."
+  },
+  {
+   "concept_name": "Identifying the Title",
+   "detailed_explanation": "The t
+<truncated 4620 bytes>
+
+## Conversation 58b0a97a-849e-40e3-8d17-469d0c5801cb: {
+- Created: 2026-06-30T10:47:41Z
+- Last modified: 2026-06-30T10:47:48Z
+
+### USER Objective:
+{
+  "mappings": [
+    {
+      "consolidated_title": "Online Test Reading Strategies",
+      "indices": [0, 17]
+    },
+    {
+      "consolidated_title": "Rules for Passage Titles",
+      "indices": [1, 2, 3, 4]
+    },
+    {
+      "consolidated_title": "Analyzing Author Tone",
+      "indices": [5, 6, 7, 8, 9, 10, 11]
+    },
+    {
+      "consolidated_title": "Publication and Author Context",
+      "indices": [12, 13]
+    },
+    {
+      "consolidated_title": "Scanning and Passage Practice",
+      "indices": [14, 15, 16, 18]
+    }
+  ]
+}
+
+## Conversation 5c4fc70e-30fc-46b2-9d67-0facc7591594: <think>
+- Created: 2026-06-30T10:47:27Z
+- Last modified: 2026-06-30T10:47:40Z
+
+### USER Objective:
+<think>
+</think>
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Reading Comprehension Strategy and Practice",
+      "explanation": "This segment focuses on the practical application of reading comprehension (RC) skills, specifically addressing common student errors in interpretation and the necessity of structural passage mastery before attempting questions.",
+      "concept_explanations": [
+        {
+          "concept_name": "Contextual vs. Independent Meaning",
+          "detailed_explanation": "A primary point of failure for students in Reading Comprehension is applying 'independent meaning' to vocabulary questions. Independent meaning refers to the literal dictionary definition of a word. However, in an RC passage, the correct answer must be derived from 'contextual meaning'—how the word functions and what it signifies specifically within the provided text. The teacher emphasizes that even if a student knows a word's standard definition, they must prioritize the logical context 
+<truncated 2802 bytes>
+
+## Conversation 85c40e5b-ca8d-4569-b8f2-94fcc90bdf6d: <think>
+- Created: 2026-06-30T10:47:11Z
+- Last modified: 2026-06-30T10:47:27Z
+
+### USER Objective:
+<think>
+1.  **Extract Core Concepts/Points from Transcript:**
+    *   The teacher is struggling with the technological presentation of the reading comprehension passage.
+    *   The primary pedagogical issue: Students cannot see the passage and the questions simultaneously.
+    *   The teacher acknowledges this as a "systemic problem" and validates the student (Shubhang) who raised it.
+    *   The teacher's immediate action: Continue solving today by scrolling/navigating, while manually scrolling to the first/last line of paragraphs to give students context.
+    *   Future solution promised: Sharing the PDF file directly on the app so students can open it in a separate window or tab to view the passage and questions side-by-side.
+    *   Teaching Strategy Discussion: The teacher emphasizes the need for the student to solve questions one by one.
+    *   Teacher reaffirms the necessity of the "Scanning Method" (looking at passage structure) while acknowledging current hardware/interface 
+<truncated 5646 bytes>
+
+## Conversation a47599c0-159e-4d95-a44c-04aee5f11aed: <think>
+- Created: 2026-06-30T10:47:01Z
+- Last modified: 2026-06-30T10:47:10Z
+
+### USER Objective:
+<think>
+</think>
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Reading Comprehension Strategy: Question-First Approach",
+      "explanation": "The teacher emphasizes the importance of a strategic 'Question-First' approach to Reading Comprehension. By viewing the questions before reading the passage, a reader can identify key information, effectively creating a focused goal for the reading process to improve retention and efficiency.",
+      "concept_explanations": [
+        {
+          "concept_name": "Question-First Strategy",
+          "detailed_explanation": "The primary rule taught is to always review the question statements before reading the passage. This methodology prevents passive reading and promotes intentional learning. By looking at the questions first, the reader identifies key topics or specific details to look for, which allows them to scan the passage with purpose. The process involves: 1. Reviewing all questions, 2. Reading the passage using the structured scanning m
+<truncated 2915 bytes>
+
+## Conversation 7aa48d01-9f3d-47d8-a6b8-f7ceeb465a6f: <think>
+- Created: 2026-06-30T10:46:40Z
+- Last modified: 2026-06-30T10:47:00Z
+
+### USER Objective:
+<think>
+</think>
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Determining Publication Medium of a Passage",
+      "explanation": "The teacher introduces a framework to identify where an article was originally published. This is a crucial skill for answering 'Global Questions' in Reading Comprehension. The determination is based on a structured analysis of the passage's nature, tone, and audience.",
+      "concept_explanations": [
+        {
+          "concept_name": "Factors Influencing Place of Publication",
+          "detailed_explanation": "To determine the publication medium, the reader must assess three primary criteria: \n1. **Topic**: The subject matter sets the initial scope (e.g., medical, economic, lifestyle).\n2. **Depth of Treatment**: How thoroughly the topic is analyzed. A superficial treatment suggests a general audience, while an exhaustive, analytical exploration often points toward academic or specialized journals.\n3. **Language/Vocabulary**: This is the most critic
+<truncated 4684 bytes>
+
+## Conversation 2d292afd-bd3e-4844-b756-be0bc3421816: <think>
+- Created: 2026-06-30T10:46:26Z
+- Last modified: 2026-06-30T10:46:39Z
+
+### USER Objective:
+<think>
+1.  **Extract concepts:**
+    *   Tone analysis: Humorous (purpose is not to belittle), Contemplative (deep thought about past/present/future), Narrative (simple, plain reporting, no emotion), Descriptive (rich vocabulary, metaphors, imagery).
+    *   Differentiating Narrative vs. Descriptive: Narrative is plain (e.g., news report), Descriptive uses beautiful language/metaphors.
+    *   Identifying Descriptive Tone: Look for metaphors (sunshine like honey, laughter like fizzy drink), rich adjectives, and sensory imagery.
+    *   Examples provided: "Sunshine dripped like honey", "Laughter bubbled up like a fizzy drink", "Scent of wild flowers mingled with fried chicken", "Ants as uninvited guests".
+    *   Determining Publication Source: Three factors: Topic, Depth of Treatment, Language.
+    *   Practice: Analyzing passages for tone (upbeat, cheerful, satisfying, optimistic).
+
+2.  **Structuring JSON:**
+    *   Block 1: Tone Identification and Classification (Humorous, Contempla
+<truncated 5770 bytes>
+
+## Conversation 86e62dd2-a5a8-4603-9d14-32b519f9e7f9: <think>
+- Created: 2026-06-30T10:46:10Z
+- Last modified: 2026-06-30T10:46:25Z
+
+### USER Objective:
+<think>
+1. **Understand Key Concepts:**
+   - Analyzing tone: Adjectives, Nouns, Verbs.
+   - Word Degrees: Dislike (light) < Criticize (strong) < Hate (stronger) < Excoriate (strongest).
+   - Author's Opinion vs. Quoted Opinion: Focus on the author's attitude, ignore the person being quoted.
+   - Sarcasm Detection: Look for inverted commas/quotation marks around words that have a 'routine' meaning (e.g., 'special').
+   - Identifying Tone (Aggregated): Look for groups of positive/negative words (e.g., dreary, stark, morbid, bleak = negative).
+   - Tone Types: Cheerful, Humorous, Contemplative, Narrative vs. Descriptive.
+
+2. **Extract Examples:**
+   - Word Degree: Dislike, Criticize, Hate, Excoriate.
+   - Author/Quote Split: Authoritative parenting (Author vs P.J.).
+   - Sarcasm: "What a great achievement" (after a loss), "Special secretary" vs. "Special duties" (quotes).
+   - Tone Sets: Dreary, Stark, Morbid, Bleak (Negative).
+   - Narrative vs. Descriptive: Railway accident report (Narr
+<truncated 7265 bytes>
+
+## Conversation 6df8ba77-d65a-4c93-b54a-394bd1706122: /multi-agent-brainstorming 
+/dispatching-parallel-agents  dispatching-parallel-agents
+ /autonomous-a
+<truncated 2669 bytes>
+- Created: 2026-06-22T08:47:45Z
+- Last modified: 2026-06-30T10:46:15Z
+
+## Conversation bdb8a3cc-01ea-438f-b42e-4e867430040f: <think>
+- Created: 2026-06-30T10:45:52Z
+- Last modified: 2026-06-30T10:46:08Z
+
+### USER Objective:
+<think>
+The transcript segment focuses on the concept of 'Tone' in Reading Comprehension. Key points extracted:
+1.  **Concept of Tone**: Tone is the author's attitude conveyed through word choice, sentence arrangement, and emotional weight. Words alone are insufficient; structure and stress impact the implied meaning.
+2.  **Examples provided**:
+    *   "You will not find this kind of thing anywhere else" (Plain/Flat) vs. "Nowhere else will you find this kind of thing" (Stressed/Emphatic).
+    *   "I am not a doctor" (Plain/Straight) vs. "I am no doctor" (Stressed/Arrogant or frustrated).
+3.  **Process for identifying tone**:
+    *   Focus on keywords (Adjectives, Nouns, Verbs).
+    *   Determine if they are positive, negative, or neutral.
+    *   Evaluate the 'degree' of words (e.g., *Dislike* vs. *Criticize* vs. *Hate* vs. *Excoriate*).
+    *   Consider the situation.
+4.  **Specific Tones defined**: Angry, Sarcastic (sharp/hurtful comment), Somber (serious), Cynical (hopeless), Optimi
+<truncated 5743 bytes>
+
+## Conversation 04531102-da98-4177-9dcf-c46e5feeb586: <think>
+- Created: 2026-06-30T10:45:31Z
+- Last modified: 2026-06-30T10:45:51Z
+
+### USER Objective:
+<think>
+</think>
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Identifying Passage Titles and Understanding Global Topics",
+      "explanation": "This section explains how to evaluate potential titles for a passage by analyzing the author's focus and the main argument being presented. It emphasizes that a good title must capture the central theme rather than focusing on secondary or general information.",
+      "concept_explanations": [
+        {
+          "concept_name": "Title Selection Strategy",
+          "detailed_explanation": "When selecting a title, one must first identify the author's primary objective—such as myth-busting or exposing a hidden truth. If the author is trying to demolish popular opinions (e.g., that vehicular pollution is the main cause of climate change) and present a 'hidden enemy' (non-veg food), a valid title must encapsulate this specific narrative.\n\nEvaluation steps include identifying 'wrong' answers by checking for lack of clarity or excessive gener
+<truncated 5051 bytes>
+
+## Conversation 33dc2dbc-01cb-4aea-800f-246ed108a7ee: <think>
+- Created: 2026-06-30T10:45:17Z
+- Last modified: 2026-06-30T10:45:30Z
+
+### USER Objective:
+<think>
+The user wants a transcript mapping of the provided segment (00:16:24 - 00:26:16).
+
+**Content Analysis:**
+1.  **Context**: Topic is "Choosing the correct title for a passage".
+2.  **Methodology**:
+    *   Find the wrong answers first, never look for the right one initially.
+    *   Discard options that are:
+        *   Unclear/ambiguous.
+        *   Narrow.
+        *   Too broad (Generic).
+        *   Not representative of the entire scope (e.g., missing the "resolution" of the controversy).
+3.  **Example 1**: Indian chocolates and nickel contamination.
+    *   Scenario: Report claims nickel in chocolates -> Public outrage -> Reputed lab test proves news false (everything normal).
+    *   Options analyzed:
+        1.  "Much Ado About Nothing": Rejected (too vague, doesn't mention context).
+        2.  "Chocolate and Nickel": Rejected (incomplete, misses the controversy/resolution).
+        3.  "Scapegoat": Accepted (best choice among given, captures the unfair blame aspect).
+  
+<truncated 6534 bytes>
+
+## Conversation e989c0e1-cbcc-4a58-9a1d-41e637eb021a: <think>
+- Created: 2026-06-30T10:44:57Z
+- Last modified: 2026-06-30T10:45:16Z
+
+### USER Objective:
+<think>
+</think>
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Mastering Global Questions: Passage Titles",
+      "explanation": "Understanding the strategy for identifying the correct title of a passage, which is a hallmark of a 'Global Question' that requires synthesizing the entire text rather than focusing on isolated segments.",
+      "concept_explanations": [
+        {
+          "concept_name": "Criteria for an Effective Passage Title",
+          "detailed_explanation": "A passage title must function as a summary of the entire content. The teacher emphasizes that the most common failure point is basing the title on a single line, word, or paragraph, which constitutes a 'narrow' answer. Because a title acts as a global representation, the reader must grasp the overall intent of the author across all paragraphs.\n\nFurthermore, the answer must be 'pin-pointed' and specific. While it should be brief, brevity is not a substitute for meaning; a short but meaningless title is inferior
+<truncated 4663 bytes>
+
+## Conversation 87404fee-0fef-433e-87dd-11bb71e9bce4: <think>
+- Created: 2026-06-30T10:44:43Z
+- Last modified: 2026-06-30T10:44:56Z
+
+### USER Objective:
+<think>
+</think>
+
+Reading Comprehension Strategies Mapping
+
+```json
+{
+  "blocks": [
+    {
+      "title": "Online Test Strategy: Paragraph Summarization on Scratch Paper",
+      "explanation": "In an online environment where text cannot be physically highlighted or annotated, the student must create a 'big picture' map of the passage using a rough sheet of paper. This facilitates navigation and helps in answering global questions by organizing the logical structure of the text.",
+      "concept_explanations": [
+        {
+          "concept_name": "Digital Mapping Strategy",
+          "detailed_explanation": "For an online RC passage with multiple paragraphs, the student should read one paragraph at a time and write down only the essential keywords on a separate rough sheet. The goal is to capture the 'central idea'—such as the introduction of a topic, a specific architectural point of view, or a list of tools—without writing full sentences. This creates an abbreviated mental map of 
+<truncated 5040 bytes>
+
+## Conversation d8cfae35-8f16-4c56-8117-c5b1133ede50: # Reading Comprehension Strategy
+- Created: 2026-06-30T10:40:12Z
+- Last modified: 2026-06-30T10:40:44Z
+
+### USER Objective:
+# Reading Comprehension Strategy
+
+From *Live-15 English Introduction to Reading Comprehension*, answering: "How to approach unfamiliar texts without domain expertise?"
+
+### Core Concept: Domain Independence
+RC tests analytical ability, not technical knowledge. If you encounter a passage on economics, psychology, or quantum physics, the language is specifically designed for general accessibility.
+
+| Feature | Strategic Approach |
+| :--- | :--- |
+| **Passage Length** | Typically 0.5 to 0.75 of an A4 page; expect 5–15 questions. |
+| **Goal** | Assess inference, logic, and interconnection, not prior facts. |
+| **Method** | Use context clues to decode unfamiliar technical terms. |
+
+### Solving Techniques
+*   **The Scanning Method:** Map the passage structure by reading the first 2-3 lines of each paragraph.
+*   **Active Questioning:** Identify the question type before reading the passage to trigger "intentional learning."
+*   **3-Round Strategy:** 
+    *   *Round 1:* Answer 100% certain q
+<truncated 1573 bytes>
+
+## Conversation 303b1670-cd16-45ac-83c1-53c0ef724ef1: {
+- Created: 2026-06-30T10:38:28Z
+- Last modified: 2026-06-30T10:38:36Z
+
+### USER Objective:
+{
+  "blocks": [
+    {
+      "title": "Reading Comprehension Practice: Vaccine Nationalism",
+      "explanation": "The instructor shares a sample passage on the COVID-19 pandemic to demonstrate how to resolve a global purpose question and a vocabulary question.\n\nApplication of reading strategies to solve Reading Comprehension (RC) questions in real time. The instructor guides the students through a practice passage, evaluating global purpose questions and contextual vocabulary questions.",
+      "concept_explanations": [
+        {
+          "concept_name": "Identifying Author's Purpose and Contextual Vocabulary",
+          "detailed_explanation": "Using a real exam passage, the instructor shows how to apply reading comprehension rules. The first question is a global question focusing on the author's primary purpose. The second question focuses on vocabulary, asking for the meaning of a specific term. Candidates must synthesize the text's tone and main argument to determine the purpose
+<truncated 9318 bytes>
+
+## Conversation 9c61a3c3-4871-40b3-8325-36658d1597df: {"blocks": [{"title": "Online Test Strategy: Paragraph Summarization on Scratch Paper", "explanation
+<truncated 7528 bytes>
+- Created: 2026-06-30T10:38:18Z
+- Last modified: 2026-06-30T10:38:27Z
+
+### USER Objective:
+{"blocks": [{"title": "Online Test Strategy: Paragraph Summarization on Scratch Paper", "explanation": "Since digital interfaces for exams do not support direct highlighting or underlining, candidates must adapt by maintaining a structural outline of the passage on their rough sheet.", "concept_explanations": [{"concept_name": "Paragraph-by-Paragraph Summarization", "detailed_explanation": "For computer-based testing, direct screen markup is impossible. To overcome this constraint, candidates should request a physical sheet of scratch paper. As they read each paragraph, they must summarize its central theme in their own words. This summary must be kept brief\u2014limited strictly to one or two words\u2014to avoid consuming excessive writing time. By mapping each paragraph's core subject, the candidate constructs a complete index of the text. This index is highly effective for locating details and answering global questions without re-reading the passage."}], "concepts": [{"term": "Digi
+<truncated 6628 bytes>
+
+## Conversation 4f4c9c96-2b10-484b-a7e1-9d211798c12f: {
+- Created: 2026-06-30T10:37:57Z
+- Last modified: 2026-06-30T10:38:17Z
+
+### USER Objective:
+{
+  "blocks": [
+    {
+      "title": "The Scanning Method: Active Scanning, Keyword Underlining, and Navigation",
+      "explanation": "To resolve the drawbacks of the Read-First and Question-First strategies, the teacher introduces the Scanning Method, which combines the strengths of both systems for detail-based passages.\n\nTo resolve the high time-cost of blind searching in Reading Comprehension (RC) passages, the instructor introduces the 'Scanning Method'. This strategy combines targeted paragraph analysis, structural mapping, and keyword tracking to optimize speed and accuracy.\n\nThis segment details active scanning and keyword-spotting strategies to navigate Reading Comprehension (RC) passages efficiently. The instructor focuses on minimizing time wastage by reading strategically and marking high-probability question zones using specific keyword categories.\n\nActive reading requires physical interaction with the text. In paper-based exams, underlining acts as a visual navigat
+<truncated 25774 bytes>
+
+## Conversation 123b9df5-230c-49b4-aaf5-efff7a08e1ce: {
+- Created: 2026-06-30T10:37:45Z
+- Last modified: 2026-06-30T10:37:55Z
+
+### USER Objective:
+{
+  "blocks": [
+    {
+      "title": "Reading Comprehension: Traditional Reading Strategies and the Intentional Learning Principle",
+      "explanation": "The teacher outlines the two most common strategies candidates use for Reading Comprehension (RC) in paper-based tests and explains why both methods contain fundamental flaws.\n\nThe teacher demonstrates through a thought experiment that reading style, speed, and focus change automatically based on the expected outcome or objective of the reading.",
+      "concept_explanations": [
+        {
+          "concept_name": "Drawbacks of the Passage-First Strategy",
+          "detailed_explanation": "In the Passage-First (Read-First) strategy, candidates read the entire passage once, twice, or even three times before looking at the questions. The primary flaw in this method is the lack of time in competitive exams. Reading a passage once only provides a broad, high-level understanding of the text. To retain detailed information well enough t
+<truncated 8758 bytes>
+
+</conversation_summaries>

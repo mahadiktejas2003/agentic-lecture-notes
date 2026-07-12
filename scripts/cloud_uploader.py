@@ -59,10 +59,22 @@ def log_to_supabase(run_data):
         except Exception as e:
             last_error = e
             print(f"⚠️ Supabase log attempt {attempt}/3 failed: {e}")
+            # If error is due to missing column schema, fallback to core keys
+            if "column" in str(e).lower() or "schema" in str(e).lower() or "42703" in str(e):
+                core_keys = ["lecture_title", "status", "audit_score", "r2_video_key", "r2_notes_key", "error_message"]
+                fallback_data = {k: run_data[k] for k in core_keys if k in run_data}
+                try:
+                    print("Attempting fallback log with core Supabase schema fields...")
+                    data = supabase.table("pipeline_runs").upsert(fallback_data).execute()
+                    print(f"✅ Fallback logged run to Supabase: {data}")
+                    return True
+                except Exception as fb_err:
+                    print(f"⚠️ Fallback log failed: {fb_err}")
             if attempt < 3:
                 time.sleep(2 ** (attempt - 1))
     print(f"❌ Supabase log failed after retries: {last_error}")
     return False
+
 
 if __name__ == "__main__":
     check_env_vars()

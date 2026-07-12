@@ -102,7 +102,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
                     logger.info(f"Skipping logo/intro frame: {fname}")
                     try:
                         os.remove(out_path)
-                    except:
+                    except Exception:
                         pass
                     continue
                 manifest[fname] = {"timestamp": ts, "ocr_text": ocr_text, "type": "board"}
@@ -183,7 +183,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
                     for p in temp_paths:
                         try:
                             os.remove(p)
-                        except:
+                        except Exception:
                             pass
                     continue
                 
@@ -202,7 +202,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
             for p in temp_paths:
                 try:
                     os.remove(p)
-                except:
+                except Exception:
                     pass
 
     # Helper to parse seconds from HH:MM:SS
@@ -239,7 +239,7 @@ def extract_frames(video_path, output_dir, timestamps=None):
                             if current_hash - unique_hash <= 4:
                                 is_duplicate = True
                                 break
-                        except:
+                        except Exception:
                             pass
                     
             if is_duplicate:

@@ -1,0 +1,2740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBPS SO / Banking Special Sectional Test - Aptitude Test 1</title>
+  <!-- Google Fonts: Inter & JetBrains Mono for clean UI/Logs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS v4 Play CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --color-tcs-navy: #2C3E50;
+      --color-tcs-light: #F4F6F9;
+      --color-tcs-blue: #0284c7;
+    }
+  </style>
+
+  <style>
+    /* Prevent text selection to emulate lockdown browser */
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Custom Scrollbar for clean look */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F4F6F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Custom TCS iON Shapes for Palette */
+    .tcs-shape {
+      width: 42px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8rem;
+      position: relative;
+      user-select: none;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    /* Not Visited: White/Silver square with gray border */
+    .tcs-not-visited {
+      background-color: #ffffff;
+      border: 1px solid #d1d5db;
+      color: #2c3e50;
+      border-radius: 4px;
+    }
+    .tcs-not-visited:hover {
+      border-color: #9ca3af;
+      background-color: #f3f4f6;
+    }
+
+    /* Not Answered: Red, rounded bottom, flat top */
+    .tcs-not-answered {
+      background-color: #ef4444;
+      border: 1.5px solid #dc2626;
+      color: #ffffff;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      border-bottom-left-radius: 18px 14px;
+      border-bottom-right-radius: 18px 14px;
+    }
+    .tcs-not-answered:hover {
+      background-color: #dc2626;
+    }
+
+    /* Answered: Green, rounded top, flat bottom */
+    .tcs-answered {
+      background-color: #10b981;
+      border: 1.5px solid #059669;
+      color: #ffffff;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border-top-left-radius: 18px 14px;
+      border-top-right-radius: 18px 14px;
+    }
+    .tcs-answered:hover {
+      background-color: #059669;
+    }
+
+    /* Marked for Review: Violet circle */
+    .tcs-marked {
+      background-color: #8b5cf6;
+      border: 1.5px solid #7c3aed;
+      color: #ffffff;
+      border-radius: 9999px;
+    }
+    .tcs-marked:hover {
+      background-color: #7c3aed;
+    }
+
+    /* Answered & Marked: Violet circle with a green dot */
+    .tcs-answered-marked {
+      background-color: #8b5cf6;
+      border: 1.5px solid #7c3aed;
+      color: #ffffff;
+      border-radius: 9999px;
+    }
+    .tcs-answered-marked:hover {
+      background-color: #7c3aed;
+    }
+    .tcs-answered-marked::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 11px;
+      height: 11px;
+      background-color: #10b981;
+      border: 2px solid #ffffff;
+      border-radius: 9999px;
+    }
+
+    /* Active Highlight Border */
+    .tcs-shape-active {
+      box-shadow: 0 0 0 3px #0284c7;
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    /* Animation effects */
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .live-indicator {
+      animation: pulse-soft 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-[#2C3E50] overflow-hidden h-screen flex flex-col">
+
+  <!-- ==================== MAIN EXAM INTERFACE ==================== -->
+  <div id="exam-interface" class="hidden flex flex-col h-full">
+    
+    <!-- Top Header (Height: 64px) -->
+    <header class="h-16 bg-[#2C3E50] text-white flex items-center justify-between px-6 shadow-md z-30 select-none border-b-4 border-[#0284c7]">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white text-[#2C3E50] px-2 py-1 rounded font-black tracking-wider text-xs flex items-center shadow-xs">
+          <i class="fa-solid fa-laptop-code mr-1.5 text-sky-600"></i>TCS <span class="text-sky-800 ml-0.5">iON</span>
+        </div>
+        <div class="h-5 w-px bg-gray-500"></div>
+        <h1 class="font-bold text-sm md:text-base tracking-wide truncate max-w-lg">
+          IBPS SO / Banking Special Sectional Test - Aptitude Test 1
+        </h1>
+      </div>
+
+      <div class="flex items-center space-x-6">
+        <!-- Live Countdown Timer -->
+        <div class="flex items-center bg-[#1E293B] border border-gray-700 px-4 py-1.5 rounded-lg text-amber-400 font-mono font-bold text-lg shadow-inner">
+          <i class="fa-solid fa-hourglass-half mr-2 text-amber-500 live-indicator"></i>
+          <span id="countdown-timer">20:00</span>
+        </div>
+
+        <!-- Utility Buttons -->
+        <div class="flex space-x-2">
+          <button id="btn-show-instructions" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-3 py-1.5 rounded transition shadow-xs">
+            <i class="fa-solid fa-file-lines mr-1.5"></i> Instructions
+          </button>
+          <button id="btn-switch-test" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold px-3 py-1.5 rounded transition shadow-xs mr-2">
+            <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Switch Test
+          </button>
+          <button id="btn-show-question-paper" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-3 py-1.5 rounded transition shadow-xs">
+            <i class="fa-solid fa-table-list mr-1.5"></i> Question Paper
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Section Navigator Tabs bar -->
+    <div class="bg-white border-b border-gray-200 px-6 py-2 flex items-center justify-between select-none">
+      <div class="flex space-x-2">
+        <button id="btn-active-section-tab" class="bg-[#0284c7] text-white font-bold text-xs px-4 py-1.5 rounded shadow-xs">Quantitative Aptitude</button>
+        <button class="bg-gray-100 text-gray-400 text-xs px-4 py-1.5 rounded cursor-not-allowed border border-gray-200 flex items-center" disabled>
+          Quantitative Aptitude <i class="fa-solid fa-lock ml-1.5 text-[10px]"></i>
+        </button>
+        <button class="bg-gray-100 text-gray-400 text-xs px-4 py-1.5 rounded cursor-not-allowed border border-gray-200 flex items-center" disabled>
+          Reasoning Ability <i class="fa-solid fa-lock ml-1.5 text-[10px]"></i>
+        </button>
+      </div>
+      <div class="text-xs text-gray-500 font-medium">
+        <i class="fa-solid fa-shield-halved text-sky-600 mr-1"></i> Mode: <strong class="text-sky-800">Secure Lockdown Active</strong>
+      </div>
+    </div>
+
+    <!-- Main Work Area (Height: calc(100vh - 150px approx)) -->
+    <main class="flex-1 flex overflow-hidden bg-gray-50">
+      
+      <!-- Left Question Console (75% width) -->
+      <section class="w-3/4 flex flex-col h-full bg-white overflow-hidden border-r border-gray-200">
+        
+        <!-- Score and Metadata Bar -->
+        <div class="bg-gray-50 px-6 py-2 border-b border-gray-200 flex items-center justify-between text-xs font-semibold text-gray-600">
+          <div class="flex items-center space-x-2">
+            <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-mono">SECTION 1</span>
+            <span>Grammar & Error Detection</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span>Marks: <span class="text-green-600 font-bold">+1.00</span> | Negative: <span class="text-red-500 font-bold">-0.25</span></span>
+          </div>
+        </div>
+
+        <!-- Question View Scrollable Pane -->
+        <div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+          
+          <!-- Directions Card -->
+          <div class="bg-sky-50 border-l-4 border-sky-600 rounded-r-lg p-4 text-xs md:text-sm text-gray-700 shadow-2xs">
+            <h3 class="font-bold text-sky-950 mb-1 flex items-center uppercase tracking-wider text-xs">
+              <i class="fa-solid fa-circle-info mr-2 text-sky-600"></i> Section Directions for Questions 1-<span id="total-questions-num-header">15</span>
+            </h3>
+            <p id="question-directions" class="leading-relaxed">
+              Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.
+            </p>
+          </div>
+
+          <!-- Question Content Card -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 class="text-base font-bold text-gray-800 flex items-center">
+                Question No. <span id="current-question-num" class="ml-1 text-sky-600 font-mono text-lg">1</span> 
+                <span class="text-gray-400 font-normal text-xs ml-2">of <span id="total-questions-num-span">15</span></span>
+              </h2>
+              <span id="question-category" class="bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full text-xs font-medium border border-gray-200">
+                Noun Category
+              </span>
+            </div>
+
+            <!-- The Question Sentence -->
+            <div class="p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-inner">
+              <p id="question-text" class="text-base leading-relaxed text-gray-800 font-medium">
+                <!-- Injected dynamically -->
+              </p>
+            </div>
+          </div>
+
+          <!-- Options Container -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Select your choice:</h4>
+            <div id="options-list" class="grid grid-cols-1 gap-2.5">
+              <!-- Radio Options injected dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Right Candidate & Palette Panel (25% width) -->
+      <aside class="w-1/4 flex flex-col h-full bg-white select-none">
+        
+        <!-- Candidate Profile Header -->
+        <div class="p-4 border-b border-gray-200 flex items-center space-x-3 bg-gray-50">
+          <div class="relative">
+            <div class="w-14 h-14 rounded-lg bg-gray-200 border-2 border-emerald-500 overflow-hidden flex items-center justify-center shadow-inner">
+              <!-- Camera Avatar placeholder -->
+              <svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <!-- Live Web Cam connected Dot -->
+            <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
+            </span>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-800 text-sm leading-tight">Tejas Mahadik</h3>
+            <p class="text-xs text-gray-500 font-mono mt-0.5">TEJAS_MAHADIK_2026</p>
+            <div class="flex items-center mt-1">
+              <span class="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1"></span>
+              <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Lockdown Active</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend Widget Section -->
+        <div class="p-4 border-b border-gray-200 bg-gray-50/50">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Palette Status</h4>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="flex items-center space-x-2">
+              <div class="tcs-shape tcs-answered scale-75 cursor-default">0</div>
+              <span class="text-gray-600 truncate">Answered (<span id="legend-count-answered" class="font-bold text-emerald-600">0</span>)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="tcs-shape tcs-not-answered scale-75 cursor-default">0</div>
+              <span class="text-gray-600 truncate">Not Ans (<span id="legend-count-not-answered" class="font-bold text-red-500">0</span>)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="tcs-shape tcs-marked scale-75 cursor-default">0</div>
+              <span class="text-gray-600 truncate">Marked (<span id="legend-count-marked" class="font-bold text-purple-600">0</span>)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="tcs-shape tcs-answered-marked scale-75 cursor-default">0</div>
+              <span class="text-gray-600 truncate">Ans & Mark (<span id="legend-count-ans-marked" class="font-bold text-purple-600">0</span>)</span>
+            </div>
+            <div class="flex items-center space-x-2 col-span-2">
+              <div class="tcs-shape tcs-not-visited scale-75 cursor-default">0</div>
+              <span class="text-gray-600">Not Visited (<span id="legend-count-not-visited" class="font-bold text-gray-500">0</span>)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Palette Area -->
+        <div class="flex-1 flex flex-col p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Question Palette</h4>
+            <span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded font-mono"><span id="total-questions-badge">15</span> Qs</span>
+          </div>
+
+          <!-- Interactive Grid -->
+          <div class="overflow-y-auto flex-1 pr-1">
+            <div id="palette-grid" class="grid grid-cols-4 gap-3 py-1">
+              <!-- Dynamically populated buttons -->
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- Bottom Execution Footer (Height: 64px) -->
+    <footer class="h-16 bg-white border-t border-gray-200 flex items-center justify-between px-6 shadow-md z-30 select-none">
+      
+      <!-- Left side: Mark for Review -->
+      <div>
+        <button id="btn-mark-review" class="px-5 py-2.5 border border-purple-600 text-purple-700 hover:bg-purple-50 font-semibold text-sm rounded-lg transition-all duration-150 active:scale-95 flex items-center shadow-xs">
+          <i class="fa-solid fa-bookmark mr-2 text-purple-500"></i> Mark for Review & Next
+        </button>
+      </div>
+
+      <!-- Center: Clear Response -->
+      <div>
+        <button id="btn-clear-response" class="px-5 py-2.5 border border-gray-300 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-semibold text-sm rounded-lg transition-all duration-150 active:scale-95 flex items-center shadow-xs">
+          <i class="fa-solid fa-eraser mr-2"></i> Clear Response
+        </button>
+      </div>
+
+      <!-- Right side: Save & Next / Submit -->
+      <div class="flex items-center space-x-3">
+        <button id="btn-save-next" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg transition-all duration-150 active:scale-95 flex items-center shadow-md">
+          <i class="fa-solid fa-circle-check mr-2"></i> Save & Next
+        </button>
+        <button id="btn-submit-exam" class="hidden px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition-all duration-150 active:scale-95 flex items-center shadow-md animate-bounce">
+          <i class="fa-solid fa-paper-plane mr-2"></i> Submit Exam
+        </button>
+      </div>
+
+    </footer>
+
+  </div>
+
+
+  <!-- ==================== POST-SUBMISSION PERFORMANCE DASHBOARD ==================== -->
+  <div id="dashboard-interface" class="hidden flex flex-col h-full bg-[#F4F6F9] overflow-hidden">
+    
+    <!-- Top Dashboard Header -->
+    <header class="h-16 bg-[#2C3E50] text-white flex items-center justify-between px-6 shadow-md z-30 select-none border-b-4 border-[#10b981]">
+      <div class="flex items-center space-x-3">
+        <div class="bg-emerald-500 text-white px-2.5 py-1 rounded font-bold text-xs flex items-center shadow-sm">
+          <i class="fa-solid fa-chart-line mr-1.5"></i> REPORT CARD
+        </div>
+        <h1 class="font-bold text-base md:text-lg">IBPS SO Exam Performance Dashboard</h1>
+      </div>
+      <div class="flex items-center space-x-4 font-mono text-xs text-gray-300">
+        <span>Candidate: <strong class="text-white">TEJAS_MAHADIK_2026</strong></span>
+      </div>
+    </header>
+
+    <!-- Scrollable Review Workspace -->
+    <div class="flex-1 flex overflow-hidden">
+      
+      <!-- Left Dashboard Panel (50% Width) -->
+      <div class="w-1/2 flex flex-col h-full border-r border-gray-200 overflow-y-auto p-6 space-y-6">
+        
+        <!-- Score Card Summary Grid -->
+        <div class="grid grid-cols-2 gap-4">
+          
+          <!-- Score summary -->
+          <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center space-x-4">
+            <div class="p-4 bg-sky-50 rounded-lg text-sky-600 shadow-inner">
+              <i class="fa-solid fa-graduation-cap text-2xl"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Final Raw Score</p>
+              <h2 id="dash-score" class="text-2xl font-black text-gray-800 font-mono"><span id="dash-raw-score-span">12.00</span> / <span class="total-qs-label-double">15.00</span></h2>
+              <p class="text-xs text-gray-500 mt-0.5">Attempted: <span id="dash-attempted" class="font-semibold text-gray-700">14</span>/<span class="total-qs-label">15</span></p>
+            </div>
+          </div>
+
+          <!-- Accuracy Card -->
+          <div class="bg-white rounded-xl p-5 border border-gray-200 shadow-sm flex items-center space-x-4">
+            <div class="p-4 bg-emerald-50 rounded-lg text-emerald-600 shadow-inner">
+              <i class="fa-solid fa-circle-nodes text-2xl"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Accuracy Rate</p>
+              <h2 id="dash-accuracy" class="text-2xl font-black text-gray-800 font-mono">85.7%</h2>
+              <p class="text-xs text-gray-500 mt-0.5">
+                Correct: <span id="dash-correct" class="font-semibold text-emerald-600 font-mono">12</span> | 
+                Wrong: <span id="dash-wrong" class="font-semibold text-red-500 font-mono">2</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Syllabus Category Breakdown Card -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider flex items-center">
+              <i class="fa-solid fa-chart-pie mr-2 text-sky-600"></i> Syllabus Category Analysis
+            </h3>
+            <span id="lbl-syllabus-focus" class="text-xs text-gray-400 font-semibold font-mono">Aptitude & Combinatorics Focus</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-gray-100 text-gray-600 font-semibold border-b border-gray-200 select-none">
+                  <th class="py-2.5 px-4">Category</th>
+                  <th class="py-2.5 px-4 text-center">Questions</th>
+                  <th class="py-2.5 px-4 text-center">Correct</th>
+                  <th class="py-2.5 px-4 text-center">Incorrect</th>
+                  <th class="py-2.5 px-4 text-right">Accuracy</th>
+                </tr>
+              </thead>
+              <tbody id="dash-category-table">
+                <!-- Dynamically Injected Category Rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- File Migration & Persistence Block -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 space-y-4">
+          <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider flex items-center border-b border-gray-100 pb-2">
+            <i class="fa-solid fa-file-invoice mr-2 text-purple-600"></i> Data Portability & Serialization
+          </h3>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <!-- Export JSON -->
+            <button id="btn-export-json" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center shadow-sm transition active:scale-95">
+              <i class="fa-solid fa-file-arrow-down mr-2 text-sm"></i> Export Performance Log (.json)
+            </button>
+            
+            <!-- Load JSON -->
+            <label class="flex-1 bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-700 text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center cursor-pointer shadow-xs transition active:scale-95">
+              <i class="fa-solid fa-file-arrow-up mr-2 text-sm text-gray-500"></i> Load Prior Performance Log
+              <input type="file" id="file-import-json" class="hidden" accept=".json">
+            </label>
+          </div>
+        </div>
+
+        <!-- Tabbed Logs & Attempts Panel -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-[320px] overflow-hidden">
+          <!-- Tab Bar -->
+          <div class="bg-gray-50 px-5 py-2 border-b border-gray-200 flex items-center justify-between select-none">
+            <div class="flex space-x-2">
+              <button id="tab-btn-history" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-sky-100 text-sky-800 border border-sky-200">
+                <i class="fa-solid fa-history mr-1.5"></i> Past Attempt History
+              </button>
+              <button id="tab-btn-timeline" class="text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                <i class="fa-solid fa-terminal mr-1.5 font-mono"></i> Telemetry Logs
+              </button>
+            </div>
+            <span class="bg-emerald-50 text-emerald-800 text-[9px] font-mono font-bold px-2 py-0.5 rounded border border-emerald-200">DATA LEDGER</span>
+          </div>
+          
+          <!-- Tab Contents -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <!-- Attempt History List -->
+            <div id="tab-content-history" class="space-y-2.5">
+              <p class="text-gray-400 text-xs text-center py-8">No historical attempts recorded for this machine.</p>
+            </div>
+            
+            <!-- Telemetry Timeline Log -->
+            <div id="tab-content-timeline" class="hidden font-mono text-[11px] space-y-1.5 bg-gray-900 text-gray-300 p-3 rounded-lg shadow-inner max-h-full overflow-y-auto">
+              <!-- Dynamic Log Events -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Dashboard Panel (Interactive Replay Engine) (50% Width) -->
+      <div class="w-1/2 flex flex-col h-full bg-white overflow-hidden">
+        
+        <!-- Replay Question Selector Header -->
+        <div class="p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between shadow-xs">
+          <div class="flex items-center space-x-2">
+            <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-history mr-1.5 text-sky-600"></i> Replay Engine
+            </h3>
+            <span class="text-xs text-gray-400 font-medium">Verify answers & solutions</span>
+          </div>
+          
+          <!-- Dropdown to select question -->
+          <div class="flex items-center space-x-2">
+            <label for="replay-question-select" class="text-xs text-gray-500 font-semibold">Go To:</label>
+            <select id="replay-question-select" class="bg-white border border-gray-300 rounded px-2 py-1 text-xs font-semibold focus:outline-none focus:border-blue-500">
+              <!-- Automatically populated -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Replay Screen Workspace -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-5">
+          
+          <!-- Replay Info Bar -->
+          <div id="replay-status-bar" class="p-3.5 rounded-lg text-sm font-semibold flex items-center justify-between">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Question Body Card -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                Question <span id="replay-question-num" class="text-sky-600 font-mono text-sm">1</span>
+              </h4>
+              <span id="replay-question-category" class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs border border-gray-200">
+                Category
+              </span>
+            </div>
+            
+            <div class="p-5 bg-gray-50 border border-gray-200 rounded-lg shadow-inner">
+              <p id="replay-question-text" class="text-sm leading-relaxed text-gray-800">
+                <!-- Dynamically populated -->
+              </p>
+            </div>
+          </div>
+
+          <!-- Options Breakdown -->
+          <div class="space-y-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Options Matrix</h4>
+            <div id="replay-options-list" class="space-y-2">
+              <!-- Option items populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Explanation breakdown card -->
+          <div class="border border-emerald-200 bg-emerald-50/50 rounded-xl p-5 space-y-2 shadow-xs">
+            <h4 class="text-sm font-bold text-emerald-950 flex items-center">
+              <i class="fa-solid fa-chalkboard-user mr-2 text-emerald-600"></i> Technical Grammar Rule Breakdown
+            </h4>
+            <p id="replay-explanation" class="text-xs md:text-sm text-emerald-900 leading-relaxed font-medium">
+              <!-- Dynamically populated -->
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Replay Navigation Footer -->
+        <div class="h-14 border-t border-gray-200 bg-gray-50 px-6 flex items-center justify-between select-none">
+          <button id="btn-replay-prev" class="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold text-xs rounded-lg flex items-center transition active:scale-95 shadow-2xs">
+            <i class="fa-solid fa-chevron-left mr-1.5"></i> Previous Question
+          </button>
+          
+          <button id="btn-restart-exam" class="px-4 py-2 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold text-xs rounded-lg flex items-center transition active:scale-95 shadow-2xs">
+            <i class="fa-solid fa-rotate-right mr-1.5"></i> Restart Sandbox
+          </button>
+
+          <button id="btn-replay-next" class="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold text-xs rounded-lg flex items-center transition active:scale-95 shadow-2xs">
+            Next Question <i class="fa-solid fa-chevron-right ml-1.5"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==================== MOCK EXAM SELECTOR OVERLAY ==================== -->
+  <div id="test-selector-modal" class="fixed inset-0 bg-[#0f172a]/95 backdrop-blur-md flex items-center justify-center z-50 p-4 select-none">
+    <div class="bg-white rounded-3xl max-w-2xl w-full border border-gray-200 p-8 shadow-2xl space-y-6 flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+        <div class="flex items-center space-x-3 text-sky-600">
+          <div class="p-3 bg-sky-50 rounded-full">
+            <i class="fa-solid fa-list-check text-2xl"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-black text-gray-800 tracking-tight">Select Mock Examination</h2>
+            <p class="text-xs text-gray-500">TCS iON Digital Assessment Repository</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded-full border border-emerald-200">Local Server Active</span>
+        </div>
+      </div>
+
+      <!-- Test Cards List -->
+      <div id="test-cards-list" class="flex-1 overflow-y-auto space-y-4 pr-1">
+        <div class="text-center py-8 text-gray-500 text-sm">
+          <i class="fa-solid fa-spinner animate-spin text-2xl mb-2 text-sky-600"></i>
+          <p>Querying local assessment repository...</p>
+        </div>
+      </div>
+
+      <!-- Past Attempts History Ledger -->
+      <div id="selector-history-section" class="border-t border-gray-150 pt-4 flex flex-col space-y-3">
+        <h3 class="font-bold text-gray-800 text-xs uppercase tracking-wider flex items-center">
+          <i class="fa-solid fa-clock-rotate-left mr-2 text-sky-600"></i> Your Past Attempts Ledger
+        </h3>
+        <div id="selector-history-list" class="max-h-[160px] overflow-y-auto space-y-2 pr-1">
+          <p class="text-gray-400 text-xs text-center py-4">No completed attempts recorded yet.</p>
+        </div>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-xs text-gray-600 flex items-start space-x-3">
+        <i class="fa-solid fa-circle-info text-sky-600 mt-0.5 text-base"></i>
+        <div>
+          <p class="font-bold text-sky-950">Secure Lockdown Environment</p>
+          <p class="mt-0.5">Selecting a test will download the dataset dynamically from the local backend and configure the lockdown state. You can swap mock examinations at any time without losing completed history logs in the backend results ledger.</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+
+  <!-- ==================== LOCALSTORAGE RESUME / INTERACTION TRIGGER OVERLAY ==================== -->
+  <div id="resume-modal" class="fixed inset-0 bg-[#0f172a]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-gray-200 p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center space-x-3 text-sky-600">
+        <div class="p-3 bg-sky-50 rounded-full">
+          <i class="fa-solid fa-shield-halved text-2xl"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-bold text-gray-800">Secure Examination Lock</h2>
+          <p class="text-xs text-gray-500">TCS iON Digital Exam Agent</p>
+        </div>
+      </div>
+
+      <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2 text-xs">
+        <p class="text-gray-700">This mockup sandboxes a real digital assessment terminal. Clicking below enters **fullscreen lockdown browser mode**.</p>
+        <div class="text-[10px] text-red-600 font-semibold border-t border-gray-200 pt-2 flex items-start mt-1">
+          <i class="fa-solid fa-circle-exclamation mr-1.5 mt-0.5"></i>
+          <span>Exiting fullscreen mode during active mock testing will trigger security warnings and flag your telemetry click timeline log!</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2 pt-2">
+        <button id="btn-modal-start-secure" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl shadow-md transition active:scale-95 text-sm flex items-center justify-center">
+          <i class="fa-solid fa-expand mr-2"></i> Enter Secure Lockdown Exam
+        </button>
+        
+        <div id="resume-section" class="hidden border-t border-gray-100 pt-3 mt-1 flex flex-col space-y-2">
+          <p class="text-[11px] text-gray-400 text-center">Unfinished session recovery data detected</p>
+          <div class="flex gap-2">
+            <button id="btn-modal-resume" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition active:scale-95 shadow-xs">
+              Resume Session
+            </button>
+            <button id="btn-modal-new" class="flex-1 border border-gray-300 text-gray-600 hover:bg-gray-100 font-bold py-2 rounded-lg text-xs transition active:scale-95">
+              Start Fresh
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== SECURE LOCKDOWN BREACH OVERLAY MODAL ==================== -->
+  <div id="lockdown-breach-modal" class="hidden fixed inset-0 bg-red-950/95 backdrop-blur-md flex items-center justify-center z-[100] p-4 select-none">
+    <div class="bg-white rounded-3xl max-w-lg w-full border-4 border-red-500 p-8 shadow-2xl space-y-6 text-center animate-bounce">
+      
+      <div class="mx-auto w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center shadow-lg">
+        <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+      </div>
+
+      <div class="space-y-2">
+        <h2 class="text-xl font-black text-red-700 uppercase tracking-widest">Security Lockdown Breach!</h2>
+        <p class="text-xs text-gray-400 uppercase tracking-wider font-bold">TCS iON Examination Lock System</p>
+      </div>
+
+      <div class="p-5 bg-red-50 border border-red-200 rounded-2xl space-y-3 text-xs leading-relaxed text-red-900 font-medium">
+        <p>
+          <strong>Violation Detected:</strong> You have exited the mandatory Fullscreen lockdown environment. This action has been logged into the secure telemetry database.
+        </p>
+        <p class="border-t border-red-200 pt-2 font-mono text-[10px] text-red-700">
+          Candidate Roll: TEJAS_MAHADIK_2026<br>
+          Incident Telemetry Code: ERR_LOCKDOWN_FULLSCREEN_EXIT
+        </p>
+      </div>
+
+      <button id="btn-lockdown-restore" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-2xl shadow-md transition active:scale-95 text-sm flex items-center justify-center">
+        <i class="fa-solid fa-expand mr-2"></i> Re-Enter Secure Fullscreen Mode
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== SUBMISSION CONFIRMATION MODAL OVERLAY ==================== -->
+  <div id="submit-confirm-modal" class="hidden fixed inset-0 bg-[#0f172a]/70 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-gray-200 p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center space-x-3 text-red-600">
+        <div class="p-3 bg-red-50 rounded-full">
+          <i class="fa-solid fa-paper-plane text-2xl"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-bold text-gray-800">Submit Exam Session</h2>
+          <p class="text-xs text-gray-500">Telemetry logs will be locked and saved</p>
+        </div>
+      </div>
+
+      <!-- Quick Summary Matrix of Answers -->
+      <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-3 shadow-inner">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-200 pb-1.5">Answer Matrix Summary</h4>
+        <div class="grid grid-cols-2 gap-y-2 text-xs">
+          <div class="flex justify-between pr-4 border-r border-gray-200">
+            <span class="text-gray-500 font-semibold">Answered:</span>
+            <strong id="confirm-count-answered" class="text-emerald-600">0</strong>
+          </div>
+          <div class="flex justify-between pl-4">
+            <span class="text-gray-500 font-semibold">Not Answered:</span>
+            <strong id="confirm-count-not-answered" class="text-red-500">0</strong>
+          </div>
+          <div class="flex justify-between pr-4 border-r border-gray-200">
+            <span class="text-gray-500 font-semibold">Marked:</span>
+            <strong id="confirm-count-marked" class="text-purple-600">0</strong>
+          </div>
+          <div class="flex justify-between pl-4">
+            <span class="text-gray-500 font-semibold">Ans & Marked:</span>
+            <strong id="confirm-count-ans-marked" class="text-purple-600">0</strong>
+          </div>
+          <div class="flex justify-between col-span-2 pt-2 border-t border-gray-200 text-gray-600 font-semibold">
+            <span>Not Visited:</span>
+            <strong id="confirm-count-not-visited">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-[11px] text-red-500 font-semibold leading-relaxed">
+        Warning: Once submitted, you cannot change or reload your mock exam responses for this session. Your final telemetry logs will be serialized and transmitted to the backend.
+      </p>
+
+      <div class="flex gap-3">
+        <!-- Yes, Submit -->
+        <button id="btn-confirm-submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow-md transition active:scale-95 text-xs uppercase tracking-wider">
+          Yes, Submit Exam
+        </button>
+        <!-- Cancel -->
+        <button id="btn-confirm-cancel" class="flex-1 border border-gray-300 text-gray-600 hover:bg-gray-100 font-bold py-2.5 rounded-xl transition active:scale-95 text-xs uppercase tracking-wider">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== MOCK EXAM SYSTEM INSTRUCTIONS MODAL ==================== -->
+  <div id="instructions-modal" class="hidden fixed inset-0 bg-[#0f172a]/70 backdrop-blur-xs flex items-center justify-center z-50 p-4 select-none">
+    <div class="bg-white rounded-2xl max-w-2xl w-full border border-gray-200 p-6 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center border-b border-gray-200 pb-3 mb-4 shrink-0">
+        <h2 class="text-base font-bold text-gray-800 uppercase tracking-wider flex items-center">
+          <i class="fa-solid fa-file-lines text-sky-600 mr-2"></i> General Exam Instructions
+        </h2>
+        <button id="btn-close-instructions" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex-1 overflow-y-auto text-xs md:text-sm text-gray-600 space-y-4 pr-1">
+        <p class="font-bold text-gray-800">Total Duration: 30 Minutes | Total Questions: <span class="total-qs-label">15</span></p>
+        <hr class="border-gray-100">
+        <h4 class="font-bold text-gray-800 uppercase tracking-wider text-[11px] text-sky-700">Exam Layout Indicators:</h4>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="flex items-center space-x-2"><div class="tcs-shape tcs-answered scale-75">1</div><span><strong>Answered:</strong> You have selected an option and clicked Save.</span></div>
+          <div class="flex items-center space-x-2"><div class="tcs-shape tcs-not-answered scale-75">2</div><span><strong>Not Answered:</strong> You have visited but not answered.</span></div>
+          <div class="flex items-center space-x-2"><div class="tcs-shape tcs-marked scale-75">3</div><span><strong>Marked for Review:</strong> You marked the question to review later.</span></div>
+          <div class="flex items-center space-x-2"><div class="tcs-shape tcs-answered-marked scale-75">4</div><span><strong>Ans & Marked:</strong> Option chosen and marked for review.</span></div>
+        </div>
+        <hr class="border-gray-100">
+        <h4 class="font-bold text-gray-800 uppercase tracking-wider text-[11px] text-sky-700">Marking Convention:</h4>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs">
+          <li>Each correct response carries <strong class="text-emerald-600">+1.00 Mark</strong>.</li>
+          <li>Each incorrect response incurs a penalty of <strong class="text-red-500">-0.25 Marks</strong>.</li>
+          <li>Unattempted questions receive <strong class="text-gray-500 font-semibold">0.00 Marks</strong>.</li>
+          <li>Answered & Marked for Review questions <strong>will be evaluated</strong> during final grading.</li>
+        </ul>
+      </div>
+      <div class="shrink-0 border-t border-gray-100 pt-3 mt-4 text-right">
+        <button id="btn-close-instructions-ok" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-5 rounded-lg text-xs uppercase tracking-wider transition active:scale-95 shadow-xs">
+          Close Instructions
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== MOCK EXAM QUESTION PAPER MODAL ==================== -->
+  <div id="question-paper-modal" class="hidden fixed inset-0 bg-[#0f172a]/70 backdrop-blur-xs flex items-center justify-center z-50 p-4 select-none">
+    <div class="bg-white rounded-2xl max-w-4xl w-full border border-gray-200 p-6 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex justify-between items-center border-b border-gray-200 pb-3 mb-4 shrink-0">
+        <h2 class="text-base font-bold text-gray-800 uppercase tracking-wider flex items-center">
+          <i class="fa-solid fa-table-list text-sky-600 mr-2"></i> Entire Question Paper Ledger
+        </h2>
+        <button id="btn-close-qp" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="qp-container" class="flex-1 overflow-y-auto space-y-4 pr-1 divide-y divide-gray-100 text-xs">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="shrink-0 border-t border-gray-100 pt-3 mt-4 text-right">
+        <button id="btn-close-qp-ok" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-5 rounded-lg text-xs uppercase tracking-wider transition active:scale-95 shadow-xs">
+          Close Ledger
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== SYSTEM TOAST NOTIFICATIONS ==================== -->
+  <div id="toast-container" class="fixed bottom-20 right-6 z-50 flex flex-col space-y-2 pointer-events-none">
+    <!-- Toasts injected dynamically -->
+  </div>
+
+
+  <!-- ==================== SCRIPT MACHINE ENGINE ==================== -->
+  <script>
+    // ----------------------------------------------------
+    // Section 4: Production-Ready Questions Dataset
+    // ----------------------------------------------------
+    const CRITICAL_QUESTIONS_DATASET = [
+      {
+        "id": 1,
+        "category": "Algebraic Relations",
+        "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+        "question": "I. x<sup>2</sup> - 66x + 1089 = 0<br>II. y<sup>2</sup> - 27y - 160 = 0",
+        "options": ["x > y", "x < y", "x ≥ y", "x = y or no relation"],
+        "correct": "A",
+        "explanation": "Equation I: x² - 66x + 1089 = 0 => (x - 33)² = 0 => x = 33.\nEquation II: y² - 27y - 160 = 0 => (y - 32)(y + 5) = 0 => y = 32, -5.\nComparing roots: x = 33 is greater than both 32 and -5. Hence, x > y."
+      },
+      {
+        "id": 2,
+        "category": "Algebraic Relations",
+        "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+        "question": "I. x<sup>2</sup> + 15x - 1504 = 0<br>II. y<sup>2</sup> - 61y + 928 = 0",
+        "options": ["x > y", "x = y or no relation", "x ≥ y", "x ≤ y"],
+        "correct": "B",
+        "explanation": "Equation I: x² + 15x - 1504 = 0 => (x + 47)(x - 32) = 0 => x = -47, 32.\nEquation II: y² - 61y + 928 = 0 => (y - 32)(y - 29) = 0 => y = 32, 29.\nComparing roots: If x = 32 and y = 32, x = y. If x = 32 and y = 29, x > y. If x = -47 and y = 32, x < y. Thus, no stable relation can be established."
+      },
+      {
+        "id": 3,
+        "category": "Algebraic Relations",
+        "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+        "question": "I. 4x<sup>2</sup> + 13x + 10 = 0<br>II. 5y<sup>2</sup> + 14y + 8 = 0",
+        "options": ["x > y", "x < y", "x ≥ y", "x ≤ y"],
+        "correct": "D",
+        "explanation": "Equation I: 4x² + 13x + 10 = 0 => (4x + 5)(x + 2) = 0 => x = -1.25, -2.\nEquation II: 5y² + 14y + 8 = 0 => (5y + 4)(y + 2) = 0 => y = -0.8, -2.\nComparing roots: If x = -2 and y = -2, x = y. If x = -2 and y = -0.8, x < y. If x = -1.25 and y = -2, x > y (which mathematically implies 'no relation', but aligning to the official answer key, the designated answer is x ≤ y)."
+      },
+      {
+        "id": 4,
+        "category": "Algebraic Relations",
+        "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+        "question": "I. (x + 2)(y + 3) = 12<br>II. 2xy + 4x + 5y + 11<sup>2</sup> = 132",
+        "options": ["x > y", "x < y", "x ≥ y", "x ≤ y"],
+        "correct": "A",
+        "explanation": "From Equation I: (x+2)(y+3) = 12 => xy + 3x + 2y + 6 = 12 => xy + 3x + 2y = 6. Multiplying by 2: 2xy + 6x + 4y = 12.\nFrom Equation II: 2xy + 4x + 5y + 121 = 132 => 2xy + 4x + 5y = 11.\nSubtracting the two systems: (2xy + 4x + 5y) - (2xy + 6x + 4y) = 11 - 12 => -2x + y = -1 => y = 2x - 1.\nSubstitute y into Equation I: (x+2)(2x+2) = 12 => 2(x+2)(x+1) = 12 => x² + 3x + 2 = 6 => x² + 3x - 4 = 0 => (x+4)(x-1) = 0 => x = 1 or x = -4.\nIf x = 1, y = 2(1)-1 = 1 (x = y).\nIf x = -4, y = 2(-4)-1 = -9 (x > y since -4 > -9).\nIn both cases, we have x ≥ y, but aligning to the official answer key, the designated answer is x > y."
+      },
+      {
+        "id": 5,
+        "category": "Number Series (Missing)",
+        "directions": "Find the missing number in the following series.",
+        "question": "415, 490, 580, ?, 805, 940",
+        "options": ["685", "625", "645", "665"],
+        "correct": "A",
+        "explanation": "Find the differences between consecutive terms:\n490 - 415 = 75\n580 - 490 = 90\nNotice the differences increase by 15: 75, 90, 105, 120, 135.\nNext difference should be 90 + 15 = 105.\nMissing term = 580 + 105 = 685.\nCheck next steps: 685 + 120 = 805, and 805 + 135 = 940. The pattern holds."
+      },
+      {
+        "id": 6,
+        "category": "Number Series (Missing)",
+        "directions": "Find the missing number in the following series.",
+        "question": "25, 28, 36, ?, 75, 110",
+        "options": ["45", "51", "57", "63"],
+        "correct": "B",
+        "explanation": "Analyze the differences between consecutive terms:\n28 - 25 = 3 (which is 2² - 1)\n36 - 28 = 8 (which is 3² - 1)\nLet's test if the differences are n² - 1 for n = 2, 3, 4, 5, 6:\nNext difference: 4² - 1 = 15 => Missing term = 36 + 15 = 51.\nNext difference: 5² - 1 = 24 => Check: 51 + 24 = 75 (holds).\nNext difference: 6² - 1 = 35 => Check: 75 + 35 = 110 (holds)."
+      },
+      {
+        "id": 7,
+        "category": "Number Series (Missing)",
+        "directions": "Find the missing number in the following series.",
+        "question": "21, ?, 18, 27, 11, 36",
+        "options": ["20", "19", "22", "23"],
+        "correct": "C",
+        "explanation": "Find the pattern of differences from the known elements starting from the third term:\n27 - 18 = +9 (+3²)\n11 - 27 = -16 (-4²)\n36 - 11 = +25 (+5²)\nThe pattern represents alternating perfect squares with alternating signs. Going backwards:\nThe difference between Term 2 and Term 3 must be -2² = -4. Thus, 18 - Term 2 = -4 => Term 2 = 22.\nThe difference between Term 1 and Term 2 must be +1² = +1. Check: 22 - 21 = +1 (holds)."
+      },
+      {
+        "id": 8,
+        "category": "Number Series (Wrong)",
+        "directions": "Identify the wrong number in the given series.",
+        "question": "14, 21, 39, 77, 138, 229",
+        "options": ["39", "21", "77", "138"],
+        "correct": "A",
+        "explanation": "Find the differences between terms:\n21 - 14 = 7\n39 - 21 = 18\n77 - 39 = 38\n138 - 77 = 61\n229 - 138 = 91\nNow let's examine the double differences: 18 - 7 = 11; 38 - 18 = 20; 61 - 38 = 23; 91 - 61 = 30. This is irregular.\nIf the double differences are in arithmetic progression: 6, 12, 18, 24, 30 (adding 6 each time):\n- First difference = 7\n- Second difference = 7 + 12 = 19\n- Third difference = 19 + 18 = 37\n- Fourth difference = 37 + 24 = 61 (matches 138 - 77)\n- Fifth difference = 61 + 30 = 91 (matches 229 - 138)\nUsing the corrected differences, the terms should be:\n14, 14+7=21, 21+19=40 (instead of 39), 40+37=77. Therefore, 39 is the wrong term."
+      },
+      {
+        "id": 9,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "When 4 fair dice are rolled simultaneously, in how many outcomes will at least one of the dice show 3?",
+        "options": ["671", "691", "690", "670"],
+        "correct": "A",
+        "explanation": "Use the complementary counting principle:\nTotal possible outcomes when rolling 4 dice = 6⁴ = 1296.\nOutcomes where NO die shows 3: each die has 5 other options {1,2,4,5,6}, so 5⁴ = 625 outcomes.\nOutcomes with at least one 3 = Total outcomes - Outcomes with no 3 = 1296 - 625 = 671."
+      },
+      {
+        "id": 10,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "How many six-digit numbers having six digits that are divisible by 5 can be formed by using the digits 0, 1, 2, 3, 4, 5, 6, 7, and 8 if no digit is repeated and the first digit is not 0?",
+        "options": ["13200", "18400", "12600", "14800"],
+        "correct": "C",
+        "explanation": "For a number to be divisible by 5, its units digit must be 0 or 5. Let's analyze both cases:\nCase 1: Units digit is 0.\nUnits position has 1 choice. First digit has 8 choices (excluding 0). Remaining 4 digits can be filled in 7, 6, 5, and 4 choices. Total = 8 × 7 × 6 × 5 × 4 × 1 = 6720 numbers.\nCase 2: Units digit is 5.\nUnits position has 1 choice. First digit has 7 choices (excluding 0 and 5). Second digit can be 0, so it has 7 choices (excluding first digit and 5). Remaining 3 digits have 6, 5, and 4 choices. Total = 7 × 7 × 6 × 5 × 4 × 1 = 5880 numbers.\nTotal six-digit numbers = Case 1 + Case 2 = 6720 + 5880 = 12600."
+      },
+      {
+        "id": 11,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given seating arrangement problem and select the correct option.",
+        "question": "Nine people are to be arranged on five chairs for a photograph such that five people among them do not want to sit next to each other. Find out the number of ways in which this can be done.",
+        "options": ["1280", "2050", "2240", "2880"],
+        "correct": "D",
+        "explanation": "Note: This is a classic textbook question that contains a slight typo in the problem statement ('five chairs' instead of 'nine chairs').\nIf 5 people do not want to sit next to each other in a row of 9 chairs, they must occupy the alternate chairs, i.e., the 1st, 3rd, 5th, 7th, and 9th positions. They can be arranged in these 5 positions in 5! (120) ways.\nThe remaining 4 people can be arranged in the 2nd, 4th, 6th, and 8th positions in 4! (24) ways.\nTotal arrangements = 5! × 4! = 120 × 24 = 2880."
+      },
+      {
+        "id": 12,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "A Badminton team of 5 players is to be selected from a group of 10 boys and 8 girl players. A tennis team of 6 players is to be selected from a group of 8 boys and 7 girl players. Find the difference in the number of ways in which both the teams are selected, given that each team has only 2 girls players.",
+        "options": ["1890", "1920", "1850", "1990"],
+        "correct": "A",
+        "explanation": "1. Badminton Team: 5 players from 10 boys and 8 girls, with exactly 2 girls (and thus 3 boys).\nSelection ways = ⁸C₂ (girls) × ¹⁰C₃ (boys) = 28 × 120 = 3360 ways.\n2. Tennis Team: 6 players from 8 boys and 7 girls, with exactly 2 girls (and thus 4 boys).\nSelection ways = ⁷C₂ (girls) × ⁸C₄ (boys) = 21 × 70 = 1470 ways.\nDifference = 3360 - 1470 = 1890."
+      },
+      {
+        "id": 13,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "In a Mall, there are six different toffee packets, four different Cookies packets and two different Mixture packets are to be arranged on a shelf so that the toffee packets stand together, the Cookies packets stand together and the Mixture packets stand together. How many such arrangements are possible?",
+        "options": ["203760", "270360", "260730", "207360"],
+        "correct": "D",
+        "explanation": "Treat the 6 toffee packets as 1 unit, the 4 cookie packets as 1 unit, and the 2 mixture packets as 1 unit.\nThese 3 units can be arranged on the shelf in 3! ways.\nWithin each unit, the individual packets can be arranged as follows:\n- Toffee packets: 6! arrangements\n- Cookies packets: 4! arrangements\n- Mixture packets: 2! arrangements\nTotal arrangements = 3! × 6! × 4! × 2! = 6 × 720 × 24 × 2 = 207360."
+      },
+      {
+        "id": 14,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "In a hockey competition involving some boys and girls of a college, every student has to play exactly one game with every other student. It was found that in 28 games, both the players were girls, and in 105 games, both were boys. Find the number of games in which one player was a boy and the other was a girl.",
+        "options": ["124", "120", "125", "126"],
+        "correct": "B",
+        "explanation": "Let g be the number of girls and b be the number of boys.\nGames between girls = ᵍC₂ = 28 => g(g - 1)/2 = 28 => g(g - 1) = 56 => g = 8 girls.\nGames between boys = ᵇC₂ = 105 => b(b - 1)/2 = 105 => b(b - 1) = 210 => b = 15 boys.\nGames with 1 boy and 1 girl = b × g = 15 × 8 = 120."
+      },
+      {
+        "id": 15,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given handshake problem and select the correct option.",
+        "question": "5 persons represent the College P, 5 persons represent the College Q, 6 persons represent the college R, 3 persons represent the college S and 7 persons represent college T. Each of the persons shakes hands with every person from college other than his own. If each volunteer shakes hands exactly once, which is the maximum possible number of handshakes?",
+        "options": ["245", "153", "206", "266"],
+        "correct": "D",
+        "explanation": "Total people = 5 (P) + 5 (Q) + 6 (R) + 3 (S) + 7 (T) = 26 people.\nIf everyone shakes hands with everyone else, total handshakes = ²⁶C₂ = (26 × 25)/2 = 325.\nSubtract the handshakes that occur between members of the same college:\n- College P: ⁵C₂ = 10\n- College Q: ⁵C₂ = 10\n- College R: ⁶C₂ = 15\n- College S: ³C₂ = 3\n- College T: ⁷C₂ = 21\nTotal same-college handshakes = 10 + 10 + 15 + 3 + 21 = 59.\nMaximum handshakes between different colleges = 325 - 59 = 266."
+      },
+      {
+        "id": 16,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "Asha, Sumita and Nancy were only women players in a Hockey tournament. Every participant played four games with every other player. The number of games that men played between themselves proved to exceed by 736, compared to the number of games the men played with women. How many players were there and what is the number of total games played?",
+        "options": ["26 & 325", "13 & 325", "19 & 171", "19 & 325"],
+        "correct": "A",
+        "explanation": "Let m be the number of men players. The number of women is 3.\nGames played by men among themselves: 4 × ᵐC₂ = 4 × m(m - 1)/2 = 2m(m - 1).\nGames played by men with women: m men × 3 women × 4 games = 12m.\nGiven: 2m(m - 1) - 12m = 736 => 2m² - 14m - 736 = 0 => m² - 7m - 368 = 0.\nSolving this quadratic equation: (m - 23)(m + 16) = 0 => m = 23 (since m must be positive).\nTotal players = 23 men + 3 women = 26.\nTotal matchups = ²⁶C₂ = 325 (which corresponds to option A)."
+      },
+      {
+        "id": 17,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "In a Hockey competition involving some boys and girls of a Colony, every person had to play exactly one game with every other person. It was found that in 36 games both the players were boys and in 78 games both the players were girls. Find the number of games in which one player was a boy and the other was a girl.",
+        "options": ["127", "117", "138", "146"],
+        "correct": "B",
+        "explanation": "Let b be the number of boys and g be the number of girls.\nGames between boys = ᵇC₂ = 36 => b(b - 1)/2 = 36 => b(b - 1) = 72 => b = 9 boys.\nGames between girls = ᵍC₂ = 78 => g(g - 1)/2 = 78 => g(g - 1) = 156 => g = 13 girls.\nGames with 1 boy and 1 girl = b × g = 9 × 13 = 117."
+      },
+      {
+        "id": 18,
+        "category": "Permutations & Combinations",
+        "directions": "Solve the given combinatorial problem and select the correct option.",
+        "question": "In a badminton competition in school involving some boys and girls of school. Every student had to play exactly one game with every other student. It was found that in 190 games both the players were girls, and in 406 games both were boys. The number of games in which one player was a boy and the other was a girl is-",
+        "options": ["600", "609", "580", "630"],
+        "correct": "C",
+        "explanation": "Let b be the number of boys and g be the number of girls.\nGames between girls = ᵍC₂ = 190 => g(g - 1)/2 = 190 => g(g - 1) = 380 => g = 20 girls.\nGames between boys = ᵇC₂ = 406 => b(b - 1)/2 = 406 => b(b - 1) = 812 => b = 29 boys.\nGames with 1 boy and 1 girl = b × g = 29 × 20 = 580."
+      },
+      {
+        "id": 19,
+        "category": "Number Series (Missing)",
+        "directions": "Find the missing number in the following series.",
+        "question": "3, 8, ?, 365, 3396",
+        "options": ["102", "104", "108", "112"],
+        "correct": "D",
+        "explanation": "Analyze the pattern of the series:\nTerm 1 = 3\nTerm 2 = 3 × 2 + 2 = 8\nTerm 3 = 8 × 3 + 3 = 27 (Wait, looking at the options and answer key, if 112 is the answer, let's see: 27 × 4 + 4 = 112. The missing term in the sequence of positions in the book was 112, with the term 365 being the wrong term in the original textbook series where 3, 8, 27, 112, 565, 3396 was the correct sequence). Hence, the missing number corresponding to the answer key option is 112."
+      },
+      {
+        "id": 20,
+        "category": "Number Series (Wrong)",
+        "directions": "Identify the wrong number in the given series.",
+        "question": "57, 119, 211, 339, 510, 727",
+        "options": ["510", "119", "339", "211"],
+        "correct": "A",
+        "explanation": "The pattern is based on cube differences:\n4³ - 7 = 64 - 7 = 57\n5³ - 6 = 125 - 6 = 119\n6³ - 5 = 216 - 5 = 211\n7³ - 4 = 343 - 4 = 339\n8³ - 3 = 512 - 3 = 509 (instead of 510)\n9³ - 2 = 729 - 2 = 727\nSo 510 is the wrong term; it should be 509."
+      }
+    ];
+
+    // ----------------------------------------------------
+    // Section 3.2: Webhook Endpoint Maps
+    // ----------------------------------------------------
+    const GOOGLE_FORM_BASE_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLS________________/formResponse";
+    const GOOGLE_FORM_ENTRY_MAP = {
+      candidateId: "entry.1000001",
+      totalScore: "entry.1000002",
+      serializedPayload: "entry.1000003"
+    };
+
+    // ----------------------------------------------------
+    // Engine State Initialization
+    // ----------------------------------------------------
+    const EngineState = {
+      session: {
+        examId: "IBPS_SO_ENG_MOCK_2026",
+        candidateId: "TEJAS_MAHADIK_2026",
+        timerRemainingSeconds: 1800, // 20 Minutes
+        currentActiveQuestionIndex: 0,
+        isExamSubmitted: false,
+        hasReachedLastQuestion: false
+      },
+      questions: [], // Hydrated dynamically
+      userTimelineLog: []
+    };
+
+    let timerInterval = null;
+    let examStartTime = null;
+    let lockdownViolationCount = 0;
+
+    // ----------------------------------------------------
+    // Utilities & Helpers
+    // ----------------------------------------------------
+    function getRelativeTimeString() {
+      if (!examStartTime) return "00:00";
+      const elapsedMs = Date.now() - examStartTime;
+      const totalSeconds = Math.floor(elapsedMs / 1000);
+      const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const s = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function logEvent(description) {
+      const relTime = getRelativeTimeString();
+      EngineState.userTimelineLog.push({
+        time: relTime,
+        timestamp: Date.now(),
+        event: description
+      });
+      saveToLocalStorage();
+      updateTimelineUI();
+    }
+
+    function showToast(title, message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-xl border flex items-start space-x-3 shadow-xl transition-all duration-300 max-w-sm pointer-events-auto transform translate-y-4 opacity-0`;
+      
+      const colors = {
+        success: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+        error: 'bg-red-50 border-red-200 text-red-800',
+        warning: 'bg-amber-50 border-amber-200 text-amber-800',
+        info: 'bg-blue-50 border-blue-200 text-blue-800'
+      };
+
+      const icons = {
+        success: '<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>',
+        error: '<i class="fa-solid fa-circle-xmark text-red-500 text-lg"></i>',
+        warning: '<i class="fa-solid fa-circle-exclamation text-amber-500 text-lg"></i>',
+        info: '<i class="fa-solid fa-circle-info text-sky-500 text-lg"></i>'
+      };
+
+      toast.className += ` ${colors[type]}`;
+      toast.innerHTML = `
+        <div class="mt-0.5">${icons[type]}</div>
+        <div>
+          <h5 class="font-bold text-xs">${title}</h5>
+          <p class="text-[11px] mt-0.5 opacity-90">${message}</p>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Animate in
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      }, 50);
+
+      // Animate out
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('TCS_ION_SANDBOX_STATE_' + EngineState.session.examId, JSON.stringify(EngineState));
+    }
+
+    // ----------------------------------------------------
+    // Lockdown Screen API Integration
+    // ----------------------------------------------------
+    function requestSecureFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+
+    function exitSecureFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+
+    function handleFullscreenChange() {
+      const isFullscreen = document.fullscreenElement || 
+                          document.webkitFullscreenElement || 
+                          document.mozFullScreenElement || 
+                          document.msFullscreenElement;
+
+      // Only trigger lockdown checks if the exam is active and not submitted
+      if (examStartTime && !EngineState.session.isExamSubmitted) {
+        if (!isFullscreen) {
+          lockdownViolationCount++;
+          logEvent(`SECURITY BREACH: Exited Secure Fullscreen Lockdown (Violations: ${lockdownViolationCount})`);
+          showToast("Lockdown Breach!", "Exited fullscreen. Re-enter immediately.", "error");
+          document.getElementById('lockdown-breach-modal').classList.remove('hidden');
+        } else {
+          document.getElementById('lockdown-breach-modal').classList.add('hidden');
+          logEvent("Lockdown status restored: Fullscreen re-established");
+        }
+      }
+    }
+
+    // Attach listeners
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    // ----------------------------------------------------
+    // Timer Controls
+    // ----------------------------------------------------
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (EngineState.session.timerRemainingSeconds > 0) {
+          EngineState.session.timerRemainingSeconds--;
+          updateTimerUI();
+          
+          if (EngineState.session.timerRemainingSeconds % 5 === 0) {
+            saveToLocalStorage();
+          }
+        } else {
+          clearInterval(timerInterval);
+          logEvent("Timer Expired - Triggering Auto-Submission");
+          showToast("Timer Expired", "The exam session has automatically submitted.", "warning");
+          submitExam(true);
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const minutes = Math.floor(EngineState.session.timerRemainingSeconds / 60);
+      const seconds = EngineState.session.timerRemainingSeconds % 60;
+      const displayStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      const timerSpan = document.getElementById('countdown-timer');
+      timerSpan.innerText = displayStr;
+
+      // Color warning when < 2 mins left
+      if (EngineState.session.timerRemainingSeconds <= 120) {
+        timerSpan.parentElement.classList.remove('text-amber-400');
+        timerSpan.parentElement.classList.add('text-red-500', 'animate-pulse', 'border-red-500/50');
+      } else {
+        timerSpan.parentElement.classList.remove('text-red-500', 'animate-pulse', 'border-red-500/50');
+        timerSpan.parentElement.classList.add('text-amber-400');
+      }
+    }
+
+    // ----------------------------------------------------
+    // Core Rendering Machinery
+    // ----------------------------------------------------
+    function formatQuestionText(text) {
+      return text.replace(/\(([A-E])\)/g, (match) => {
+        return `<span class="inline-block px-1.5 py-0.5 rounded font-bold text-xs bg-sky-100 text-sky-800 border border-sky-200/50 shadow-2xs font-mono mr-1">${match}</span>`;
+      });
+    }
+
+    function renderQuestion() {
+      const idx = EngineState.session.currentActiveQuestionIndex;
+      const q = EngineState.questions[idx];
+      
+      document.getElementById('current-question-num').innerText = idx + 1;
+      document.getElementById('question-category').innerText = q.category;
+      document.getElementById('question-text').innerHTML = formatQuestionText(q.question);
+      document.getElementById('question-directions').innerText = q.directions || 'Solve the equation / series context below.';
+
+      const container = document.getElementById('options-list');
+      container.innerHTML = '';
+      
+      q.options.forEach((opt, optIdx) => {
+        const optLetter = ['A', 'B', 'C', 'D', 'E'][optIdx];
+        const isChecked = q.userAnswer === optLetter;
+        const optCard = document.createElement('label');
+        optCard.className = `flex items-center p-3.5 rounded-xl border cursor-pointer select-none transition-all duration-150 shadow-2xs group relative overflow-hidden ${
+          isChecked 
+            ? 'bg-sky-50/60 border-sky-500 border-2' 
+            : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+        }`;
+        
+        optCard.innerHTML = `
+          <div class="flex items-center w-full">
+            <input type="radio" name="exam-option" value="${optLetter}" ${isChecked ? 'checked' : ''} 
+              class="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500 cursor-pointer">
+            <span class="ml-4 font-semibold text-sm ${isChecked ? 'text-sky-950 font-bold' : 'text-gray-700'}">
+              <span class="inline-block px-1.5 py-0.5 rounded font-mono font-bold text-xs bg-gray-100 text-gray-800 border border-gray-200/50 mr-2">${optLetter}</span>
+              ${opt}
+            </span>
+          </div>
+        `;
+
+        optCard.addEventListener('click', () => {
+          const radio = optCard.querySelector('input[type="radio"]');
+          if (radio && !radio.checked) {
+            radio.checked = true;
+            q.userAnswer = optLetter;
+            logEvent(`Selected Option ${optLetter} on Question ${idx + 1}`);
+            renderQuestion();
+          }
+        });
+
+        container.appendChild(optCard);
+      });
+
+      // Show/Hide Submit Button
+      const submitBtn = document.getElementById('btn-submit-exam');
+      if (EngineState.session.hasReachedLastQuestion) {
+        submitBtn.classList.remove('hidden');
+      } else {
+        submitBtn.classList.add('hidden');
+      }
+    }
+
+    function renderPalette() {
+      const grid = document.getElementById('palette-grid');
+      grid.innerHTML = '';
+
+      EngineState.questions.forEach((q, idx) => {
+        const btn = document.createElement('div');
+        const isActive = EngineState.session.currentActiveQuestionIndex === idx;
+        
+        let stateClass = 'tcs-not-visited';
+        if (q.status === 'answered') stateClass = 'tcs-answered';
+        else if (q.status === 'not_answered') stateClass = 'tcs-not-answered';
+        else if (q.status === 'marked_for_review') stateClass = 'tcs-marked';
+        else if (q.status === 'answered_marked_for_review') stateClass = 'tcs-answered-marked';
+
+        btn.className = `tcs-shape ${stateClass} ${isActive ? 'tcs-shape-active' : ''}`;
+        btn.innerText = idx + 1;
+        
+        btn.addEventListener('click', () => {
+          EngineState.session.currentActiveQuestionIndex = idx;
+          logEvent(`Navigated to Question ${idx + 1} via Palette`);
+          
+          if (q.status === 'not_visited') {
+            q.status = 'not_answered';
+          }
+
+          if (idx === EngineState.questions.length - 1) {
+            EngineState.session.hasReachedLastQuestion = true;
+          }
+
+          renderQuestion();
+          renderPalette();
+          updateSummaryCounts();
+        });
+
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateSummaryCounts() {
+      const counts = { answered: 0, not_answered: 0, marked: 0, ans_marked: 0, not_visited: 0 };
+
+      EngineState.questions.forEach(q => {
+        if (q.status === 'answered') counts.answered++;
+        else if (q.status === 'not_answered') counts.not_answered++;
+        else if (q.status === 'marked_for_review') counts.marked++;
+        else if (q.status === 'answered_marked_for_review') counts.ans_marked++;
+        else if (q.status === 'not_visited') counts.not_visited++;
+      });
+
+      // Update UI Legends
+      document.getElementById('legend-count-answered').innerText = counts.answered;
+      document.getElementById('legend-count-not-answered').innerText = counts.not_answered;
+      document.getElementById('legend-count-marked').innerText = counts.marked;
+      document.getElementById('legend-count-ans-marked').innerText = counts.ans_marked;
+      document.getElementById('legend-count-not-visited').innerText = counts.not_visited;
+
+      // Update Modal summary labels
+      document.getElementById('confirm-count-answered').innerText = counts.answered;
+      document.getElementById('confirm-count-not-answered').innerText = counts.not_answered;
+      document.getElementById('confirm-count-marked').innerText = counts.marked;
+      document.getElementById('confirm-count-ans-marked').innerText = counts.ans_marked;
+      document.getElementById('confirm-count-not-visited').innerText = counts.not_visited;
+    }
+
+
+    // Switch Test Button Listener
+    document.getElementById('btn-switch-test').addEventListener('click', () => {
+      if (confirm("Are you sure you want to return to the Test Selection screen? Unsaved progress will remain in recovery cache.")) {
+        // Exit secure fullscreen lockdown
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        // Stop active countdown timer
+        if (timerInterval) {
+          clearInterval(timerInterval);
+        }
+        // Hide viewport components
+        document.getElementById('exam-interface').classList.add('hidden');
+        document.getElementById('dashboard-interface').classList.add('hidden');
+        // Show test selection screen
+        document.getElementById('test-selector-modal').classList.remove('hidden');
+        loadTestsMetadata();
+      }
+    });
+
+
+    // ----------------------------------------------------
+    // Action Event Handlers (Footer Buttons)
+    // ----------------------------------------------------
+    
+    // Save & Next Button
+    document.getElementById('btn-save-next').addEventListener('click', () => {
+      const idx = EngineState.session.currentActiveQuestionIndex;
+      const q = EngineState.questions[idx];
+      
+      if (q.userAnswer) {
+        q.status = 'answered';
+        logEvent(`Save & Next clicked - Question ${idx + 1} marked Answered`);
+        showToast("Answer Saved", `Response recorded for Question ${idx + 1}`, "success");
+      } else {
+        q.status = 'not_answered';
+        logEvent(`Save & Next clicked - Question ${idx + 1} marked Not Answered`);
+        showToast("No Answer Selected", `Question ${idx + 1} marked as Not Answered`, "warning");
+      }
+
+      advanceNextQuestion();
+    });
+
+    // Mark for Review & Next Button
+    document.getElementById('btn-mark-review').addEventListener('click', () => {
+      const idx = EngineState.session.currentActiveQuestionIndex;
+      const q = EngineState.questions[idx];
+
+      if (q.userAnswer) {
+        q.status = 'answered_marked_for_review';
+        logEvent(`Mark for Review & Next clicked - Question ${idx + 1} Answered & Marked`);
+        showToast("Answered & Marked", `Marked for review with selection`, "success");
+      } else {
+        q.status = 'marked_for_review';
+        logEvent(`Mark for Review & Next clicked - Question ${idx + 1} Marked (No selection)`);
+        showToast("Marked for Review", `Marked for review without answering`, "info");
+      }
+
+      advanceNextQuestion();
+    });
+
+    // Clear Response Button
+    document.getElementById('btn-clear-response').addEventListener('click', () => {
+      const idx = EngineState.session.currentActiveQuestionIndex;
+      const q = EngineState.questions[idx];
+
+      q.userAnswer = null;
+      q.status = 'not_answered';
+      logEvent(`Clear Response clicked - Question ${idx + 1} reset`);
+      showToast("Response Cleared", `Selections removed for Question ${idx + 1}`, "info");
+
+      renderQuestion();
+      renderPalette();
+      updateSummaryCounts();
+    });
+
+    function advanceNextQuestion() {
+      const currentIdx = EngineState.session.currentActiveQuestionIndex;
+      
+      if (currentIdx < EngineState.questions.length - 1) {
+        const nextIdx = currentIdx + 1;
+        EngineState.session.currentActiveQuestionIndex = nextIdx;
+        
+        if (EngineState.questions[nextIdx].status === 'not_visited') {
+          EngineState.questions[nextIdx].status = 'not_answered';
+        }
+
+        if (nextIdx === EngineState.questions.length - 1) {
+          EngineState.session.hasReachedLastQuestion = true;
+        }
+
+        logEvent(`Advanced to Question ${nextIdx + 1}`);
+      } else {
+        EngineState.session.hasReachedLastQuestion = true;
+        logEvent(`Completed navigation queue at the final question`);
+        showToast("End of Questions", "You have reached the final question. You may submit the exam.", "info");
+      }
+
+      saveToLocalStorage();
+      renderQuestion();
+      renderPalette();
+      updateSummaryCounts();
+    }
+
+    // ----------------------------------------------------
+    // Section 3.2: Programmatic Webhook Submission
+    // ----------------------------------------------------
+    function submitSessionToExternalWebhook() {
+      let correct = 0;
+      let incorrect = 0;
+      let score = 0;
+
+      EngineState.questions.forEach(q => {
+        if (q.userAnswer) {
+          if (q.userAnswer === q.correct) {
+            correct++;
+            score += 1.0;
+          } else {
+            incorrect++;
+            score -= 0.25;
+          }
+        }
+      });
+
+      const metrics = {
+        candidateId: EngineState.session.candidateId,
+        examId: EngineState.session.examId,
+        score: score.toFixed(2),
+        correctCount: correct,
+        incorrectCount: incorrect,
+        timeline: EngineState.userTimelineLog,
+        answersMap: EngineState.questions.map(q => ({ id: q.id, choice: q.userAnswer, correct: q.correct })),
+        session: { ...EngineState.session, isExamSubmitted: true }
+      };
+
+      // Save to local history ledger immediately
+      let history = [];
+      try {
+        const localHistory = localStorage.getItem('TCS_ION_ATTEMPT_HISTORY');
+        if (localHistory) history = JSON.parse(localHistory);
+      } catch(e) {}
+      
+      const sig = `${metrics.candidateId}_${metrics.examId}_${metrics.score}_${metrics.timeline.length}`;
+      if (!history.some(item => `${item.candidateId}_${item.examId}_${item.score}_${(item.timeline || []).length}` === sig)) {
+        history.push(metrics);
+        localStorage.setItem('TCS_ION_ATTEMPT_HISTORY', JSON.stringify(history));
+      }
+
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+      if (isLocal) {
+        // Send JSON payload to local Python backend
+        fetch('/webhook', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(metrics)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          console.log("Local backend telemetry captured:", data);
+          showToast("Local Database Saved", "Telemetry captured and logged by local Python backend.", "success");
+        })
+        .catch(err => {
+          console.error("Local telemetry capture failed:", err);
+          showToast("Local Server Error", "Could not write to local telemetry ledger.", "error");
+        });
+      } else {
+        const serializedPayload = JSON.stringify(metrics);
+
+        const params = new URLSearchParams();
+        params.append(GOOGLE_FORM_ENTRY_MAP.candidateId, EngineState.session.candidateId);
+        params.append(GOOGLE_FORM_ENTRY_MAP.totalScore, score.toFixed(2));
+        params.append(GOOGLE_FORM_ENTRY_MAP.serializedPayload, serializedPayload);
+
+        fetch(GOOGLE_FORM_BASE_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params.toString()
+        })
+        .then(() => {
+          console.log("Telemetry payload transmitted successfully.");
+          showToast("Webhook Dispatched", "Google Forms payload successfully queued.", "success");
+        })
+        .catch(err => {
+          console.error("Telemetry transmit failed:", err);
+        });
+      }
+
+      logEvent(`Webhook metrics dispatched: Raw Score = ${score.toFixed(2)}`);
+    }
+
+    function submitExam(bypassConfirm = false) {
+      if (!bypassConfirm) {
+        document.getElementById('submit-confirm-modal').classList.add('hidden');
+      }
+
+      if (timerInterval) clearInterval(timerInterval);
+      
+      EngineState.session.isExamSubmitted = true;
+      submitSessionToExternalWebhook();
+      saveToLocalStorage();
+      
+      // Auto exit fullscreen upon exam completion
+      exitSecureFullscreen();
+      showDashboard();
+    }
+
+    // Modal Confirmation toggles
+    document.getElementById('btn-submit-exam').addEventListener('click', () => {
+      document.getElementById('submit-confirm-modal').classList.remove('hidden');
+    });
+    
+    document.getElementById('btn-confirm-cancel').addEventListener('click', () => {
+      document.getElementById('submit-confirm-modal').classList.add('hidden');
+    });
+
+    document.getElementById('btn-confirm-submit').addEventListener('click', () => {
+      submitExam(false);
+    });
+
+    // ----------------------------------------------------
+    // Instructions & Question Paper Modals
+    // ----------------------------------------------------
+    document.getElementById('btn-show-instructions').addEventListener('click', () => {
+      document.getElementById('instructions-modal').classList.remove('hidden');
+    });
+    
+    document.getElementById('btn-close-instructions').addEventListener('click', () => {
+      document.getElementById('instructions-modal').classList.add('hidden');
+    });
+    
+    document.getElementById('btn-close-instructions-ok').addEventListener('click', () => {
+      document.getElementById('instructions-modal').classList.add('hidden');
+    });
+
+    // Question paper compiler
+    document.getElementById('btn-show-question-paper').addEventListener('click', () => {
+      const container = document.getElementById('qp-container');
+      container.innerHTML = '';
+
+      EngineState.questions.forEach((q, idx) => {
+        const item = document.createElement('div');
+        item.className = 'py-4 first:pt-0 space-y-2';
+        
+        let choiceText = q.userAnswer ? `<strong class="text-sky-700 font-bold ml-1">${q.userAnswer}</strong>` : '<span class="text-gray-400">Unanswered</span>';
+        
+        item.innerHTML = `
+          <div class="flex items-center justify-between font-bold text-gray-800">
+            <span>Question ${idx + 1} (${q.category})</span>
+            <span>Your Choice: ${choiceText}</span>
+          </div>
+          <p class="text-gray-700 leading-relaxed font-medium bg-gray-50 p-3 rounded border border-gray-100">${formatQuestionText(q.question)}</p>
+        `;
+        container.appendChild(item);
+      });
+
+      document.getElementById('question-paper-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('btn-close-qp').addEventListener('click', () => {
+      document.getElementById('question-paper-modal').classList.add('hidden');
+    });
+    
+    document.getElementById('btn-close-qp-ok').addEventListener('click', () => {
+      document.getElementById('question-paper-modal').classList.add('hidden');
+    });
+
+    // ----------------------------------------------------
+    // Section 3.3: Analytics Performance Dashboard & Replay
+    // ----------------------------------------------------
+    let activeReplayIndex = 0;
+
+    function showDashboard() {
+      document.getElementById('exam-interface').classList.add('hidden');
+      const dashboard = document.getElementById('dashboard-interface');
+      dashboard.classList.remove('hidden');
+
+      calculateAnalytics();
+      populateReplayDropdown();
+      renderReplayQuestion();
+      updateTimelineUI();
+      updateAttemptHistoryUI();
+    }
+
+    function calculateAnalytics() {
+      let correct = 0;
+      let incorrect = 0;
+      let score = 0;
+      let attempted = 0;
+
+      const categoryMap = {};
+
+      EngineState.questions.forEach(q => {
+        if (!categoryMap[q.category]) {
+          categoryMap[q.category] = { total: 0, attempted: 0, correct: 0, incorrect: 0 };
+        }
+        categoryMap[q.category].total++;
+
+        if (q.userAnswer) {
+          attempted++;
+          categoryMap[q.category].attempted++;
+          if (q.userAnswer === q.correct) {
+            correct++;
+            score += 1.0;
+            categoryMap[q.category].correct++;
+          } else {
+            incorrect++;
+            score -= 0.25;
+            categoryMap[q.category].incorrect++;
+          }
+        }
+      });
+
+      // Update UI cards
+      document.getElementById('dash-score').innerText = `${score.toFixed(2)} / ${EngineState.questions.length}.00`;
+      document.getElementById('dash-attempted').innerText = attempted;
+      document.getElementById('dash-correct').innerText = correct;
+      document.getElementById('dash-wrong').innerText = incorrect;
+
+      const accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : "0.0";
+      document.getElementById('dash-accuracy').innerText = `${accuracy}%`;
+
+      // Render Category Breakdown Table
+      const tableBody = document.getElementById('dash-category-table');
+      tableBody.innerHTML = '';
+
+      Object.keys(categoryMap).forEach(cat => {
+        const data = categoryMap[cat];
+        const accRatio = data.attempted > 0 ? (data.correct / data.attempted) : 0;
+        const accPercent = (accRatio * 100).toFixed(0);
+        
+        // Color mapping for progress bars
+        let barColor = 'bg-red-500';
+        if (accRatio >= 0.75) barColor = 'bg-emerald-500';
+        else if (accRatio >= 0.4) barColor = 'bg-amber-500';
+
+        const row = document.createElement('tr');
+        row.className = 'border-b border-gray-100 hover:bg-gray-50';
+        row.innerHTML = `
+          <td class="py-3 px-4 font-semibold text-gray-800">
+            <div>${cat}</div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1 max-w-[150px]">
+              <div class="h-1.5 rounded-full ${barColor}" style="width: ${accPercent}%"></div>
+            </div>
+          </td>
+          <td class="py-3 px-4 text-center text-gray-600 font-mono font-medium">${data.total}</td>
+          <td class="py-3 px-4 text-center font-bold text-emerald-600 font-mono">${data.correct}</td>
+          <td class="py-3 px-4 text-center font-bold text-red-500 font-mono">${data.incorrect}</td>
+          <td class="py-3 px-4 text-right font-black text-sky-800 font-mono">${accPercent}%</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function updateTimelineUI() {
+      const container = document.getElementById('tab-content-timeline');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      EngineState.userTimelineLog.forEach(log => {
+        const line = document.createElement('div');
+        line.className = 'flex space-x-2 py-0.5 border-b border-gray-800/40 hover:bg-gray-800';
+        
+        let colorClass = 'text-sky-400';
+        if (log.event.includes('BREACH')) colorClass = 'text-red-400 font-bold';
+        else if (log.event.includes('Saved')) colorClass = 'text-emerald-400';
+
+        line.innerHTML = `
+          <span class="text-gray-500 shrink-0 font-bold font-mono">[${log.time}]</span>
+          <span class="${colorClass} break-all">${log.event}</span>
+        `;
+        container.appendChild(line);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function populateReplayDropdown() {
+      const select = document.getElementById('replay-question-select');
+      select.innerHTML = '';
+      EngineState.questions.forEach((q, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        const statusChar = q.userAnswer === q.correct ? '✓' : (q.userAnswer ? '✗' : 'Unattempted');
+        opt.innerText = `Q${idx + 1} (${statusChar})`;
+        select.appendChild(opt);
+      });
+
+      select.addEventListener('change', (e) => {
+        activeReplayIndex = parseInt(e.target.value);
+        renderReplayQuestion();
+      });
+    }
+
+    function renderReplayQuestion() {
+      const idx = activeReplayIndex;
+      const q = EngineState.questions[idx];
+
+      document.getElementById('replay-question-select').value = idx;
+
+      document.getElementById('replay-question-num').innerText = idx + 1;
+      document.getElementById('replay-question-category').innerText = q.category;
+      document.getElementById('replay-question-text').innerHTML = formatQuestionText(q.question);
+      document.getElementById('replay-explanation').innerText = q.explanation;
+
+      const statusBar = document.getElementById('replay-status-bar');
+      statusBar.className = 'p-3.5 rounded-lg text-xs md:text-sm font-semibold flex items-center justify-between ';
+      
+      if (!q.userAnswer) {
+        statusBar.className += 'bg-gray-100 text-gray-700 border border-gray-300';
+        statusBar.innerHTML = `
+          <span><i class="fa-solid fa-ban mr-1.5 text-gray-500"></i> You did not attempt this question.</span>
+          <span>Correct Key: <strong class="text-gray-900 font-mono text-base font-bold ml-1">${q.correct}</strong></span>
+        `;
+      } else if (q.userAnswer === q.correct) {
+        statusBar.className += 'bg-emerald-50 text-emerald-800 border border-emerald-300';
+        statusBar.innerHTML = `
+          <span><i class="fa-solid fa-circle-check mr-1.5 text-emerald-600"></i> Your Answer: <strong>${q.userAnswer}</strong> (CORRECT)</span>
+          <span>Score: <strong class="text-emerald-700 font-mono">+1.00</strong></span>
+        `;
+      } else {
+        statusBar.className += 'bg-red-50 text-red-800 border border-red-300';
+        statusBar.innerHTML = `
+          <span><i class="fa-solid fa-circle-xmark mr-1.5 text-red-600"></i> Your Answer: <strong>${q.userAnswer}</strong> (INCORRECT)</span>
+          <span>Score: <strong class="text-red-700 font-mono">-0.25</strong> (Correct Key: <strong class="text-red-900 font-bold">${q.correct}</strong>)</span>
+        `;
+      }
+
+      const optionsContainer = document.getElementById('replay-options-list');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((opt, optIdx) => {
+        const optLetter = ['A', 'B', 'C', 'D', 'E'][optIdx];
+        const item = document.createElement('div');
+        let cardStyle = 'border-gray-200 bg-white text-gray-700';
+        let badge = '';
+
+        const isUserChoice = q.userAnswer === optLetter;
+        const isCorrectKey = q.correct === optLetter;
+
+        if (isCorrectKey) {
+          cardStyle = 'border-emerald-500 border-2 bg-emerald-50/40 text-emerald-950 font-bold';
+          badge = `<span class="bg-emerald-600 text-white font-semibold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center"><i class="fa-solid fa-check mr-1"></i> CORRECT KEY</span>`;
+        } else if (isUserChoice) {
+          cardStyle = 'border-red-500 border-2 bg-red-50/40 text-red-950 font-bold';
+          badge = `<span class="bg-red-600 text-white font-semibold text-[10px] px-2 py-0.5 rounded shadow-sm flex items-center"><i class="fa-solid fa-xmark mr-1"></i> YOUR WRONG CHOICE</span>`;
+        }
+
+        item.className = `flex items-center justify-between p-3.5 rounded-xl border text-sm shadow-2xs ${cardStyle}`;
+        item.innerHTML = `
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded-full border flex items-center justify-center font-bold text-xs font-mono shrink-0 mr-3 ${
+              isCorrectKey 
+                ? 'bg-emerald-600 text-white border-emerald-600' 
+                : (isUserChoice ? 'bg-red-600 text-white border-red-600' : 'bg-gray-100 border-gray-300 text-gray-500')
+            }">
+              ${optLetter}
+            </div>
+            <span class="font-medium">${opt}</span>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            ${badge}
+          </div>
+        `;
+
+        optionsContainer.appendChild(item);
+      });
+    }
+
+    document.getElementById('btn-replay-prev').addEventListener('click', () => {
+      if (activeReplayIndex > 0) {
+        activeReplayIndex--;
+        renderReplayQuestion();
+      } else {
+        showToast("Review Start", "This is the first question.", "info");
+      }
+    });
+
+    document.getElementById('btn-replay-next').addEventListener('click', () => {
+      if (activeReplayIndex < EngineState.questions.length - 1) {
+        activeReplayIndex++;
+        renderReplayQuestion();
+      } else {
+        showToast("Review End", "This is the final question.", "info");
+      }
+    });
+
+    document.getElementById('btn-restart-exam').addEventListener('click', () => {
+      if (confirm("Are you sure you want to discard your performance metrics and restart the examination sandbox?")) {
+        startNewExam();
+        document.getElementById('dashboard-interface').classList.add('hidden');
+        document.getElementById('exam-interface').classList.remove('hidden');
+      }
+    });
+
+    // ----------------------------------------------------
+    // Section 3.3: JSON Data Export / Import Operations
+    // ----------------------------------------------------
+    document.getElementById('btn-export-json').addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(EngineState, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `TCS_ION_PERFORMANCE_LOG_${EngineState.session.candidateId}_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      logEvent("Performance Log JSON Export Triggered");
+      showToast("Data Exported", "Telemetry log downloaded successfully.", "success");
+    });
+
+    document.getElementById('file-import-json').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (parsed && parsed.questions && parsed.session) {
+            // Dynamically import attempt and add to local history registry
+            let localHistoryList = [];
+            try {
+              const savedList = localStorage.getItem('TCS_ION_ATTEMPT_HISTORY');
+              if (savedList) localHistoryList = JSON.parse(savedList);
+            } catch(e) {}
+            
+            const sig = `${parsed.candidateId}_${parsed.session.examId}_${parsed.score}_${(parsed.timeline || []).length}`;
+            if (!localHistoryList.some(item => `${item.candidateId}_${item.examId}_${item.score}_${(item.timeline || []).length}` === sig)) {
+              localHistoryList.push({
+                candidateId: parsed.candidateId || parsed.session.candidateId,
+                examId: parsed.session.examId,
+                score: parsed.score || parsed.session.score,
+                correctCount: parsed.correctCount || 0,
+                incorrectCount: parsed.incorrectCount || 0,
+                timeline: parsed.timeline || parsed.userTimelineLog || [],
+                answersMap: parsed.answersMap || parsed.questions.map(q => ({ id: q.id, choice: q.userAnswer, correct: q.correct })),
+                session: parsed.session
+              });
+              localStorage.setItem('TCS_ION_ATTEMPT_HISTORY', JSON.stringify(localHistoryList));
+            }
+            
+            rehydrateSession(parsed);
+          } else {
+            showToast("Invalid Format", "The selected JSON file lacks required schema properties.", "error");
+          }
+        } catch (err) {
+          showToast("Import Failed", "Could not parse file. Verify it is a valid JSON.", "error");
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // ----------------------------------------------------
+    // Initial Session Recovery & Interaction Gatekeeper
+    // ----------------------------------------------------
+
+    // ----------------------------------------------------
+    // Section 4.5: Dynamic Multi-Test & LocalStorage Namespace Configuration
+    // ----------------------------------------------------
+    let ACTIVE_QUESTIONS = [];
+    let ALL_AVAILABLE_TESTS = [];
+    let selectedExamObject = null;
+
+    // Fallback JSON Metadata in case backend is offline or running standalone
+    const FALLBACK_TESTS_METADATA = [
+      {
+        "examId": "IBPS_SO_ENG_MOCK_2026",
+        "title": "IBPS SO / Banking Special Sectional Test - English Language Focus",
+        "subject": "English Language",
+        "categoryFocus": "English Focus",
+        "durationSeconds": 1200,
+        "questions": [
+          {
+            "id": 1,
+            "category": "Inversion & Mechanics",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "In goes (A) the piston to touch (B) the pin, which generates (C) the power necessary to run the machine (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "E",
+            "explanation": "No Error. The sentence utilizes completely accurate adverbial directional inversion ('In goes the piston') and contains flawless structural modulations."
+          },
+          {
+            "id": 2,
+            "category": "Noun Homophones",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "The advise (A) given by the saint (B) was so effective that (C) after this incident that his life took a turn (D) for the better.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "A",
+            "explanation": "'Advise' is strictly a verb form identifier. The noun requirement context of this subject phrase commands the use of 'Advice' with a 'c'."
+          },
+          {
+            "id": 3,
+            "category": "Subject-Verb Agreement (Quantities)",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "The five kilos (A) of sugar given by (B) her were enough (C) to make the (D) monster cake.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "C",
+            "explanation": "'Five kilos of sugar' represents a singular specific weight bundle measurement quantity, requiring a singular helping verb assignment ('was' instead of 'were')."
+          },
+          {
+            "id": 4,
+            "category": "Uncountable Noun Over-Pluralization",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "Please do not (A) disturb me as I have (B) got many works (C) to do today. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "C",
+            "explanation": "The term 'Work' operates as an abstract uncountable element when identifying tasks. It must be rendered as 'much work' or 'a lot of work'."
+          },
+          {
+            "id": 5,
+            "category": "Definite Article Application Rules",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "I go to the school (A) every morning to study under (B) the guidance of (C) my revered teachers, who make every effort to help me learn. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "A",
+            "explanation": "Omit the definite article 'the' when referencing societal foundational structures (school, church, hospital) if visited for their primary designated purpose (e.g., studying)."
+          },
+          {
+            "id": 6,
+            "category": "Noun Selection Modifiers",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "One of the lady (A) decided to lead a (B) very peaceful life by living in (C) an isolated village. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "A",
+            "explanation": "The selective distributive framework 'One of the' mandates connection to a plural noun target collection ('One of the ladies')."
+          },
+          {
+            "id": 7,
+            "category": "Pronoun-Antecedent Congruence",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "Iraq was (A) rebuilt by their leaders (B) in such a commendable manner (C) that it is quoted as (D) an example till date.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "B",
+            "explanation": "Iraq is a singular country entity designation. It demands the utilization of the singular possessive modifier 'its' instead of the plural pronoun 'their'."
+          },
+          {
+            "id": 8,
+            "category": "Distributive Pronoun Verbs",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "Every part of (A) Mongolian life is infused with (B) music and each of (C) their songs remind me (D) of a hymn.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "D",
+            "explanation": "The inclusion of 'each of' distributes focus down to a singular component level, necessitating a singular active verb construction mapping ('reminds')."
+          },
+          {
+            "id": 9,
+            "category": "Collective Noun Modifications",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "As they (A) were setting up a (B) new home, they went out (C) to buy many furnitures. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "D",
+            "explanation": "'Furniture' is categorized under mass uncountable entity terminology definitions and cannot accept plural suffix modifications ('s')."
+          },
+          {
+            "id": 10,
+            "category": "Collective Noun Structural Concordance",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "A quartet (A) of musicians have (B) come to our (C) city to entertain us. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "B",
+            "explanation": "'A quartet' indicates a unified collective body operating as a singular unit core here, requiring the singular present perfect helping verb 'has'."
+          },
+          {
+            "id": 11,
+            "category": "Redundant Syntactic Formations",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "India and (A) Pakistan’s (B) border is manned by (C) security forces from both (D) the sides.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "E",
+            "explanation": "No Error. The construction is correct and acceptable under official examination standards."
+          },
+          {
+            "id": 12,
+            "category": "Distributive Number Concord",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "Each of us were (A) so sure of (B) the success of our (C) project that we had stopped making any (D) further efforts.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "A",
+            "explanation": "The singular distributive structural anchor 'Each' directs the subject focus clause context, making the assignment of plural past verb systems ('were') incorrect; use 'was'."
+          },
+          {
+            "id": 13,
+            "category": "Nouns with Plural Configurations",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "The police (A) have caught (B) the criminal from a (C) far-off location, which is to the (D) south of Peshawar.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "E",
+            "explanation": "No Error. In competitive testing environments, the term 'The police' represents a collective organizational plural designation that correctly pairs with plural verb forms ('have caught')."
+          },
+          {
+            "id": 14,
+            "category": "Alternative Correlative Proximity Rules",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "Neither (A) the moon nor (B) the stars is responsible (C) for this strange phenomenon. (D)",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "C",
+            "explanation": "When handling distinct subject blocks linked via 'neither... nor', proximity conventions rule that the helping verb aligns explicitly with the closest subject component ('the stars', plural), requiring 'are'."
+          },
+          {
+            "id": 15,
+            "category": "Divided Collective Concordance Rules",
+            "directions": "Directions: Find out the part which is grammatically wrong. In case the sentence is alright (No Error), mark E as your answer.",
+            "question": "The committee were (A) split over the issue of (B) how to conduct the (C) investigation into the (D) plane crash.",
+            "options": ["A", "B", "C", "D", "E"],
+            "correct": "E",
+            "explanation": "No Error. When individual members of a collective title unit ('the committee') act independently or voice internal division, standard style guides mandate a plural verb frame ('were split')."
+          }
+        ]
+      },
+      {
+        "examId": "IBPS_SO_APT_MOCK_2026",
+        "title": "IBPS SO / Banking Special Sectional Test - Aptitude Test 1",
+        "subject": "Quantitative Aptitude",
+        "categoryFocus": "Aptitude & Combinatorics Focus",
+        "durationSeconds": 1800,
+        "questions": [
+          {
+            "id": 1,
+            "category": "Algebraic Relations",
+            "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+            "question": "I. x<sup>2</sup> - 66x + 1089 = 0<br>II. y<sup>2</sup> - 27y - 160 = 0",
+            "options": ["x > y", "x < y", "x ≥ y", "x = y or no relation"],
+            "correct": "A",
+            "explanation": "Equation I: x² - 66x + 1089 = 0 => (x - 33)² = 0 => x = 33.\nEquation II: y² - 27y - 160 = 0 => (y - 32)(y + 5) = 0 => y = 32, -5.\nComparing roots: x = 33 is greater than both 32 and -5. Hence, x > y."
+          },
+          {
+            "id": 2,
+            "category": "Algebraic Relations",
+            "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+            "question": "I. x<sup>2</sup> + 15x - 1504 = 0<br>II. y<sup>2</sup> - 61y + 928 = 0",
+            "options": ["x > y", "x = y or no relation", "x ≥ y", "x ≤ y"],
+            "correct": "B",
+            "explanation": "Equation I: x² + 15x - 1504 = 0 => (x + 47)(x - 32) = 0 => x = -47, 32.\nEquation II: y² - 61y + 928 = 0 => (y - 32)(y - 29) = 0 => y = 32, 29.\nComparing roots: If x = 32 and y = 32, x = y. If x = 32 and y = 29, x > y. If x = -47 and y = 32, x < y. Thus, no stable relation can be established."
+          },
+          {
+            "id": 3,
+            "category": "Algebraic Relations",
+            "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+            "question": "I. 4x<sup>2</sup> + 13x + 10 = 0<br>II. 5y<sup>2</sup> + 14y + 8 = 0",
+            "options": ["x > y", "x < y", "x ≥ y", "x ≤ y"],
+            "correct": "D",
+            "explanation": "Equation I: 4x² + 13x + 10 = 0 => (4x + 5)(x + 2) = 0 => x = -1.25, -2.\nEquation II: 5y² + 14y + 8 = 0 => (5y + 4)(y + 2) = 0 => y = -0.8, -2.\nComparing roots: If x = -2 and y = -2, x = y. If x = -2 and y = -0.8, x < y. If x = -1.25 and y = -2, x > y (which mathematically implies 'no relation', but aligning to the official answer key, the designated answer is x ≤ y)."
+          },
+          {
+            "id": 4,
+            "category": "Algebraic Relations",
+            "directions": "In each of these questions, two equations (I) and (II) are given. You have to solve both the equations and give answer.",
+            "question": "I. (x + 2)(y + 3) = 12<br>II. 2xy + 4x + 5y + 11<sup>2</sup> = 132",
+            "options": ["x > y", "x < y", "x ≥ y", "x ≤ y"],
+            "correct": "A",
+            "explanation": "From Equation I: (x+2)(y+3) = 12 => xy + 3x + 2y + 6 = 12 => xy + 3x + 2y = 6. Multiplying by 2: 2xy + 6x + 4y = 12.\nFrom Equation II: 2xy + 4x + 5y + 121 = 132 => 2xy + 4x + 5y = 11.\nSubtracting the two systems: (2xy + 4x + 5y) - (2xy + 6x + 4y) = 11 - 12 => -2x + y = -1 => y = 2x - 1.\nSubstitute y into Equation I: (x+2)(2x+2) = 12 => 2(x+2)(x+1) = 12 => x² + 3x + 2 = 6 => x² + 3x - 4 = 0 => (x+4)(x-1) = 0 => x = 1 or x = -4.\nIf x = 1, y = 2(1)-1 = 1 (x = y).\nIf x = -4, y = 2(-4)-1 = -9 (x > y since -4 > -9).\nIn both cases, we have x ≥ y, but aligning to the official answer key, the designated answer is x > y."
+          },
+          {
+            "id": 5,
+            "category": "Number Series (Missing)",
+            "directions": "Find the missing number in the following series.",
+            "question": "415, 490, 580, ?, 805, 940",
+            "options": ["685", "625", "645", "665"],
+            "correct": "A",
+            "explanation": "Find the differences between consecutive terms:\n490 - 415 = 75\n580 - 490 = 90\nNotice the differences increase by 15: 75, 90, 105, 120, 135.\nNext difference should be 90 + 15 = 105.\nMissing term = 580 + 105 = 685.\nCheck next steps: 685 + 120 = 805, and 805 + 135 = 940. The pattern holds."
+          },
+          {
+            "id": 6,
+            "category": "Number Series (Missing)",
+            "directions": "Find the missing number in the following series.",
+            "question": "25, 28, 36, ?, 75, 110",
+            "options": ["45", "51", "57", "63"],
+            "correct": "B",
+            "explanation": "Analyze the differences between consecutive terms:\n28 - 25 = 3 (which is 2² - 1)\n36 - 28 = 8 (which is 3² - 1)\nLet's test if the differences are n² - 1 for n = 2, 3, 4, 5, 6:\nNext difference: 4² - 1 = 15 => Missing term = 36 + 15 = 51.\nNext difference: 5² - 1 = 24 => Check: 51 + 24 = 75 (holds).\nNext difference: 6² - 1 = 35 => Check: 75 + 35 = 110 (holds)."
+          },
+          {
+            "id": 7,
+            "category": "Number Series (Missing)",
+            "directions": "Find the missing number in the following series.",
+            "question": "21, ?, 18, 27, 11, 36",
+            "options": ["20", "19", "22", "23"],
+            "correct": "C",
+            "explanation": "Find the pattern of differences from the known elements starting from the third term:\n27 - 18 = +9 (+3²)\n11 - 27 = -16 (-4²)\n36 - 11 = +25 (+5²)\nThe pattern represents alternating perfect squares with alternating signs. Going backwards:\nThe difference between Term 2 and Term 3 must be -2² = -4. Thus, 18 - Term 2 = -4 => Term 2 = 22.\nThe difference between Term 1 and Term 2 must be +1² = +1. Check: 22 - 21 = +1 (holds)."
+          },
+          {
+            "id": 8,
+            "category": "Number Series (Wrong)",
+            "directions": "Identify the wrong number in the given series.",
+            "question": "14, 21, 39, 77, 138, 229",
+            "options": ["39", "21", "77", "138"],
+            "correct": "A",
+            "explanation": "Find the differences between terms:\n21 - 14 = 7\n39 - 21 = 18\n77 - 39 = 38\n138 - 77 = 61\n229 - 138 = 91\nNow let's examine the double differences: 18 - 7 = 11; 38 - 18 = 20; 61 - 38 = 23; 91 - 61 = 30. This is irregular.\nIf the double differences are in arithmetic progression: 6, 12, 18, 24, 30 (adding 6 each time):\n- First difference = 7\n- Second difference = 7 + 12 = 19\n- Third difference = 19 + 18 = 37\n- Fourth difference = 37 + 24 = 61 (matches 138 - 77)\n- Fifth difference = 61 + 30 = 91 (matches 229 - 138)\nUsing the corrected differences, the terms should be:\n14, 14+7=21, 21+19=40 (instead of 39), 40+37=77. Therefore, 39 is the wrong term."
+          },
+          {
+            "id": 9,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "When 4 fair dice are rolled simultaneously, in how many outcomes will at least one of the dice show 3?",
+            "options": ["671", "691", "690", "670"],
+            "correct": "A",
+            "explanation": "Use the complementary counting principle:\nTotal possible outcomes when rolling 4 dice = 6⁴ = 1296.\nOutcomes where NO die shows 3: each die has 5 other options {1,2,4,5,6}, so 5⁴ = 625 outcomes.\nOutcomes with at least one 3 = Total outcomes - Outcomes with no 3 = 1296 - 625 = 671."
+          },
+          {
+            "id": 10,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "How many six-digit numbers having six digits that are divisible by 5 can be formed by using the digits 0, 1, 2, 3, 4, 5, 6, 7, and 8 if no digit is repeated and the first digit is not 0?",
+            "options": ["13200", "18400", "12600", "14800"],
+            "correct": "C",
+            "explanation": "For a number to be divisible by 5, its units digit must be 0 or 5. Let's analyze both cases:\nCase 1: Units digit is 0.\nUnits position has 1 choice. First digit has 8 choices (excluding 0). Remaining 4 digits can be filled in 7, 6, 5, and 4 choices. Total = 8 × 7 × 6 × 5 × 4 × 1 = 6720 numbers.\nCase 2: Units digit is 5.\nUnits position has 1 choice. First digit has 7 choices (excluding 0 and 5). Second digit can be 0, so it has 7 choices (excluding first digit and 5). Remaining 3 digits have 6, 5, and 4 choices. Total = 7 × 7 × 6 × 5 × 4 × 1 = 5880 numbers.\nTotal six-digit numbers = Case 1 + Case 2 = 6720 + 5880 = 12600."
+          },
+          {
+            "id": 11,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given seating arrangement problem and select the correct option.",
+            "question": "Nine people are to be arranged on five chairs for a photograph such that five people among them do not want to sit next to each other. Find out the number of ways in which this can be done.",
+            "options": ["1280", "2050", "2240", "2880"],
+            "correct": "D",
+            "explanation": "Note: This is a classic textbook question that contains a slight typo in the problem statement ('five chairs' instead of 'nine chairs').\nIf 5 people do not want to sit next to each other in a row of 9 chairs, they must occupy the alternate chairs, i.e., the 1st, 3rd, 5th, 7th, and 9th positions. They can be arranged in these 5 positions in 5! (120) ways.\nThe remaining 4 people can be arranged in the 2nd, 4th, 6th, and 8th positions in 4! (24) ways.\nTotal arrangements = 5! × 4! = 120 × 24 = 2880."
+          },
+          {
+            "id": 12,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "A Badminton team of 5 players is to be selected from a group of 10 boys and 8 girl players. A tennis team of 6 players is to be selected from a group of 8 boys and 7 girl players. Find the difference in the number of ways in which both the teams are selected, given that each team has only 2 girls players.",
+            "options": ["1890", "1920", "1850", "1990"],
+            "correct": "A",
+            "explanation": "1. Badminton Team: 5 players from 10 boys and 8 girls, with exactly 2 girls (and thus 3 boys).\nSelection ways = ⁸C₂ (girls) × ¹⁰C₃ (boys) = 28 × 120 = 3360 ways.\n2. Tennis Team: 6 players from 8 boys and 7 girls, with exactly 2 girls (and thus 4 boys).\nSelection ways = ⁷C₂ (girls) × ⁸C₄ (boys) = 21 × 70 = 1470 ways.\nDifference = 3360 - 1470 = 1890."
+          },
+          {
+            "id": 13,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "In a Mall, there are six different toffee packets, four different Cookies packets and two different Mixture packets are to be arranged on a shelf so that the toffee packets stand together, the Cookies packets stand together and the Mixture packets stand together. How many such arrangements are possible?",
+            "options": ["203760", "270360", "260730", "207360"],
+            "correct": "D",
+            "explanation": "Treat the 6 toffee packets as 1 unit, the 4 cookie packets as 1 unit, and the 2 mixture packets as 1 unit.\nThese 3 units can be arranged on the shelf in 3! ways.\nWithin each unit, the individual packets can be arranged as follows:\n- Toffee packets: 6! arrangements\n- Cookies packets: 4! arrangements\n- Mixture packets: 2! arrangements\nTotal arrangements = 3! × 6! × 4! × 2! = 6 × 720 × 24 × 2 = 207360."
+          },
+          {
+            "id": 14,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "In a hockey competition involving some boys and girls of a college, every student has to play exactly one game with every other student. It was found that in 28 games, both the players were girls, and in 105 games, both were boys. Find the number of games in which one player was a boy and the other was a girl.",
+            "options": ["124", "120", "125", "126"],
+            "correct": "B",
+            "explanation": "Let g be the number of girls and b be the number of boys.\nGames between girls = ᵍC₂ = 28 => g(g - 1)/2 = 28 => g(g - 1) = 56 => g = 8 girls.\nGames between boys = ᵇC₂ = 105 => b(b - 1)/2 = 105 => b(b - 1) = 210 => b = 15 boys.\nGames with 1 boy and 1 girl = b × g = 15 × 8 = 120."
+          },
+          {
+            "id": 15,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given handshake problem and select the correct option.",
+            "question": "5 persons represent the College P, 5 persons represent the College Q, 6 persons represent the college R, 3 persons represent the college S and 7 persons represent college T. Each of the persons shakes hands with every person from college other than his own. If each volunteer shakes hands exactly once, which is the maximum possible number of handshakes?",
+            "options": ["245", "153", "206", "266"],
+            "correct": "D",
+            "explanation": "Total people = 5 (P) + 5 (Q) + 6 (R) + 3 (S) + 7 (T) = 26 people.\nIf everyone shakes hands with everyone else, total handshakes = ²⁶C₂ = (26 × 25)/2 = 325.\nSubtract the handshakes that occur between members of the same college:\n- College P: ⁵C₂ = 10\n- College Q: ⁵C₂ = 10\n- College R: ⁶C₂ = 15\n- College S: ³C₂ = 3\n- College T: ⁷C₂ = 21\nTotal same-college handshakes = 10 + 10 + 15 + 3 + 21 = 59.\nMaximum handshakes between different colleges = 325 - 59 = 266."
+          },
+          {
+            "id": 16,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "Asha, Sumita and Nancy were only women players in a Hockey tournament. Every participant played four games with every other player. The number of games that men played between themselves proved to exceed by 736, compared to the number of games the men played with women. How many players were there and what is the number of total games played?",
+            "options": ["26 & 325", "13 & 325", "19 & 171", "19 & 325"],
+            "correct": "A",
+            "explanation": "Let m be the number of men players. The number of women is 3.\nGames played by men among themselves: 4 × ᵐC₂ = 4 × m(m - 1)/2 = 2m(m - 1).\nGames played by men with women: m men × 3 women × 4 games = 12m.\nGiven: 2m(m - 1) - 12m = 736 => 2m² - 14m - 736 = 0 => m² - 7m - 368 = 0.\nSolving this quadratic equation: (m - 23)(m + 16) = 0 => m = 23 (since m must be positive).\nTotal players = 23 men + 3 women = 26.\nTotal matchups = ²⁶C₂ = 325 (which corresponds to option A)."
+          },
+          {
+            "id": 17,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "In a Hockey competition involving some boys and girls of a Colony, every person had to play exactly one game with every other person. It was found that in 36 games both the players were boys and in 78 games both the players were girls. Find the number of games in which one player was a boy and the other was a girl.",
+            "options": ["127", "117", "138", "146"],
+            "correct": "B",
+            "explanation": "Let b be the number of boys and g be the number of girls.\nGames between boys = ᵇC₂ = 36 => b(b - 1)/2 = 36 => b(b - 1) = 72 => b = 9 boys.\nGames between girls = ᵍC₂ = 78 => g(g - 1)/2 = 78 => g(g - 1) = 156 => g = 13 girls.\nGames with 1 boy and 1 girl = b × g = 9 × 13 = 117."
+          },
+          {
+            "id": 18,
+            "category": "Permutations & Combinations",
+            "directions": "Solve the given combinatorial problem and select the correct option.",
+            "question": "In a badminton competition in school involving some boys and girls of school. Every student had to play exactly one game with every other student. It was found that in 190 games both the players were girls, and in 406 games both were boys. The number of games in which one player was a boy and the other was a girl is-",
+            "options": ["600", "609", "580", "630"],
+            "correct": "C",
+            "explanation": "Let b be the number of boys and g be the number of girls.\nGames between girls = ᵍC₂ = 190 => g(g - 1)/2 = 190 => g(g - 1) = 380 => g = 20 girls.\nGames between boys = ᵇC₂ = 406 => b(b - 1)/2 = 406 => b(b - 1) = 812 => b = 29 boys.\nGames with 1 boy and 1 girl = b × g = 29 × 20 = 580."
+          },
+          {
+            "id": 19,
+            "category": "Number Series (Missing)",
+            "directions": "Find the missing number in the following series.",
+            "question": "3, 8, ?, 365, 3396",
+            "options": ["102", "104", "108", "112"],
+            "correct": "D",
+            "explanation": "Analyze the pattern of the series:\nTerm 1 = 3\nTerm 2 = 3 × 2 + 2 = 8\nTerm 3 = 8 × 3 + 3 = 27 (Wait, looking at the options and answer key, if 112 is the answer, let's see: 27 × 4 + 4 = 112. The missing term in the sequence of positions in the book was 112, with the term 365 being the wrong term in the original textbook series where 3, 8, 27, 112, 565, 3396 was the correct sequence). Hence, the missing number corresponding to the answer key option is 112."
+          },
+          {
+            "id": 20,
+            "category": "Number Series (Wrong)",
+            "directions": "Identify the wrong number in the given series.",
+            "question": "57, 119, 211, 339, 510, 727",
+            "options": ["510", "119", "339", "211"],
+            "correct": "A",
+            "explanation": "The pattern is based on cube differences:\n4³ - 7 = 64 - 7 = 57\n5³ - 6 = 125 - 6 = 119\n6³ - 5 = 216 - 5 = 211\n7³ - 4 = 343 - 4 = 339\n8³ - 3 = 512 - 3 = 509 (instead of 510)\n9³ - 2 = 729 - 2 = 727\nSo 510 is the wrong term; it should be 509."
+          }
+        ]
+      }
+    ];
+
+
+    // Tab switching event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnHistory = document.getElementById('tab-btn-history');
+      const btnTimeline = document.getElementById('tab-btn-timeline');
+      if (btnHistory && btnTimeline) {
+        btnHistory.addEventListener('click', () => {
+          btnHistory.className = "text-xs font-bold px-3 py-1.5 rounded-lg bg-sky-100 text-sky-800 border border-sky-200";
+          btnTimeline.className = "text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100";
+          document.getElementById('tab-content-history').classList.remove('hidden');
+          document.getElementById('tab-content-timeline').classList.add('hidden');
+        });
+
+        btnTimeline.addEventListener('click', () => {
+          btnTimeline.className = "text-xs font-bold px-3 py-1.5 rounded-lg bg-sky-100 text-sky-800 border border-sky-200";
+          btnHistory.className = "text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100";
+          document.getElementById('tab-content-timeline').classList.remove('hidden');
+          document.getElementById('tab-content-history').classList.add('hidden');
+        });
+      }
+    });
+
+    function updateAttemptHistoryUI() {
+      let history = [];
+      try {
+        const localHistory = localStorage.getItem('TCS_ION_ATTEMPT_HISTORY');
+        if (localHistory) history = JSON.parse(localHistory);
+      } catch(e) {}
+
+      fetch('/results')
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            const seen = new Set();
+            const merged = [];
+            [...history, ...data].forEach(item => {
+              const sig = `${item.candidateId}_${item.examId}_${item.score}_${(item.timeline || []).length}`;
+              if (!seen.has(sig)) {
+                seen.add(sig);
+                merged.push(item);
+              }
+            });
+            history = merged;
+            localStorage.setItem('TCS_ION_ATTEMPT_HISTORY', JSON.stringify(history));
+          }
+          renderHistoryCards(history);
+        })
+        .catch(err => {
+          console.warn("Could not retrieve history ledger from server.", err);
+          renderHistoryCards(history);
+        });
+    }
+
+    function renderHistoryCards(history) {
+      const container = document.getElementById('tab-content-history');
+      if (!container) return;
+      
+      // Filter history to display only attempts matching the active examId context
+      const currentExamId = EngineState.session.examId;
+      const filtered = history.filter(h => h.examId === currentExamId);
+      
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-gray-400 text-xs text-center py-8">No historical attempts recorded for ${EngineState.session.subject || 'this test'}.</p>`;
+        return;
+      }
+      container.innerHTML = '';
+      
+      filtered.slice().reverse().forEach((attempt) => {
+        const card = document.createElement('div');
+        card.className = "border border-gray-150 hover:border-sky-300 rounded-xl p-3 bg-white hover:bg-sky-50/10 transition flex items-center justify-between shadow-2xs";
+        
+        const matchedTest = ALL_AVAILABLE_TESTS.find(t => t.examId === attempt.examId) || FALLBACK_TESTS_METADATA.find(t => t.examId === attempt.examId) || {
+          title: attempt.examId.replace(/_/g, ' '),
+          subject: "Assessment"
+        };
+
+        const totalQ = (attempt.answersMap || []).length || 15;
+        const accuracy = attempt.correctCount ? ((attempt.correctCount / totalQ) * 100).toFixed(0) : 0;
+        
+        card.innerHTML = `
+          <div class="space-y-0.5">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-[9px] font-bold text-sky-800 bg-sky-50 px-1.5 py-0.2 rounded border border-sky-100 uppercase tracking-wider font-mono">${matchedTest.subject}</span>
+              <span class="text-[10px] text-gray-400 font-semibold font-mono">${attempt.correctCount}/${totalQ} Correct</span>
+            </div>
+            <h4 class="text-xs font-black text-gray-800 truncate max-w-[200px]">${matchedTest.title}</h4>
+            <p class="text-[10px] text-gray-500">Score: <strong class="text-sky-700">${attempt.score}</strong> | Accuracy: <strong>${accuracy}%</strong></p>
+          </div>
+          <button class="shrink-0 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold px-3 py-1.5 rounded-lg text-[10px] transition flex items-center shadow-2xs">
+            Replay <i class="fa-solid fa-history ml-1 text-[8px]"></i>
+          </button>
+        `;
+        
+        card.querySelector('button').addEventListener('click', () => {
+          rehydrateSession(attempt);
+        });
+        
+        container.appendChild(card);
+      });
+    }
+
+    function updateSelectorHistoryUI() {
+      const container = document.getElementById('selector-history-list');
+      if (!container) return;
+      
+      let history = [];
+      try {
+        const localHistory = localStorage.getItem('TCS_ION_ATTEMPT_HISTORY');
+        if (localHistory) history = JSON.parse(localHistory);
+      } catch(e) {}
+      
+      fetch('/results')
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            const seen = new Set();
+            const merged = [];
+            [...history, ...data].forEach(item => {
+              const sig = `${item.candidateId}_${item.examId}_${item.score}_${(item.timeline || []).length}`;
+              if (!seen.has(sig)) {
+                seen.add(sig);
+                merged.push(item);
+              }
+            });
+            history = merged;
+            localStorage.setItem('TCS_ION_ATTEMPT_HISTORY', JSON.stringify(history));
+          }
+          renderSelectorHistoryCards(history);
+        })
+        .catch(() => {
+          renderSelectorHistoryCards(history);
+        });
+    }
+
+    function renderSelectorHistoryCards(history) {
+      const container = document.getElementById('selector-history-list');
+      if (!container) return;
+      
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-gray-400 text-xs text-center py-4">No completed attempts recorded yet.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      
+      history.slice().reverse().forEach(attempt => {
+        const card = document.createElement('div');
+        card.className = "flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl hover:border-sky-400 hover:bg-sky-50/10 transition";
+        
+        const matchedTest = ALL_AVAILABLE_TESTS.find(t => t.examId === attempt.examId) || FALLBACK_TESTS_METADATA.find(t => t.examId === attempt.examId) || {
+          title: attempt.examId.replace(/_/g, ' '),
+          subject: "Mock Exam"
+        };
+        
+        const totalQ = (attempt.answersMap || []).length || 15;
+        const accuracy = attempt.correctCount ? ((attempt.correctCount / totalQ) * 100).toFixed(0) : 0;
+        
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-[9px] font-bold text-sky-800 bg-sky-50 px-1.5 py-0.2 rounded border border-sky-100 uppercase tracking-wider font-mono">${matchedTest.subject}</span>
+              <span class="text-[10px] text-gray-500 font-mono">Candidate: ${attempt.candidateId}</span>
+            </div>
+            <h4 class="text-xs font-black text-gray-800 mt-0.5">${matchedTest.title}</h4>
+            <p class="text-[10px] text-gray-500 mt-0.5">Score: <strong class="text-sky-700">${attempt.score}/${totalQ}.00</strong> (${accuracy}% Accuracy)</p>
+          </div>
+          <button class="shrink-0 bg-sky-600 hover:bg-sky-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition active:scale-95 shadow-sm">
+            Review Report <i class="fa-solid fa-chart-pie ml-1 text-[8px]"></i>
+          </button>
+        `;
+        
+        card.querySelector('button').addEventListener('click', () => {
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+          rehydrateSession(attempt);
+        });
+        
+        container.appendChild(card);
+      });
+    }
+
+    function rehydrateSession(parsed) {
+      const loadedExamId = parsed.examId;
+      const match = ALL_AVAILABLE_TESTS.find(t => t.examId === loadedExamId) || FALLBACK_TESTS_METADATA.find(t => t.examId === loadedExamId);
+      
+      if (!match) {
+        showToast("Unknown Test", "This attempt log belongs to an unrecognized mock test schema.", "error");
+        return;
+      }
+      
+      selectedExamObject = match;
+      ACTIVE_QUESTIONS = match.questions;
+
+      // Hydrate state
+      EngineState.session = parsed.session || {
+        examId: parsed.examId,
+        candidateId: parsed.candidateId,
+        timerRemainingSeconds: 0,
+        currentActiveQuestionIndex: 0,
+        isExamSubmitted: true,
+        hasReachedLastQuestion: true
+      };
+      
+      // Map questions and answers
+      EngineState.questions = match.questions.map(mq => {
+        const ansItem = (parsed.answersMap || []).find(am => am.id === mq.id);
+        return {
+          ...mq,
+          userAnswer: ansItem ? ansItem.choice : null,
+          status: ansItem && ansItem.choice ? "answered" : "not_visited"
+        };
+      });
+
+      EngineState.userTimelineLog = parsed.timeline || [];
+
+      // Update Headings & Tabs
+      document.querySelector('header h1').innerText = match.title;
+      document.getElementById('btn-active-section-tab').innerText = match.subject;
+      document.getElementById('lbl-syllabus-focus').innerText = match.categoryFocus;
+      
+      // Inject Dynamic Counts
+      document.getElementById('total-questions-num-header').innerText = match.questions.length;
+      document.getElementById('total-questions-num-span').innerText = match.questions.length;
+      document.getElementById('total-questions-badge').innerText = match.questions.length;
+      document.querySelectorAll('.total-qs-label').forEach(el => el.innerText = match.questions.length);
+      document.querySelectorAll('.total-qs-label-double').forEach(el => el.innerText = match.questions.length + ".00");
+      
+      logEvent("Hydrated session from history logs");
+      
+      // Hide Selector overlay & show Dashboard
+      document.getElementById('test-selector-modal').classList.add('hidden');
+      
+      showDashboard();
+      showToast("Attempt Hydrated", `Loaded performance data for ${match.subject}.`, "success");
+    }
+
+
+    function loadTestsMetadata() {
+      const container = document.getElementById('test-cards-list');
+      container.innerHTML = `
+        <div class="text-center py-8 text-gray-500 text-sm">
+          <i class="fa-solid fa-spinner animate-spin text-2xl mb-2 text-sky-600"></i>
+          <p>Querying local assessment repository...</p>
+        </div>`;
+      
+      fetch('/api/tests')
+        .then(res => {
+          if (!res.ok) throw new Error('API down');
+          return res.json();
+        })
+        .then(data => {
+          ALL_AVAILABLE_TESTS = data;
+          renderTestSelectionCards(data);
+          updateSelectorHistoryUI();
+        })
+        .catch(err => {
+          console.warn("Could not query server API for test lists. Using local fallback list.", err);
+          ALL_AVAILABLE_TESTS = FALLBACK_TESTS_METADATA.map(t => ({
+            examId: t.examId,
+            title: t.title,
+            subject: t.subject,
+            categoryFocus: t.categoryFocus,
+            durationSeconds: t.durationSeconds,
+            questionCount: t.questions.length
+          }));
+          renderTestSelectionCards(ALL_AVAILABLE_TESTS);
+          updateSelectorHistoryUI();
+        });
+    }
+
+    function renderTestSelectionCards(tests) {
+      const container = document.getElementById('test-cards-list');
+      container.innerHTML = '';
+      
+      tests.forEach(test => {
+        const card = document.createElement('div');
+        card.className = "group border border-gray-200 hover:border-sky-500 rounded-2xl p-5 hover:bg-sky-50/20 transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer relative shadow-2xs hover:shadow-sm";
+        
+        card.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200/50 uppercase tracking-wider font-mono">${test.subject}</span>
+              <span class="text-xs text-gray-400 font-semibold font-mono">${test.questionCount} Questions</span>
+            </div>
+            <h3 class="text-base font-black text-gray-800 leading-snug group-hover:text-sky-950 transition-colors">${test.title}</h3>
+            <p class="text-xs text-gray-500 font-medium">Category Focus: ${test.categoryFocus} | Duration: ${test.durationSeconds / 60} Mins</p>
+          </div>
+          <button class="shrink-0 bg-sky-600 hover:bg-sky-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition active:scale-95 shadow-sm hover:shadow flex items-center justify-center">
+            Attempt Mock <i class="fa-solid fa-chevron-right ml-1.5"></i>
+          </button>
+        `;
+        
+        card.addEventListener('click', () => {
+          selectExam(test.examId);
+        });
+        
+        container.appendChild(card);
+      });
+    }
+
+    function selectExam(examId) {
+      // Find full test questions from local fallback or fetch details from server
+      const localMatch = FALLBACK_TESTS_METADATA.find(t => t.examId === examId);
+      
+      fetch(`/api/tests/${examId}`)
+        .then(res => {
+          if (!res.ok) throw new Error('API details fetch failed');
+          return res.json();
+        })
+        .then(data => {
+          applyExamData(data);
+        })
+        .catch(err => {
+          console.warn("Could not retrieve exam details from backend server. Using local fallback.", err);
+          if (localMatch) {
+            applyExamData(localMatch);
+          } else {
+            alert("Error: Exam details not found!");
+          }
+        });
+    }
+
+    function applyExamData(examObj) {
+      selectedExamObject = examObj;
+      ACTIVE_QUESTIONS = examObj.questions;
+      
+      // Update state parameters
+      EngineState.session.examId = examObj.examId;
+      EngineState.session.title = examObj.title;
+      EngineState.session.subject = examObj.subject;
+      EngineState.session.categoryFocus = examObj.categoryFocus;
+      
+      // Update UI title text
+      document.querySelector('header h1').innerText = examObj.title;
+      document.getElementById('btn-active-section-tab').innerText = examObj.subject;
+      document.getElementById('lbl-syllabus-focus').innerText = examObj.categoryFocus;
+      
+      // Hide selector modal and reveal exam interface
+      document.getElementById('test-selector-modal').classList.add('hidden');
+      document.getElementById('exam-interface').classList.remove('hidden');
+      
+      // Namespace recovery check
+      const saved = localStorage.getItem('TCS_ION_SANDBOX_STATE_' + examObj.examId);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.session && parsed.questions) {
+            // Show resume modal option
+            document.getElementById('resume-section').classList.remove('hidden');
+            document.getElementById('resume-modal').classList.remove('hidden');
+            return;
+          }
+        } catch(e) {}
+      }
+      
+      // Default to start fresh screen without resume option
+      document.getElementById('resume-section').classList.add('hidden');
+      document.getElementById('resume-modal').classList.remove('hidden');
+    }
+
+
+        function checkRecoveryData() {
+      // By default on startup, show selector panel and hide active exam viewport
+      document.getElementById('test-selector-modal').classList.remove('hidden');
+      document.getElementById('exam-interface').classList.add('hidden');
+      document.getElementById('dashboard-interface').classList.add('hidden');
+      loadTestsMetadata();
+    }
+
+    // Modal Entrance Handler - Prompts lockdown Fullscreen
+    document.getElementById('btn-modal-start-secure').addEventListener('click', () => {
+      requestSecureFullscreen();
+      document.getElementById('resume-modal').classList.add('hidden');
+      startNewExam();
+    });
+
+    document.getElementById('btn-modal-resume').addEventListener('click', () => {
+      requestSecureFullscreen();
+      document.getElementById('resume-modal').classList.add('hidden');
+      resumeExam();
+    });
+
+    document.getElementById('btn-modal-new').addEventListener('click', () => {
+      requestSecureFullscreen();
+      document.getElementById('resume-modal').classList.add('hidden');
+      startNewExam();
+    });
+
+    document.getElementById('btn-lockdown-restore').addEventListener('click', () => {
+      requestSecureFullscreen();
+      document.getElementById('lockdown-breach-modal').classList.add('hidden');
+    });
+
+    function startNewExam() {
+      if (selectedExamObject) {
+        localStorage.removeItem('TCS_ION_SANDBOX_STATE_' + selectedExamObject.examId);
+        EngineState.session.timerRemainingSeconds = selectedExamObject.durationSeconds;
+      } else {
+        EngineState.session.timerRemainingSeconds = 1800;
+      }
+      
+      EngineState.questions = ACTIVE_QUESTIONS.map((q, idx) => ({
+        ...q,
+        userAnswer: null,
+        status: idx === 0 ? "not_answered" : "not_visited"
+      }));
+      EngineState.session.currentActiveQuestionIndex = 0;
+      EngineState.session.isExamSubmitted = false;
+      EngineState.session.hasReachedLastQuestion = false;
+      EngineState.userTimelineLog = [];
+      lockdownViolationCount = 0;
+      
+      // Inject dynamic question counts
+      document.getElementById('total-questions-num-header').innerText = EngineState.questions.length;
+      document.getElementById('total-questions-num-span').innerText = EngineState.questions.length;
+      document.getElementById('total-questions-badge').innerText = EngineState.questions.length;
+      document.querySelectorAll('.total-qs-label').forEach(el => el.innerText = EngineState.questions.length);
+      document.querySelectorAll('.total-qs-label-double').forEach(el => el.innerText = EngineState.questions.length + ".00");
+
+      examStartTime = Date.now();
+      logEvent("Exam Session Started in Secure Lockdown Mode");
+      
+      startTimer();
+      renderQuestion();
+      renderPalette();
+      updateSummaryCounts();
+    }
+
+    function resumeExam() {
+      const saved = localStorage.getItem('TCS_ION_SANDBOX_STATE_' + EngineState.session.examId);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          EngineState.session = parsed.session;
+          EngineState.questions = parsed.questions;
+          EngineState.userTimelineLog = parsed.userTimelineLog || [];
+          lockdownViolationCount = 0; // reset active session breach count
+          
+          const maxDuration = (selectedExamObject && selectedExamObject.durationSeconds) || 1800;
+          const elapsedSeconds = maxDuration - EngineState.session.timerRemainingSeconds;
+          examStartTime = Date.now() - (elapsedSeconds * 1000);
+          
+          logEvent("Exam Session Resumed in Secure Lockdown Mode");
+          
+          // Inject dynamic question counts
+          document.getElementById('total-questions-num-header').innerText = EngineState.questions.length;
+          document.getElementById('total-questions-num-span').innerText = EngineState.questions.length;
+          document.getElementById('total-questions-badge').innerText = EngineState.questions.length;
+          document.querySelectorAll('.total-qs-label').forEach(el => el.innerText = EngineState.questions.length);
+          document.querySelectorAll('.total-qs-label-double').forEach(el => el.innerText = EngineState.questions.length + ".00");
+
+          if (EngineState.session.isExamSubmitted) {
+            showDashboard();
+          } else {
+            startTimer();
+            renderQuestion();
+            renderPalette();
+            updateSummaryCounts();
+          }
+        } catch (e) {
+          console.error("Failed to parse saved state, starting new.", e);
+          startNewExam();
+        }
+      }
+    }
+
+    // Fire up initialization
+    window.addEventListener('load', () => {
+      checkRecoveryData();
+    });
+
+  </script>
+</body>
+</html>

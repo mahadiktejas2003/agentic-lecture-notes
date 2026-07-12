@@ -41,7 +41,44 @@ def clean_text(text: str) -> str:
     return text
 
 
-def strip_markup(text: str) -> str:
+def stringify_item(item) -> str:
+    if not item:
+        return ""
+    if isinstance(item, str):
+        return item
+    if isinstance(item, dict):
+        parts = []
+        for key in ["name", "title", "scenario"]:
+            if item.get(key):
+                parts.append(f"**{item.get(key)}**:")
+                break
+        
+        main_text = ""
+        for key in ["trap", "description", "note", "sentence"]:
+            if item.get(key):
+                main_text = item.get(key)
+                break
+        
+        if main_text:
+            parts.append(main_text)
+            
+        for key in ["danger", "prevention", "correction", "rule", "working"]:
+            if item.get(key):
+                parts.append(f"({key.capitalize()}: {item.get(key)})")
+                
+        if parts:
+            return " ".join(parts)
+            
+        return " ".join(str(v) for v in item.values() if v)
+        
+    return str(item)
+
+
+def strip_markup(text) -> str:
+    if not isinstance(text, str):
+        text = stringify_item(text)
+    if not text:
+        return ""
     text = clean_text(text)
     text = re.sub(r"<[^>]+>", "", text)
     text = text.replace("**", "").replace("*", "")
@@ -49,13 +86,10 @@ def strip_markup(text: str) -> str:
 
 
 def shorten(text: str, limit: int) -> str:
-    text = strip_markup(text)
-    if len(text) <= limit:
-        return text
-    clipped = text[: limit + 1]
-    if " " in clipped:
-        clipped = clipped.rsplit(" ", 1)[0]
-    return clipped.rstrip(" ,;:-") + "..."
+    cleaned = strip_markup(text)
+    if len(cleaned) > limit:
+        return cleaned[:limit].strip() + "..."
+    return cleaned
 
 
 def slugify(text: str) -> str:
@@ -67,9 +101,14 @@ def slugify(text: str) -> str:
 def extract_markdown_from_output(output: str) -> str:
     if not output:
         return ""
-    fence_match = re.search(r"```(?:markdown|md)?\s*(.*?)\s*```", output, re.DOTALL | re.IGNORECASE)
+    # Try matching explicit markdown/md code block
+    fence_match = re.search(r"```(?:markdown|md)\s*(.*?)\s*```", output, re.DOTALL | re.IGNORECASE)
     if fence_match:
         return fence_match.group(1).strip() + "\n"
+    # If the entire output starts and ends with generic code fences, extract the inside
+    generic_match = re.match(r"^\s*```[a-zA-Z0-9_-]*\s*(.*?)\s*```\s*$", output, re.DOTALL)
+    if generic_match:
+        return generic_match.group(1).strip() + "\n"
     return output.strip() + "\n"
 
 
@@ -78,35 +117,35 @@ def load_short_note_skill_prompt() -> str:
     return load_text_if_exists(skill_path)
 
 
-def summarize_examples(block: Dict, limit: int = 2) -> List[Dict]:
+def summarize_examples(block: Dict, limit: int = 100) -> List[Dict]:
     summary = []
-    for ex in block.get("examples", [])[:limit]:
+    for ex in (block.get("examples") or [])[:limit]:
         summary.append({
-            "sentence": shorten(ex.get("sentence", ""), 120),
-            "rule": shorten(ex.get("rule", ""), 110),
-            "student_notes": shorten(ex.get("student_notes", ""), 110),
-            "cloze_text": shorten(ex.get("cloze_text", ""), 90),
+            "sentence": shorten(ex.get("sentence", ""), 500),
+            "rule": shorten(ex.get("rule", ""), 500),
+            "student_notes": shorten(ex.get("student_notes", ""), 500),
+            "cloze_text": shorten(ex.get("cloze_text", ""), 500),
         })
     return summary
 
 
-def summarize_blocks_for_llm(blocks: List[Dict], limit: int = 8) -> List[Dict]:
+def summarize_blocks_for_llm(blocks: List[Dict], limit: int = 100) -> List[Dict]:
     summarized = []
     for block in blocks[:limit]:
         summarized.append({
-            "title": shorten(block.get("title", ""), 100),
-            "explanation": shorten(block.get("explanation", ""), 220),
+            "title": shorten(block.get("title", ""), 500),
+            "explanation": shorten(block.get("explanation", ""), 1000),
             "concepts": [
                 {
-                    "term": shorten(c.get("term", ""), 60),
-                    "definition": shorten(c.get("definition", ""), 110),
+                    "term": shorten(c.get("term", ""), 500),
+                    "definition": shorten(c.get("definition", ""), 500),
                 }
-                for c in block.get("concepts", [])[:3]
+                for c in (block.get("concepts") or [])[:20]
             ],
             "examples": summarize_examples(block),
-            "teacher_quotes": [shorten(q, 120) for q in block.get("teacher_quotes", [])[:2]],
-            "traps": [shorten(t, 120) for t in block.get("traps", [])[:3]],
-            "tricks": [shorten(t, 120) for t in block.get("tricks", [])[:2]],
+            "teacher_quotes": [shorten(q, 500) for q in (block.get("teacher_quotes") or [])[:20]],
+            "traps": [shorten(t, 500) for t in (block.get("traps") or [])[:20]],
+            "tricks": [shorten(t, 500) for t in (block.get("tricks") or [])[:20]],
         })
     return summarized
 
@@ -115,11 +154,11 @@ def summarize_slide_manifest_for_llm(slide_manifest) -> List[Dict]:
     if not isinstance(slide_manifest, list):
         return []
     summarized = []
-    for slide in slide_manifest[:8]:
+    for slide in slide_manifest[:30]:
         summarized.append({
             "slide_number": slide.get("slide_number"),
             "discussed": slide.get("discussed"),
-            "ocr_text": shorten(slide.get("ocr_text", ""), 140),
+            "ocr_text": shorten(slide.get("ocr_text", ""), 500),
         })
     return summarized
 
@@ -134,16 +173,16 @@ def summarize_frame_manifest_for_llm(frame_manifest) -> List[Dict]:
         source = list(frame_manifest.values())
     else:
         source = []
-    for item in source[:8]:
+    for item in source[:30]:
         items.append({
             "timestamp": item.get("timestamp"),
-            "description": shorten(item.get("description", ""), 100),
-            "ocr_text": shorten(item.get("ocr_text", ""), 120),
+            "description": shorten(item.get("description", ""), 500),
+            "ocr_text": shorten(item.get("ocr_text", ""), 500),
         })
     return items
 
 
-def call_antigravity_markdown(prompt: str, timeout: int = 600) -> str:
+def call_antigravity_markdown(prompt: str, timeout: int = 900) -> str:
     cli_path = (
         os.environ.get("ANTIGRAVITY_CLI_PATH")
         or shutil.which("antigravity")
@@ -223,11 +262,11 @@ def gather_teacher_quotes(blocks: List[Dict], limit: int = 4) -> List[str]:
 def gather_traps(blocks: List[Dict], limit: int = 5) -> List[str]:
     traps: List[str] = []
     for block in blocks:
-        for trap in block.get("traps", []):
+        for trap in (block.get("traps") or []):
             t = strip_markup(trap)
             if t:
                 traps.append(t)
-        for ex in block.get("examples", []):
+        for ex in (block.get("examples") or []):
             note = strip_markup(ex.get("student_notes", ""))
             if note and any(word in note.lower() for word in ["careful", "mistake", "trick", "wrong", "confuse", "impossible"]):
                 traps.append(note)
@@ -246,11 +285,13 @@ def gather_traps(blocks: List[Dict], limit: int = 5) -> List[str]:
 def render_math(blocks: List[Dict]) -> List[str]:
     rows = ["| Formula / Concept | Shortcut / Trick | Solved Pattern |", "|---|---|---|"]
     for block in blocks[:4]:
-        concepts = block.get("concepts", [])
+        concepts = block.get("concepts") or []
         concept = strip_markup(concepts[0].get("term", block.get("title", ""))) if concepts else strip_markup(block.get("title", ""))
         definition = strip_markup(concepts[0].get("definition", "")) if concepts else ""
-        example = block.get("examples", [{}])[0]
-        trick = strip_markup(block.get("tricks", [""])[0] if block.get("tricks") else definition[:80])
+        examples = block.get("examples") or []
+        example = examples[0] if examples else {}
+        tricks = block.get("tricks") or []
+        trick = strip_markup(tricks[0] if tricks else definition[:80])
         solved = shorten(example.get("cloze_text") or example.get("sentence") or example.get("working", ""), 110)
         rows.append(f"| {concept} | {shorten(trick or definition, 90)} | {solved} |")
     return rows
@@ -259,7 +300,8 @@ def render_math(blocks: List[Dict]) -> List[str]:
 def render_reasoning(blocks: List[Dict]) -> List[str]:
     bullets = ["**Decision Map**", "- Identify the relation/pattern before solving.", "- Track direction/order first, then infer conclusions.", "- Recheck option traps before finalizing."]
     if blocks:
-        example = blocks[0].get("examples", [{}])[0]
+        examples = blocks[0].get("examples") or []
+        example = examples[0] if examples else {}
         sentence = shorten(example.get("sentence", "") or example.get("working", ""), 140)
         if sentence:
             bullets.append(f"- Worked pattern: {sentence[:140]}")
@@ -270,9 +312,10 @@ def render_english(blocks: List[Dict]) -> List[str]:
     rows = ["| Rule | Correct / Key Form | Wrong / Confusion |", "|---|---|---|"]
     for block in blocks[:4]:
         rule = strip_markup(block.get("title", ""))
-        examples = block.get("examples", [])
+        examples = block.get("examples") or []
         correct = shorten(examples[0].get("sentence", "") if examples else block.get("explanation", ""), 90)
-        wrong = strip_markup(block.get("traps", [""])[0] if block.get("traps") else "Common case/confusion from lecture")
+        traps = block.get("traps") or []
+        wrong = strip_markup(traps[0] if traps else "Common case/confusion from lecture")
         rows.append(f"| {rule} | {correct} | {shorten(wrong, 90)} |")
     return rows
 
@@ -337,13 +380,11 @@ def build_short_note(lecture_title: str, blocks: List[Dict], transcript_path: st
         for quote in quotes[:2]:
             lines.append(f"- *{shorten(quote, 160)}*")
 
-    lines.extend(["", "**Trap Box**"])
     if traps:
+        lines.extend(["", "**Trap Box**"])
         for trap in traps[:4]:
             lines.append(f"- {shorten(trap, 180)}")
-    else:
-        lines.append("- Watch notation, boundary conditions, and option-level traps from the lecture.")
-    lines.append("- [Add your mock errors here]")
+        lines.append("- [Add your mock errors here]")
 
     self_test = core_question.replace("What are", "Explain").replace("What is", "Explain").rstrip("?") + "."
     lines.extend([
@@ -351,40 +392,27 @@ def build_short_note(lecture_title: str, blocks: List[Dict], transcript_path: st
         f"**Self-Test:** {self_test}",
         "",
         f"_Source: {os.path.basename(transcript_path) if transcript_path else 'lecture artifacts'}, generated from concept map + transcript._",
-        "_Review: 1/4/52 - Anki (weekly), Monthly reconstruction, Annual dust-off._",
-        "[ ] Day 1 - Blurt & compress",
-        "[ ] Day 2 - Refine draft",
-        "[ ] Day 7 - Self-test from cues",
-        "[ ] Month 1 - Reconstruct from anchor",
-        "[ ] Month 6 - Update traps",
-        "[ ] Year 1 - Dust-off",
     ])
     return "\n".join(lines).strip() + "\n"
 
 
-def sanitize_short_note_markdown(text: str, lecture_title: str, transcript_path: str) -> str:
+def sanitize_short_note_markdown(text: str, lecture_title: str, transcript_path: str, has_traps: bool) -> str:
     text = text.replace("\r\n", "\n").strip()
     text = re.sub(r"[\u0900-\u097F]+", "", text)
-    if not text:
+    
+    # Strip any hallucinated SRS boilerplate
+    text = re.sub(r"_Review: 1/4/52.*?(?=\n\n|\Z)", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"\[ \] Day 1 - Blurt & compress.*?(?=\n\n|\Z)", "", text, flags=re.DOTALL | re.IGNORECASE)
+    
+    if not text.strip():
         return build_short_note(lecture_title, [], transcript_path)
     if "From " not in text:
         anchor = f'From **{strip_markup(lecture_title)}**, answering: "What are the key revision points from this lecture?"'
         text = anchor + "\n\n" + text
-    if "Trap Box" not in text and "[Add your mock errors here]" not in text:
+    if has_traps and "Trap Box" not in text and "[Add your mock errors here]" not in text:
         text += "\n\n**Trap Box**\n- [Add your mock errors here]\n"
     if "Self-Test:" not in text:
         text += "\n**Self-Test:** Explain the core idea of this lecture from memory.\n"
-    if "_Review: 1/4/52" not in text:
-        text += "\n_Review: 1/4/52 - Anki (weekly), Monthly reconstruction, Annual dust-off._\n"
-    if "[ ] Day 1 - Blurt & compress" not in text:
-        text += (
-            "[ ] Day 1 - Blurt & compress\n"
-            "[ ] Day 2 - Refine draft\n"
-            "[ ] Day 7 - Self-test from cues\n"
-            "[ ] Month 1 - Reconstruct from anchor\n"
-            "[ ] Month 6 - Update traps\n"
-            "[ ] Year 1 - Dust-off\n"
-        )
     if "_Source:" not in text:
         source_name = os.path.basename(transcript_path) if transcript_path else "lecture artifacts"
         text += f"\n_Source: {source_name}, generated from concept map + transcript._\n"
@@ -399,7 +427,9 @@ def build_llm_prompt(
     transcript_text: str,
 ) -> str:
     skill_prompt = load_short_note_skill_prompt()
-    transcript_excerpt = transcript_text[:8000]
+    transcript_excerpt = transcript_text[:60000]
+    if len(transcript_text) > 60000:
+        transcript_excerpt = transcript_excerpt.rsplit(" ", 1)[0] + "..."
     concept_summary = {
         "lecture_title": concept_map.get("lecture_title", lecture_title) if isinstance(concept_map, dict) else lecture_title,
         "blocks": summarize_blocks_for_llm(
@@ -423,12 +453,15 @@ Follow the skill instructions below exactly. The goal is a separate compact revi
 Produce only the final markdown note. Do not explain your process. Do not include analysis outside the note.
 
 Hard constraints:
+- WORD BUDGET: The entire short revision note must be extremely compact, targeting 300 to 500 words (strictly less than 600 words total). Focus strictly on high-yield equations, concepts, and steps, and write concisely without narrative fluff.
 - Preserve source fidelity.
 - No Devanagari script.
 - No conversational attribution like 'the teacher says'.
 - Use markdown tables/bullets compactly.
 - Keep it crisp and revision-oriented.
-- Include: context anchor, compact body, trap box, self-test, source line, and review cadence/footer checklist.
+- Include: context anchor, compact body, trap box, self-test, source line.
+- STRICTLY PROHIBITED: Do not include ANY spaced repetition (SRS) boilerplate, Anki tags, Cornell cues, or review checklists (e.g., 'Review: 1/4/52', 'Day 1 - Blurt', etc.). The notes must be clean and self-contained.
+- STRICTLY PROHIBITED: Do not include the answers to the Self-Test questions in the document. The Self-Test section must contain ONLY the active recall questions, and the answers must be completely omitted to allow self-testing.
 
 Lecture title:
 {lecture_title}
@@ -485,7 +518,7 @@ def main():
                 transcript_text=transcript_text,
             )
             content = call_antigravity_markdown(prompt)
-            content = sanitize_short_note_markdown(content, lecture_title, args.transcript)
+            content = sanitize_short_note_markdown(content, lecture_title, args.transcript, bool(traps))
         except Exception as exc:
             llm_error = exc
             if args.mode == "llm":

@@ -20,6 +20,19 @@ def normalize_status(status):
         return status
     return "completed" if status == "completed" else "in_progress"
 
+def is_already_uploaded(s3_client, bucket, local_path, r2_key):
+    if not s3_client or not bucket or not os.path.exists(local_path):
+        return False
+    try:
+        head = s3_client.head_object(Bucket=bucket, Key=r2_key)
+        r2_size = head.get('ContentLength', 0)
+        local_size = os.path.getsize(local_path)
+        if r2_size == local_size:
+            return True
+    except Exception:
+        pass
+    return False
+
 def main():
     # Set CWD to project root
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +57,11 @@ def main():
     notes_path = state["artifacts"]["notes_output"]
     short_note_path = state.get("artifacts", {}).get("short_note_output")
     
+    # Locate Anki CSV
+    anki_path = state.get("artifacts", {}).get("anki_output")
+    if not (anki_path and os.path.exists(anki_path)):
+        anki_path = None
+    
     print(f"Uploading files for: {lecture_title} ({lecture_slug})")
     
     video_key = f"lectures/{lecture_slug}/video.mp4"
@@ -51,6 +69,7 @@ def main():
     short_note_key = f"lectures/{lecture_slug}/short-note.md"
     transcript_key = f"lectures/{lecture_slug}/transcript.srt"
     slides_key = f"lectures/{lecture_slug}/slides.pdf"
+    anki_key = f"lectures/{lecture_slug}/anki.csv"
     
     # 9 GB R2 Safety limit check
     LIMIT_BYTES = 9 * 1024 * 1024 * 1024
@@ -65,6 +84,8 @@ def main():
         files_to_upload.append(transcript_path)
     if short_note_path and os.path.exists(short_note_path):
         files_to_upload.append(short_note_path)
+    if anki_path and os.path.exists(anki_path):
+        files_to_upload.append(anki_path)
     if os.path.exists("lecture-input/SLIDES.pdf"):
         files_to_upload.append("lecture-input/SLIDES.pdf")
         
@@ -74,9 +95,11 @@ def main():
     print(f"Size of files to upload: {new_files_size / (1024 * 1024):.2f} MB")
     
     current_bucket_size = 0
+    s3_client = None
+    bucket = None
     try:
         session = boto3.session.Session()
-        client = session.client(
+        s3_client = session.client(
             service_name='s3',
             endpoint_url=os.getenv("R2_ENDPOINT"),
             aws_access_key_id=os.getenv("R2_ACCESS_KEY_ID"),
@@ -85,12 +108,11 @@ def main():
         )
         bucket = os.getenv("R2_BUCKET_NAME")
         
-        paginator = client.get_paginator('list_objects_v2')
+        paginator = s3_client.get_paginator('list_objects_v2')
         for page in paginator.paginate(Bucket=bucket):
             if 'Contents' in page:
                 for obj in page['Contents']:
-                    # Don't double count files that will be overwritten
-                    if obj['Key'] not in [video_key, notes_key, short_note_key, transcript_key, slides_key]:
+                    if obj['Key'] not in [video_key, notes_key, short_note_key, transcript_key, slides_key, anki_key]:
                         current_bucket_size += obj['Size']
         print(f"Current R2 bucket usage (excluding overwritten files): {current_bucket_size / (1024 * 1024):.2f} MB")
     except Exception as e:
@@ -103,7 +125,6 @@ def main():
         print("   Total would be: {:.3f} GB (Limit: 9.000 GB)".format((current_bucket_size + new_files_size) / (1024 * 1024 * 1024)))
         print("   To prevent Cloudflare charges, this upload has been blocked.")
         
-        # Archive files locally for later upload
         archive_dir = f"local-archive/{lecture_slug}"
         os.makedirs(archive_dir, exist_ok=True)
         print(f"Archiving files locally in {archive_dir} for retry queue...")
@@ -121,6 +142,9 @@ def main():
         if short_note_path and os.path.exists(short_note_path):
             shutil.copy2(short_note_path, f"{archive_dir}/short-note.md")
             archived_paths["short_note"] = f"{archive_dir}/short-note.md"
+        if anki_path and os.path.exists(anki_path):
+            shutil.copy2(anki_path, f"{archive_dir}/anki.csv")
+            archived_paths["anki"] = f"{archive_dir}/anki.csv"
         if os.path.exists("lecture-input/SLIDES.pdf"):
             shutil.copy2("lecture-input/SLIDES.pdf", f"{archive_dir}/slides.pdf")
             archived_paths["slides"] = f"{archive_dir}/slides.pdf"
@@ -128,7 +152,6 @@ def main():
         paths_str = ";".join([f"{k}={v}" for k, v in archived_paths.items()])
         error_msg = f"Upload blocked: Cloudflare R2 safety limit of 9 GB exceeded | Archive Paths: {paths_str}"
         
-        # Log to Supabase with status limit_exceeded
         run_data = {
             "lecture_title": lecture_title,
             "status": "limit_exceeded",
@@ -145,41 +168,77 @@ def main():
     
     # 1. Upload notes
     if os.path.exists(notes_path):
-        print(f"Uploading notes: {notes_path} -> {notes_key}")
-        if not upload_to_r2(notes_path, notes_key):
-            r2_success = False
+        if is_already_uploaded(s3_client, bucket, notes_path, notes_key):
+            print(f"✅ Notes file size matches R2 copy ({notes_key}). Skipping upload.")
+        else:
+            print(f"Uploading notes: {notes_path} -> {notes_key}")
+            if not upload_to_r2(notes_path, notes_key):
+                r2_success = False
     else:
         print(f"Warning: Notes file not found at {notes_path}")
         r2_success = False
         
     # 2. Upload video
     if os.path.exists(video_path):
-        print(f"Uploading video: {video_path} -> {video_key}")
-        if not upload_to_r2(video_path, video_key):
-            r2_success = False
+        if is_already_uploaded(s3_client, bucket, video_path, video_key):
+            print(f"✅ Video file size matches R2 copy ({video_key}). Skipping upload.")
+        else:
+            print(f"Uploading video: {video_path} -> {video_key}")
+            if not upload_to_r2(video_path, video_key):
+                r2_success = False
     else:
         print(f"Warning: Video file not found at {video_path}")
         video_key = None
         
     # 3. Upload transcript
     if os.path.exists(transcript_path):
-        print(f"Uploading transcript: {transcript_path} -> {transcript_key}")
-        if not upload_to_r2(transcript_path, transcript_key):
-            r2_success = False
+        if is_already_uploaded(s3_client, bucket, transcript_path, transcript_key):
+            print(f"✅ Transcript file size matches R2 copy ({transcript_key}). Skipping upload.")
+        else:
+            print(f"Uploading transcript: {transcript_path} -> {transcript_key}")
+            if not upload_to_r2(transcript_path, transcript_key):
+                r2_success = False
 
     # 4. Upload short note markdown
+    actual_short_note_key = None
     if short_note_path and os.path.exists(short_note_path):
-        print(f"Uploading short note: {short_note_path} -> {short_note_key}")
-        if not upload_to_r2(short_note_path, short_note_key):
-            r2_success = False
+        if is_already_uploaded(s3_client, bucket, short_note_path, short_note_key):
+            print(f"✅ Short note file size matches R2 copy ({short_note_key}). Skipping upload.")
+            actual_short_note_key = short_note_key
+        else:
+            print(f"Uploading short note: {short_note_path} -> {short_note_key}")
+            if upload_to_r2(short_note_path, short_note_key):
+                actual_short_note_key = short_note_key
+            else:
+                r2_success = False
+                
+    # 5. Upload Anki CSV
+    actual_anki_key = None
+    if anki_path and os.path.exists(anki_path):
+        if is_already_uploaded(s3_client, bucket, anki_path, anki_key):
+            print(f"✅ Anki deck file size matches R2 copy ({anki_key}). Skipping upload.")
+            actual_anki_key = anki_key
+        else:
+            print(f"Uploading Anki deck: {anki_path} -> {anki_key}")
+            if upload_to_r2(anki_path, anki_key):
+                actual_anki_key = anki_key
+            else:
+                r2_success = False
         
-    # 5. Upload slides (if SLIDES.pdf exists)
+    # 6. Upload slides (if SLIDES.pdf exists)
+    actual_slides_key = None
     if os.path.exists("lecture-input/SLIDES.pdf"):
-        print(f"Uploading slides: lecture-input/SLIDES.pdf -> {slides_key}")
-        if not upload_to_r2("lecture-input/SLIDES.pdf", slides_key):
-            r2_success = False
+        if is_already_uploaded(s3_client, bucket, "lecture-input/SLIDES.pdf", slides_key):
+            print(f"✅ Slides file size matches R2 copy ({slides_key}). Skipping upload.")
+            actual_slides_key = slides_key
+        else:
+            print(f"Uploading slides: lecture-input/SLIDES.pdf -> {slides_key}")
+            if upload_to_r2("lecture-input/SLIDES.pdf", slides_key):
+                actual_slides_key = slides_key
+            else:
+                r2_success = False
         
-    # 6. Log to Supabase
+    # 7. Log to Supabase
     if r2_success:
         run_data = {
             "lecture_title": lecture_title,
@@ -187,6 +246,10 @@ def main():
             "audit_score": audit_score,
             "r2_video_key": video_key,
             "r2_notes_key": notes_key,
+            "r2_short_note_key": actual_short_note_key,
+            "r2_anki_key": actual_anki_key,
+            "r2_transcript_key": transcript_key if os.path.exists(transcript_path) else None,
+            "r2_slides_key": actual_slides_key,
             "error_message": None
         }
         print("Logging run to Supabase...")
@@ -197,4 +260,5 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
+
     main()

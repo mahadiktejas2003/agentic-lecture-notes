@@ -123,7 +123,7 @@ if __name__ == '__main__':
     parser.add_argument('--transcript', default='lecture-input/transcript.srt', help='Path to transcript.srt')
     args = parser.parse_args()
     
-    logger.info(f"Verifying density of {args.concept-map} against {args.transcript}")
+    logger.info(f"Verifying density of {args.concept_map} against {args.transcript}")
     passed, report = verify_density(args.concept_map, args.transcript)
     
     logger.info("=== Coverage Report ===")

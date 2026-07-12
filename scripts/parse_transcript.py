@@ -83,8 +83,8 @@ def parse_srt(srt_path):
 
 def call_antigravity_chat(prompt):
     """Calls the antigravity chat CLI command and extracts JSON from the response."""
-    cli_path = os.environ.get("ANTIGRAVITY_CLI_PATH") or shutil.which("antigravity") or "/Users/tejasmahadik/.gemini/antigravity/bin/antigravity"
-    if not os.path.exists(cli_path):
+    cli_path = os.environ.get("ANTIGRAVITY_CLI_PATH") or shutil.which("antigravity")
+    if not cli_path or not os.path.exists(cli_path):
         logger.error(f"Antigravity CLI not found at: {cli_path}")
         return None
         
@@ -120,7 +120,10 @@ def call_antigravity_chat(prompt):
         try:
             return json.loads(clean_output, strict=False)
         except Exception as je:
-            logger.error(f"All JSON parsing attempts failed. Raw output: {output[:500]}")
+            os.makedirs("logs", exist_ok=True)
+            with open("logs/failed_raw_output.txt", "w", encoding="utf-8") as fe:
+                fe.write(output)
+            logger.error(f"All JSON parsing attempts failed. Saved raw output to logs/failed_raw_output.txt. Raw snippet: {output[:500]}")
             return None
             
     except subprocess.TimeoutExpired:
@@ -132,8 +135,8 @@ def call_antigravity_chat(prompt):
 
 def call_antigravity_chat_raw(prompt):
     """Calls the antigravity chat CLI command and returns the raw output text."""
-    cli_path = os.environ.get("ANTIGRAVITY_CLI_PATH") or shutil.which("antigravity") or "/Users/tejasmahadik/.gemini/antigravity/bin/antigravity"
-    if not os.path.exists(cli_path):
+    cli_path = os.environ.get("ANTIGRAVITY_CLI_PATH") or shutil.which("antigravity")
+    if not cli_path or not os.path.exists(cli_path):
         logger.error(f"Antigravity CLI not found at: {cli_path}")
         return None
         
@@ -193,7 +196,7 @@ def clean_dict_fields(val):
     else:
         return val
 
-def process_chunk(entries, chunk_index, total_chunks, slide_data, continuity_context=""):
+def process_chunk(entries, chunk_index, total_chunks, slide_data, continuity_context="", audit_feedback_context=""):
     """Processes a single 10-minute overlapping chunk using the Antigravity CLI."""
     start_time = entries[0]['start']
     end_time = entries[-1]['end']
@@ -223,6 +226,10 @@ def process_chunk(entries, chunk_index, total_chunks, slide_data, continuity_con
     if continuity_context:
         continuity_section = f"### CONTEXT FROM PREVIOUS LECTURES/PARTS:\n{continuity_context}\n\nUse this context to maintain consistent terminology and notation, link related concepts back to previous parts, and avoid repeating definitions that were already covered in detail.\n\n"
 
+    feedback_section = ""
+    if audit_feedback_context:
+        feedback_section = f"### AUDIT FEEDBACK FROM PREVIOUS RUN:\n{audit_feedback_context}\nEnsure you strictly fix these issues in this chunk.\n\n"
+
     prompt = f"""
 You are the Transcript Mapping Specialist Subagent.
 Analyze the following lecture transcript segment from {start_str} to {end_str}.
@@ -233,50 +240,44 @@ Your task is to extract all key teaching concepts, rules, formulas, examples, vi
 -------------------------
 
 {slides_section}
-{continuity_section}Based on this transcript, produce a JSON object with a single key "blocks", containing a list of concept blocks matching this exact schema.
+{continuity_section}
+{feedback_section}Based on this transcript, produce a JSON object with a single key "blocks", containing a list of concept blocks matching this exact schema.
 CRITICAL JSON SYNTAX RULE: Double quotes (") must ONLY be used for JSON keys and string boundaries. Inside JSON string values themselves, you MUST use single quotes (e.g. 'the') and never unescaped double quotes.
 
 {{
   "blocks": [
     {{
-      "title": "Slide title or explicit lecture heading. You may create descriptive sub-headings if a slide contains multiple distinct sub-concepts.",
-      "explanation": "High-level explanation, why the rule exists, or real-world analogy. Explain the context or logical flow here.",
-      "concept_explanations": [
-        {{
-          "concept_name": "Name of the sub-concept or theory part",
-          "detailed_explanation": "A concise 2-4 sentence explanation of the concept. State the rule, its purpose, and one key analogy if given. Use bullet points for multi-part explanations. Max 100 words."
-        }}
-      ],
+      "title": "Slide title or explicit lecture heading. Create descriptive sub-headings only if a slide covers multiple distinct sub-concepts.",
       "concepts": [
         {{
           "term": "Term, rule, or formula name",
-          "definition": "Definition, description of the rule, or formula. Apply **bolding** to key terms. Apply color highlighting using <highlight color='BLUE'>text</highlight> or <highlight color='RED'>text</highlight> for critical rules, standout facts, or warnings. Do NOT use yellow or green."
+          "definition": "Clear, concise point-wise definition or rule statement. Apply **bolding** to key terms."
         }}
       ],
       "examples": [
         {{
-          "timestamp": "HH:MM:SS", // Timestamp at the END of the example discussion (solved-state timestamp)
+          "timestamp": "HH:MM:SS",
           "sentence": "The complete word problem, scenario, or equation discussed",
-          "rule": "The specific rule or theorem applied (1-2 sentences max)",
-          "working": "Step-by-step solution in concise numbered steps. Use elimination tables for MCQ-type problems. Max 150 words.",
-          "student_notes": "Key student doubts or warning points (1-2 sentences). Preserve teacher's best analogy if any. DO NOT use Hindi/Hinglish."
+          "rule": "The specific rule applied (1 sentence max). Set to null if it's just a redundant re-statement of a concept already defined in the block.",
+          "working": "Step-by-step solution in concise numbered steps.",
+          "teacher_analogies": "Any real-world analogies used by the teacher to explain this example",
+          "student_notes": "Key student notes, warnings, or intuition boxes for this example",
+          "method2": "Alternative Method 2 (Without Formula or visual drawing) if discussed"
         }}
       ],
       "visual_moments": [
         {{
-          "timestamp": "HH:MM:SS", // Must match the solved-state timestamp of the example
-          "type": "board",
-          "description": "Short description of the board/slide content corresponding to the example"
+          "timestamp": "HH:MM:SS",
+          "type": "board or slide",
+          "slide_number": "Integer slide number if type is slide, else null",
+          "description": "Short description of the content"
         }}
       ],
       "teacher_quotes": [
-        "Maximum 5 most impactful teacher statements per block. Paraphrase into formal English. Only preserve verbatim if the exact wording is a definition or rule."
+        "Maximum 2 most impactful teacher statements per block. Paraphrase into formal English."
       ],
-      "traps": [
-        "Common student mistakes (1 sentence each, max 5)"
-      ],
-      "tricks": [
-        "Exam shortcuts or tips (1 sentence each, max 5)"
+      "teacher_cautions": [
+        "ONLY if the teacher EXPLICITLY says 'be careful', 'common mistake', 'remember this shortcut', 'trap', or 'trick'. Otherwise this array MUST be empty. Max 1 per block."
       ],
       "exercise_questions": [
         "Homework, practice, or unsolved questions assigned or discussed"
@@ -287,11 +288,11 @@ CRITICAL JSON SYNTAX RULE: Double quotes (") must ONLY be used for JSON keys and
 
 STRICT RULES:
 1. DEEP EXTRACTION (TWO-PASS): Before outputting the JSON, use a `<think>` block to list out all raw insights, formulas, real-world analogies, and examples found in the chunk. Then build the JSON.
-1b. SMART SYNTHESIS: Preserve all facts, formulas, rules, and worked examples. Condense verbose teacher explanations into concise bullet-point study notes. Never lose information — but never repeat it or pad it with filler prose either. Target concise, exam-ready output.
+1b. HIGH-QUALITY EXAM NOTES: Preserve 100% of core rules, formulas, and worked examples, and write out detailed steps. Write concise, point-wise notes instead of long, verbose paragraphs. Do NOT add unnecessary fluff, conversational filler, or redundant explanations.
 2. EXTRACT EVERYTHING: Extract EVERY SINGLE example problem and question discussed in the transcript segment. Group continuous back-to-back examples under a single visual moment if they belong to the same board state to avoid duplicate screenshots.
 3. ENGLISH ENFORCEMENT: Write purely in English. Do NOT preserve the teacher's Hinglish/bilingual conversational filler, BUT YOU MUST PRESERVE the intuitive real-world analogies translated into clear English. 
-4. BOLDING & MARKDOWN: Aggressively use **bolding** for key terms, definitions, and formulas. Use single asterisks (like *plays*) for italics.
-5. TRANSCRIPT FIDELITY: Your primary source of truth is the verbal transcript, not the slides. Extract the teaching logic, examples, and key analogies concisely. Prefer bullet points over prose paragraphs. Do not write generic slide summaries, but also do not write textbook-length essays — write study notes.
+4. BOLDING & MARKDOWN: Aggressively use **bolding** for key terms, definitions, and formulas. Use single asterisks (like *plays*) for italics. Ensure SQL keywords (`SELECT`, etc.) are in UPPERCASE and wrapped in `<codeinline>...</codeinline>` tags for Consolas styling. Code blocks should be wrapped in `<codeblock>...</codeblock>`.
+5. TRANSCRIPT FIDELITY: Your primary source of truth is the verbal transcript, not the slides. Extract the teaching logic, examples, and key analogies concisely using bullet points or very short paragraphs. Do not write generic slide summaries or textbook-length essays.
 6. SYLLOGISM SPECIAL RULES (ONLY WHEN RELEVANT): Apply the following rules and interpretations ONLY if the corresponding syllogism concept or example is discussed in the transcript segment. Do NOT inject them if the segment does not cover these concepts:
    - Exclusivity of "Only A are B": Translate to "All B are A". B can NEVER intersect or have any relation with any other set C except A. Any possibility statement asserting an overlap between B and C must be marked as FALSE.
    - Surety vs. Possibility Rule: If a relationship is definitely true (Surety), any corresponding possibility conclusion (e.g., "X being Y is a possibility" or "X can be Y") is strictly FALSE.
@@ -312,13 +313,15 @@ STRICT RULES:
    - Rings and fingers: Identify fixed positions (fingers) and moving items (rings). Explain why at least 1 ring per finger in 3 rings/4 fingers is impossible (results in 0 ways).
    - Circular permutations: Standard is (n-1)!. Necklace/Garland (clockwise and anti-clockwise are identical) is (n-1)! / 2. Identical items is 1. Gaps in circular seating of n items is exactly n gaps (not n+1).
    - Combination: Selection of items where order doesn't matter, compared to permutation (arrangement where order matters).
-8. JSON FORMAT: Enclose your final JSON inside ```json ... ``` tags.
-9. CONCEPT BLOCK CONSOLIDATION: You must strictly align all concept block titles with actual slide titles or explicit lecture headings. Do NOT invent arbitrary, custom, or extra concept block titles or categories that are not explicitly present in the lecture slides or transcript. Group related content under these primary topic blocks rather than creating tiny or custom-named blocks.
-10. STRICT FIDELITY CONSTRAINT (NO HALLUCINATIONS / ALTERATIONS): You must ONLY extract concepts, formulas, rules, examples, and definitions that are explicitly taught or mentioned in the provided transcript segment. Do NOT invent, assume, or add any extra topics, theories, rules, or questions that were not discussed by the teacher, even if they are standard academic concepts. You must NOT alter the facts, formulas, or examples taught by the teacher. The notes must represent a 100% faithful reconstruction of the actual lecture segment, nothing more and nothing less.
+8. PRESERVE ANALOGIES & SEQUENCE (CRITICAL): The user specifically complained that generated notes lacked the sequence, analogies, and detailed explanations as told in the lecture. You MUST capture the exact chronological flow, the teacher's unique real-world analogies, and the step-by-step reasoning. Do NOT generate standard rhetoric or generic textbook summaries; mirror the lecture's unique teaching style.
+9. JSON FORMAT: Enclose your final JSON inside ```json ... ``` tags.
+10. CONCEPT BLOCK CONSOLIDATION: You must strictly align all concept block titles with actual slide titles or explicit lecture headings. Do NOT invent arbitrary, custom, or extra concept block titles or categories that are not explicitly present in the lecture slides or transcript. Group related content under these primary topic blocks rather than creating tiny or custom-named blocks.
+11. STRICT FIDELITY CONSTRAINT (NO HALLUCINATIONS / ALTERATIONS): You must ONLY extract concepts, formulas, rules, examples, and definitions that are explicitly taught or mentioned in the provided transcript segment. Do NOT invent, assume, or add any extra topics, theories, rules, or questions that were not discussed by the teacher, even if they are standard academic concepts. You must NOT alter the facts, formulas, or examples taught by the teacher. The notes must represent a 100% faithful reconstruction of the actual lecture segment, nothing more and nothing less.
 """
     
-    # Retry loop
-    for attempt in range(3):
+    # Retry loop — up to 5 attempts with exponential backoff (10s, 20s, 40s, 80s)
+    MAX_ATTEMPTS = 5
+    for attempt in range(MAX_ATTEMPTS):
         res = call_antigravity_chat(prompt)
         if res and isinstance(res, dict) and "blocks" in res:
             # Add segment start/end timestamps to each block's temporary metadata
@@ -326,11 +329,15 @@ STRICT RULES:
                 block["_chunk_start"] = start_time
                 block["_chunk_end"] = end_time
             return res["blocks"]
-        logger.warning(f"Attempt {attempt+1} failed to parse or return valid JSON. Retrying...")
-        if attempt < 2:
-            time.sleep(2 ** attempt)
+        logger.warning(f"Attempt {attempt+1}/{MAX_ATTEMPTS} failed to parse or return valid JSON. Retrying...")
+        if attempt < MAX_ATTEMPTS - 1:
+            backoff = 10 * (2 ** attempt)  # 10s, 20s, 40s, 80s
+            logger.info(f"Waiting {backoff}s before retry...")
+            time.sleep(backoff)
         
-    logger.error(f"Failed to process chunk {chunk_index} after 3 attempts.")
+    # Non-fatal: skip this chunk with a warning; the pipeline continues with other chunks
+    logger.warning(f"Chunk {chunk_index}/{total_chunks} skipped after {MAX_ATTEMPTS} failed attempts. " 
+                   f"Transcript segment {start_str}-{end_str} will be missing from notes.")
     return []
 
 def consolidate_blocks(blocks):
@@ -355,21 +362,8 @@ def consolidate_blocks(blocks):
             existing_title = cb["title"]
             existing_clean = re.sub(r'[^a-zA-Z0-9\s]', '', existing_title).lower().strip()
             
-            # Match conditions:
-            # 1. Exact match (cleaned)
-            # 2. Substring match if long enough (>= 8 chars)
-            # 3. Fuzzy similarity score >= 0.75
-            is_match = False
-            if title_clean == existing_clean:
-                is_match = True
-            elif len(title_clean) >= 8 and len(existing_clean) >= 8:
-                if title_clean in existing_clean or existing_clean in title_clean:
-                    is_match = True
-            
-            if not is_match:
-                ratio = difflib.SequenceMatcher(None, title_clean, existing_clean).ratio()
-                if ratio >= 0.75:
-                    is_match = True
+            # Strict Match condition: Exact match of normalized titles to prevent concept jumbling
+            is_match = (title_clean == existing_clean)
                     
             if is_match:
                 matched_idx = idx
@@ -379,15 +373,13 @@ def consolidate_blocks(blocks):
             # Create new block
             merged_block = {
                 "title": title,
-                "explanation": block.get("explanation", ""),
                 "_chunk_start": block.get("_chunk_start"),
                 "_chunk_end": block.get("_chunk_end"),
                 "concepts": list(block.get("concepts", [])),
                 "examples": list(block.get("examples", [])),
                 "visual_moments": list(block.get("visual_moments", [])),
                 "teacher_quotes": list(block.get("teacher_quotes", [])),
-                "traps": list(block.get("traps", [])),
-                "tricks": list(block.get("tricks", [])),
+                "teacher_cautions": list(block.get("teacher_cautions", [])),
                 "exercise_questions": list(block.get("exercise_questions", []))
             }
             consolidated.append(merged_block)
@@ -411,16 +403,8 @@ def consolidate_blocks(blocks):
                 else:
                     existing["_chunk_end"] = max(existing["_chunk_end"], block["_chunk_end"])
                     
-            # Concatenate explanations
-            exp1 = existing.get("explanation", "").strip()
-            exp2 = block.get("explanation", "").strip()
-            if exp2 and exp2 != exp1:
-                if exp1:
-                    if exp2 not in exp1:
-                        existing["explanation"] = exp1 + " " + exp2
-                else:
-                    existing["explanation"] = exp2
                     
+
             # Deduplicate concepts by 'term' (case-insensitive)
             existing_terms = {c.get("term", "").strip().lower() for c in existing["concepts"] if c.get("term")}
             for c in block.get("concepts", []):
@@ -458,8 +442,7 @@ def consolidate_blocks(blocks):
                         seen.add(item.strip().lower())
             
             merge_str_lists(existing["teacher_quotes"], block.get("teacher_quotes", []))
-            merge_str_lists(existing["traps"], block.get("traps", []))
-            merge_str_lists(existing["tricks"], block.get("tricks", []))
+            merge_str_lists(existing["teacher_cautions"], block.get("teacher_cautions", []))
             merge_str_lists(existing["exercise_questions"], block.get("exercise_questions", []))
             
     consolidated.sort(key=lambda x: x.get("_chunk_start") if x.get("_chunk_start") is not None else 0.0)
@@ -500,10 +483,15 @@ def inject_reference_notes(blocks, ref_data):
 REFERENCE NOTES FOR THIS BLOCK (user's manual handwritten notes):
 {json.dumps(relevant_ref, indent=1)}
 
-CONCEPT BLOCK TO UPDATE:
+CONCEPT BLOCK TO UPDATE (built from the transcript mapping):
 {json.dumps(block, indent=1)}
 
-TASK: Inject any missing rules, handwritten examples, or specific analogies from the reference notes into the concept block. Match the keys in the concept block (e.g. concepts, examples, visual_moments, teacher_quotes, traps, tricks, student_notes, boundary_questions). Return the updated concept block.
+TASK:
+Integrate, map, and correct the concept block contextually using the user's handwritten reference notes:
+1. CROSS-CHECK AND CORRECT: Compare the reference notes against the mapped concepts. Check for any mismatches, incorrect terms, or omissions in the mapped concepts. Use the reference notes to correct and enrich the explanations.
+2. SOURCE-ALIGNED INTEGRATION: Do NOT blindly copy-paste the notes. Align them logically with the flow of the lecture. Verify how the teacher actually explained the concept/rule in the lecture.
+3. MATCH KEYS: Map the rules, examples, traps, tricks, student doubts, and warnings into their respective keys (e.g. concepts, examples, visual_moments, teacher_quotes, traps, tricks, student_notes, boundary_questions).
+4. PROFESSIONAL STUDY NOTE TONE: Format the injected elements to match the academic, high-fidelity tone of the rest of the document (bold key terms, pastel highlights, step-by-step layout).
 
 OUTPUT FORMAT (respond with ONLY this JSON):
 {{
@@ -514,11 +502,10 @@ OUTPUT FORMAT (respond with ONLY this JSON):
             # Preserve internal block metadata keys
             for key, val in res.items():
                 if val is not None:
-                    if isinstance(val, (list, dict, str)):
-                        if len(val) > 0:
-                            block[key] = val
-                    else:
-                        block[key] = val
+                    if isinstance(val, (list, dict, str)) and not val:
+                        # If key in res is empty (like an empty list []), do NOT overwrite
+                        continue
+                    block[key] = val
             if chunk_start is not None:
                 block["_chunk_start"] = chunk_start
             if chunk_end is not None:
@@ -528,7 +515,7 @@ OUTPUT FORMAT (respond with ONLY this JSON):
     return updated_blocks
 
 
-def apply_linguistic_filter(blocks):
+def apply_linguistic_filter(blocks, audit_feedback_context=""):
     if not blocks:
         return []
     logger.info("Running Pass 3: Post-Processing Linguistic Filter...")
@@ -540,16 +527,21 @@ def apply_linguistic_filter(blocks):
         batch = blocks[idx:idx+batch_size]
         input_blocks = [dict(b) for b in batch]
         
+        feedback_instruction = ""
+        if audit_feedback_context:
+            feedback_instruction = f"URGENT AUDIT FAILURES TO FIX:\n{audit_feedback_context}\n"
+            
         prompt = f"""You are the Post-Processing Linguistic Filter. You MUST respond with ONLY valid JSON and nothing else. No explanations, no commentary — ONLY a raw JSON object.
 
 INPUT — Concept blocks:
 {json.dumps(input_blocks, indent=1)}
 
-TASK: Clean all text fields in the blocks to satisfy Topper-Grade English. Rules:
+{feedback_instruction}
+TASK: Clean all text fields in the blocks to satisfy clear English. Rules:
 1. STRICT DEVANAGARI BAN: Translate any Devanagari script (Hindi/Hinglish characters) to English or remove it.
-2. HINGLISH CLEANUP: Translate Hinglish conversational filler (e.g. 'hai', 'toh', 'ki', 'bhi', 'aur') from explanations, workings, and definitions into formal English.
-3. TEACHER QUOTES: Clean direct quotes (`teacher_quotes`) of Hinglish filler and translate them into formal Topper-Grade English, UNLESS a specific quote uses a very unique, irreplaceable Hindi analogy that is strictly required to explain the concept. Otherwise, direct quotes must be translated.
-4. NO SUMMARIZATION (CRITICAL): You must preserve 100% of the detail, formulas, examples, step-by-step workings, and explanations. Do not summarize, shorten, or simplify the explanation text. Only translate Devanagari and Hinglish filler to formal English while keeping the exact same depth and length of information.
+2. HINGLISH CLEANUP: Translate Hinglish conversational filler (e.g. 'hai', 'toh', 'ki', 'bhi', 'aur') from explanations, workings, and definitions into clear English.
+3. TEACHER QUOTES: Clean direct quotes (`teacher_quotes`) of Hinglish filler. DO NOT scrub the teacher's unique tone or quirky conversational analogies—simply make them readable in English.
+4. NO SUMMARIZATION (CRITICAL): You must preserve 100% of the detail, formulas, examples, step-by-step workings, and explanations. Do not summarize, shorten, or simplify the explanation text. Only translate Devanagari and Hinglish filler to clear English while keeping the exact same depth and length of information.
 5. SCHEMA COMPLIANCE: Keep the JSON structure exactly identical to the input.
 
 OUTPUT FORMAT (respond with ONLY this JSON):
@@ -569,17 +561,13 @@ OUTPUT FORMAT (respond with ONLY this JSON):
                 if new_blocks and len(new_blocks) == len(batch):
                     logger.info(f"Linguistic filter batch {idx//batch_size + 1} succeeded on attempt {attempt+1}")
                     for orig_b, new_b in zip(batch, new_blocks):
-                        orig_b["title"] = new_b.get("title", orig_b.get("title"))
-                        orig_b["explanation"] = new_b.get("explanation", orig_b.get("explanation"))
-                        orig_b["concepts"] = new_b.get("concepts", orig_b.get("concepts"))
-                        orig_b["examples"] = new_b.get("examples", orig_b.get("examples"))
-                        orig_b["teacher_quotes"] = new_b.get("teacher_quotes", orig_b.get("teacher_quotes"))
-                        orig_b["traps"] = new_b.get("traps", orig_b.get("traps"))
-                        orig_b["tricks"] = new_b.get("tricks", orig_b.get("tricks"))
-                        if "student_notes" in new_b:
-                            orig_b["student_notes"] = new_b["student_notes"]
-                        if "method2" in new_b:
-                            orig_b["method2"] = new_b["method2"]
+                        for key in ["title", "explanation", "concepts", "examples", "teacher_quotes", "traps", "tricks", "student_notes", "method2"]:
+                            if key in new_b:
+                                new_val = new_b[key]
+                                if new_val is not None:
+                                    if isinstance(new_val, (list, dict, str)) and not new_val:
+                                        continue
+                                    orig_b[key] = new_val
                     success = True
                     break
     return blocks
@@ -587,8 +575,8 @@ OUTPUT FORMAT (respond with ONLY this JSON):
 def check_sentence_similarity(s1, s2):
     if not s1 or not s2:
         return 0.0
-    w1 = set(re.findall(r'\b[a-z0-9]+\b', s1.lower()))
-    w2 = set(re.findall(r'\b[a-z0-9]+\b', s2.lower()))
+    w1 = set(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', s1.lower()))
+    w2 = set(re.findall(r'\b[a-z0-9_\-\+]{1,}\b', s2.lower()))
     if not w1 or not w2:
         return 0.0
     return len(w1 & w2) / len(w1 | w2)
@@ -596,17 +584,6 @@ def check_sentence_similarity(s1, s2):
 def merge_two_blocks(b1, b2, consolidated_title=None):
     title = consolidated_title or b1.get("title", "")
     
-    exp1 = b1.get("explanation", "").strip()
-    exp2 = b2.get("explanation", "").strip()
-    if exp1 == exp2:
-        explanation = exp1
-    elif exp2 in exp1:
-        explanation = exp1
-    elif exp1 in exp2:
-        explanation = exp2
-    else:
-        explanation = exp1 + "\n\n" + exp2
-        
     start1 = b1.get("_chunk_start")
     start2 = b2.get("_chunk_start")
     if start1 is None:
@@ -643,63 +620,79 @@ def merge_two_blocks(b1, b2, consolidated_title=None):
                     break
         
     concepts = list(b1.get("concepts", []))
-    concept_map = {c.get("term", "").strip().lower(): c for c in concepts if c.get("term")}
+    concept_map = {str(c.get("term") or "").strip().lower(): c for c in concepts if c.get("term")}
     for c in b2.get("concepts", []):
-        term = c.get("term", "").strip().lower()
+        term = str(c.get("term") or "").strip().lower()
+        if not term:
+            continue
         if term not in concept_map:
             concepts.append(c)
             concept_map[term] = c
         else:
-            existing_def = concept_map[term].get("definition", "").strip()
-            new_def = c.get("definition", "").strip()
+            existing_def = str(concept_map[term].get("definition") or "").strip()
+            new_def = str(c.get("definition") or "").strip()
             if new_def and new_def.lower() not in existing_def.lower():
                 concept_map[term]["definition"] = (existing_def + "\nAlso: " + new_def).strip()
             
     examples = list(b1.get("examples", []))
     for e2 in b2.get("examples", []):
         sent2 = e2.get("sentence", e2.get("scenario_or_problem", "")).strip()
+        ts2 = timestamp_to_seconds(e2.get("timestamp", ""))
         is_dup = False
         for i, e1 in enumerate(examples):
             sent1 = e1.get("sentence", e1.get("scenario_or_problem", "")).strip()
+            ts1 = timestamp_to_seconds(e1.get("timestamp", ""))
+            
+            # Timestamp delta check (> 5 mins / 300 seconds)
+            if abs(ts1 - ts2) > 300:
+                continue
+                
+            if not sent1 or not sent2:
+                continue
+                
             if sent1.lower() == sent2.lower() or check_sentence_similarity(sent1, sent2) >= 0.98:
                 is_dup = True
-                w1 = e1.get("working", e1.get("step_by_step_logic", "")).strip()
-                w2 = e2.get("working", e2.get("step_by_step_logic", "")).strip()
+                
+                def safe_str(val):
+                    return str(val).strip() if val is not None else ""
+
+                w1 = safe_str(e1.get("working", e1.get("step_by_step_logic")))
+                w2 = safe_str(e2.get("working", e2.get("step_by_step_logic")))
                 if w2 and w2.lower() not in w1.lower():
                     e1["working"] = (w1 + "\n\n" + w2).strip()
                 
-                r1 = e1.get("rule", e1.get("core_principles", "")).strip()
-                r2 = e2.get("rule", e2.get("core_principles", "")).strip()
+                r1 = safe_str(e1.get("rule", e1.get("core_principles")))
+                r2 = safe_str(e2.get("rule", e2.get("core_principles")))
                 if r2 and r2.lower() not in r1.lower():
                     e1["rule"] = (r1 + " | " + r2).strip(" | ")
                 
-                sn1 = e1.get("student_notes", "").strip()
-                sn2 = e2.get("student_notes", "").strip()
+                sn1 = safe_str(e1.get("student_notes"))
+                sn2 = safe_str(e2.get("student_notes"))
                 if sn2 and sn2.lower() not in sn1.lower():
                     e1["student_notes"] = (sn1 + "\n\n" + sn2).strip()
                 
-                m1 = e1.get("method2", "").strip()
-                m2 = e2.get("method2", "").strip()
+                m1 = safe_str(e1.get("method2"))
+                m2 = safe_str(e2.get("method2"))
                 if m2 and m2.lower() not in m1.lower():
                     e1["method2"] = (m1 + "\n\n" + m2).strip()
 
-                c1 = e1.get("cloze_text", "").strip()
-                c2 = e2.get("cloze_text", "").strip()
+                c1 = safe_str(e1.get("cloze_text"))
+                c2 = safe_str(e2.get("cloze_text"))
                 if c2 and c2.lower() not in c1.lower():
                     e1["cloze_text"] = (c1 + " " + c2).strip()
 
                 cues1 = list(e1.get("cornell_cues", []))
                 cues2 = e2.get("cornell_cues", [])
                 for cue in cues2:
-                    if cue and cue.strip().lower() not in {c.strip().lower() for c in cues1}:
+                    if cue and safe_str(cue).lower() not in {safe_str(c).lower() for c in cues1}:
                         cues1.append(cue)
                 e1["cornell_cues"] = cues1
 
                 if not e1.get("srs_tag") and e2.get("srs_tag"):
                     e1["srs_tag"] = e2.get("srs_tag")
 
-                ana1 = e1.get("teacher_analogies", "").strip()
-                ana2 = e2.get("teacher_analogies", "").strip()
+                ana1 = safe_str(e1.get("teacher_analogies"))
+                ana2 = safe_str(e2.get("teacher_analogies"))
                 if ana2 and ana2.lower() not in ana1.lower():
                     e1["teacher_analogies"] = (ana1 + "\n\n" + ana2).strip()
                 break
@@ -733,7 +726,6 @@ def merge_two_blocks(b1, b2, consolidated_title=None):
     
     return {
         "title": title,
-        "explanation": explanation,
         "concept_explanations": concept_explanations,
         "_chunk_start": chunk_start,
         "_chunk_end": chunk_end,
@@ -757,8 +749,7 @@ def consolidate_blocks_llm(blocks, slide_data):
     for idx, b in enumerate(blocks):
         light_blocks.append({
             "index": idx,
-            "title": b.get("title", ""),
-            "explanation": b.get("explanation", "")[:200]
+            "title": b.get("title", "")
         })
         
     prompt = f"""You are the Concept Block Consolidator. You MUST respond with ONLY valid JSON and nothing else. No explanations, no commentary — ONLY a raw JSON object.
@@ -769,9 +760,10 @@ def consolidate_blocks_llm(blocks, slide_data):
     SLIDE HEADINGS for alignment:
     {json.dumps([{"slide": s.get("slide_number"), "title": s.get("ocr_text","")[:100]} for s in slide_data], indent=1)}
     
-    TASK: Aggressively merge redundant and overlapping blocks. If two blocks cover >50% overlapping concepts or the same topic area, MERGE them. 
-    TARGET: Maximum 5-7 concept blocks for the entire lecture. Each block must have a UNIQUE focus — no two blocks should cover the same topic. Align titles with actual slide headings.
-    CRITICAL: Err on the side of MERGING rather than keeping separate. Fewer, richer blocks are better than many thin, overlapping ones.
+    TASK: Merge redundant and overlapping blocks. If two blocks cover the exact same concept or are truly redundant, MERGE them.
+    TARGET: Maintain distinct main topics and separate sub-topics as independent blocks (e.g., different algorithms, methods, or protocols like FDM, TDM, and WDM must remain separate concept blocks). Align titles with actual slide headings.
+    CRITICAL: Do NOT merge distinct sub-topics into a single generic block. Each main topic or distinct sub-topic must remain its own separate block to preserve chronological flow and detailed analogies. You MUST preserve the teacher's analogies and step-by-step sequences. Over-merging ruins the sequence of the notes.
+    STRICT CONSTRAINT: You can ONLY merge contiguous (adjacent) blocks. Do NOT merge blocks that are separated by other unmerged blocks.
     
     OUTPUT FORMAT (respond with ONLY this JSON structure):
     {{
@@ -811,7 +803,7 @@ def consolidate_blocks_llm(blocks, slide_data):
                 merged_block["title"] = title
                 consolidated.append(merged_block)
                 merged_indices.update(valid_indices)
-                
+                    
             # Add any raw blocks that were not merged
             for idx, b in enumerate(blocks):
                 if idx not in merged_indices:
@@ -827,7 +819,38 @@ def consolidate_blocks_llm(blocks, slide_data):
     logger.warning("Failed to consolidate concept blocks using LLM mapping, falling back to deterministic consolidation.")
     return consolidate_blocks(blocks)
 
-def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title=None, min_block_duration=120):
+def synthesize_explanations(blocks):
+    if not blocks:
+        return []
+    logger.info("Running Pass 1.6: Synthesizing verbose explanations...")
+    for idx, block in enumerate(blocks):
+        title = block.get("title", "")
+        explanation = block.get("explanation", "")
+        if len(explanation) > 4000:
+            logger.info(f"Synthesizing explanation for '{title}' ({len(explanation)} chars)...")
+            prompt = f"""You are the Note Explanation Synthesizer. Your goal is to rewrite the explanation for the concept block "{title}" to make it highly readable, like high-quality student study notes, without losing ANY detail.
+            
+            CRITICAL CONSTRAINTS:
+            1. PRESERVE DETAIL: You MUST NOT shorten the explanation. Preserve 100% of the reasoning, mathematical formulas, equations, definitions, and core technical rules.
+            2. DEDUPLICATION: Eliminate any redundant information, repeated descriptions, or summaries of other topics that are covered in other blocks.
+            3. PRESERVE ANALOGIES (CRITICAL): Do NOT remove or summarize the teacher's real-world analogies; they must be preserved in full.
+            4. FORMATTING: Use bolding and short paragraphs to make it readable.
+            
+            INPUT EXPLANATION:
+            {explanation}
+            
+            OUTPUT: Respond with ONLY the rewritten explanation. No markdown wrappers other than standard formatting (e.g. bold, math). Do not wrap the output in json or backticks unless they are part of the formatting."""
+            
+            res = call_antigravity_chat_raw(prompt)
+            if res and len(res.strip()) > 50:
+                block["explanation"] = res.strip()
+                logger.info(f"Synthesized explanation length: {len(block['explanation'])} chars.")
+            else:
+                logger.warning(f"Synthesis returned empty response. Keeping original explanation.")
+    return blocks
+
+
+def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title=None, min_block_duration=120, audit_feedback_path=None):
     """Automatically segments and parses an SRT transcript into a concept block map."""
     logger.info(f"Starting transcript parsing for {input_path}")
     
@@ -874,6 +897,19 @@ def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title
     except Exception as continuity_err:
         logger.warning(f"Failed to fetch continuity context: {continuity_err}")
 
+    audit_feedback_context = ""
+    if audit_feedback_path and os.path.exists(audit_feedback_path):
+        try:
+            with open(audit_feedback_path, 'r', encoding='utf-8') as f:
+                feedback_data = json.load(f)
+                if feedback_data:
+                    audit_feedback_context = "PREVIOUS AUDIT FAILED. FIX THESE ISSUES IN YOUR EXTRACTION:\n"
+                    for gate, reasons in feedback_data.items():
+                        for r in reasons:
+                            audit_feedback_context += f"- Gate {gate}: {r}\n"
+        except Exception as e:
+            logger.warning(f"Could not load audit feedback: {e}")
+
     # 2. Chunk transcript into overlapping 10-minute (600s) windows with 9.5-minute (570s) steps
     window_size = 600.0
     step_size = 570.0
@@ -892,17 +928,25 @@ def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title
     # 3. Process each chunk
     all_blocks = []
     for i, chunk in enumerate(chunks):
-        blocks = process_chunk(chunk, i+1, total_chunks, slide_data, continuity_context)
+        blocks = process_chunk(chunk, i+1, total_chunks, slide_data, continuity_context, audit_feedback_context)
         all_blocks.extend(blocks)
         
     if not all_blocks:
-        logger.error("Failed to extract any concept blocks from transcript.")
+        logger.error("Failed to extract ANY concept blocks from transcript across all chunks. "
+                     "This indicates a persistent API connectivity issue. Aborting pipeline.")
+        return False
+    
+    # Count how many chunks had data vs were skipped
+    successful_chunk_count = sum(1 for b in all_blocks if b)
+    if successful_chunk_count == 0:
+        logger.error("All chunk blocks are empty. Aborting.")
         return False
         
     # Apply structural passes
     all_blocks = consolidate_blocks_llm(all_blocks, slide_data)
+
     all_blocks = inject_reference_notes(all_blocks, ref_data)
-    all_blocks = apply_linguistic_filter(all_blocks)
+    all_blocks = apply_linguistic_filter(all_blocks, audit_feedback_context)
         
     # 4. Global normalization and formatting
     normalized_blocks = []
@@ -941,11 +985,18 @@ def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title
             ts = ex.get("timestamp", "")
             sec = timestamp_to_seconds(ts)
             ts_formatted = seconds_to_timestamp(sec)
+            
+            sentence_val = ex.get("sentence", ex.get("scenario_or_problem", "")).strip()
+            working_val = ex.get("working", ex.get("step_by_step_logic", "")).strip()
+            # Skip empty placeholder examples
+            if not sentence_val and not working_val:
+                continue
+                
             item = {
                 "timestamp": ts_formatted,
-                "sentence": ex.get("sentence", ex.get("scenario_or_problem", "")),
+                "sentence": sentence_val,
                 "rule": ex.get("rule", ex.get("core_principles", "")),
-                "working": ex.get("working", ex.get("step_by_step_logic", ""))
+                "working": working_val
             }
             if "student_notes" in ex:
                 item["student_notes"] = ex["student_notes"]
@@ -971,6 +1022,7 @@ def parse_transcript(input_path, output_path, frame_manifest_path, lecture_title
             formatted_visuals.append({
                 "timestamp": ts_formatted,
                 "type": vis.get("type", "board"),
+                "slide_number": vis.get("slide_number"),
                 "description": vis.get("description", "")
             })
             visual_timestamps.add(ts_formatted)
@@ -1031,7 +1083,8 @@ if __name__ == '__main__':
     parser.add_argument('--frame-manifest', default='frame_manifest.json', help='Output frame manifest path')
     parser.add_argument('--lecture-title', help='Override lecture title')
     parser.add_argument('--min-block-duration', type=int, default=120, help='Minimum block duration in seconds')
+    parser.add_argument('--audit-feedback', default=None, help='Path to audit feedback JSON')
     args = parser.parse_args()
     
-    success = parse_transcript(args.input, args.output, args.frame_manifest, args.lecture_title, args.min_block_duration)
+    success = parse_transcript(args.input, args.output, args.frame_manifest, args.lecture_title, args.min_block_duration, args.audit_feedback)
     sys.exit(0 if success else 1)

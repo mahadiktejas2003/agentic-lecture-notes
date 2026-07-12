@@ -27,7 +27,7 @@ Abort if any fails.
    ```bash
    source venv/bin/activate && python3 scripts/audit.py --docx notes-output/LECTURE_NOTES.docx --concept-map concept_block_map.json --frame-manifest frame_manifest.json --slide-manifest slide_manifest.json
    ```
-4. Fix failures and re‑audit until all 18 gates pass.
+4. Fix failures and re‑audit until all 22 gates pass.
 
 ## Attribution Ban
 NEVER write "the lecturer says", "the teacher explains", etc. Write content directly.
@@ -38,8 +38,8 @@ NEVER write "the lecturer says", "the teacher explains", etc. Write content dire
 - **Inline Screenshot Placement**: Always insert the corresponding visual moment screenshot inline immediately following the example's Answer/Working section. Use a 1-to-1 index matching between examples and visual moments in each block, keeping leftover images at the end of the block.
 - **Rule Deduplication**: Filter out redundant rules within the same block. A rule should not print if it has a word overlap similarity ratio > 0.50 with any rule already printed in the current block.
 - **Drawn Table Support**: If a concept block contains a `"table"` property, render it as a styled Word table in the document.
-- **No Explanation Truncation**: Never truncate or abbreviate explanations or concepts; print the full text to preserve grammar rules and context.
-- **Math Explanations & Layout**: Ensure that all mathematical workings are formatted step-by-step with each step on a new sentence/line (splitting on '->' or step indicators). Show Golden Rule checks first, prime factorization combinations clearly, divisions explicitly, and original fractional/decimal equations first before simplified forms. Label homework questions explicitly as "Homework Questions (HW Que): Try:". Do not mix them with lecture examples. Do not hallucinate or invent extra questions.
+- **Highlighting & Callouts**: Banish all native neon highlights; all highlighting tags are converted to soft pastels (blue `#E1F5FE`, red `#FEE2E2`, purple `#F3E8FF`, orange `#FFEDD5`, gray `#F1F5F9`) using OpenXML run-level shading. Student Note/Doubt boxes must use Ice-Blue `#F0F4F8` shading.
+
 
 ## Anti-Patterns List
 | Anti-Pattern | Description | Corrective Guideline |

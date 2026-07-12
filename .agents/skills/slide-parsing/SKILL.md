@@ -15,7 +15,8 @@ description: Converts slide decks to images, OCRs text, cross‑references with 
 1. Convert slides:
    - `.pptx`:
      ```bash
-     python3 -c "from pptx import Presentation; prs=Presentation('lecture-input/SLIDES.pptx'); [slide.export(f'slides/slide_{i+1:03d}.png') for i,slide in enumerate(prs.slides)]"
+     # NOTE: python-pptx cannot natively export images. If a .pptx is provided,
+     # convert it to .pdf first using libreoffice (if available) or ask the user for a PDF.
      ```
    - `.pdf`:
      ```bash

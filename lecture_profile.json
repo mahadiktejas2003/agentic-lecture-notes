@@ -6,6 +6,12 @@
   "generate_worked_examples": true,
   "generate_theoretical_theory": true,
   "visual_appendix_limit": 20,
-  "focus_areas": ["Detailed Concepts", "Worked Examples", "Traps and Tricks"],
-  "explanation_limit": 600
+  "focus_areas": [
+    "Detailed Concepts",
+    "Worked Examples",
+    "Traps and Tricks"
+  ],
+  "explanation_limit": 2000,
+  "word_count": 5163,
+  "syllabus_keyword_matches": 0
 }
