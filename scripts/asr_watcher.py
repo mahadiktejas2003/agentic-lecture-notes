@@ -153,11 +153,11 @@ class ASRQueue:
                 conn.close()
 
     def next_job(self) -> dict | None:
-        """Get the next queued job (FIFO)."""
+        """Get the next queued job (LIFO - Newest first)."""
         with self._lock:
             conn = self._connect()
             row = conn.execute(
-                "SELECT * FROM jobs WHERE status = 'queued' ORDER BY id ASC LIMIT 1"
+                "SELECT * FROM jobs WHERE status = 'queued' ORDER BY id DESC LIMIT 1"
             ).fetchone()
             conn.close()
             return dict(row) if row else None

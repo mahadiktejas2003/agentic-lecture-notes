@@ -1048,6 +1048,12 @@ async def root():
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
+            // Clear watcher interval when switching away
+            if (watcherPollInterval && tab !== 'watcher') {
+                clearInterval(watcherPollInterval);
+                watcherPollInterval = null;
+            }
+
             if (tab === 'notes') {
                 document.getElementById('tabNotes').classList.add('active');
                 document.getElementById('notesContentSection').classList.add('active');
@@ -1058,6 +1064,9 @@ async def root():
                 document.getElementById('tabWatcher').classList.add('active');
                 document.getElementById('watcherContentSection').classList.add('active');
                 refreshWatcherQueue();
+                if (!watcherPollInterval) {
+                    watcherPollInterval = setInterval(refreshWatcherQueue, 3000);
+                }
             }
         }
 
@@ -1072,9 +1081,19 @@ async def root():
                 // Update alive indicator
                 const indicator = document.getElementById('watcherAliveIndicator');
                 if (data.alive) {
-                    indicator.innerHTML = '🟢 Online';
-                    indicator.style.background = 'rgba(46,204,113,0.15)';
-                    indicator.style.color = '#2ecc71';
+                    if (data.on_battery) {
+                        indicator.innerHTML = '⚠️ Paused (Running on Battery)';
+                        indicator.style.background = 'rgba(243,156,18,0.15)';
+                        indicator.style.color = '#f39c12';
+                    } else if (data.paused) {
+                        indicator.innerHTML = '⏸️ Paused';
+                        indicator.style.background = 'rgba(155,89,182,0.15)';
+                        indicator.style.color = '#9b59b6';
+                    } else {
+                        indicator.innerHTML = '🟢 Online';
+                        indicator.style.background = 'rgba(46,204,113,0.15)';
+                        indicator.style.color = '#2ecc71';
+                    }
                 } else {
                     indicator.innerHTML = '🔴 Offline';
                     indicator.style.background = 'rgba(255,50,50,0.15)';
@@ -2267,6 +2286,7 @@ async def watcher_status():
     """Get watcher daemon status from heartbeat file."""
     alive = False
     paused = False
+    on_battery = False
     currently_transcribing = None
     stats = {}
 
@@ -2279,6 +2299,7 @@ async def watcher_status():
             age = (dt.now() - alive_at).total_seconds()
             alive = age < 60  # alive if heartbeat < 60 seconds old
             paused = data.get("paused", False)
+            on_battery = data.get("on_battery", False)
             currently_transcribing = data.get("currently_transcribing")
             stats = data.get("stats", {})
         except Exception:
@@ -2287,6 +2308,7 @@ async def watcher_status():
     return {
         "alive": alive,
         "paused": paused or WATCHER_PAUSE_FLAG.exists(),
+        "on_battery": on_battery,
         "currently_transcribing": currently_transcribing,
         "stats": stats,
     }
