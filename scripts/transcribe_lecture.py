@@ -115,7 +115,7 @@ def main():
     )
     parser.add_argument("--input", required=True, help="Path to input video or audio file")
     parser.add_argument("--output-dir", default="lecture-input", help="Directory to save the transcripts")
-    parser.add_argument("--model", default="mlx-community/Qwen3-ASR-1.7B-8bit", 
+    parser.add_argument("--model", default="mlx-community/Qwen3-ASR-1.7B-4bit", 
                         help="MLX model repository name on Hugging Face")
     parser.add_argument("--language", default="hi", help="Language code, e.g. hi (Hindi), en (English) or auto")
     parser.add_argument("--context", default="", help="Optional domain vocabulary/context to bias recognition")
