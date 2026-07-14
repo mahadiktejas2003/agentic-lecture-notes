@@ -20,6 +20,61 @@ def main():
             sys.exit(1)
         prompt = args[1]
         
+        # Check if USE_LOCAL_LLM is enabled in .env
+        use_local = False
+        local_model = "qwen2.5vl:7b"
+        ollama_host = "http://localhost:11434"
+        
+        env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), ".env")
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.strip() and not line.startswith("#"):
+                        parts = line.split("=", 1)
+                        if len(parts) == 2:
+                            k = parts[0].strip()
+                            v = parts[1].strip().strip('"\'')
+                            if k == "USE_LOCAL_LLM" and v.lower() in ("true", "1", "yes"):
+                                use_local = True
+                            elif k == "LOCAL_LLM_MODEL":
+                                local_model = v
+                            elif k == "OLLAMA_HOST":
+                                ollama_host = v
+
+        if use_local:
+            print(f"[Antigravity CLI] Routing task to local Ollama ({local_model})...", file=sys.stderr)
+            try:
+                import urllib.request
+                import json
+                
+                url = f"{ollama_host}/api/chat"
+                payload = {
+                    "model": local_model,
+                    "messages": [
+                        {"role": "user", "content": prompt}
+                    ],
+                    "stream": False,
+                    "options": {
+                        "temperature": 0.3,
+                        "num_ctx": 32768
+                    }
+                }
+                
+                req = urllib.request.Request(
+                    url, 
+                    data=json.dumps(payload).encode("utf-8"),
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                with urllib.request.urlopen(req, timeout=900) as response:
+                    res_body = json.loads(response.read().decode("utf-8"))
+                    content = res_body["message"]["content"]
+                    print(content)
+                    sys.exit(0)
+            except Exception as le:
+                print(f"[Antigravity CLI] Local Ollama call failed: {le}", file=sys.stderr)
+                print(f"[Antigravity CLI] Falling back to cloud agent...", file=sys.stderr)
+        
         # Call agentapi new-conversation
         agentapi_bin = os.path.expanduser("~/.gemini/antigravity/bin/agentapi")
         if not os.path.exists(agentapi_bin):

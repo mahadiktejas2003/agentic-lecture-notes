@@ -52,6 +52,182 @@ def slugify(text: str) -> str:
     text = re.sub(r'[^a-z0-9]+', '-', text)
     return text.strip('-')
 
+
+def get_media_duration(filepath: str) -> float:
+    """Uses ffprobe to extract duration of media file in seconds."""
+    try:
+        cmd = [
+            "ffprobe", "-v", "error", "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1", filepath
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return float(res.stdout.strip())
+    except Exception:
+        return 0.0
+
+
+def log_asr_performance(filepath: str, asr_time: float, force_summary_update=False):
+    """Logs transcription duration vs media duration and calculates speed factors."""
+    try:
+        stats_file = Path(PROJECT_ROOT) / "logs" / "asr_performance_stats.jsonl"
+        stats_file.parent.mkdir(exist_ok=True)
+        
+        filename = os.path.basename(filepath) if filepath else ""
+        audio_dur = 0.0
+        speed_factor = 0.0
+        
+        if not force_summary_update and filepath:
+            audio_dur = get_media_duration(filepath)
+            speed_factor = (audio_dur / asr_time) if asr_time > 0 and audio_dur > 0 else 0.0
+            
+            entry = {
+                "timestamp": datetime.utcnow().isoformat(),
+                "filename": filename,
+                "audio_duration_seconds": audio_dur,
+                "transcription_time_seconds": asr_time,
+                "speed_factor": round(speed_factor, 2)
+            }
+            
+            with open(stats_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(entry) + "\n")
+        
+        all_runs = []
+        if stats_file.exists():
+            with open(stats_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        try:
+                            all_runs.append(json.loads(line.strip()))
+                        except Exception:
+                            pass
+        
+        if not all_runs:
+            return
+            
+        total_lectures = len(all_runs)
+        total_audio_sec = sum(run.get("audio_duration_seconds", 0) for run in all_runs)
+        total_asr_sec = sum(run.get("transcription_time_seconds", 0) for run in all_runs)
+        avg_speed = (total_audio_sec / total_asr_sec) if total_asr_sec > 0 else 0.0
+        
+        buckets = {
+            "short": {"count": 0, "audio": 0.0, "asr": 0.0},
+            "medium": {"count": 0, "audio": 0.0, "asr": 0.0},
+            "long": {"count": 0, "audio": 0.0, "asr": 0.0}
+        }
+        
+        for run in all_runs:
+            dur = run.get("audio_duration_seconds", 0)
+            if dur <= 0:
+                continue
+            if dur < 900:
+                b = "short"
+            elif dur <= 2700:
+                b = "medium"
+            else:
+                b = "long"
+            buckets[b]["count"] += 1
+            buckets[b]["audio"] += dur
+            buckets[b]["asr"] += run.get("transcription_time_seconds", 0)
+            
+        summary_file = Path(PROJECT_ROOT) / "logs" / "asr_performance_summary.txt"
+        with open(summary_file, "w", encoding="utf-8") as sf:
+            sf.write("============================================================\n")
+            sf.write("ASR Transcription Performance Summary\n")
+            sf.write(f"Generated at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            sf.write("============================================================\n\n")
+            sf.write("Overall Stats:\n")
+            sf.write(f"  - Total Lectures Transcribed: {total_lectures}\n")
+            sf.write(f"  - Total Audio Duration: {total_audio_sec/3600:.2f} hours ({total_audio_sec:.1f} seconds)\n")
+            sf.write(f"  - Total Transcription Time: {total_asr_sec/60:.2f} minutes ({total_asr_sec:.1f} seconds)\n")
+            sf.write(f"  - Overall Average Speed: {avg_speed:.2f}x Real-Time (ASR is {avg_speed:.1f}x faster than playback)\n\n")
+            
+            sf.write("Averages by Lecture Length:\n")
+            for key, name in [("short", "Short Lectures (< 15 min)"), ("medium", "Medium Lectures (15 - 45 min)"), ("long", "Long Lectures (> 45 min)")]:
+                b_data = buckets[key]
+                if b_data["count"] > 0:
+                    b_avg_audio = (b_data["audio"] / b_data["count"]) / 60
+                    b_avg_speed = b_data["audio"] / b_data["asr"] if b_data["asr"] > 0 else 0.0
+                    sf.write(f"  - {name}:\n")
+                    sf.write(f"    * Total: {b_data['count']}\n")
+                    sf.write(f"    * Avg Audio Duration: {b_avg_audio:.1f} min\n")
+                    sf.write(f"    * Avg ASR Speed: {b_avg_speed:.2f}x\n")
+                else:
+                    sf.write(f"  - {name}: None processed yet\n")
+                    
+            if not force_summary_update and filename:
+                sf.write(f"\nLatest Run:\n")
+                sf.write(f"  - Lecture: {filename}\n")
+                sf.write(f"  - Length: {audio_dur/60:.1f} min ({audio_dur:.1f}s)\n")
+                sf.write(f"  - ASR Time: {asr_time/60:.1f} min ({asr_time:.1f}s)\n")
+                sf.write(f"  - Speed: {speed_factor:.2f}x\n")
+            sf.write("============================================================\n")
+            
+    except Exception as ex:
+        pass
+
+
+def sync_past_runs_performance():
+    """Reads all completed jobs from the database and populates the performance log if needed."""
+    try:
+        stats_file = Path(PROJECT_ROOT) / "logs" / "asr_performance_stats.jsonl"
+        existing_files = set()
+        if stats_file.exists():
+            with open(stats_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.strip():
+                        try:
+                            run = json.loads(line.strip())
+                            if "filename" in run:
+                                existing_files.add(run["filename"])
+                        except Exception:
+                            pass
+
+        db_path = PROJECT_ROOT / "logs" / "asr_queue.db"
+        if not db_path.exists():
+            return
+            
+        conn = sqlite3.connect(str(db_path))
+        cursor = conn.cursor()
+        cursor.execute("SELECT filename, filepath, started_at, completed_at FROM jobs WHERE status = 'completed'")
+        rows = cursor.fetchall()
+        conn.close()
+        
+        updated = False
+        for filename, filepath, started_at, completed_at in rows:
+            if filename in existing_files:
+                continue
+            if not started_at or not completed_at:
+                continue
+                
+            try:
+                t_start = datetime.fromisoformat(started_at)
+                t_end = datetime.fromisoformat(completed_at)
+                asr_time = (t_end - t_start).total_seconds()
+                
+                audio_dur = get_media_duration(filepath)
+                speed_factor = (audio_dur / asr_time) if asr_time > 0 and audio_dur > 0 else 0.0
+                
+                entry = {
+                    "timestamp": completed_at,
+                    "filename": filename,
+                    "audio_duration_seconds": audio_dur,
+                    "transcription_time_seconds": asr_time,
+                    "speed_factor": round(speed_factor, 2)
+                }
+                
+                with open(stats_file, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(entry) + "\n")
+                
+                existing_files.add(filename)
+                updated = True
+            except Exception:
+                pass
+                
+        if updated or not (Path(PROJECT_ROOT) / "logs" / "asr_performance_summary.txt").exists():
+            log_asr_performance("", 0.0, force_summary_update=True)
+    except Exception as e:
+        logger.warning(f"Failed to sync past runs performance: {e}", exc_info=True)
+
 # ── Optional: watchdog ────────────────────────────────────────────────────────
 try:
     from watchdog.observers import Observer
@@ -497,6 +673,9 @@ def worker_loop(
                 logger.info(f"   SRT: {abs_srt}")
                 logger.info(f"   TXT: {abs_txt}")
 
+                # Log performance metrics
+                log_asr_performance(filepath, last_job_duration)
+
                 # Cloud Backup and Logging
                 if has_cloud:
                     try:
@@ -677,6 +856,7 @@ def main():
     kill_existing_transcribe_processes()
     queue.reset_all_transcribing_jobs()
     queue.reset_stuck_jobs()
+    sync_past_runs_performance()
 
     # Scan watch directory for existing media files not yet in queue
     logger.info(f"Scanning {watch_dir} for existing media files...")
