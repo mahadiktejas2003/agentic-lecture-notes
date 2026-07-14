@@ -462,7 +462,7 @@ def worker_loop(
             # Run transcription with low CPU priority, writing output to logs/watcher_active_transcription.log in real-time
             cmd = [
                 "nice", "-n", "15",
-                sys.executable,
+                sys.executable, "-u",
                 str(PROJECT_ROOT / "scripts" / "transcribe_lecture.py"),
                 "--input", filepath,
                 "--output-dir", job_output_dir,
@@ -471,12 +471,15 @@ def worker_loop(
                 "--no-fallback",
             ]
 
+            env = dict(os.environ, PYTHONUNBUFFERED="1")
+
             with open(active_log_file, "w", encoding="utf-8") as f_log:
                 result = subprocess.run(
                     cmd,
                     cwd=str(PROJECT_ROOT),
                     stdout=f_log,
                     stderr=subprocess.STDOUT,
+                    env=env,
                     timeout=7200,  # 2 hour max per file
                 )
 
