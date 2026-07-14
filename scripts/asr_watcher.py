@@ -370,11 +370,7 @@ def worker_loop(
             stop_event.wait(10)
             continue
 
-        # Battery check
-        if is_on_battery():
-            logger.debug("On battery power. Sleeping...")
-            stop_event.wait(30)
-            continue
+
 
         # Thermal backoff
         if last_job_duration > 0:

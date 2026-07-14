@@ -1025,6 +1025,15 @@ async def root():
                 </div>
             </div>
 
+            <!-- Filters -->
+            <div style="display: flex; gap: 8px; margin-bottom: 15px; font-size: 0.8rem;">
+                <button class="filter-btn active" onclick="setWatcherFilter('all')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.08); color: var(--text-primary); border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">All</button>
+                <button class="filter-btn" onclick="setWatcherFilter('queued')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #3498db; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Queued</button>
+                <button class="filter-btn" onclick="setWatcherFilter('transcribing')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #f39c12; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Transcribing</button>
+                <button class="filter-btn" onclick="setWatcherFilter('completed')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #2ecc71; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Completed</button>
+                <button class="filter-btn" onclick="setWatcherFilter('failed')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #e74c3c; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Failed</button>
+            </div>
+
             <!-- Job Queue Table -->
             <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -1081,6 +1090,20 @@ async def root():
 
         // ── Watch Folder Dashboard Functions ──
         let watcherPollInterval = null;
+        let watcherFilter = 'all';
+
+        function setWatcherFilter(status) {
+            watcherFilter = status;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = 'transparent';
+                if (btn.getAttribute('onclick').includes("'" + status + "'")) {
+                    btn.classList.add('active');
+                    btn.style.background = 'rgba(255,255,255,0.08)';
+                }
+            });
+            refreshWatcherQueue();
+        }
 
         async function refreshWatcherQueue() {
             try {
@@ -1090,16 +1113,13 @@ async def root():
                 // Update alive indicator
                 const indicator = document.getElementById('watcherAliveIndicator');
                 if (data.alive) {
-                    if (data.on_battery) {
-                        indicator.innerHTML = '⚠️ Paused (Running on Battery)';
-                        indicator.style.background = 'rgba(243,156,18,0.15)';
-                        indicator.style.color = '#f39c12';
-                    } else if (data.paused) {
+                    if (data.paused) {
                         indicator.innerHTML = '⏸️ Paused';
                         indicator.style.background = 'rgba(155,89,182,0.15)';
                         indicator.style.color = '#9b59b6';
                     } else {
-                        indicator.innerHTML = '🟢 Online';
+                        const batteryText = data.on_battery ? ' (🔋 Battery)' : '';
+                        indicator.innerHTML = '🟢 Online' + batteryText;
                         indicator.style.background = 'rgba(46,204,113,0.15)';
                         indicator.style.color = '#2ecc71';
                     }
@@ -1156,11 +1176,16 @@ async def root():
 
                 // Fetch queue
                 const qRes = await fetch('/watcher/queue');
-                const jobs = await qRes.json();
+                let jobs = await qRes.json();
                 const tbody = document.getElementById('watcherQueueBody');
                 
+                // Filter jobs based on status filter
+                if (watcherFilter !== 'all') {
+                    jobs = jobs.filter(job => job.status === watcherFilter);
+                }
+                
                 if (jobs.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No jobs in queue. Drop a video file into ~/Downloads/ to start.</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No ${watcherFilter !== 'all' ? watcherFilter : ''} jobs found in queue.</td></tr>`;
                     return;
                 }
 
