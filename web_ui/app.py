@@ -18,6 +18,12 @@ from typing import Dict, Optional
 from fastapi import FastAPI, UploadFile, File, Form, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Directories
+PROJECT_ROOT = Path(__file__).parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
 app = FastAPI(
     title="Lecture Notes Generator",
@@ -1050,6 +1056,27 @@ async def root():
                     </tbody>
                 </table>
             </div>
+
+            <!-- Cloud Database Logs -->
+            <div style="margin-top: 35px; margin-bottom: 15px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">☁️ Supabase Cloud History</h3>
+                <p style="color: var(--text-secondary); font-size: 0.8rem; margin: 0;">Permanent historical logs synced to Supabase with copyable R2 Object Keys.</p>
+            </div>
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); margin-bottom: 30px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.05);">
+                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">Lecture Title</th>
+                            <th style="padding: 12px 15px; text-align: center; font-weight: 600; color: var(--text-secondary); width: 100px;">Status</th>
+                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">R2 Asset Keys</th>
+                            <th style="padding: 12px 15px; text-align: right; font-weight: 600; color: var(--text-secondary); width: 180px;">Synced At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="watcherCloudHistoryBody">
+                        <tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">Loading cloud history...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
@@ -1210,6 +1237,55 @@ async def root():
                         <td style="padding: 12px 15px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
                     </tr>`;
                 }).join('');
+
+                // Fetch cloud history
+                try {
+                    const cloudRes = await fetch('/watcher/cloud_history');
+                    const cloudData = await cloudRes.json();
+                    const cloudTbody = document.getElementById('watcherCloudHistoryBody');
+                    if (cloudTbody) {
+                        if (cloudData.error) {
+                            cloudTbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; text-align: center; color: #e74c3c;">${cloudData.error}</td></tr>`;
+                        } else if (!Array.isArray(cloudData) || cloudData.length === 0) {
+                            cloudTbody.innerHTML = `<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No synced runs in cloud history yet.</td></tr>`;
+                        } else {
+                            cloudTbody.innerHTML = cloudData.map(run => {
+                                const statusColors = {
+                                    'completed': '#2ecc71',
+                                    'failed': '#e74c3c',
+                                };
+                                const statusColor = statusColors[run.status] || '#f39c12';
+                                
+                                let keys = [];
+                                if (run.r2_notes_key) {
+                                    keys.push(`notes: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #3498db;" onclick="navigator.clipboard.writeText('${run.r2_notes_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_notes_key}</code>`);
+                                }
+                                if (run.r2_transcript_key) {
+                                    keys.push(`transcript: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #2ecc71;" onclick="navigator.clipboard.writeText('${run.r2_transcript_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_transcript_key}</code>`);
+                                }
+                                if (run.r2_short_note_key) {
+                                    keys.push(`short-note: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #9b59b6;" onclick="navigator.clipboard.writeText('${run.r2_short_note_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_short_note_key}</code>`);
+                                }
+                                if (run.r2_anki_key) {
+                                    keys.push(`anki: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #f1c40f;" onclick="navigator.clipboard.writeText('${run.r2_anki_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_anki_key}</code>`);
+                                }
+                                if (keys.length === 0) {
+                                    keys.push('<span style="color: var(--text-secondary);">—</span>');
+                                }
+
+                                const timeDisplay = run.created_at ? new Date(run.created_at).toLocaleString() : '—';
+                                return `<tr style="border-top: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 12px 15px; font-weight: 500;">${run.lecture_title}</td>
+                                    <td style="padding: 12px 15px; text-align: center;"><span style="padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${run.status}</span></td>
+                                    <td style="padding: 12px 15px; line-height: 1.6;">${keys.join('<br>')}</td>
+                                    <td style="padding: 12px 15px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
+                                </tr>`;
+                            }).join('');
+                        }
+                    }
+                } catch (cErr) {
+                    console.error('Failed to update cloud history:', cErr);
+                }
 
             } catch (err) {
                 console.error('Watcher refresh error:', err);
@@ -2427,6 +2503,22 @@ async def watcher_resume():
     if WATCHER_PAUSE_FLAG.exists():
         WATCHER_PAUSE_FLAG.unlink()
     return {"status": "resumed"}
+
+
+@app.get("/watcher/cloud_history")
+async def watcher_cloud_history():
+    """Fetch completed runs directly from Supabase pipeline_runs table."""
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+    if not url or not key:
+        return {"error": "Supabase credentials not configured in environment"}
+    try:
+        from supabase import create_client
+        supabase = create_client(url, key)
+        res = supabase.table("pipeline_runs").select("*").order("created_at", desc=True).limit(100).execute()
+        return res.data
+    except Exception as e:
+        return {"error": f"Failed to query Supabase: {str(e)}"}
 
 
 if __name__ == "__main__":
