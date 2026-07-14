@@ -400,6 +400,23 @@ def worker_loop(
         job_output_dir = os.path.join(output_root, basename)
         os.makedirs(job_output_dir, exist_ok=True)
 
+        # Check if transcript already exists to pick up where left off / avoid duplicate runs
+        srt_path = os.path.join(job_output_dir, "transcript.srt")
+        txt_path = os.path.join(job_output_dir, "transcript.txt")
+        if os.path.exists(txt_path) and os.path.getsize(txt_path) > 0:
+            abs_srt = str(Path(srt_path).resolve()) if os.path.exists(srt_path) else ""
+            abs_txt = str(Path(txt_path).resolve())
+            queue.mark_completed(job_id, abs_srt, abs_txt)
+            logger.info(f"⏭️ Skipped (already completed): {filename}")
+            # Log in active_log_file so UI shows it
+            active_log_file = PROJECT_ROOT / "logs" / "watcher_active_transcription.log"
+            try:
+                with open(active_log_file, "w", encoding="utf-8") as f_log:
+                    f_log.write(f"Transcript already exists for {filename}.\nSkipping ASR run and marking completed.\nSRT: {abs_srt}\n")
+            except Exception:
+                pass
+            continue
+
         queue.mark_transcribing(job_id, job_output_dir)
         logger.info(f"🎙️ Transcribing: {filename}")
 
