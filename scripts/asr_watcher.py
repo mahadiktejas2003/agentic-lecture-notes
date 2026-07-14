@@ -34,8 +34,23 @@ import time
 from datetime import datetime, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+import re
 
 from dotenv import load_dotenv
+
+# Try importing cloud uploader for R2/Supabase logging
+try:
+    sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+    from cloud_uploader import upload_to_r2, log_to_supabase
+    has_cloud = True
+except Exception:
+    has_cloud = False
+
+
+def slugify(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    return text.strip('-')
 
 # ── Optional: watchdog ────────────────────────────────────────────────────────
 try:
@@ -472,6 +487,28 @@ def worker_loop(
                 logger.info(f"✅ Completed: {filename} ({last_job_duration:.1f}s)")
                 logger.info(f"   SRT: {abs_srt}")
                 logger.info(f"   TXT: {abs_txt}")
+
+                # Cloud Backup and Logging
+                if has_cloud:
+                    try:
+                        logger.info(f"Uploading transcripts to R2 for {basename}...")
+                        lecture_slug = slugify(basename)
+                        r2_srt_key = f"transcripts/{lecture_slug}/transcript.srt"
+                        r2_txt_key = f"transcripts/{lecture_slug}/transcript.txt"
+                        
+                        r2_srt_ok = upload_to_r2(srt_path, r2_srt_key) if os.path.exists(srt_path) else False
+                        r2_txt_ok = upload_to_r2(txt_path, r2_txt_key)
+                        
+                        logger.info("Logging to Supabase...")
+                        run_data = {
+                            "lecture_title": basename,
+                            "status": "completed" if (r2_srt_ok or r2_txt_ok) else "failed",
+                            "r2_transcript_key": r2_srt_key if r2_srt_ok else None,
+                            "error_message": None
+                        }
+                        log_to_supabase(run_data)
+                    except Exception as ce:
+                        logger.warning(f"Cloud backup failed: {ce}")
             else:
                 # Read last 5 lines of log file on failure
                 err_msg = f"Exit code {result.returncode}"
@@ -486,15 +523,46 @@ def worker_loop(
                 queue.mark_failed(job_id, err_msg)
                 logger.error(f"❌ Failed: {filename} — {err_msg[:200]}")
 
+                # Cloud Logging for failure
+                if has_cloud:
+                    try:
+                        logger.info("Logging failure to Supabase...")
+                        run_data = {
+                            "lecture_title": basename,
+                            "status": "failed",
+                            "error_message": err_msg[:1000]
+                        }
+                        log_to_supabase(run_data)
+                    except Exception as ce:
+                        logger.warning(f"Cloud failure logging failed: {ce}")
+
         except subprocess.TimeoutExpired:
             last_job_duration = time.time() - start_time
             queue.mark_failed(job_id, "Timeout: transcription exceeded 2 hours")
             logger.error(f"⏰ Timeout: {filename}")
+            if has_cloud:
+                try:
+                    log_to_supabase({
+                        "lecture_title": basename,
+                        "status": "failed",
+                        "error_message": "Timeout: transcription exceeded 2 hours"
+                    })
+                except Exception:
+                    pass
 
         except Exception as e:
             last_job_duration = time.time() - start_time
             queue.mark_failed(job_id, str(e))
             logger.error(f"💥 Exception transcribing {filename}: {e}")
+            if has_cloud:
+                try:
+                    log_to_supabase({
+                        "lecture_title": basename,
+                        "status": "failed",
+                        "error_message": str(e)[:1000]
+                    })
+                except Exception:
+                    pass
 
         # Small cooldown between jobs
         stop_event.wait(WORKER_SLEEP)
