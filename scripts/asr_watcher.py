@@ -453,6 +453,11 @@ def worker_loop(
         # File for active transcription logging
         active_log_file = PROJECT_ROOT / "logs" / "watcher_active_transcription.log"
 
+        # Generate transcription context bias from filename to improve quality
+        clean_name = os.path.splitext(filename)[0]
+        context_words = clean_name.replace("-", " ").replace("_", " ").replace(".", " ")
+        context_str = f"{context_words}, computer science, lecture, key terms, DBMS"
+
         try:
             # Run transcription with low CPU priority, writing output to logs/watcher_active_transcription.log in real-time
             cmd = [
@@ -462,6 +467,7 @@ def worker_loop(
                 "--input", filepath,
                 "--output-dir", job_output_dir,
                 "--model", model,
+                "--context", context_str,
                 "--no-fallback",
             ]
 
