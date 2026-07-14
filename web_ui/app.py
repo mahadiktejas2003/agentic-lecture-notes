@@ -982,6 +982,11 @@ async def root():
                     <a id="asrDownloadSrtLink" class="asr-download-btn srt">🎬 Download Subtitles (.srt)</a>
                     <a id="asrDownloadTxtLink" class="asr-download-btn txt">📄 Download Text (.txt)</a>
                 </div>
+                
+                <div id="asrFilePathContainer" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); border-radius: 12px; text-align: left;">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px; font-weight: 500;">💾 Transcribed File Local Path:</div>
+                    <code id="asrFilePathText" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--success-color); word-break: break-all; select: all; display: block; background: #000000; padding: 8px; border-radius: 6px;"></code>
+                </div>
             </div>
         </div>
     </div>
@@ -1161,6 +1166,7 @@ async def root():
                 document.getElementById('asrConsoleLog').textContent = "Uploading audio/video track...";
                 document.getElementById('asrDownloadSrtLink').style.display = 'none';
                 document.getElementById('asrDownloadTxtLink').style.display = 'none';
+                document.getElementById('asrFilePathContainer').style.display = 'none';
                 
                 const response = await fetch('/transcribe', {
                     method: 'POST',
@@ -1359,6 +1365,13 @@ async def root():
                     
                     srtLink.style.display = 'block';
                     txtLink.style.display = 'block';
+                    
+                    if (data.absolute_srt_path) {
+                        const pathContainer = document.getElementById('asrFilePathContainer');
+                        const pathText = document.getElementById('asrFilePathText');
+                        pathText.textContent = data.absolute_srt_path;
+                        pathContainer.style.display = 'block';
+                    }
                     
                     clearInterval(asrStatusInterval);
                     clearInterval(asrLogsInterval);
@@ -1859,7 +1872,9 @@ def run_asr_only(lecture_id: str, input_path: str, language: str = "hi"):
                     "status": "completed",
                     "progress": progress_msg,
                     "used_fallback": used_fallback,
-                    "completed_at": datetime.now().isoformat()
+                    "completed_at": datetime.now().isoformat(),
+                    "absolute_srt_path": str((asr_output_dir / "transcript.srt").resolve()),
+                    "absolute_txt_path": str((asr_output_dir / "transcript.txt").resolve())
                 })
             else:
                 status.update({
