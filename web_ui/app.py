@@ -828,6 +828,7 @@ async def root():
         <div class="tab-container">
             <button class="tab-btn active" id="tabNotes" onclick="switchTab('notes')">📝 Lecture Notes Reconstruction</button>
             <button class="tab-btn" id="tabASR" onclick="switchTab('asr')">🎙️ ASR-Only Speech-to-Text</button>
+            <button class="tab-btn" id="tabWatcher" onclick="switchTab('watcher')">🎧 Watch Folder</button>
         </div>
         
         <!-- Tab 1: Notes Generation Form -->
@@ -989,6 +990,49 @@ async def root():
                 </div>
             </div>
         </div>
+
+        <!-- Tab 3: Watch Folder Dashboard -->
+        <div class="tab-content" id="watcherContentSection">
+            <div style="margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <h2 style="margin: 0; font-size: 1.4rem;">🎧 Background Transcription Daemon</h2>
+                    <span id="watcherAliveIndicator" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: rgba(255,50,50,0.15); color: #ff6b6b;">🔴 Offline</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Watches <code>~/Downloads/</code> for new video files and transcribes them automatically using Qwen3-ASR. Transcripts saved to <code>~/Transcripts/</code></p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button id="watcherPauseBtn" class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem;" onclick="toggleWatcherPause()">⏸️ Pause</button>
+                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #f39c12, #e67e22);" onclick="retryFailedJobs()">🔄 Retry All Failed</button>
+                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #3498db, #2980b9);" onclick="refreshWatcherQueue()">🔃 Refresh</button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div id="watcherStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;"></div>
+
+            <!-- Currently Transcribing -->
+            <div id="watcherCurrentJob" style="display: none; padding: 15px; background: rgba(52, 152, 219, 0.1); border: 1px solid rgba(52, 152, 219, 0.3); border-radius: 12px; margin-bottom: 20px;">
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">🎙️ Currently Transcribing:</div>
+                <div id="watcherCurrentFileName" style="font-weight: 600; font-size: 1rem;"></div>
+            </div>
+
+            <!-- Job Queue Table -->
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.05);">
+                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">File</th>
+                            <th style="padding: 12px 15px; text-align: center; font-weight: 600; color: var(--text-secondary); width: 100px;">Status</th>
+                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">Transcript Path</th>
+                            <th style="padding: 12px 15px; text-align: right; font-weight: 600; color: var(--text-secondary); width: 150px;">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="watcherQueueBody">
+                        <tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">Loading queue...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -1010,7 +1054,122 @@ async def root():
             } else if (tab === 'asr') {
                 document.getElementById('tabASR').classList.add('active');
                 document.getElementById('asrContentSection').classList.add('active');
+            } else if (tab === 'watcher') {
+                document.getElementById('tabWatcher').classList.add('active');
+                document.getElementById('watcherContentSection').classList.add('active');
+                refreshWatcherQueue();
             }
+        }
+
+        // ── Watch Folder Dashboard Functions ──
+        let watcherPollInterval = null;
+
+        async function refreshWatcherQueue() {
+            try {
+                const res = await fetch('/watcher/status');
+                const data = await res.json();
+                
+                // Update alive indicator
+                const indicator = document.getElementById('watcherAliveIndicator');
+                if (data.alive) {
+                    indicator.innerHTML = '🟢 Online';
+                    indicator.style.background = 'rgba(46,204,113,0.15)';
+                    indicator.style.color = '#2ecc71';
+                } else {
+                    indicator.innerHTML = '🔴 Offline';
+                    indicator.style.background = 'rgba(255,50,50,0.15)';
+                    indicator.style.color = '#ff6b6b';
+                }
+
+                // Update pause button
+                const pauseBtn = document.getElementById('watcherPauseBtn');
+                if (data.paused) {
+                    pauseBtn.innerHTML = '▶️ Resume';
+                    pauseBtn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+                } else {
+                    pauseBtn.innerHTML = '⏸️ Pause';
+                    pauseBtn.style.background = '';
+                }
+
+                // Update stats cards
+                const stats = data.stats || {};
+                const statsDiv = document.getElementById('watcherStats');
+                const statItems = [
+                    { label: 'Queued', value: stats.queued || 0, color: '#3498db', icon: '📋' },
+                    { label: 'Transcribing', value: stats.transcribing || 0, color: '#f39c12', icon: '🎙️' },
+                    { label: 'Completed', value: stats.completed || 0, color: '#2ecc71', icon: '✅' },
+                    { label: 'Failed', value: stats.failed || 0, color: '#e74c3c', icon: '❌' },
+                ];
+                statsDiv.innerHTML = statItems.map(s => `
+                    <div style="padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px; text-align: center;">
+                        <div style="font-size: 1.5rem;">${s.icon}</div>
+                        <div style="font-size: 1.8rem; font-weight: 700; color: ${s.color};">${s.value}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${s.label}</div>
+                    </div>
+                `).join('');
+
+                // Update current job
+                const currentDiv = document.getElementById('watcherCurrentJob');
+                if (data.currently_transcribing) {
+                    currentDiv.style.display = 'block';
+                    document.getElementById('watcherCurrentFileName').textContent = data.currently_transcribing;
+                } else {
+                    currentDiv.style.display = 'none';
+                }
+
+                // Fetch queue
+                const qRes = await fetch('/watcher/queue');
+                const jobs = await qRes.json();
+                const tbody = document.getElementById('watcherQueueBody');
+                
+                if (jobs.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No jobs in queue. Drop a video file into ~/Downloads/ to start.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = jobs.map(job => {
+                    const statusColors = {
+                        'queued': '#3498db',
+                        'transcribing': '#f39c12',
+                        'completed': '#2ecc71',
+                        'failed': '#e74c3c',
+                    };
+                    const statusColor = statusColors[job.status] || '#999';
+                    const pathDisplay = job.absolute_srt_path 
+                        ? `<code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--success-color); background: #000; padding: 4px 8px; border-radius: 4px; word-break: break-all; cursor: pointer;" onclick="navigator.clipboard.writeText('${job.absolute_srt_path.replace(/'/g, "\\'")}'). then(() => this.style.color='#f39c12')" title="Click to copy">${job.absolute_srt_path}</code>`
+                        : (job.error_message ? `<span style="color: #e74c3c; font-size: 0.8rem;">${job.error_message.substring(0, 80)}...</span>` : '<span style="color: var(--text-secondary);">—</span>');
+                    const timeDisplay = job.completed_at 
+                        ? new Date(job.completed_at).toLocaleString() 
+                        : (job.created_at ? new Date(job.created_at).toLocaleString() : '—');
+                    return `<tr style="border-top: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 12px 15px; font-weight: 500;">${job.filename}</td>
+                        <td style="padding: 12px 15px; text-align: center;"><span style="padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${job.status}</span></td>
+                        <td style="padding: 12px 15px;">${pathDisplay}</td>
+                        <td style="padding: 12px 15px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
+                    </tr>`;
+                }).join('');
+
+            } catch (err) {
+                console.error('Watcher refresh error:', err);
+            }
+        }
+
+        async function toggleWatcherPause() {
+            try {
+                const btn = document.getElementById('watcherPauseBtn');
+                const isPaused = btn.textContent.includes('Resume');
+                await fetch(isPaused ? '/watcher/resume' : '/watcher/pause', { method: 'POST' });
+                setTimeout(refreshWatcherQueue, 500);
+            } catch (err) { console.error(err); }
+        }
+
+        async function retryFailedJobs() {
+            try {
+                const res = await fetch('/watcher/retry', { method: 'POST' });
+                const data = await res.json();
+                alert(`Retried ${data.count} failed job(s).`);
+                refreshWatcherQueue();
+            } catch (err) { console.error(err); }
         }
 
         // Collapsible Advanced Settings toggler
@@ -2094,6 +2253,97 @@ async def cancel_pipeline(lecture_id: str):
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+
+# ── Watch Folder Dashboard API Endpoints ──────────────────────────────────────
+
+WATCHER_HEARTBEAT = PROJECT_ROOT / "logs" / "asr_watcher_heartbeat.json"
+WATCHER_DB = PROJECT_ROOT / "logs" / "asr_queue.db"
+WATCHER_PAUSE_FLAG = PROJECT_ROOT / "logs" / "asr_watcher_paused.flag"
+
+
+@app.get("/watcher/status")
+async def watcher_status():
+    """Get watcher daemon status from heartbeat file."""
+    alive = False
+    paused = False
+    currently_transcribing = None
+    stats = {}
+
+    if WATCHER_HEARTBEAT.exists():
+        try:
+            with open(WATCHER_HEARTBEAT, "r") as f:
+                data = json.load(f)
+            from datetime import datetime as dt
+            alive_at = dt.fromisoformat(data.get("alive_at", ""))
+            age = (dt.now() - alive_at).total_seconds()
+            alive = age < 60  # alive if heartbeat < 60 seconds old
+            paused = data.get("paused", False)
+            currently_transcribing = data.get("currently_transcribing")
+            stats = data.get("stats", {})
+        except Exception:
+            pass
+
+    return {
+        "alive": alive,
+        "paused": paused or WATCHER_PAUSE_FLAG.exists(),
+        "currently_transcribing": currently_transcribing,
+        "stats": stats,
+    }
+
+
+@app.get("/watcher/queue")
+async def watcher_queue():
+    """Get all jobs from the watcher SQLite queue."""
+    if not WATCHER_DB.exists():
+        return []
+    try:
+        import sqlite3
+        conn = sqlite3.connect(str(WATCHER_DB))
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            "SELECT * FROM jobs ORDER BY id DESC LIMIT 100"
+        ).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+    except Exception as e:
+        return [{"error": str(e)}]
+
+
+@app.post("/watcher/retry")
+async def watcher_retry():
+    """Reset all failed watcher jobs to queued."""
+    if not WATCHER_DB.exists():
+        return {"count": 0}
+    try:
+        import sqlite3
+        conn = sqlite3.connect(str(WATCHER_DB))
+        cursor = conn.execute(
+            "UPDATE jobs SET status = 'queued', error_message = NULL, "
+            "started_at = NULL, completed_at = NULL WHERE status = 'failed'"
+        )
+        count = cursor.rowcount
+        conn.commit()
+        conn.close()
+        return {"count": count}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/watcher/pause")
+async def watcher_pause():
+    """Pause the watcher daemon by creating a flag file."""
+    WATCHER_PAUSE_FLAG.parent.mkdir(exist_ok=True)
+    WATCHER_PAUSE_FLAG.touch()
+    return {"status": "paused"}
+
+
+@app.post("/watcher/resume")
+async def watcher_resume():
+    """Resume the watcher daemon by removing the flag file."""
+    if WATCHER_PAUSE_FLAG.exists():
+        WATCHER_PAUSE_FLAG.unlink()
+    return {"status": "resumed"}
 
 
 if __name__ == "__main__":

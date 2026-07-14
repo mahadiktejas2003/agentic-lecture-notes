@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ASR Watcher Daemon - macOS LaunchAgent
+  
+  INSTALL:
+    cp scripts/com.tejasmahadik.asr-watcher.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.tejasmahadik.asr-watcher.plist
+  
+  UNINSTALL:
+    launchctl unload ~/Library/LaunchAgents/com.tejasmahadik.asr-watcher.plist
+    rm ~/Library/LaunchAgents/com.tejasmahadik.asr-watcher.plist
+  
+  CHECK STATUS:
+    launchctl list | grep asr-watcher
+  
+  VIEW LOGS:
+    tail -f ~/Library/Logs/asr_watcher_stdout.log
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.tejasmahadik.asr-watcher</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/tejasmahadik/Documents/agentic-lecture-notes/venv/bin/python</string>
+        <string>/Users/tejasmahadik/Documents/agentic-lecture-notes/scripts/asr_watcher.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/tejasmahadik/Documents/agentic-lecture-notes</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/tejasmahadik/Library/Logs/asr_watcher_stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/tejasmahadik/Library/Logs/asr_watcher_stderr.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>

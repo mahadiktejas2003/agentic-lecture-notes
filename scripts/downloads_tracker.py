@@ -543,17 +543,23 @@ def main():
                     print(f"Copying direct SRT transcript: {bundle['srt']}")
                     shutil.copy(bundle["srt"], os.path.join(PROJECT_DIR, "lecture-input/transcript.srt"))
                 else:
-                    ss_manifest = find_soundscribe_job(video_basename)
-                    if ss_manifest:
-                        print(f"Found SoundScribe manifest at: {ss_manifest}. Converting...")
-                        subprocess.run([
-                            sys.executable, 
-                            "scripts/soundscribe_to_srt.py", 
-                            ss_manifest, 
-                            "lecture-input/transcript.srt"
-                        ], cwd=PROJECT_DIR, check=True, timeout=3600)
+                    # Check ~/Transcripts/<video_basename>/transcript.srt
+                    watcher_transcript = os.path.expanduser(f"~/Transcripts/{video_basename}/transcript.srt")
+                    if os.path.exists(watcher_transcript) and os.path.getsize(watcher_transcript) > 0:
+                        print(f"Found background watcher transcript at: {watcher_transcript}. Copying...")
+                        shutil.copy(watcher_transcript, os.path.join(PROJECT_DIR, "lecture-input/transcript.srt"))
                     else:
-                        print("No matching SoundScribe transcript found. Orchestrator will run local Qwen3-ASR transcription.")
+                        ss_manifest = find_soundscribe_job(video_basename)
+                        if ss_manifest:
+                            print(f"Found SoundScribe manifest at: {ss_manifest}. Converting...")
+                            subprocess.run([
+                                sys.executable, 
+                                "scripts/soundscribe_to_srt.py", 
+                                ss_manifest, 
+                                "lecture-input/transcript.srt"
+                            ], cwd=PROJECT_DIR, check=True, timeout=3600)
+                        else:
+                            print("No matching background watcher or SoundScribe transcript found. Orchestrator will run local Qwen3-ASR transcription.")
 
                 print("Starting note-reconstruction pipeline...")
                 subprocess.run([sys.executable, "scripts/langgraph_orchestrator.py"], cwd=PROJECT_DIR, check=True, timeout=3600)
