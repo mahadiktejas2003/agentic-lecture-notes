@@ -208,6 +208,19 @@ class ASRQueue:
             conn.commit()
             conn.close()
 
+    def reset_all_transcribing_jobs(self):
+        """Reset all 'transcribing' jobs to 'queued' at startup."""
+        with self._lock:
+            conn = self._connect()
+            cursor = conn.execute(
+                "UPDATE jobs SET status = 'queued', error_message = 'Reset: daemon restarted' "
+                "WHERE status = 'transcribing'"
+            )
+            if cursor.rowcount > 0:
+                logger.info(f"Reset {cursor.rowcount} leftover transcribing job(s) back to queued.")
+            conn.commit()
+            conn.close()
+
     def retry_failed(self) -> int:
         """Reset all failed jobs to queued. Returns count."""
         with self._lock:
@@ -511,7 +524,25 @@ def heartbeat_loop(queue: ASRQueue, stop_event: threading.Event):
         stop_event.wait(HEARTBEAT_INTERVAL)
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+def kill_existing_transcribe_processes():
+    """Kill any lingering transcribe_lecture.py processes on start."""
+    try:
+        import subprocess
+        # Get list of running processes matching transcribe_lecture.py
+        result = subprocess.run(["pgrep", "-f", "transcribe_lecture.py"], capture_output=True, text=True)
+        if result.returncode == 0:
+            pids = result.stdout.strip().splitlines()
+            for pid_str in pids:
+                try:
+                    pid = int(pid_str)
+                    if pid != os.getpid():  # don't kill ourselves
+                        logger.info(f"Terminating lingering transcribe process with PID {pid}...")
+                        os.kill(pid, signal.SIGTERM)
+                except Exception:
+                    pass
+    except Exception as e:
+        logger.warning(f"Failed to check/kill lingering transcribe processes: {e}")
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -566,6 +597,8 @@ def main():
 
     # Initialize queue and recover stuck jobs
     queue = ASRQueue()
+    kill_existing_transcribe_processes()
+    queue.reset_all_transcribing_jobs()
     queue.reset_stuck_jobs()
 
     # Scan watch directory for existing media files not yet in queue
