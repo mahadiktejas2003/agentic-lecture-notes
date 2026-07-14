@@ -125,6 +125,7 @@ class ASRQueue:
                     UNIQUE(filename, filesize)
                 )
             """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status_id ON jobs (status, id)")
             conn.commit()
             conn.close()
 
@@ -408,8 +409,11 @@ def worker_loop(
 
         start_time = time.time()
 
+        # File for active transcription logging
+        active_log_file = PROJECT_ROOT / "logs" / "watcher_active_transcription.log"
+
         try:
-            # Run transcription with low CPU priority
+            # Run transcription with low CPU priority, writing output to logs/watcher_active_transcription.log in real-time
             cmd = [
                 "nice", "-n", "15",
                 sys.executable,
@@ -420,13 +424,14 @@ def worker_loop(
                 "--no-fallback",
             ]
 
-            result = subprocess.run(
-                cmd,
-                cwd=str(PROJECT_ROOT),
-                capture_output=True,
-                text=True,
-                timeout=7200,  # 2 hour max per file
-            )
+            with open(active_log_file, "w", encoding="utf-8") as f_log:
+                result = subprocess.run(
+                    cmd,
+                    cwd=str(PROJECT_ROOT),
+                    stdout=f_log,
+                    stderr=subprocess.STDOUT,
+                    timeout=7200,  # 2 hour max per file
+                )
 
             last_job_duration = time.time() - start_time
 
@@ -442,9 +447,16 @@ def worker_loop(
                 logger.info(f"   SRT: {abs_srt}")
                 logger.info(f"   TXT: {abs_txt}")
             else:
-                # Extract error from last 5 lines of stderr
-                err_lines = result.stderr.strip().splitlines()
-                err_msg = "\n".join(err_lines[-5:]) if err_lines else f"Exit code {result.returncode}"
+                # Read last 5 lines of log file on failure
+                err_msg = f"Exit code {result.returncode}"
+                try:
+                    if os.path.exists(active_log_file):
+                        with open(active_log_file, "r", encoding="utf-8") as f_log:
+                            lines = f_log.readlines()
+                            if lines:
+                                err_msg = "".join(lines[-5:]).strip()
+                except Exception:
+                    pass
                 queue.mark_failed(job_id, err_msg)
                 logger.error(f"❌ Failed: {filename} — {err_msg[:200]}")
 

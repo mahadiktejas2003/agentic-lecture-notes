@@ -1013,7 +1013,16 @@ async def root():
             <!-- Currently Transcribing -->
             <div id="watcherCurrentJob" style="display: none; padding: 15px; background: rgba(52, 152, 219, 0.1); border: 1px solid rgba(52, 152, 219, 0.3); border-radius: 12px; margin-bottom: 20px;">
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">🎙️ Currently Transcribing:</div>
-                <div id="watcherCurrentFileName" style="font-weight: 600; font-size: 1rem;"></div>
+                <div id="watcherCurrentFileName" style="font-weight: 600; font-size: 1rem; margin-bottom: 10px;"></div>
+                
+                <!-- Live watcher console viewer -->
+                <div class="console-wrapper" style="margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;">
+                    <div class="console-header" style="background: rgba(0, 0, 0, 0.4); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.8rem;">
+                        <span>⚙️ Live Transcription Progress Logs</span>
+                        <span style="color: #2ecc71;">Streaming...</span>
+                    </div>
+                    <div class="console-log" id="watcherConsoleLog" style="height: 150px; background: #000; color: #2ecc71; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 10px; overflow-y: auto; white-space: pre-wrap; text-align: left;">Initializing logs...</div>
+                </div>
             </div>
 
             <!-- Job Queue Table -->
@@ -1132,6 +1141,15 @@ async def root():
                 if (data.currently_transcribing) {
                     currentDiv.style.display = 'block';
                     document.getElementById('watcherCurrentFileName').textContent = data.currently_transcribing;
+                    
+                    // Fetch live transcription logs
+                    try {
+                        const logRes = await fetch('/watcher/active_logs');
+                        const logData = await logRes.json();
+                        const consoleDiv = document.getElementById('watcherConsoleLog');
+                        consoleDiv.textContent = logData.logs || "ASR analyzer initializing...";
+                        consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto-scroll to bottom
+                    } catch (e) {}
                 } else {
                     currentDiv.style.display = 'none';
                 }
@@ -2312,6 +2330,24 @@ async def watcher_status():
         "currently_transcribing": currently_transcribing,
         "stats": stats,
     }
+
+
+WATCHER_ACTIVE_LOG = PROJECT_ROOT / "logs" / "watcher_active_transcription.log"
+
+
+@app.get("/watcher/active_logs")
+async def watcher_active_logs():
+    """Get the active transcription logs (last 50 lines)."""
+    if not WATCHER_ACTIVE_LOG.exists():
+        return {"logs": "ASR analyzer starting up..."}
+    try:
+        with open(WATCHER_ACTIVE_LOG, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        # Return last 50 lines
+        last_lines = lines[-50:] if len(lines) > 50 else lines
+        return {"logs": "".join(last_lines)}
+    except Exception as e:
+        return {"logs": f"Error reading logs: {str(e)}"}
 
 
 @app.get("/watcher/queue")
