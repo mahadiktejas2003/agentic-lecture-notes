@@ -212,12 +212,30 @@ def format_math_text(text, is_code=False):
         return text
     if is_code:
         return text
+        
+    # Remove standard math delimiters first
     text = text.replace(r'\(', '').replace(r'\)', '').replace(r'\[', '').replace(r'\]', '')
-    text = re.sub(r'\\text\{([^}]+)\}', r'\1', text)
+    text = text.replace('$$', '')
     text = re.sub(r'(?<!\\)\$', '', text)
     
+    # Strip \text{} commands
+    text = re.sub(r'\\text\s*\{([^}]*)\}', r'\1', text)
+    
     # Parse fractions recursively
-    text = parse_latex_fractions(text)
+    while True:
+        match = re.search(r'\\frac\s*\{([^}]*)\}\s*\{([^}]*)\}', text)
+        if not match:
+            break
+        text = text.replace(match.group(0), f"({match.group(1)})/({match.group(2)})")
+        
+    # Normalize square roots recursively
+    while True:
+        match = re.search(r'\\sqrt\s*\{([^}]*)\}', text)
+        if not match:
+            break
+        text = text.replace(match.group(0), f"√({match.group(1)})")
+    text = re.sub(r'\\sqrt\s*([a-zA-Z0-9])', r'√\1', text)
+    text = re.sub(r'\bsqrt\((.*?)\)', r'√(\1)', text)
     
     # Convert nPr and nCr notation
     superscripts = {
@@ -246,69 +264,77 @@ def format_math_text(text, is_code=False):
     text = re.sub(r'\^\{?([0-9a-zA-Z]+)\}?\\text\{([PC])\}_\{?([0-9a-zA-Z]+)\}?', repl_npr_ncr, text)
     text = re.sub(r'\^\{?([0-9a-zA-Z]+)\}?([PC])_\{?([0-9a-zA-Z]+)\}?', repl_npr_ncr, text)
 
-    # LaTeX commands
-    text = text.replace(r'\pm', '±')
-    text = text.replace(r'\oplus', '⊕')
-    text = text.replace(r'\dots', '...')
-    text = text.replace(r'\lfloor', '⌊')
-    text = text.replace(r'\rfloor', '⌋')
-    text = text.replace(r'\langle', '⟨')
-    text = text.replace(r'\rangle', '⟩')
-    text = text.replace(r'\times', '×')
-    text = text.replace(r'\leq', '≤')
-    text = text.replace(r'\geq', '≥')
-    text = text.replace(r'\neq', '≠')
-    text = text.replace(r'\approx', '≈')
-    text = text.replace(r'\div', '÷')
-    text = text.replace(r'\cdot', '·')
-    text = text.replace(r'\rightarrow', '→')
-    text = text.replace(r'\leftarrow', '←')
-    text = text.replace(r'\Rightarrow', '⇒')
-    text = text.replace(r'\infty', '∞')
-    text = text.replace(r'\min', 'min')
-    text = text.replace(r'\max', 'max')
-    text = text.replace(r'\sum', '∑')
-    text = text.replace(r'\prod', '∏')
-    text = text.replace(r'\int', '∫')
-    text = text.replace(r'\forall', '∀')
-    text = text.replace(r'\exists', '∃')
-    text = re.sub(r'(?<![a-zA-Z])\\in(?![a-zA-Z])', '∈', text)
-    text = text.replace(r'\notin', '∉')
-    text = text.replace(r'\subset', '⊂')
-    text = text.replace(r'\supset', '⊃')
-    text = text.replace(r'\cup', '∪')
-    text = text.replace(r'\cap', '∩')
-    text = text.replace(r'\emptyset', '∅')
-    text = text.replace(r'\triangle', '△')
-    text = text.replace(r'\angle', '∠')
-    text = text.replace(r'\degree', '°')
-    text = text.replace(r'\circ', '°')
-    text = text.replace(r'\log', 'log')
-    text = text.replace(r'\ln', 'ln')
-    text = text.replace(r'\sin', 'sin')
-    text = text.replace(r'\cos', 'cos')
-    text = text.replace(r'\tan', 'tan')
+    # Standard LaTeX math symbols replacements
+    replacements = {
+        r'\\times': '×',
+        r'\\cdot': '·',
+        r'\\approx': '≈',
+        r'\\leq': '≤',
+        r'\\le\b': '≤',
+        r'\\geq': '≥',
+        r'\\ge\b': '≥',
+        r'\\neq': '≠',
+        r'\\ne\b': '≠',
+        r'\\sigma': 'σ',
+        r'\\alpha': 'α',
+        r'\\beta': 'β',
+        r'\\delta': 'δ',
+        r'\\theta': 'θ',
+        r'\\pi': 'π',
+        r'\\mu': 'μ',
+        r'\\lambda': 'λ',
+        r'\\omega': 'ω',
+        r'\\phi': 'φ',
+        r'\\oplus': '⊕',
+        r'\\sum': '∑',
+        r'\\infty': '∞',
+        r'\\cup': '∪',
+        r'\\cap': '∩',
+        r'\\in\b': '∈',
+        r'\\notin\b': '∉',
+        r'\\subset\b': '⊂',
+        r'\\subseteq\b': '⊆',
+        r'\\to\b': '→',
+        r'\\rightarrow\b': '→',
+        r'\\gets\b': '←',
+        r'\\leftarrow\b': '←',
+        r'\\iff\b': '⇔',
+        r'\\implies\b': '⇒',
+        r'\\pm': '±',
+        r'\\dots': '...',
+        r'\\lfloor': '⌊',
+        r'\\rfloor': '⌋',
+        r'\\langle': '⟨',
+        r'\\rangle': '⟩',
+        r'\\div': '÷',
+        r'\\prod': '∏',
+        r'\\int': '∫',
+        r'\\forall': '∀',
+        r'\\exists': '∃',
+        r'\\emptyset': '∅',
+        r'\\triangle': '△',
+        r'\\angle': '∠',
+        r'\\degree': '°',
+        r'\\circ': '°',
+        r'\\log': 'log',
+        r'\\ln': 'ln',
+        r'\\sin': 'sin',
+        r'\\cos': 'cos',
+        r'\\tan': 'tan',
+    }
     
-    # Handle sqrt variants
-    text = re.sub(r'\\sqrt\{([^}]*)\}', r'√(\1)', text)
-    text = re.sub(r'\\sqrt\s*', '√', text)
-    text = re.sub(r'\bsqrt\((.*?)\)', r'√(\1)', text)
+    for pattern, rep in replacements.items():
+        text = re.sub(pattern, rep, text)
+
+    # Support pmod formatting
+    text = re.sub(r'\\pmod\s*\{([^}]*)\}', r'(mod \1)', text)
+    text = re.sub(r'\\pmod\s*([a-zA-Z0-9])', r'(mod \1)', text)
     
-    # ASCII equivalents
+    # ASCII equivalents for multiplication
     text = re.sub(r'(?=[0-9a-zA-Z\)])\s*\*\s*(?=[0-9a-zA-Z\(√])', ' × ', text)
     text = re.sub(r'(?=[0-9a-zA-Z\)\]])\s+\*\s+(?=[0-9a-zA-Z\(√\[])', ' × ', text)
-    text = text.replace('->', '→')
-    text = text.replace('<-', '←')
-    text = text.replace('=>', '⇒')
-    text = text.replace('<=', '≤')
-    text = text.replace('>=', '≥')
-    text = text.replace('!=', '≠')
-    text = text.replace('+/-', '±')
     
-    fractions = {'1/2': '½', '1/4': '¼', '3/4': '¾', '1/3': '⅓', '2/3': '⅔', '1/5': '⅕', '2/5': '⅖', '3/5': '⅗', '4/5': '⅘', '1/6': '⅙', '5/6': '⅚', '1/8': '⅛', '3/8': '⅜', '5/8': '⅝', '7/8': '⅞'}
-    for f_str, f_uni in fractions.items():
-        text = re.sub(rf'\b{f_str}\b', f_uni, text)
-        
+    # Greek words fallback mapping (for un-backslashed or backslashed Greek words)
     greek = {
         'alpha': 'α', 'beta': 'β', 'gamma': 'γ', 'delta': 'δ', 'epsilon': 'ε',
         'zeta': 'ζ', 'eta': 'η', 'theta': 'θ', 'iota': 'ι', 'kappa': 'κ',
@@ -319,7 +345,7 @@ def format_math_text(text, is_code=False):
     for g_str, g_uni in greek.items():
         text = re.sub(rf'\\?\b{g_str}\b', g_uni, text)
         text = re.sub(rf'\\?\b{g_str.capitalize()}\b', g_uni, text)
-
+        
     # Clean stray LaTeX backslashes and leftover $ after all conversions
     text = re.sub(r'\\(?=[a-zA-Z])', '', text)  # stray \letter
     text = re.sub(r'(?<!\\)\$', '', text)  # stray $ not escaped
@@ -397,7 +423,7 @@ def add_rich_runs(p, text, default_bold=False, default_italic=False, default_und
     text = re.sub(r'\^\{([^}]+)\}', r'<sup>\1</sup>', text)
     text = re.sub(r'_\{([^}]+)\}', r'<sub>\1</sub>', text)
     text = re.sub(r'\^([a-zA-Z0-9])', r'<sup>\1</sup>', text)
-    text = re.sub(r'_([a-zA-Z0-9])', r'<sub>\1</sub>', text)
+    text = re.sub(r'(?<=[a-zA-Z0-9])_([a-zA-Z0-9])', r'<sub>\1</sub>', text)
     # Pre-convert markdown bold, highlight, and italic to HTML-like tags
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
     text = re.sub(r'==(.*?)==', r'<highlight color="BLUE">\1</highlight>', text)
@@ -566,7 +592,7 @@ def add_revision_box(doc, bullets, rule=None):
         else:
             add_rich_runs(p, part)
             
-    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="A9CCE3" w:val="clear"/>')
+    shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="D6EAF8" w:val="clear"/>')
     p._p.get_or_add_pPr().append(shading)
     
     for run in p.runs:
@@ -1387,7 +1413,10 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     for block in concept_blocks:
         block_id = block.get('block_id', 'CB')
         title = block.get('title', 'Untitled Concept')
-        add_custom_heading(doc, title, level=2)
+        # Clean "Concept Block X: " prefix from title using regex
+        clean_title = re.sub(r'(?i)^\s*Concept\s*Block\s*\d*\s*[:\-]?\s*', '', title).strip()
+        add_custom_heading(doc, clean_title, level=2)
+
 
         # Check if the block has a custom flow
         flow = block.get('flow', [])
@@ -1502,16 +1531,19 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                             if target_idx != -1:
                                 inserted_vm_indices.add(target_idx)
                 elif el_type == 'trap':
-                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
+                    if global_callout_count >= MAX_CALLOUTS: continue
                     add_trap(doc, elem.get('text', ''))
+                    global_callout_count += 1
                     total_callouts_rendered += 1
                 elif el_type == 'trick':
-                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
+                    if global_callout_count >= MAX_CALLOUTS: continue
                     add_trick(doc, elem.get('text', ''))
+                    global_callout_count += 1
                     total_callouts_rendered += 1
                 elif el_type == 'quote':
-                    if enforce_callout_cap and total_callouts_rendered >= 20: continue
+                    if global_callout_count >= MAX_CALLOUTS: continue
                     add_quote(doc, elem.get('text', ''))
+                    global_callout_count += 1
                     total_callouts_rendered += 1
                 elif el_type == 'highlight':
                     p_i = doc.add_paragraph()
@@ -1811,25 +1843,25 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 context_text = block.get('explanation', '')
                 insert_image_for_vm(doc, vm, block_id, slides, timestamp_to_frame, frames, inserted_filenames, inserted_ocrs, embedded_screenshots, context_text)
 
-        # Render block-level elements with document-wide caps
-        block_quotes = block.get('teacher_quotes', [])
-        for q in block_quotes[:1]:  # Cap at 1 teacher quote per block
-            if global_callout_count >= MAX_CALLOUTS:
-                break
-            add_quote(doc, q)
-            global_callout_count += 1
-            total_callouts_rendered += 1
-        # Support both old schema (traps/tricks) and new schema (teacher_cautions)
-        traps = block.get('traps') or []
-        tricks = block.get('tricks') or []
-        cautions = (block.get('teacher_cautions') or []) or (traps[:1] + tricks[:1])
-        for c in cautions:
-            if global_callout_count >= MAX_CALLOUTS:
-                break
-            if c and isinstance(c, str) and c.strip():
-                add_trap(doc, c)
+            # Render block-level elements with document-wide caps
+            block_quotes = block.get('teacher_quotes', [])
+            for q in block_quotes[:1]:  # Cap at 1 teacher quote per block
+                if global_callout_count >= MAX_CALLOUTS:
+                    break
+                add_quote(doc, q)
                 global_callout_count += 1
                 total_callouts_rendered += 1
+            # Support both old schema (traps/tricks) and new schema (teacher_cautions)
+            traps = block.get('traps') or []
+            tricks = block.get('tricks') or []
+            cautions = (block.get('teacher_cautions') or []) or (traps[:1] + tricks[:1])
+            for c in cautions:
+                if global_callout_count >= MAX_CALLOUTS:
+                    break
+                if c and isinstance(c, str) and c.strip():
+                    add_trap(doc, c)
+                    global_callout_count += 1
+                    total_callouts_rendered += 1
 
 
 
@@ -1849,6 +1881,34 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
     # Section 3 and Section 4 REMOVED — they redundantly re-printed concepts and rules
     # already present in the main body. Revision boxes at the end of each section serve
     # the same purpose without adding word count.
+
+    # Relocated: Add a single Quick Revision Summary box at the very end of the document
+    rev_bullets = []
+    for idx, block in enumerate(concept_blocks):
+        b_num = idx + 1
+        b_title = block.get('title', f"Block {b_num}")
+        b_title_clean = re.sub(r'(?i)^\s*Concept\s*Block\s*\d*\s*[:\-]?\s*', '', b_title).strip()
+        
+        traps = block.get('traps') or []
+        cautions = (block.get('teacher_cautions') or []) or traps
+        
+        rules = []
+        for ex in block.get('examples', []):
+            rule_text = ex.get('rule') or ex.get('core_principles')
+            if rule_text:
+                rules.append(rule_text)
+                
+        if cautions and len(cautions) > 0:
+            rev_bullets.append(f"⭐ **{b_title_clean} (Warning)**: {cautions[0]}")
+        elif rules and len(rules) > 0:
+            rev_bullets.append(f"💡 **{b_title_clean} (Rule)**: {rules[0]}")
+        else:
+            rev_bullets.append(f"📌 **{b_title_clean}**: Refer to detailed notes.")
+            
+    if rev_bullets:
+        add_custom_heading(doc, "Quick Revision Summary", level=1)
+        add_revision_box(doc, rev_bullets)
+        doc.add_paragraph()
 
     # Section 5: Appendix: Cloze Deletion Answer Key
     if CLOZE_ANSWERS:
