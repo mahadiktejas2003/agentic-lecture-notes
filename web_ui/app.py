@@ -25,6 +25,56 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 load_dotenv(PROJECT_ROOT / ".env")
 
+# Sync dynamic Antigravity env keys to .env file so background processes running under launchd can load them
+def sync_antigravity_env():
+    import os
+    ls_addr = os.getenv("ANTIGRAVITY_LS_ADDRESS")
+    csrf_token = os.getenv("ANTIGRAVITY_CSRF_TOKEN")
+    project_id = os.getenv("ANTIGRAVITY_PROJECT_ID")
+    
+    if not ls_addr or not csrf_token:
+        return
+        
+    env_path = PROJECT_ROOT / ".env"
+    if env_path.exists():
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                
+            new_lines = []
+            has_ls = False
+            has_csrf = False
+            has_project = False
+            
+            for line in lines:
+                if line.strip().startswith("ANTIGRAVITY_LS_ADDRESS="):
+                    new_lines.append(f"ANTIGRAVITY_LS_ADDRESS=\"{ls_addr}\"\n")
+                    has_ls = True
+                elif line.strip().startswith("ANTIGRAVITY_CSRF_TOKEN="):
+                    new_lines.append(f"ANTIGRAVITY_CSRF_TOKEN=\"{csrf_token}\"\n")
+                    has_csrf = True
+                elif line.strip().startswith("ANTIGRAVITY_PROJECT_ID=") and project_id:
+                    new_lines.append(f"ANTIGRAVITY_PROJECT_ID=\"{project_id}\"\n")
+                    has_project = True
+                else:
+                    new_lines.append(line)
+                    
+            if not has_ls:
+                new_lines.append(f"ANTIGRAVITY_LS_ADDRESS=\"{ls_addr}\"\n")
+            if not has_csrf:
+                new_lines.append(f"ANTIGRAVITY_CSRF_TOKEN=\"{csrf_token}\"\n")
+            if not has_project and project_id:
+                new_lines.append(f"ANTIGRAVITY_PROJECT_ID=\"{project_id}\"\n")
+                
+            with open(env_path, "w", encoding="utf-8") as f:
+                f.writelines(new_lines)
+            print(f"[Startup] Synced Antigravity environment keys to .env")
+        except Exception as e:
+            print(f"Failed to sync Antigravity env to .env file: {e}")
+
+sync_antigravity_env()
+
+
 app = FastAPI(
     title="Lecture Notes Generator",
     description="Upload lecture videos and transcripts to generate exam-ready notes",
@@ -305,18 +355,19 @@ async def root():
     
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(17, 25, 40, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f3f4f6;
+            --bg-color: #030712;
+            --card-bg: rgba(17, 25, 40, 0.65);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --text-primary: #f9fafb;
             --text-secondary: #9ca3af;
             --accent-glow: #6366f1;
-            --accent-secondary: #a855f7;
+            --accent-secondary: #c084fc;
             --success-color: #10b981;
             --error-color: #ef4444;
             --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             --asr-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --shadow-primary: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --shadow-primary: 0 20px 50px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -328,82 +379,90 @@ async def root():
         body {
             font-family: 'Outfit', sans-serif;
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
-            background-attachment: fixed;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 28px;
+            padding: 45px;
             box-shadow: var(--shadow-primary);
+            transition: var(--transition);
         }
 
         header {
-            text-align: center;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         h1 {
-            font-size: 2.6rem;
+            font-size: 2.8rem;
             font-weight: 700;
-            background: linear-gradient(90deg, #818cf8, #c084fc);
+            background: linear-gradient(90deg, #818cf8, #c084fc, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.8px;
         }
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 350;
         }
 
         /* Tabs styling */
         .tab-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 35px;
             border-bottom: 1px solid var(--card-border);
-            padding-bottom: 12px;
+            padding-bottom: 14px;
+            overflow-x: auto;
         }
 
         .tab-btn {
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             color: var(--text-secondary);
             padding: 10px 20px;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border-radius: 10px;
+            transition: var(--transition);
             font-family: inherit;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tab-btn.active {
-            background: rgba(99, 102, 241, 0.15);
+            background: rgba(99, 102, 241, 0.12);
             color: #818cf8;
             border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
         .tab-btn:hover:not(.active) {
             color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .tab-content {
@@ -412,11 +471,11 @@ async def root():
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 26px;
         }
 
         label {
@@ -431,22 +490,22 @@ async def root():
         .file-upload-wrapper {
             position: relative;
             width: 100%;
-            height: 100px;
-            border: 2px dashed rgba(99, 102, 241, 0.3);
-            border-radius: 14px;
+            height: 110px;
+            border: 2px dashed rgba(99, 102, 241, 0.25);
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.02);
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.01);
         }
 
         .file-upload-wrapper:hover, .file-upload-wrapper.dragover {
             border-color: var(--accent-glow);
-            background: rgba(99, 102, 241, 0.05);
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.04);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
         }
 
         .file-upload-wrapper input[type="file"] {
@@ -460,26 +519,27 @@ async def root():
         }
 
         .upload-icon {
-            font-size: 24px;
-            margin-bottom: 6px;
+            font-size: 26px;
+            margin-bottom: 8px;
             transition: transform 0.2s ease;
         }
 
         .file-upload-wrapper:hover .upload-icon {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
         .upload-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
         .upload-filename {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #818cf8;
             font-weight: 500;
-            margin-top: 6px;
+            margin-top: 8px;
             display: none;
+            text-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
         }
 
         .optional-tag {
@@ -494,50 +554,63 @@ async def root():
 
         /* Collapsible settings panel */
         .collapsible-trigger {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--card-border);
-            padding: 12px 20px;
-            border-radius: 12px;
+            padding: 14px 22px;
+            border-radius: 14px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 26px;
             font-weight: 500;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: var(--transition);
         }
 
         .collapsible-trigger:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 0 10px;
         }
 
         .collapsible-content.open {
-            max-height: 200px;
-            margin-bottom: 24px;
+            max-height: 220px;
+            margin-bottom: 26px;
         }
 
-        select {
+        select, .glass-input {
             width: 100%;
-            background: #111827;
+            background: rgba(17, 24, 39, 0.85);
             border: 1px solid var(--card-border);
             color: var(--text-primary);
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border-radius: 12px;
             outline: none;
             cursor: pointer;
             font-family: inherit;
+            transition: var(--transition);
         }
 
-        select:focus {
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        select:focus, .glass-input:focus {
             border-color: var(--accent-glow);
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
         }
 
         button.btn-submit {
@@ -548,19 +621,20 @@ async def root():
             padding: 16px;
             font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+            transition: var(--transition);
         }
 
         button.btn-submit.asr-only-btn {
             background: var(--asr-gradient);
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
         }
 
         button.btn-submit:hover {
             transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
         }
 
         button.btn-submit:disabled {
@@ -573,10 +647,10 @@ async def root():
         /* Status card */
         .status-box {
             margin-top: 40px;
-            padding: 24px;
+            padding: 26px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--card-border);
-            border-radius: 16px;
+            border-radius: 18px;
             display: none;
             animation: fadeIn 0.4s ease;
         }
@@ -589,7 +663,7 @@ async def root():
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .status-badge {
@@ -619,7 +693,7 @@ async def root():
             border-radius: 14px;
             cursor: pointer;
             box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             margin-top: 12px;
             display: none;
         }
@@ -635,18 +709,19 @@ async def root():
         }
 
         .progress-bar {
-            height: 6px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             margin: 15px 0;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
             background: var(--primary-gradient);
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .asr-progress .progress-fill {
@@ -657,8 +732,8 @@ async def root():
         .pipeline-steps {
             display: flex;
             justify-content: space-between;
-            margin: 24px 0;
-            font-size: 0.8rem;
+            margin: 30px 0;
+            font-size: 0.82rem;
             color: var(--text-secondary);
             position: relative;
         }
@@ -666,7 +741,7 @@ async def root():
         .pipeline-steps::before {
             content: '';
             position: absolute;
-            top: 10px;
+            top: 11px;
             left: 0;
             right: 0;
             height: 2px;
@@ -680,29 +755,29 @@ async def root():
             align-items: center;
             position: relative;
             z-index: 2;
-            width: 80px;
+            width: 85px;
             text-align: center;
         }
 
         .step-dot {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: #111827;
             border: 2px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 8px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: bold;
             color: transparent;
         }
 
         .step-node.active .step-dot {
             border-color: var(--accent-glow);
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.7);
             background: var(--accent-glow);
             color: white;
         }
@@ -716,18 +791,18 @@ async def root():
         .step-node.completed .step-dot::after {
             content: '✓';
             color: white;
-            font-size: 11px;
+            font-size: 12px;
         }
 
         /* Logs Console styling */
         .console-wrapper {
-            margin-top: 24px;
+            margin-top: 28px;
         }
 
         .console-header {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -735,43 +810,43 @@ async def root():
 
         .console-log {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            background: #06090f;
+            font-size: 0.82rem;
+            background: #05070c;
             border: 1px solid var(--card-border);
-            padding: 16px;
-            border-radius: 10px;
-            height: 180px;
+            padding: 18px;
+            border-radius: 12px;
+            height: 200px;
             overflow-y: auto;
             white-space: pre-wrap;
             color: #34d399;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
-            line-height: 1.4;
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.8);
+            line-height: 1.45;
         }
 
         .download-btn {
             display: none;
             width: 100%;
             text-align: center;
-            margin-top: 24px;
-            padding: 15px;
+            margin-top: 26px;
+            padding: 16px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            transition: var(--transition);
         }
 
         .download-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.45);
         }
 
         .asr-download-buttons {
             display: flex;
             gap: 12px;
-            margin-top: 24px;
+            margin-top: 26px;
         }
 
         .asr-download-btn {
@@ -781,60 +856,350 @@ async def root():
             padding: 14px;
             color: white;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             font-size: 0.95rem;
         }
 
         .asr-download-btn.srt {
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
         }
 
         .asr-download-btn.txt {
             background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
         }
 
         .asr-download-btn:hover {
             transform: translateY(-2px);
         }
 
+        /* Waveform Animation */
+        .waveform-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            height: 40px;
+            margin: 18px 0;
+            display: none;
+        }
+        .waveform-container.active {
+            display: flex;
+        }
+        .waveform-bar {
+            width: 4px;
+            height: 8px;
+            background: var(--accent-glow);
+            border-radius: 3px;
+            animation: pulse 1s ease-in-out infinite alternate;
+        }
+        .waveform-bar:nth-child(1) { animation-delay: 0.1s; }
+        .waveform-bar:nth-child(2) { animation-delay: 0.25s; }
+        .waveform-bar:nth-child(3) { animation-delay: 0.4s; }
+        .waveform-bar:nth-child(4) { animation-delay: 0.55s; }
+        .waveform-bar:nth-child(5) { animation-delay: 0.7s; }
+        .waveform-bar:nth-child(6) { animation-delay: 0.55s; }
+        .waveform-bar:nth-child(7) { animation-delay: 0.4s; }
+        .waveform-bar:nth-child(8) { animation-delay: 0.25s; }
+        .waveform-bar:nth-child(9) { animation-delay: 0.1s; }
+        
+        @keyframes pulse {
+            0% { height: 8px; background: var(--accent-glow); }
+            100% { height: 35px; background: var(--accent-secondary); }
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Scrollbar styling */
-        .console-log::-webkit-scrollbar {
+        .console-log::-webkit-scrollbar, table-container::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         .console-log::-webkit-scrollbar-track {
             background: rgba(0,0,0,0.2);
-            border-radius: 0 10px 10px 0;
+            border-radius: 0 12px 12px 0;
         }
         .console-log::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
             border-radius: 4px;
         }
         .console-log::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.18);
         }
+
+        /* Tables & Queue layout styling */
+        .table-container {
+            border-radius: 16px;
+            overflow-x: auto;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.015);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 14px 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--card-border);
+        }
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: middle;
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Glass Toast Notification */
+        .toast-notify {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(17, 25, 40, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            padding: 18px 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 1000;
+            transform: translateY(150%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 380px;
+        }
+        .toast-notify.show {
+            transform: translateY(0);
+        }
+        .toast-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        .toast-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Glassmorphic UI / UX Overhaul Additions */
+        .header-main {
+            text-align: left;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .engine-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .engine-toggle-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .engine-toggle {
+            position: relative;
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 14px;
+            padding: 3px;
+            cursor: pointer;
+            user-select: none;
+            width: 220px;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .engine-toggle-option {
+            flex: 1;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            z-index: 2;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .engine-toggle-option.active {
+            color: #ffffff;
+        }
+
+        .engine-toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            bottom: 3px;
+            width: calc(50% - 3px);
+            background: var(--primary-gradient);
+            border-radius: 11px;
+            z-index: 1;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .engine-toggle[data-engine="local"] .engine-toggle-slider {
+            transform: translateX(100%);
+            background: var(--asr-gradient);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Waveform Animation */
+        .audio-waveform {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+        }
+
+        .audio-waveform span {
+            display: block;
+            width: 3px;
+            height: 4px;
+            background: #2ecc71;
+            border-radius: 2px;
+            animation: bounce 0.8s ease-in-out infinite alternate;
+        }
+
+        .audio-waveform span:nth-child(2) { animation-delay: 0.15s; }
+        .audio-waveform span:nth-child(3) { animation-delay: 0.3s; }
+        .audio-waveform span:nth-child(4) { animation-delay: 0.45s; }
+        .audio-waveform span:nth-child(5) { animation-delay: 0.6s; }
+
+        @keyframes bounce {
+            100% {
+                height: 18px;
+            }
+        }
+
+        /* Pulse Ring Indicator */
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: currentColor;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-ring 1.2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 currentColor;
+            }
+            70% {
+                box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Stats Card Hover Overhaul */
+        .stat-card {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: var(--transition);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(99, 102, 241, 0.15);
+        }
+
+        .stat-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .stat-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .stat-card-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📚 AI Lecture Notes & ASR Studio</h1>
-            <p class="subtitle">Extract audio and automatically transcribe Hinglish speech locally on M4 Metal GPU</p>
+            <div class="header-main">
+                <h1>📚 AI Lecture Notes & ASR Studio</h1>
+                <p class="subtitle">Extract audio and automatically transcribe Hinglish speech locally on M4 Metal GPU</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-control daemon-control-btn" id="headerDaemonBtn" onclick="toggleWatcherDaemon()" style="margin-right: 10px; background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.25); padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: inherit;">
+                    🛑 Stop Daemon
+                </button>
+                <button class="btn-control" onclick="shutdownASRStudio()" style="margin-right: 15px; background: rgba(149, 165, 166, 0.15); color: #95a5a6; border: 1px solid rgba(149, 165, 166, 0.25); padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; font-family: inherit;">
+                    🔌 Shutdown Studio
+                </button>
+                <div class="engine-toggle-container">
+                    <span class="engine-toggle-label">Active Core</span>
+                    <div class="engine-toggle" id="globalEngineToggle" onclick="toggleGlobalEngine()" data-engine="cloud">
+                        <div class="engine-toggle-slider"></div>
+                        <div class="engine-toggle-option active" id="optCloud">⚡ Cloud</div>
+                        <div class="engine-toggle-option" id="optLocal">🤖 Local</div>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!-- Tabs -->
         <div class="tab-container">
-            <button class="tab-btn active" id="tabNotes" onclick="switchTab('notes')">📝 Lecture Notes Reconstruction</button>
-            <button class="tab-btn" id="tabASR" onclick="switchTab('asr')">🎙️ ASR-Only Speech-to-Text</button>
+            <button class="tab-btn active" id="tabNotes" onclick="switchTab('notes')">📝 Lecture Notes</button>
+            <button class="tab-btn" id="tabASR" onclick="switchTab('asr')">🎙️ ASR Studio</button>
             <button class="tab-btn" id="tabWatcher" onclick="switchTab('watcher')">🎧 Watch Folder</button>
+            <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">⚙️ AI Settings</button>
         </div>
         
         <!-- Tab 1: Notes Generation Form -->
@@ -872,7 +1237,7 @@ async def root():
 
                 <!-- Collapsible Advanced Settings -->
                 <div class="collapsible-trigger" id="settingsTrigger">
-                    <span>⚙️ Advanced Speech Recognition Settings</span>
+                    <span>🗣️ Advanced Speech Recognition Settings</span>
                     <span id="triggerChevron">▼</span>
                 </div>
                 
@@ -902,6 +1267,19 @@ async def root():
                 </div>
                 <p id="progressText" style="font-size: 0.9rem; color: var(--text-secondary);">Uploading files...</p>
                 
+                <!-- Pulse animation waveform -->
+                <div class="waveform-container" id="pipelineWaveform">
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                </div>
+
                 <!-- Pipeline stage nodes -->
                 <div class="pipeline-steps">
                     <div class="step-node" id="stepASR">
@@ -922,7 +1300,7 @@ async def root():
                     </div>
                     <div class="step-node" id="stepAudit">
                         <div class="step-dot"></div>
-                        <div>18 Gates</div>
+                        <div>24 Gates</div>
                     </div>
                 </div>
 
@@ -976,6 +1354,19 @@ async def root():
                 </div>
                 <p id="asrProgressText" style="font-size: 0.9rem; color: var(--text-secondary);">Uploading audio...</p>
 
+                <!-- Pulse animation waveform -->
+                <div class="waveform-container" id="asrWaveform">
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                    <div class="waveform-bar"></div>
+                </div>
+
                 <!-- Console Log viewer -->
                 <div class="console-wrapper">
                     <div class="console-header">
@@ -990,7 +1381,7 @@ async def root():
                     <a id="asrDownloadTxtLink" class="asr-download-btn txt">📄 Download Text (.txt)</a>
                 </div>
                 
-                <div id="asrFilePathContainer" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); border-radius: 12px; text-align: left;">
+                <div id="asrFilePathContainer" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--card-border); border-radius: 12px; text-align: left;">
                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px; font-weight: 500;">💾 Transcribed File Local Path:</div>
                     <code id="asrFilePathText" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--success-color); word-break: break-all; select: all; display: block; background: #000000; padding: 8px; border-radius: 6px;"></code>
                 </div>
@@ -999,85 +1390,123 @@ async def root():
 
         <!-- Tab 3: Watch Folder Dashboard -->
         <div class="tab-content" id="watcherContentSection">
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <h2 style="margin: 0; font-size: 1.4rem;">🎧 Background Transcription Daemon</h2>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 12px;">
+                    <h2 style="margin: 0; font-size: 1.5rem;">🎧 Background Transcription Daemon</h2>
                     <span id="watcherAliveIndicator" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: rgba(255,50,50,0.15); color: #ff6b6b;">🔴 Offline</span>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0;">Watches <code>~/Downloads/</code> for new video files and transcribes them automatically using Qwen3-ASR. Transcripts saved to <code>~/Transcripts/</code></p>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Watches <code>~/Downloads/</code> for new video files and transcribes them automatically using Qwen3-ASR. Transcripts saved to <code>~/Transcripts/</code></p>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button id="watcherPauseBtn" class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem;" onclick="toggleWatcherPause()">⏸️ Pause</button>
-                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #f39c12, #e67e22);" onclick="retryFailedJobs()">🔄 Retry All Failed</button>
-                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #3498db, #2980b9);" onclick="refreshWatcherQueue()">🔃 Refresh</button>
+            <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                <button id="watcherPauseBtn" class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; width: auto;" onclick="toggleWatcherPause()">⏸️ Pause</button>
+                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #f39c12, #e67e22); width: auto; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.25);" onclick="retryFailedJobs()">🔄 Retry All Failed</button>
+                <button class="btn-submit" style="padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #3498db, #2980b9); width: auto; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.25);" onclick="refreshWatcherQueue()">🔃 Refresh</button>
             </div>
 
             <!-- Stats Cards -->
-            <div id="watcherStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;"></div>
+            <div id="watcherStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 25px;"></div>
 
             <!-- Currently Transcribing -->
-            <div id="watcherCurrentJob" style="display: none; padding: 15px; background: rgba(52, 152, 219, 0.1); border: 1px solid rgba(52, 152, 219, 0.3); border-radius: 12px; margin-bottom: 20px;">
+            <div id="watcherCurrentJob" style="display: none; padding: 18px; background: rgba(52, 152, 219, 0.08); border: 1px solid rgba(52, 152, 219, 0.25); border-radius: 16px; margin-bottom: 25px;">
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px;">🎙️ Currently Transcribing:</div>
-                <div id="watcherCurrentFileName" style="font-weight: 600; font-size: 1rem; margin-bottom: 10px;"></div>
+                <div id="watcherCurrentFileName" style="font-weight: 600; font-size: 1.05rem; margin-bottom: 10px;"></div>
                 
                 <!-- Live watcher console viewer -->
-                <div class="console-wrapper" style="margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;">
-                    <div class="console-header" style="background: rgba(0, 0, 0, 0.4); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.8rem;">
+                <div class="console-wrapper" style="margin-top: 10px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; overflow: hidden;">
+                    <div class="console-header" style="background: rgba(0, 0, 0, 0.4); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.8rem;">
                         <span>⚙️ Live Transcription Progress Logs</span>
                         <span style="color: #2ecc71;">Streaming...</span>
                     </div>
-                    <div class="console-log" id="watcherConsoleLog" style="height: 150px; background: #000; color: #2ecc71; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 10px; overflow-y: auto; white-space: pre-wrap; text-align: left;">Initializing logs...</div>
+                    <div class="console-log" id="watcherConsoleLog" style="height: 150px; background: #05070c; color: #2ecc71; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; padding: 12px; overflow-y: auto; white-space: pre-wrap; text-align: left; border: none;">Initializing logs...</div>
                 </div>
             </div>
 
             <!-- Filters -->
-            <div style="display: flex; gap: 8px; margin-bottom: 15px; font-size: 0.8rem;">
-                <button class="filter-btn active" onclick="setWatcherFilter('all')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.08); color: var(--text-primary); border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">All</button>
-                <button class="filter-btn" onclick="setWatcherFilter('queued')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #3498db; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Queued</button>
-                <button class="filter-btn" onclick="setWatcherFilter('transcribing')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #f39c12; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Transcribing</button>
-                <button class="filter-btn" onclick="setWatcherFilter('completed')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #2ecc71; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Completed</button>
-                <button class="filter-btn" onclick="setWatcherFilter('failed')" style="padding: 6px 14px; border: 1px solid var(--card-border); background: transparent; color: #e74c3c; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 500;">Failed</button>
+            <div style="display: flex; gap: 8px; margin-bottom: 18px; font-size: 0.8rem;">
+                <button class="filter-btn active" onclick="setWatcherFilter('all')" style="padding: 8px 16px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.06); color: var(--text-primary); border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 500;">All</button>
+                <button class="filter-btn" onclick="setWatcherFilter('queued')" style="padding: 8px 16px; border: 1px solid var(--card-border); background: transparent; color: #3498db; border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 500;">Queued</button>
+                <button class="filter-btn" onclick="setWatcherFilter('transcribing')" style="padding: 8px 16px; border: 1px solid var(--card-border); background: transparent; color: #f39c12; border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 500;">Transcribing</button>
+                <button class="filter-btn" onclick="setWatcherFilter('completed')" style="padding: 8px 16px; border: 1px solid var(--card-border); background: transparent; color: #2ecc71; border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 500;">Completed</button>
+                <button class="filter-btn" onclick="setWatcherFilter('failed')" style="padding: 8px 16px; border: 1px solid var(--card-border); background: transparent; color: #e74c3c; border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 500;">Failed</button>
             </div>
 
             <!-- Job Queue Table -->
-            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border);">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <div class="table-container">
+                <table>
                     <thead>
-                        <tr style="background: rgba(255,255,255,0.05);">
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">File</th>
-                            <th style="padding: 12px 15px; text-align: center; font-weight: 600; color: var(--text-secondary); width: 100px;">Status</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">Transcript Path</th>
-                            <th style="padding: 12px 15px; text-align: right; font-weight: 600; color: var(--text-secondary); width: 150px;">Time</th>
+                        <tr>
+                            <th>File</th>
+                            <th style="text-align: center; width: 120px;">Status</th>
+                            <th>Transcript Path / Action</th>
+                            <th style="text-align: right; width: 180px;">Time</th>
                         </tr>
                     </thead>
                     <tbody id="watcherQueueBody">
-                        <tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">Loading queue...</td></tr>
+                        <tr><td colspan="4" style="padding: 35px; text-align: center; color: var(--text-secondary);">Loading queue...</td></tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Cloud Database Logs -->
-            <div style="margin-top: 35px; margin-bottom: 15px;">
-                <h3 style="margin: 0 0 5px 0; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">☁️ Supabase Cloud History</h3>
-                <p style="color: var(--text-secondary); font-size: 0.8rem; margin: 0;">Permanent historical logs synced to Supabase with copyable R2 Object Keys.</p>
+            <div style="margin-top: 40px; margin-bottom: 18px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 1.2rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">☁️ Supabase Cloud History</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">Permanent historical logs synced to Supabase with copyable R2 Object Keys.</p>
             </div>
-            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); margin-bottom: 30px;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <div class="table-container" style="margin-bottom: 30px;">
+                <table>
                     <thead>
-                        <tr style="background: rgba(255,255,255,0.05);">
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">Lecture Title</th>
-                            <th style="padding: 12px 15px; text-align: center; font-weight: 600; color: var(--text-secondary); width: 100px;">Status</th>
-                            <th style="padding: 12px 15px; text-align: left; font-weight: 600; color: var(--text-secondary);">R2 Asset Keys</th>
-                            <th style="padding: 12px 15px; text-align: right; font-weight: 600; color: var(--text-secondary); width: 180px;">Synced At</th>
+                        <tr>
+                            <th>Lecture Title</th>
+                            <th style="text-align: center; width: 120px;">Status</th>
+                            <th>R2 Asset Keys / Download</th>
+                            <th style="text-align: right; width: 180px;">Synced At</th>
                         </tr>
                     </thead>
                     <tbody id="watcherCloudHistoryBody">
-                        <tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">Loading cloud history...</td></tr>
+                        <tr><td colspan="4" style="padding: 35px; text-align: center; color: var(--text-secondary);">Loading cloud history...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Tab 4: AI Settings Configuration -->
+        <div class="tab-content" id="settingsContentSection">
+            <form id="settingsForm" onsubmit="saveSettings(event)">
+                <div style="margin-bottom: 25px;">
+                    <h2 style="margin: 0 0 8px 0; font-size: 1.5rem;">⚙️ Model Configuration</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0;">Configure the AI Engine Path to use for note generation and composition.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="settingUseLocal">🤖 AI Engine Path</label>
+                    <select id="settingUseLocal" onchange="toggleOllamaSettingsVisibility(this.value === 'true')">
+                        <option value="false">🌐 Cloud AI (Gemini Flash/Pro API - Recommended)</option>
+                        <option value="true">💻 Local AI (Ollama Studio - 24/7 battery saver)</option>
+                    </select>
+                </div>
+
+                <div id="ollamaSettingsFields" style="max-height: 0; opacity: 0; overflow: hidden; transition: var(--transition);">
+                    <div class="form-group">
+                        <label for="settingModelName">🏷️ Ollama Model Name</label>
+                        <input type="text" id="settingModelName" class="glass-input" value="notes-2b:latest" placeholder="e.g., notes-2b:latest">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="settingOllamaHost">🖥️ Ollama API Host</label>
+                        <input type="text" id="settingOllamaHost" class="glass-input" value="http://127.0.0.1:11434" placeholder="e.g., http://127.0.0.1:11434">
+                    </div>
+                </div>
+                
+                <button type="submit" id="saveSettingsBtn" class="btn-submit" style="margin-top: 15px;">Save Configuration</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Glass Toast Notification -->
+    <div id="toastNotification" class="toast-notify">
+        <div class="toast-title" id="toastTitle">Notification</div>
+        <div class="toast-desc" id="toastDesc">Status updated.</div>
     </div>
     
     <script>
@@ -1087,6 +1516,8 @@ async def root():
         let logsInterval = null;
         let asrStatusInterval = null;
         let asrLogsInterval = null;
+        let watcherPollInterval = null;
+        let watcherFilter = 'all';
         
         // Tab switching logic
         function switchTab(tab) {
@@ -1112,13 +1543,105 @@ async def root():
                 if (!watcherPollInterval) {
                     watcherPollInterval = setInterval(refreshWatcherQueue, 3000);
                 }
+            } else if (tab === 'settings') {
+                document.getElementById('tabSettings').classList.add('active');
+                document.getElementById('settingsContentSection').classList.add('active');
+                fetchSettings();
+            }
+        }
+
+        // Show Toast Notification
+        function showNotification(title, desc, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            const titleEl = document.getElementById('toastTitle');
+            const descEl = document.getElementById('toastDesc');
+            
+            titleEl.textContent = title;
+            descEl.textContent = desc;
+            
+            if (type === 'success') {
+                toast.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            } else if (type === 'error') {
+                toast.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+            } else {
+                toast.style.borderColor = 'var(--card-border)';
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ── AI Settings Functions ──
+        async function fetchSettings() {
+            try {
+                const res = await fetch('/api/settings');
+                const data = await res.json();
+                
+                const settingUseLocalEl = document.getElementById('settingUseLocal');
+                const settingModelNameEl = document.getElementById('settingModelName');
+                const settingOllamaHostEl = document.getElementById('settingOllamaHost');
+                
+                if (settingUseLocalEl) settingUseLocalEl.value = data.USE_LOCAL_LLM ? 'true' : 'false';
+                if (settingModelNameEl) settingModelNameEl.value = data.LOCAL_LLM_MODEL || 'notes-2b:latest';
+                if (settingOllamaHostEl) settingOllamaHostEl.value = data.OLLAMA_HOST || 'http://127.0.0.1:11434';
+                
+                toggleOllamaSettingsVisibility(data.USE_LOCAL_LLM);
+                updateEngineToggleUI(data.USE_LOCAL_LLM);
+            } catch (err) {
+                console.error('Failed to load settings:', err);
+            }
+        }
+
+        function toggleOllamaSettingsVisibility(useLocal) {
+            const ollamaFields = document.getElementById('ollamaSettingsFields');
+            if (useLocal) {
+                ollamaFields.style.maxHeight = '250px';
+                ollamaFields.style.opacity = '1';
+                ollamaFields.style.marginTop = '15px';
+            } else {
+                ollamaFields.style.maxHeight = '0px';
+                ollamaFields.style.opacity = '0';
+                ollamaFields.style.marginTop = '0px';
+            }
+        }
+
+        async function saveSettings(e) {
+            if (e) e.preventDefault();
+            const btn = document.getElementById('saveSettingsBtn');
+            btn.textContent = 'Saving Settings...';
+            btn.disabled = true;
+            
+            try {
+                const payload = {
+                    USE_LOCAL_LLM: document.getElementById('settingUseLocal').value === 'true',
+                    LOCAL_LLM_MODEL: document.getElementById('settingModelName').value,
+                    OLLAMA_HOST: document.getElementById('settingOllamaHost').value
+                };
+                
+                const res = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    showNotification('Settings Saved', 'Configuration successfully synchronized to .env file', 'success');
+                } else {
+                    const err = await res.json();
+                    showNotification('Save Failed', err.detail || 'Failed to save configuration', 'error');
+                }
+            } catch (err) {
+                showNotification('Connection Error', err.message, 'error');
+            } finally {
+                btn.textContent = 'Save Configuration';
+                btn.disabled = false;
             }
         }
 
         // ── Watch Folder Dashboard Functions ──
-        let watcherPollInterval = null;
-        let watcherFilter = 'all';
-
         function setWatcherFilter(status) {
             watcherFilter = status;
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -1126,7 +1649,7 @@ async def root():
                 btn.style.background = 'transparent';
                 if (btn.getAttribute('onclick').includes("'" + status + "'")) {
                     btn.classList.add('active');
-                    btn.style.background = 'rgba(255,255,255,0.08)';
+                    btn.style.background = 'rgba(255,255,255,0.06)';
                 }
             });
             refreshWatcherQueue();
@@ -1156,6 +1679,22 @@ async def root():
                     indicator.style.color = '#ff6b6b';
                 }
 
+                // Update header daemon button
+                const headerDaemonBtn = document.getElementById('headerDaemonBtn');
+                if (headerDaemonBtn) {
+                    if (data.alive) {
+                        headerDaemonBtn.innerHTML = '🛑 Stop Daemon';
+                        headerDaemonBtn.style.background = 'rgba(231, 76, 60, 0.15)';
+                        headerDaemonBtn.style.color = '#e74c3c';
+                        headerDaemonBtn.style.borderColor = 'rgba(231, 76, 60, 0.25)';
+                    } else {
+                        headerDaemonBtn.innerHTML = '🚀 Start Daemon';
+                        headerDaemonBtn.style.background = 'rgba(46, 204, 113, 0.15)';
+                        headerDaemonBtn.style.color = '#2ecc71';
+                        headerDaemonBtn.style.borderColor = 'rgba(46, 204, 113, 0.25)';
+                    }
+                }
+
                 // Update pause button
                 const pauseBtn = document.getElementById('watcherPauseBtn');
                 if (data.paused) {
@@ -1176,10 +1715,10 @@ async def root():
                     { label: 'Failed', value: stats.failed || 0, color: '#e74c3c', icon: '❌' },
                 ];
                 statsDiv.innerHTML = statItems.map(s => `
-                    <div style="padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 10px; text-align: center;">
-                        <div style="font-size: 1.5rem;">${s.icon}</div>
+                    <div style="padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 12px; text-align: center;">
+                        <div style="font-size: 1.5rem; margin-bottom: 4px;">${s.icon}</div>
                         <div style="font-size: 1.8rem; font-weight: 700; color: ${s.color};">${s.value}</div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${s.label}</div>
+                        <div style="font-size: 0.78rem; color: var(--text-secondary);">${s.label}</div>
                     </div>
                 `).join('');
 
@@ -1212,7 +1751,7 @@ async def root():
                 }
                 
                 if (jobs.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No ${watcherFilter !== 'all' ? watcherFilter : ''} jobs found in queue.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="4" style="padding: 35px; text-align: center; color: var(--text-secondary);">No ${watcherFilter !== 'all' ? watcherFilter : ''} jobs found in queue.</td></tr>`;
                     return;
                 }
 
@@ -1224,17 +1763,37 @@ async def root():
                         'failed': '#e74c3c',
                     };
                     const statusColor = statusColors[job.status] || '#999';
-                    const pathDisplay = job.absolute_srt_path 
-                        ? `<code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--success-color); background: #000; padding: 4px 8px; border-radius: 4px; word-break: break-all; cursor: pointer;" onclick="navigator.clipboard.writeText('${job.absolute_srt_path.replace(/'/g, "\\'")}'). then(() => this.style.color='#f39c12')" title="Click to copy">${job.absolute_srt_path}</code>`
+                    
+                    let pathDisplay = job.absolute_srt_path 
+                        ? `<code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--success-color); background: #000; padding: 4px 8px; border-radius: 4px; word-break: break-all; cursor: pointer; display: block;" onclick="navigator.clipboard.writeText('${job.absolute_srt_path.replace(/'/g, "\\'")}').then(() => showNotification('Copied Path', 'SRT transcript path copied to clipboard', 'success'))" title="Click to copy">${job.absolute_srt_path}</code>`
                         : (job.error_message ? `<span style="color: #e74c3c; font-size: 0.8rem;">${job.error_message.substring(0, 80)}...</span>` : '<span style="color: var(--text-secondary);">—</span>');
+
+                    if (job.status === 'completed') {
+                        const titleOnly = job.filename.substring(0, job.filename.lastIndexOf('.')) || job.filename;
+                        if (job.notes_exists && job.notes_path) {
+                            pathDisplay += `
+                                <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center;">
+                                    <span style="color: #2ecc71; font-size: 0.75rem; font-weight: 600;">✅ Notes Ready</span>
+                                    <a href="/watcher/download?title=${encodeURIComponent(titleOnly)}&type=notes" style="padding: 4px 10px; border-radius: 6px; background: rgba(52,152,219,0.15); color: #3498db; text-decoration: none; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(52,152,219,0.25); display: inline-flex; align-items: center; gap: 4px;" download>📥 Download</a>
+                                </div>
+                                <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #3498db; background: #000; padding: 3px 6px; border-radius: 4px; word-break: break-all; cursor: pointer; display: block; margin-top: 4px;" onclick="navigator.clipboard.writeText('${job.notes_path.replace(/'/g, "\\\\\\'")}').then(() => showNotification('Copied Path', 'Notes path copied to clipboard', 'success'))" title="Click to copy path">${job.notes_path}</code>
+                            `;
+                        } else {
+                            pathDisplay += `
+                                <div style="margin-top: 8px;">
+                                    <span style="color: #f39c12; font-size: 0.75rem;">⏳ Notes Pending — transcript ready, notes generation queued</span>
+                                </div>
+                            `;
+                        }
+                    }
                     const timeDisplay = job.completed_at 
                         ? new Date(job.completed_at).toLocaleString() 
                         : (job.created_at ? new Date(job.created_at).toLocaleString() : '—');
                     return `<tr style="border-top: 1px solid rgba(255,255,255,0.05);">
-                        <td style="padding: 12px 15px; font-weight: 500;">${job.filename}</td>
-                        <td style="padding: 12px 15px; text-align: center;"><span style="padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${job.status}</span></td>
-                        <td style="padding: 12px 15px;">${pathDisplay}</td>
-                        <td style="padding: 12px 15px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
+                        <td style="padding: 14px 18px; font-weight: 500;">${job.filename}</td>
+                        <td style="padding: 14px 18px; text-align: center;"><span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${job.status}</span></td>
+                        <td style="padding: 14px 18px;">${pathDisplay}</td>
+                        <td style="padding: 14px 18px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
                     </tr>`;
                 }).join('');
 
@@ -1247,7 +1806,7 @@ async def root():
                         if (cloudData.error) {
                             cloudTbody.innerHTML = `<tr><td colspan="4" style="padding: 15px; text-align: center; color: #e74c3c;">${cloudData.error}</td></tr>`;
                         } else if (!Array.isArray(cloudData) || cloudData.length === 0) {
-                            cloudTbody.innerHTML = `<tr><td colspan="4" style="padding: 30px; text-align: center; color: var(--text-secondary);">No synced runs in cloud history yet.</td></tr>`;
+                            cloudTbody.innerHTML = `<tr><td colspan="4" style="padding: 35px; text-align: center; color: var(--text-secondary);">No synced runs in cloud history yet.</td></tr>`;
                         } else {
                             cloudTbody.innerHTML = cloudData.map(run => {
                                 const statusColors = {
@@ -1258,16 +1817,35 @@ async def root():
                                 
                                 let keys = [];
                                 if (run.r2_notes_key) {
-                                    keys.push(`notes: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #3498db;" onclick="navigator.clipboard.writeText('${run.r2_notes_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_notes_key}</code>`);
-                                }
-                                if (run.r2_transcript_key) {
-                                    keys.push(`transcript: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #2ecc71;" onclick="navigator.clipboard.writeText('${run.r2_transcript_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_transcript_key}</code>`);
+                                    keys.push(`
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <a href="/watcher/download?title=${encodeURIComponent(run.lecture_title)}&type=notes" style="padding: 3px 8px; border-radius: 4px; background: rgba(52,152,219,0.15); color: #3498db; text-decoration: none; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(52,152,219,0.25);" download>📥 Notes docx</a>
+                                            <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #7f8c8d;" onclick="navigator.clipboard.writeText('${run.r2_notes_key.replace(/'/g, "\\'")}').then(() => showNotification('Copied Key', 'R2 Notes key copied', 'success'))" title="Click to copy R2 Key">📋 Copy Key</code>
+                                        </div>
+                                    `);
                                 }
                                 if (run.r2_short_note_key) {
-                                    keys.push(`short-note: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #9b59b6;" onclick="navigator.clipboard.writeText('${run.r2_short_note_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_short_note_key}</code>`);
+                                    keys.push(`
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <a href="/watcher/download?title=${encodeURIComponent(run.lecture_title)}&type=short_note" style="padding: 3px 8px; border-radius: 4px; background: rgba(155,89,182,0.15); color: #9b59b6; text-decoration: none; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(155,89,182,0.25);" download>📥 Short Note</a>
+                                            <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #7f8c8d;" onclick="navigator.clipboard.writeText('${run.r2_short_note_key.replace(/'/g, "\\'")}').then(() => showNotification('Copied Key', 'R2 Short note key copied', 'success'))" title="Click to copy R2 Key">📋 Copy Key</code>
+                                        </div>
+                                    `);
                                 }
                                 if (run.r2_anki_key) {
-                                    keys.push(`anki: <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #f1c40f;" onclick="navigator.clipboard.writeText('${run.r2_anki_key.replace(/'/g, "\\'")}')" title="Click to copy">${run.r2_anki_key}</code>`);
+                                    keys.push(`
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <a href="/watcher/download?title=${encodeURIComponent(run.lecture_title)}&type=anki" style="padding: 3px 8px; border-radius: 4px; background: rgba(241,196,15,0.15); color: #f1c40f; text-decoration: none; font-size: 0.7rem; font-weight: 600; border: 1px solid rgba(241,196,15,0.25);" download>📥 Anki CSV</a>
+                                            <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #7f8c8d;" onclick="navigator.clipboard.writeText('${run.r2_anki_key.replace(/'/g, "\\'")}').then(() => showNotification('Copied Key', 'R2 Anki key copied', 'success'))" title="Click to copy R2 Key">📋 Copy Key</code>
+                                        </div>
+                                    `);
+                                }
+                                if (run.r2_transcript_key && !run.r2_notes_key) {
+                                    keys.push(`
+                                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                            <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; background: #000; padding: 2px 5px; border-radius: 3px; cursor: pointer; color: #2ecc71;" onclick="navigator.clipboard.writeText('${run.r2_transcript_key.replace(/'/g, "\\'")}').then(() => showNotification('Copied Key', 'R2 Transcript key copied', 'success'))" title="Click to copy R2 Key">📋 Transcript: ${run.r2_transcript_key}</code>
+                                        </div>
+                                    `);
                                 }
                                 if (keys.length === 0) {
                                     keys.push('<span style="color: var(--text-secondary);">—</span>');
@@ -1275,10 +1853,10 @@ async def root():
 
                                 const timeDisplay = run.created_at ? new Date(run.created_at).toLocaleString() : '—';
                                 return `<tr style="border-top: 1px solid rgba(255,255,255,0.05);">
-                                    <td style="padding: 12px 15px; font-weight: 500;">${run.lecture_title}</td>
-                                    <td style="padding: 12px 15px; text-align: center;"><span style="padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${run.status}</span></td>
-                                    <td style="padding: 12px 15px; line-height: 1.6;">${keys.join('<br>')}</td>
-                                    <td style="padding: 12px 15px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
+                                    <td style="padding: 14px 18px; font-weight: 500;">${run.lecture_title}</td>
+                                    <td style="padding: 14px 18px; text-align: center;"><span style="padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: ${statusColor}22; color: ${statusColor};">${run.status}</span></td>
+                                    <td style="padding: 14px 18px; line-height: 1.65;">${keys.join('')}</td>
+                                    <td style="padding: 14px 18px; text-align: right; font-size: 0.8rem; color: var(--text-secondary);">${timeDisplay}</td>
                                 </tr>`;
                             }).join('');
                         }
@@ -1301,11 +1879,53 @@ async def root():
             } catch (err) { console.error(err); }
         }
 
+        async function toggleWatcherDaemon() {
+            try {
+                const btn = document.getElementById('headerDaemonBtn');
+                const isRunning = btn.textContent.includes('Stop');
+                
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.textContent = isRunning ? 'Stopping...' : 'Starting...';
+                
+                const res = await fetch(isRunning ? '/watcher/stop_daemon' : '/watcher/start_daemon', { method: 'POST' });
+                const data = await res.json();
+                
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                
+                if (data.status === 'stopped' || data.status === 'started') {
+                    showNotification(
+                        isRunning ? 'Daemon Stopped' : 'Daemon Started', 
+                        isRunning ? 'Background transcriber service unloaded.' : 'Background transcriber service loaded.', 
+                        'success'
+                    );
+                } else {
+                    showNotification('Daemon Error', data.detail || 'Could not update daemon status.', 'error');
+                }
+                setTimeout(refreshWatcherQueue, 1000);
+            } catch (err) {
+                console.error(err);
+                showNotification('Error', 'Failed to communicate with service manager.', 'error');
+            }
+        }
+
+        async function shutdownASRStudio() {
+            if (!confirm('Are you sure you want to completely stop the Web UI server and exit ASR Studio?')) return;
+            try {
+                showNotification('Shutting Down', 'Stopping Web UI server. You can close this window now.', 'info');
+                fetch('/watcher/shutdown_server', { method: 'POST' }).catch(() => {});
+                setTimeout(() => {
+                    document.body.innerHTML = '<div style="padding: 100px; text-align: center; font-family: sans-serif; color: #ff6b6b; background: #0b0e14; height: 100vh;"><h2>🔌 ASR Studio has been shut down successfully.</h2><p style="color: #888;">You can safely close this browser window/tab now.</p></div>';
+                }, 500);
+            } catch (err) { console.error(err); }
+        }
+
         async function retryFailedJobs() {
             try {
                 const res = await fetch('/watcher/retry', { method: 'POST' });
                 const data = await res.json();
-                alert(`Retried ${data.count} failed job(s).`);
+                showNotification('Retrying Jobs', `Retried ${data.count} failed job(s).`, 'success');
                 refreshWatcherQueue();
             } catch (err) { console.error(err); }
         }
@@ -1337,7 +1957,7 @@ async def root():
                     wrapper.style.borderColor = 'var(--success-color)';
                 } else {
                     filenameDiv.style.display = 'none';
-                    wrapper.style.borderColor = 'rgba(99, 102, 241, 0.3)';
+                    wrapper.style.borderColor = 'rgba(99, 102, 241, 0.25)';
                 }
             });
             
@@ -1381,7 +2001,7 @@ async def root():
             const transcriptFile = document.getElementById('transcript').files[0];
             
             if (!videoFile && !transcriptFile) {
-                alert('Please upload either a lecture video or a transcript file to proceed.');
+                showNotification('Missing Inputs', 'Please upload either a lecture video or a transcript file to proceed.', 'error');
                 return;
             }
             
@@ -1441,7 +2061,7 @@ async def root():
                 checkLogs();
                 
             } catch (error) {
-                alert('Workspace error: ' + error.message);
+                showNotification('Workspace Error', error.message, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Generate Lecture Notes';
             }
@@ -1494,7 +2114,7 @@ async def root():
                 checkAsrLogs();
                 
             } catch (error) {
-                alert('ASR Error: ' + error.message);
+                showNotification('ASR Error', error.message, 'error');
                 asrSubmitBtn.disabled = false;
                 asrSubmitBtn.textContent = 'Start Local Transcription';
             }
@@ -1512,12 +2132,14 @@ async def root():
                 const progressFill = document.getElementById('progressFill');
                 const progressText = document.getElementById('progressText');
                 const downloadLink = document.getElementById('downloadLink');
+                const waveform = document.getElementById('pipelineWaveform');
                 
                 badge.textContent = data.status;
                 badge.className = 'status-badge status-' + data.status;
                 progressText.textContent = data.progress;
                 
                 if (data.status === 'processing') {
+                    waveform.classList.add('active');
                     // Use real progress if available, otherwise estimate based on log content
                     if (data.asr_percent && data.asr_percent > 0) {
                         progressFill.style.width = Math.min(data.asr_percent, 95) + '%';
@@ -1526,6 +2148,7 @@ async def root():
                     }
                     document.getElementById('stopPipelineBtn').classList.add('active');
                 } else if (data.status === 'completed') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '100%';
                     downloadLink.href = '/download/' + currentLectureId;
                     downloadLink.style.display = 'block';
@@ -1539,6 +2162,7 @@ async def root():
                     document.getElementById('submitBtn').textContent = 'Process Another Lecture';
                     document.getElementById('stopPipelineBtn').classList.remove('active');
                 } else if (data.status === 'failed') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '0%';
                     progressText.textContent = 'Failed: ' + (data.error_message || 'Unknown error');
                     clearInterval(statusInterval);
@@ -1551,6 +2175,7 @@ async def root():
                     document.getElementById('submitBtn').textContent = 'Retry Generation';
                     document.getElementById('stopPipelineBtn').classList.remove('active');
                 } else if (data.status === 'cancelled') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '0%';
                     progressText.textContent = 'Pipeline was stopped by user.';
                     clearInterval(statusInterval);
@@ -1596,7 +2221,7 @@ async def root():
                 const compositionFinished = logText.includes("Saved notes to") || logText.includes("Composition complete");
                 const hasAudit = logText.includes("audit") || logText.includes("Gate");
                 const auditFinished =
-                    /all\\s+22\\s+gates\\s+passed/i.test(logText) ||
+                    /all\\s+24\\s+gates\\s+passed/i.test(logText) ||
                     /all\\s+gates\\s+passed/i.test(logText) ||
                     logText.includes("completed successfully");
 
@@ -1624,7 +2249,7 @@ async def root():
                 console.error('Logs retrieval failed:', error);
             }
         }
-
+        
         async function checkAsrStatus() {
             if (!currentAsrLectureId) return;
             
@@ -1636,12 +2261,14 @@ async def root():
                 const badge = document.getElementById('asrStatusBadge');
                 const progressFill = document.getElementById('asrProgressFill');
                 const progressText = document.getElementById('asrProgressText');
+                const waveform = document.getElementById('asrWaveform');
                 
                 badge.textContent = data.status;
                 badge.className = 'status-badge status-' + data.status;
                 progressText.textContent = data.progress;
                 
                 if (data.status === 'processing') {
+                    waveform.classList.add('active');
                     // Use real ASR percentage from backend
                     if (data.asr_percent && data.asr_percent > 0) {
                         progressFill.style.width = Math.min(data.asr_percent, 95) + '%';
@@ -1652,6 +2279,7 @@ async def root():
                     }
                     document.getElementById('stopAsrBtn').classList.add('active');
                 } else if (data.status === 'completed') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '100%';
                     
                     const srtLink = document.getElementById('asrDownloadSrtLink');
@@ -1680,6 +2308,7 @@ async def root():
                     document.getElementById('asrSubmitBtn').textContent = 'Transcribe Another File';
                     document.getElementById('stopAsrBtn').classList.remove('active');
                 } else if (data.status === 'failed') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '0%';
                     progressText.textContent = 'Failed: ' + (data.error_message || 'Unknown error');
                     clearInterval(asrStatusInterval);
@@ -1692,6 +2321,7 @@ async def root():
                     document.getElementById('asrSubmitBtn').textContent = 'Retry Transcription';
                     document.getElementById('stopAsrBtn').classList.remove('active');
                 } else if (data.status === 'cancelled') {
+                    waveform.classList.remove('active');
                     progressFill.style.width = '0%';
                     progressText.textContent = 'Transcription was stopped by user.';
                     clearInterval(asrStatusInterval);
@@ -1808,6 +2438,82 @@ async def root():
                 console.error('Cancel request failed:', e);
             }
         }
+
+        // Active Core UI helpers
+        function updateEngineToggleUI(useLocal) {
+            const toggle = document.getElementById('globalEngineToggle');
+            if (!toggle) return;
+            const optCloud = document.getElementById('optCloud');
+            const optLocal = document.getElementById('optLocal');
+            if (useLocal) {
+                toggle.setAttribute('data-engine', 'local');
+                if (optCloud) optCloud.classList.remove('active');
+                if (optLocal) optLocal.classList.add('active');
+            } else {
+                toggle.setAttribute('data-engine', 'cloud');
+                if (optLocal) optLocal.classList.remove('active');
+                if (optCloud) optCloud.classList.add('active');
+            }
+        }
+
+        async function toggleGlobalEngine() {
+            const toggle = document.getElementById('globalEngineToggle');
+            if (!toggle) return;
+            const currentEngine = toggle.getAttribute('data-engine');
+            const newUseLocal = (currentEngine === 'cloud');
+            
+            updateEngineToggleUI(newUseLocal);
+            
+            const selectEl = document.getElementById('settingUseLocal');
+            if (selectEl) {
+                selectEl.value = newUseLocal ? 'true' : 'false';
+                toggleOllamaSettingsVisibility(newUseLocal);
+            }
+            
+            try {
+                const res = await fetch('/api/settings');
+                const data = await res.json();
+                
+                const payload = {
+                    USE_LOCAL_LLM: newUseLocal,
+                    LOCAL_LLM_MODEL: data.LOCAL_LLM_MODEL || 'notes-2b:latest',
+                    OLLAMA_HOST: data.OLLAMA_HOST || 'http://127.0.0.1:11434'
+                };
+                
+                const postRes = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (postRes.ok) {
+                    showNotification(
+                        'Active Core Switched',
+                        `Active core engine updated to ${newUseLocal ? 'Local AI (Ollama)' : 'Cloud AI (Gemini)'}`,
+                        'success'
+                    );
+                } else {
+                    const err = await postRes.json();
+                    showNotification('Failed to switch engine', err.detail || 'API error', 'error');
+                    updateEngineToggleUI(!newUseLocal);
+                    if (selectEl) {
+                        selectEl.value = (!newUseLocal) ? 'true' : 'false';
+                        toggleOllamaSettingsVisibility(!newUseLocal);
+                    }
+                }
+            } catch (err) {
+                showNotification('Network Error', 'Could not sync engine toggle: ' + err.message, 'error');
+                updateEngineToggleUI(!newUseLocal);
+                if (selectEl) {
+                    selectEl.value = (!newUseLocal) ? 'true' : 'false';
+                    toggleOllamaSettingsVisibility(!newUseLocal);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSettings();
+        });
     </script>
 </body>
 </html>
@@ -2064,6 +2770,195 @@ async def get_logs(lecture_id: str):
         return {"logs": content}
     except Exception as e:
         return {"logs": f"Error reading logs: {str(e)}"}
+
+
+def slugify(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    return text.strip('-')
+
+
+def extract_lecture_number(text: str) -> Optional[str]:
+    # Look for primary prefixes first: lec, lecture, live, rec, l
+    for match in re.finditer(r"(?i)(?:^|[^a-zA-Z0-9])(?:lec(?:ture)?|live|lve|rec|l)\s*[-_]*\s*(\d+)", text):
+        num = match.group(1)
+        if len(num) == 4 and num.startswith(("201", "202")):
+            continue
+        return num
+    # Then look for secondary prefixes: part, p, class
+    for match in re.finditer(r"(?i)(?:^|[^a-zA-Z0-9])(?:part|p|class)\s*[-_]*\s*(\d+)", text):
+        num = match.group(1)
+        if len(num) == 4 and num.startswith(("201", "202")):
+            continue
+        return num
+    return None
+
+
+def find_notes_file_for_title(title: str, file_type: str = "notes") -> Optional[Path]:
+    """Find a notes/short-note/anki file in notes-output/ matching a lecture title using word-based fuzzy matching and strict lecture number check."""
+    import glob as _glob
+    
+    # Extract lecture numbers
+    query_lec_num = extract_lecture_number(title)
+    
+    # Extract significant words from the title (3+ chars, skip common words and digits)
+    skip_words = {'the', 'and', 'for', 'new', 'with', 'part', 'by', 'lec', 'live', 'lve', 'rec', 'lecture'}
+    words = [w.lower() for w in re.split(r'[\s_\-]+', title.strip()) if len(w) > 2 and w.lower() not in skip_words and not w.isdigit()]
+    
+    if not words and not query_lec_num:
+        return None
+    
+    # Determine file extension filter
+    if file_type == "notes":
+        ext_filter = "*.docx"
+        # Exclude short notes and concept maps
+        exclude_patterns = ['_SHORTNOTE', '_concept_map', '_anki', '_original']
+    elif file_type == "short_note":
+        ext_filter = "*SHORTNOTE*.md"
+        exclude_patterns = []
+    elif file_type == "anki":
+        ext_filter = "*anki*.csv"
+        exclude_patterns = []
+    else:
+        return None
+    
+    candidates = _glob.glob(str(OUTPUT_DIR / ext_filter))
+    
+    best_match = None
+    best_score = 0.0
+    
+    for filepath in candidates:
+        basename = os.path.basename(filepath)
+        basename_lower = basename.lower()
+        
+        # Skip excluded patterns
+        if any(exc.lower() in basename_lower for exc in exclude_patterns):
+            continue
+        
+        # Enforce strict lecture number matching if present
+        cand_lec_num = extract_lecture_number(basename)
+        if query_lec_num and cand_lec_num:
+            if int(query_lec_num) != int(cand_lec_num):
+                continue
+        elif query_lec_num or cand_lec_num:
+            # One has a number and the other doesn't; skip to avoid false positive cross-lecture matching
+            continue
+        
+        # Count matching words
+        matched = sum(1 for w in words if w in basename_lower)
+        if words and matched == 0:
+            continue
+            
+        base_score = matched / len(words) if words else 0.0
+        
+        # Require at least 60% word match (or all words if <= 3 words) if words are present
+        if words:
+            min_match = 1.0 if len(words) <= 3 else 0.6
+            if base_score < min_match:
+                # If we don't have enough matching words, skip unless it's a strict lecture number match with at least some overlap
+                if query_lec_num and cand_lec_num and int(query_lec_num) == int(cand_lec_num) and base_score >= 0.3:
+                    pass
+                else:
+                    continue
+                    
+        score = base_score
+        # If lecture numbers match, give high preference
+        if query_lec_num and cand_lec_num and int(query_lec_num) == int(cand_lec_num):
+            score += 1.0  # Give massive boost to correct lecture number
+        
+        if score > best_score:
+            best_score = score
+            best_match = filepath
+            
+    return Path(best_match) if best_match else None
+
+
+@app.get("/watcher/check_notes")
+async def check_notes_for_title(title: str):
+    """Check if notes exist locally for a given lecture title. Returns the local path if found."""
+    notes_path = find_notes_file_for_title(title, "notes")
+    transcript_path = os.path.expanduser(f"~/Transcripts/{title.strip()}/transcript.srt")
+    
+    result = {
+        "title": title,
+        "notes_exists": notes_path is not None,
+        "notes_path": str(notes_path) if notes_path else None,
+        "transcript_exists": os.path.exists(transcript_path),
+        "transcript_path": transcript_path if os.path.exists(transcript_path) else None,
+    }
+    return result
+
+
+@app.get("/watcher/download")
+async def download_watcher_file(title: str, type: str):
+    """
+    Download notes, short note, or Anki CSV for a watcher-processed lecture title.
+    Finds the file locally under notes-output/ first using word-based fuzzy matching.
+    If not found, fetches from R2.
+    """
+    if type not in ("notes", "short_note", "anki"):
+        raise HTTPException(status_code=400, detail="Invalid download type")
+    
+    # Determine media type and output filename
+    type_config = {
+        "notes": ("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),
+        "short_note": ("text/markdown", "md"),
+        "anki": ("text/csv", "csv"),
+    }
+    media_type, ext = type_config[type]
+    sanitized_title = re.sub(r'[^a-zA-Z0-9_-]', '_', title)
+    sanitized_title = re.sub(r'_+', '_', sanitized_title).strip('_')
+    filename_out = f"{sanitized_title}_{'NOTES' if type == 'notes' else 'SHORTNOTE' if type == 'short_note' else 'ANKI'}.{ext}"
+    
+    # Check locally first using fuzzy matching
+    local_file = find_notes_file_for_title(title, type)
+    if local_file and local_file.exists():
+        return FileResponse(
+            str(local_file),
+            media_type=media_type,
+            filename=filename_out
+        )
+            
+    # Fallback to R2
+    slug = slugify(title)
+    r2_endpoint = os.getenv("R2_ENDPOINT")
+    r2_bucket = os.getenv("R2_BUCKET_NAME")
+    if r2_endpoint and r2_bucket:
+        try:
+            import boto3
+            session = boto3.session.Session()
+            s3 = session.client(
+                service_name='s3',
+                endpoint_url=r2_endpoint,
+                aws_access_key_id=os.getenv("R2_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("R2_SECRET_ACCESS_KEY"),
+                region_name=os.getenv("R2_REGION")
+            )
+            
+            if type == "notes":
+                r2_key = f"lectures/{slug}/notes.docx"
+            elif type == "short_note":
+                r2_key = f"lectures/{slug}/short-note.md"
+            elif type == "anki":
+                r2_key = f"lectures/{slug}/anki.csv"
+                
+            temp_path = OUTPUT_DIR / f"temp_{slug}_{type}.{ext}"
+            s3.download_file(r2_bucket, r2_key, str(temp_path))
+            
+            if temp_path.exists():
+                return FileResponse(
+                    str(temp_path),
+                    media_type=media_type,
+                    filename=filename_out
+                )
+        except Exception as e:
+            if 'temp_path' in locals() and temp_path.exists():
+                try:
+                    temp_path.unlink()
+                except Exception:
+                    pass
+                
+    raise HTTPException(status_code=404, detail="File not found locally or in R2 storage")
 
 
 @app.get("/download/{lecture_id}")
@@ -2464,7 +3359,23 @@ async def watcher_queue():
             "SELECT * FROM jobs ORDER BY id DESC LIMIT 100"
         ).fetchall()
         conn.close()
-        return [dict(r) for r in rows]
+        
+        jobs = []
+        for r in rows:
+            d = dict(r)
+            filename = d.get("filename", "")
+            title = os.path.splitext(filename)[0] if filename else ""
+            d["title"] = title
+            notes_path = find_notes_file_for_title(title, "notes")
+            d["notes_exists"] = notes_path is not None
+            d["notes_path"] = str(notes_path) if notes_path else None
+            
+            transcript_path = os.path.expanduser(f"~/Transcripts/{title.strip()}/transcript.srt")
+            d["transcript_exists"] = os.path.exists(transcript_path)
+            d["transcript_path"] = transcript_path if os.path.exists(transcript_path) else None
+            jobs.append(d)
+            
+        return jobs
     except Exception as e:
         return [{"error": str(e)}]
 
@@ -2519,6 +3430,139 @@ async def watcher_cloud_history():
         return res.data
     except Exception as e:
         return {"error": f"Failed to query Supabase: {str(e)}"}
+
+
+def read_settings_from_env():
+    env_path = PROJECT_ROOT / ".env"
+    settings = {
+        "USE_LOCAL_LLM": False,
+        "LOCAL_LLM_MODEL": "notes-2b:latest",
+        "OLLAMA_HOST": "http://127.0.0.1:11434"
+    }
+    if env_path.exists():
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k == "USE_LOCAL_LLM":
+                            settings["USE_LOCAL_LLM"] = v.lower() in ("true", "1", "yes")
+                        elif k == "LOCAL_LLM_MODEL":
+                            settings["LOCAL_LLM_MODEL"] = v
+                        elif k == "OLLAMA_HOST":
+                            settings["OLLAMA_HOST"] = v
+        except Exception:
+            pass
+    return settings
+
+
+def write_settings_to_env(settings: SettingsUpdate):
+    env_path = PROJECT_ROOT / ".env"
+    lines = []
+    if env_path.exists():
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+        except Exception:
+            pass
+
+    new_lines = []
+    keys_updated = set()
+    
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("USE_LOCAL_LLM="):
+            new_lines.append(f"USE_LOCAL_LLM=\"{str(settings.USE_LOCAL_LLM).lower()}\"\n")
+            keys_updated.add("USE_LOCAL_LLM")
+        elif stripped.startswith("LOCAL_LLM_MODEL="):
+            new_lines.append(f"LOCAL_LLM_MODEL=\"{settings.LOCAL_LLM_MODEL}\"\n")
+            keys_updated.add("LOCAL_LLM_MODEL")
+        elif stripped.startswith("OLLAMA_HOST="):
+            new_lines.append(f"OLLAMA_HOST=\"{settings.OLLAMA_HOST}\"\n")
+            keys_updated.add("OLLAMA_HOST")
+        else:
+            new_lines.append(line)
+            
+    if "USE_LOCAL_LLM" not in keys_updated:
+        new_lines.append(f"USE_LOCAL_LLM=\"{str(settings.USE_LOCAL_LLM).lower()}\"\n")
+    if "LOCAL_LLM_MODEL" not in keys_updated:
+        new_lines.append(f"LOCAL_LLM_MODEL=\"{settings.LOCAL_LLM_MODEL}\"\n")
+    if "OLLAMA_HOST" not in keys_updated:
+        new_lines.append(f"OLLAMA_HOST=\"{settings.OLLAMA_HOST}\"\n")
+        
+    try:
+        with open(env_path, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+            
+        # Update os.environ
+        os.environ["USE_LOCAL_LLM"] = str(settings.USE_LOCAL_LLM).lower()
+        os.environ["LOCAL_LLM_MODEL"] = settings.LOCAL_LLM_MODEL
+        os.environ["OLLAMA_HOST"] = settings.OLLAMA_HOST
+        return True
+    except Exception:
+        return False
+
+
+class SettingsUpdate(BaseModel):
+    USE_LOCAL_LLM: bool
+    LOCAL_LLM_MODEL: str = "notes-2b:latest"
+    OLLAMA_HOST: str = "http://127.0.0.1:11434"
+
+
+@app.get("/api/settings")
+async def get_settings():
+    try:
+        return read_settings_from_env()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/settings")
+async def update_settings(settings: SettingsUpdate):
+    try:
+        success = write_settings_to_env(settings)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to save settings to .env file")
+        return {"status": "saved", "settings": read_settings_from_env()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/watcher/stop_daemon")
+async def stop_watcher_daemon():
+    """Unloads the launchd watcher agent on macOS."""
+    import subprocess
+    plist_path = os.path.expanduser("~/Library/LaunchAgents/com.tejasmahadik.asr-watcher.plist")
+    try:
+        subprocess.run(["launchctl", "unload", plist_path], capture_output=True, check=True)
+        return {"status": "stopped"}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
+
+@app.post("/watcher/start_daemon")
+async def start_watcher_daemon():
+    """Loads the launchd watcher agent on macOS."""
+    import subprocess
+    plist_path = os.path.expanduser("~/Library/LaunchAgents/com.tejasmahadik.asr-watcher.plist")
+    try:
+        subprocess.run(["launchctl", "load", plist_path], capture_output=True, check=True)
+        return {"status": "started"}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
+
+@app.post("/watcher/shutdown_server")
+async def shutdown_server():
+    """Shuts down the FastAPI server by sending SIGINT to the process."""
+    import signal
+    os.kill(os.getpid(), signal.SIGINT)
+    return {"status": "shutting down"}
 
 
 if __name__ == "__main__":
