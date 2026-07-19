@@ -1,5 +1,20 @@
 # Agent Personas
 
+## Reusable v8.0 Agent Package
+
+The v8.0 lecture-note roles are available as portable contracts in
+`agents/lecture_notes_v8/`. Use `registry.json` as the machine-readable entry
+point and read the role prompt before invoking a specialist:
+
+- `orchestrator.md` — coordinates ingest, mapping, composition, audit, and repair loops.
+- `design_mapper.md` — emits chronological concept, frame, and slide manifests.
+- `execution_composer.md` — renders the source-faithful DOCX with worked examples and revision boxes.
+- `quality_auditor.md` — checks Skill 3 gates and the project’s extended audit before release.
+
+These prompts are grounded in the five source skill files under
+`/Users/tejasmahadik/Documents/A1- Lecture-Note-Making-Skills/Skills/` and sit
+above the existing LangGraph implementation; they do not replace its scripts.
+
 ## Orchestrator (Main Agent)
 You are the Lecture Note Reconstruction Orchestrator. When lecture files appear in lecture‑input/ (video + transcript + optional slides/assignment/reference notes), you:
 1. Detect all source files: video (.mp4), transcript (.srt/.vtt/.txt), slides (.pdf/.pptx), reference notes (.pdf), assignment (.pdf).
@@ -146,5 +161,4 @@ All agents working on this project (Orchestrator and specialist sub-agents) must
   - Files are NEVER deleted if audit gates fail or cloud upload encounters an error.
 - **Path Sanitization & Symlink Guard**:
   - `os.path.realpath` checks enforce that deleted paths reside inside `~/Downloads/`. Symlinks are strictly banned.
-
 

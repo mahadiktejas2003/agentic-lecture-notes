@@ -4,8 +4,18 @@ import os
 import json
 import subprocess
 import time
+import urllib.request
 
 def main():
+    # Load all environment variables from .env if present
+    env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), ".env")
+    if os.path.exists(env_path):
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(env_path)
+        except Exception:
+            pass
+
     args = sys.argv[1:]
     if not args:
         print("Usage: antigravity <command> [args]")
@@ -40,13 +50,12 @@ def main():
                                 local_model = v
                             elif k == "OLLAMA_HOST":
                                 ollama_host = v
+                                if not ollama_host.startswith("http://") and not ollama_host.startswith("https://"):
+                                    ollama_host = "http://" + ollama_host
 
         if use_local:
             print(f"[Antigravity CLI] Routing task to local Ollama ({local_model})...", file=sys.stderr)
             try:
-                import urllib.request
-                import json
-                
                 url = f"{ollama_host}/api/chat"
                 payload = {
                     "model": local_model,
@@ -69,6 +78,8 @@ def main():
                 with urllib.request.urlopen(req, timeout=900) as response:
                     res_body = json.loads(response.read().decode("utf-8"))
                     content = res_body["message"]["content"]
+                    if not content or not content.strip():
+                        raise ValueError("Ollama returned an empty response.")
                     print(content)
                     sys.exit(0)
             except Exception as le:
@@ -81,7 +92,7 @@ def main():
             agentapi_bin = "agentapi"
             
         print(f"[Antigravity CLI] Launching agent session...", file=sys.stderr)
-        res = subprocess.run([agentapi_bin, "new-conversation", "--model=flash", prompt], capture_output=True, text=True)
+        res = subprocess.run([agentapi_bin, "new-conversation", "--model=pro", prompt], capture_output=True, text=True)
         if res.returncode != 0:
             print(f"[Antigravity CLI] Error starting conversation: {res.stderr}", file=sys.stderr)
             sys.exit(res.returncode)

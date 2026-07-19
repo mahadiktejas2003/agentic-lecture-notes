@@ -94,7 +94,7 @@ def write_srt(segments, srt_path):
 def parse_srt_end_time(srt_path: str) -> float:
     if not os.path.exists(srt_path):
         return 0.0
-    pattern = re.compile(r"-->\s*(\d{2}):(\d{2}):(\d{2}),(\d{3})")
+    pattern = re.compile(r"-->\s*(\d+):(\d{2}):(\d{2}),(\d{3})")
     end_time = 0.0
     with open(srt_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -162,45 +162,84 @@ def main():
     else:
         audio_to_transcribe = input_file
         
-    print(f"Loading mlx-qwen3-asr model: {args.model}")
     start_time = time.time()
     
-    from mlx_qwen3_asr import transcribe
-    
     try:
-        # Map simple language codes to what Qwen3-ASR expects
-        language = args.language
-        if language == "hi":
-            language = "Hindi"
-        elif language == "en":
-            language = "English"
-        elif language == "auto":
-            language = None
-            
-        print(f"Transcribing '{audio_to_transcribe}' on Apple Silicon GPU (Metal) using Qwen3-ASR (model: {args.model})...")
+        from mlx_qwen3_asr import transcribe
+        is_mlx = True
+    except ImportError:
+        is_mlx = False
         
-        def progress(event):
-            name = event.get("event", "progress")
-            pct = float(event.get("progress", 0.0)) * 100
-            chunk = event.get("chunk_index")
-            total = event.get("total_chunks")
-            if chunk and total:
-                print(f"ASR progress: {pct:5.1f}% | {name} | chunk {chunk}/{total}", flush=True)
-            else:
-                print(f"ASR progress: {pct:5.1f}% | {name}", flush=True)
+    try:
+        if is_mlx:
+            print(f"Loading mlx-qwen3-asr model: {args.model}")
+            # Map simple language codes to what Qwen3-ASR expects
+            language = args.language
+            if language == "hi":
+                language = "Hindi"
+            elif language == "en":
+                language = "English"
+            elif language == "auto":
+                language = None
+                
+            print(f"Transcribing '{audio_to_transcribe}' on Apple Silicon GPU (Metal) using Qwen3-ASR (model: {args.model})...")
+            
+            def progress(event):
+                name = event.get("event", "progress")
+                pct = float(event.get("progress", 0.0)) * 100
+                chunk = event.get("chunk_index")
+                total = event.get("total_chunks")
+                if chunk and total:
+                    print(f"ASR progress: {pct:5.1f}% | {name} | chunk {chunk}/{total}", flush=True)
+                else:
+                    print(f"ASR progress: {pct:5.1f}% | {name}", flush=True)
 
-        result = transcribe(
-            audio=audio_to_transcribe,
-            model=args.model,
-            draft_model=args.draft_model,
-            num_draft_tokens=args.num_draft_tokens,
-            context=args.context,
-            language=language,
-            return_timestamps=args.timestamps,
-            return_chunks=True,
-            verbose=True,
-            on_progress=progress
-        )
+            result = transcribe(
+                audio=audio_to_transcribe,
+                model=args.model,
+                draft_model=args.draft_model,
+                num_draft_tokens=args.num_draft_tokens,
+                context=args.context,
+                language=language,
+                return_timestamps=args.timestamps,
+                return_chunks=True,
+                verbose=True,
+                on_progress=progress
+            )
+        else:
+            print("mlx-qwen3-asr not found. Falling back to faster-whisper on CPU/non-macOS system...")
+            from faster_whisper import WhisperModel
+            
+            # For Ryzen 7 CPU, we run the fast and accurate base model using int8 quantization
+            print(f"Loading faster-whisper model ('base') on CPU...")
+            model = WhisperModel("base", device="cpu", compute_type="int8")
+            
+            # Map simple language codes
+            language = args.language
+            if language == "auto":
+                language = None
+                
+            print(f"Transcribing '{audio_to_transcribe}' using faster-whisper...")
+            segments, info = model.transcribe(audio_to_transcribe, beam_size=5, language=language)
+            
+            segments_list = []
+            full_text = []
+            for segment in segments:
+                segments_list.append({
+                    "start": segment.start,
+                    "end": segment.end,
+                    "text": segment.text
+                })
+                full_text.append(segment.text)
+                print(f"[{segment.start:.2f}s -> {segment.end:.2f}s] {segment.text}", flush=True)
+                
+            class MockResult:
+                def __init__(self, text, segments):
+                    self.text = text
+                    self.segments = segments
+                    self.chunks = segments
+                    
+            result = MockResult(" ".join(full_text), segments_list)
         
         # Paths for output files
         final_txt_path = os.path.join(args.output_dir, "transcript.txt")
@@ -223,6 +262,7 @@ def main():
             write_srt(segments_to_write, final_srt_path)
             print(f"Saved SRT: {final_srt_path}")
         else:
+            print(f"WARNING: No segments/chunks returned by Qwen3-ASR. Falling back to single-segment SRT.", flush=True)
             duration = get_media_duration(audio_to_transcribe) or get_media_duration(input_file)
             fallback_segments = [{"start": 0.0, "end": duration or 10.0, "text": result.text}]
             write_srt(fallback_segments, final_srt_path)

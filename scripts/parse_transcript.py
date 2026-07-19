@@ -10,6 +10,9 @@ import subprocess
 import shutil
 import math
 
+from dotenv import load_dotenv
+load_dotenv()
+
 os.makedirs('logs', exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
@@ -91,8 +94,10 @@ def call_antigravity_chat(prompt):
     logger.info(f"Calling Antigravity CLI...")
     try:
         result = subprocess.run([cli_path, "chat", prompt], capture_output=True, text=True, timeout=600)
+        if result.stderr.strip():
+            logger.info(f"Antigravity CLI stderr:\n{result.stderr.strip()}")
         if result.returncode != 0:
-            logger.error(f"Antigravity CLI returned exit code {result.returncode}. Error: {result.stderr}")
+            logger.error(f"Antigravity CLI returned exit code {result.returncode}.")
             return None
             
         output = result.stdout
@@ -143,8 +148,10 @@ def call_antigravity_chat_raw(prompt):
     logger.info(f"Calling Antigravity CLI (raw text mode)...")
     try:
         result = subprocess.run([cli_path, "chat", prompt], capture_output=True, text=True, timeout=600)
+        if result.stderr.strip():
+            logger.info(f"Antigravity CLI stderr:\n{result.stderr.strip()}")
         if result.returncode != 0:
-            logger.error(f"Antigravity CLI returned exit code {result.returncode}. Error: {result.stderr}")
+            logger.error(f"Antigravity CLI returned exit code {result.returncode}.")
             return None
             
         output = result.stdout
