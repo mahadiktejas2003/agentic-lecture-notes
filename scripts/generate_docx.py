@@ -1899,9 +1899,14 @@ def build_document(concept_map_path, frame_manifest_path, slide_manifest_path, o
                 rules.append(rule_text)
                 
         if cautions and len(cautions) > 0:
-            rev_bullets.append(f"⭐ **{b_title_clean} (Warning)**: {cautions[0]}")
+            c_text = cautions[0]
+            # Strip emojis like 🚨, 💡 and prefixes like TRAP, TRICK to prevent duplicate count in audit.py
+            c_text = re.sub(r'^[🚨💡📌]?\s*(TRAP|TRICK|QUOTE|Warning|Caution)?\s*[:\-]?\s*', '', c_text).strip()
+            rev_bullets.append(f"⭐ **{b_title_clean} (Warning)**: {c_text}")
         elif rules and len(rules) > 0:
-            rev_bullets.append(f"💡 **{b_title_clean} (Rule)**: {rules[0]}")
+            r_text = rules[0]
+            r_text = re.sub(r'^[🚨💡📌]?\s*(TRAP|TRICK|QUOTE|Rule|Principle)?\s*[:\-]?\s*', '', r_text).strip()
+            rev_bullets.append(f"💡 **{b_title_clean} (Rule)**: {r_text}")
         else:
             rev_bullets.append(f"📌 **{b_title_clean}**: Refer to detailed notes.")
             
